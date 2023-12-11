@@ -25,17 +25,10 @@ const School = require("../models/school.name");
     
     }
 
-    const forwardAuthenticated = function(req, res, next) {
-      if (!req.isAuthenticated()) {
-        return next();
-      }
-      res.redirect('/learner/student-profile');     
-    }
 
 
-
-router.get('/', forwardAuthenticated, (req, res) => {
-    res.render('login')
+router.get('/', async(req, res) => {
+   await res.render('login')
 } )
 
 router.get('/home-page', ensureAuthenticated ,(req, res, next) => {
