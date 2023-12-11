@@ -1,0 +1,88 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="divide_route">
+    <a href="http://">All Classes </a> <a href="http://"> Update Current Class</a>   
+   
+</div>
+
+<div class="diverr">
+    <h4>Use this form to Update <%= classes.name %> Class</h4>
+
+    <div class="form_for_create">
+    
+        <%- include ('./partials/messages') %>
+     <form method="PUT" id="edit-posts">
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <input type="hidden" name="id" value="<%= classes._id %>">  
+                        <label for="roll_no">Roll Number:</label>
+                        <input
+                        type="number" 
+                        name="roll_no" 
+                        value="<%= classes.roll_no %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="name">Name:</label>
+                        <input
+                        type="text" 
+                        name="name" 
+                        value="<%= classes.name %>" />
+                    </div>
+                   
+                 </div>
+                 <div class="mb-3">
+                    <div class="hop">
+                        <label for="arm">Arm:</label>
+                        <input 
+                        type="text" 
+                        name="arm" 
+                        value="<%= classes.arm %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="class_code">Class Code:</label>
+                        <input 
+                        type="class_code" 
+                        name="class_code"
+                        value="<%= classes.class_code %>" />
+                    </div>
+                 </div>
+                  <div class="mb-3">
+                    <div class="hop">
+                        <label for="capacity">Capacity:</label>
+                        <input 
+                        type="capacity" 
+                        name="capacity" 
+                        value="<%= classes.capacity %>" />
+                    </div>
+                    <div class="hop">
+                        <div class="form-group">
+                            <label for="gender" class="text-light">Status</label>
+                            <div class="radio inline">
+                                <input type="radio" id="radio-4" name="status" value="Active" <%= classes.status=='Active' ? 'checked' : '' %>>
+                                <label for="radio-4" class="radio-label">Active</label>
+                            </div>
+                            <div class="radio inline">
+                                <input type="radio" id="radio-5" name="status" value="Inactive" value="Inactive" <%= classes.status=='Inactive' ? 'checked' : '' %> >
+                                <label for="radio-5" class="radio-label">Inactive</label>
+                            </div>
+                        </div>
+                    </div>
+                  
+                 </div>
+            </div>
+       
+       
+        
+               <div class="mb-3">
+            <input type="submit" value="Update">
+         </div>
+     </form>
+ </div>   
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<%- include ("./include/footer.ejs") %> 

@@ -1,0 +1,72 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+<div class="divide_route">
+    <a href="http://">All Classes </a> <a href="http://"> Add Class</a> 
+   
+</div>
+
+<div class="diverr">
+    <h4><i class="fas fa-house-user"></i>Create Currentclass</h4>
+
+    <div class="form_for_create">
+        
+        <%- include ('./partials/messages') %>
+        <form action="/session/add_current_class" method="POST" id="creatClassing">
+
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="number">Roll Number:</label>
+                        <input type="number" name="roll_no" value="<%= typeof roll_no != 'undefined' ? roll_no : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="name">Name:</label>
+                        <input type="text" name="name" value="<%= typeof name != 'undefined' ? name : '' %>" />
+                    </div>
+                   
+                </div>
+            
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="arm">Arm:</label>
+                        <input type="text" name="arm" value="<%= typeof arm != 'undefined' ? arm : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="class_code">Class Code:</label>
+                        <input type="class_code" name="class_code" value="<%= typeof class_code != 'undefined' ? class_code  : '' %>" />
+                    </div>
+                    
+                </div>
+                <div class="mb-3">
+                   
+                    <div class="hop">
+                        <div class="form-group">
+                            <label for="gender" class="text-light">Status:</label>
+                            <div class="radio inline">
+                                <input type="radio" id="radio-4" name="status" value="Active"/>
+                                <label for="radio-4" class="radio-label">Active</label>
+                            </div>
+                            <div class="radio inline">
+                                <input type="radio" id="radio-5" name="status" value="Inactive" value="Inactive"/>
+                                <label for="radio-5" class="radio-label">Inactive</label>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            
+                
+            </div>      
+
+                <div class="mb-3">
+                    <input type="submit" value="Ok? Create">
+                </div>
+        </form>
+    </div> 
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+   
+<%- include ("./include/footer.ejs") %> 

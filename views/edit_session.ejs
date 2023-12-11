@@ -1,0 +1,115 @@
+<%- include ('./include/header.ejs') %> 
+
+<%- include ("./include/_dash_board.ejs") %>
+
+<div class="divide_route">
+    <a href="http://">All Sessions </a> <a href="http://">Update Session</a> 
+</div>
+   
+
+<div class="diverr">
+    <h4><i class="fas fa-hourglass-start"></i> Update Session of <%= session.name %></h4>
+    <div class="form_for_create">
+    
+        <%- include ('./partials/messages') %>
+        <form method="PUT" id="pull_out">
+
+        <div class="all-single-form">
+
+            <div class="mb-3">
+               <div class="hop">
+                <input type="hidden" name="id" value="<%= session._id %>">
+                    <label for="roll_no">Roll_no</label>
+                    <input 
+                    type="number" 
+                    name="roll_no" 
+                    value="<%= session.roll_no %>"/>
+               </div>
+               <div class="hop">
+                    <label for="name">Name</label>
+                    <input 
+                    type="name"
+                    name="name"
+                    value="<%= session.name  %>"/>
+               </div>
+                
+            </div>
+
+            <div class="mb-3">
+              <div class="hop">
+                    <label for="classof">Class of</label>
+                    <input 
+                    type="classof"
+                    name="classof"
+                    placeholder="example: 2022/2023" 
+                    value="<%= session.classof %>"/>
+              </div>
+                    
+            </div>
+            
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="dating">From:</label>
+                    <input 
+                    type="text" 
+                    name="date_started"
+                    id="dating"
+                    value=" <%= session.date_started%>"/>
+                </div>
+                <div class="hop">
+                    <label for="dating">To:</label>
+                    <input 
+                    type="text"
+                    name="date_ended"
+                    id="dating"
+                    value=" <%= session.date_ended%>"/>
+
+                </div>
+               
+            </div>
+
+        </div>    
+           
+           
+   
+           <div class="mb-3">
+              <input type="submit" value="Ok? Update">
+           </div>
+           
+       
+       </form>
+   </div>
+</div>
+<footer class="foot">
+  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+</footer>
+
+<%- include ("./include/footer.ejs") %> 
+
+
+<script>
+    
+$("#pull_out").submit(function (params) {
+  params.preventDefault();
+
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+  console.log(data);
+
+  let request = {
+    "url" : `/admin/update-session/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
+  });
+});
+</script>

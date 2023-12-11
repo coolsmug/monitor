@@ -1,0 +1,116 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="divide_route"><a href="http://">All Classes </a> <a href="http://"> Update Class</a>   
+    
+</div>
+
+<div class="diverr">
+    <h4> Update Prorietor's Name & Comments</h4>
+    <div class="form_for_create">
+    
+        <%- include ('./partials/messages') %>
+     <form method="PUT" id="pull_out">
+        <div class="all-single-form">
+            <div class="mb-3">
+                <div class="hop">
+                   
+                    <input type="hidden" name="id" value="<%= comment._id %> ">
+                    <label for="full_name">Full Name:</label>
+                    <input 
+                    type="full_name" 
+                    name="full_name" 
+                    value="<%= comment.full_name %>" />
+                </div>
+                <div class="hop">
+                    <label for="excellent">Excellent Statement:</label>
+                    <input 
+                    type="excellent" 
+                    name="excellent" 
+                    value="<%= comment.excellent%>" />
+                </div>
+               
+            </div>
+
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="very_good">Very good Statement:</label>
+                    <input 
+                    type="very_good" 
+                    name="very_good" 
+                    value="<%= comment.very_good %>" />
+                </div>
+                <div class="hop">
+                    <label for="good">Good Statement:</label>
+                    <input 
+                    type="good" 
+                    name="good" 
+                    value="<%= comment.good %>" />
+                </div>
+           
+            </div>
+          
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="pass">Pass Statement:</label>
+                    <input 
+                    type="pass" 
+                    name="pass" 
+                    value="<%= comment.pass %>" />
+                </div>
+                
+                <div class="hop">
+                    <label for="poor">Poor Statement:</label>
+                    <input type="poor" name="poor" placeholder="" value="<%= comment.poor %>" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="vpoor">Very poor Statement:</label>
+                    <input type="vpoor" name="vpoor" value="<%= comment.vpoor %>" />
+                </div>
+                
+            </div>
+
+        </div> 
+        
+        <div class="mb-3">
+            <input type="submit" value="Ok? Update">
+         </div>
+       
+     </form>
+ </div>    
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+</footer>
+<%- include ("./include/footer.ejs") %> 
+<script>
+    
+    $("#pull_out").submit(function (params) {
+      params.preventDefault();
+    
+      let unindexed_arrays = $(this).serializeArray();
+      let data = {}
+    
+      $.map(unindexed_arrays, function (n, i) {
+        data[ n[ "name" ]] = n[ "value" ]
+      }); 
+      console.log(data);
+    
+      let request = {
+        "url" : `/school/update-proprietor/${data.id}`,
+        "method" : "PUT",
+        "data" : data,
+      };
+    
+      $.ajax(request).done(function (response) {
+        alert("Session Updated Successfully!")
+        location.reload();
+        
+      });
+    });
+
+    </script>

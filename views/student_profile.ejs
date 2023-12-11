@@ -1,0 +1,142 @@
+<%- include ('./include/header.ejs') %> 
+<%- include ('./partials/messages') %>
+<div class="allss">
+    <div class="mon">
+        <img src="/img/monitor.png" alt="" width="200">
+        <form action="/learner/logout" method="POST" class="logoutss">
+            <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i></button>
+        </form>
+    </div>
+    <div class="profile">
+        <p>
+            You are welcome <%= user.first_name %>!
+        </p>
+        <img class="imgs" src="/img/img_8.jpg" alt="" width="100">
+        <div class="imgss">
+            <% if(user.img.contentType) {%> 
+                 <img src="data:user/<%= user.img.contentType %>;base64,<%= user.img.data.toString('base64') %>" alt="" >
+            <% } else {%> 
+                <img src="/img/monitor_user_image.jpg" alt="" >
+                <% } %> 
+        </div>  
+    </div>
+
+    <div class="profile_name">
+        <p><i class="fas fa-chess-rook"> Roll Number:</i> <%= user.roll_no %></p>
+        <p><i class="fas fa-user"></i> <%= user.first_name %> <%= user.last_name %> <%= user.middle_name %> </p>
+        <p><i class="fas fa-envelope"></i> <%= user.email %></p>
+        <p><i class="fas fa-code"> Class code:</i> <%= user.class_code %></p>
+        <p><i class="fas fa-democrat"> Arm:</i> <%= user.arm %></p>
+    </div>
+   
+        <a href="/edit-profile?id=<%= user._id %>" id="aahref">Edit profile</a>
+    
+    <div class="checking">
+       
+        <ul>
+           
+            <p>Check result <i class="fas fa-hand-point-down"></i></p>
+            <li><button  class="btn btn-open">1st & 2nd term</button></li>
+            <li><button  class="btn btn-opens">3rd Term </button></li>
+        </ul>
+    
+    </div>
+   
+
+    <div class="modality">
+        <section class="modal hidden">
+            <div> 
+                <div class="flex">
+                    <h1 style="color: skyblue; z-index: 1;">First-Term & Second-Term</h1>
+                <button class="btn-close"><i class="fas fa-times"></i></button>
+                </div>
+                <form action="/learner/check_result" method="GET">
+                <div class="inputss">
+                    <label for="">Term:</label>
+                    <select name="name" id="name" required>
+                        <option value="First-Term">First-Term</option>
+                        <option value="Second-Term">Second-Term</option>
+                    </select>
+                </div>
+                <div class="inputss">
+                    <label for="">Learner ID:</label>
+                    <input type="text" name="_learner" value="<%= user._id %>" required>
+                </div>
+                <div class="inputss">
+                    <label for="">Roll_No:</label>
+                    <input type="text" name="roll_no" value="" required>
+                </div>
+                <div class="inputss">
+                    <label for="">Class Of:</label>
+                    <input type="text" name="classof" value="" required>
+                </div>
+                <div class="inputss">
+                    <label for="">Enter Pin:</label>
+                    <input type="text" name="code" value="">
+                </div>
+                <button class="btns">Fetch Result</button>
+
+                </form>
+            
+            </div>       
+        </section>
+        <div class="overlay hidden"></div>
+    </div>
+
+    <div class="modality">
+
+        <section class="modals hiddens">
+           
+            
+           
+            <div> 
+                <div class="flexs">
+                    <h1 style="color: skyblue; z-index: 1;">Third-Term</h1>
+                    <button class="btn-closes"><i class="fas fa-times"></i></button>
+                </div>
+                <form action="/learner/check_results" method="GET">
+                   
+                <div class="inputss">
+                    <label for="">Term:</label>
+                    <select name="name" id="name" required>
+                        <option value="Third-Term">Third-Term</option>
+                    </select>
+                </div>
+                <div class="inputss">
+                    <label for="">Learner ID:</label>
+                    <input type="text" name="_learner" value="<%= user._id %>">
+                </div>
+                <div class="inputss">
+                    <label for="">Roll_No:</label>
+                    <input type="text" name="roll_no" value="" required>
+                </div>
+                <div class="inputss">
+                    <label for="">Class Of:</label>
+                    <input type="text" name="classof" value="" required>
+                </div>
+                <div class="inputss">
+                    <label for="">Enter Pin:</label>
+                    <input type="text" name="code" value="">
+                </div>
+                <button class="btns">Fetch Result</button>
+    
+                </form>
+            
+            </div>
+       
+        </section>
+        <div class="overlays hiddens"></div>
+    </div>
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<%- include ('./include/footer.ejs')  %> 
+
+<style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+</style>

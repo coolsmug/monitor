@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow&family=PT+Sans&display=swap');
+:root {
+    --deepest-blue: #355E3B; 
+    --deep-blue: #00A36C;
+    --light-blue: #90EE90;
+    --lighter-blue: #7FFFD4;
+    --white: #ffffff;
+    --white_one: #f7f7f7;
+    --white_two: #e7e6e2;
+    --white_three: #e2e2e2;
+    --red: #c30010;
+    --red-1: #d1001f;
+    --red-2: #de0a26;
+    --red_:#FF0000;
+    --crimson:#DC143C;
+    --bad-red: #750000;
+    --ubuntu: 'Ubuntu', sans-serif ;
+    --ubuntu-light: 'Ubuntu light', sans-serif;
+    --ubuntu-regular: 'Ubuntu regular', sans-serif;
+    --ubuntu-bold: 'Ubuntu bold', sans-serif;
+    --ubuntu-medium: 'Ubuntu Medium', sans-serif;
+    --playfair: 'Playfair Display', sans-serif;
+    --playfair-light: 'Playfair Display Light', sans-serif;
+    --playfair-regular: 'Playfair Display Regular', sans-serif;
+    --playfair-medium: 'Playfair Display Medium', sans-serif;
+    --playfair-bold: 'Playfair Display Bold', sans-serif;
+    --montserrat: 'Montserrat', sans-serif;
+    --montserrat-light: 'Montserrat Light', sans-serif;
+    --montserrat-regular: 'Montserrat Regular', sans-serif;
+    --montserrat-bold: 'Montserrat Bold', sans-serif;
+    --montserrat-medium: 'Montserrat Medium', sans-serif;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+
+.every {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--ubuntu-medium);
+    color: royalblue;
+    max-width: 250px;
+    min-height: 150px;
+    background-color: #fff;
+    border: 5px solid var(--deep-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 14px 14px 20px #c6c6c6,
+    -14px -14px 20px rgb(203, 202, 202);
+    z-index: 1;
+
+}
+
+.okbutton {
+    padding: 10px;
+    background-color: var(--deep-blue) ;
+    border: 1px solid var(--lighter-blue);
+    border-radius:10px ;
+    width: 100px;
+    color: var(--white);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
+}
+
+.closeds {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--ubuntu-medium);
+    color: royalblue;
+    max-width: 250px;
+    min-height: 150px;
+    background-color: #fff;
+    border: 5px solid var(--deep-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 14px 14px 20px #abd4fd,
+    -14px -14px 20px rgb(247, 245, 245);
+    z-index: 1;
+
+}
+
+.mainButton {
+    padding: 10px;
+    background-color: var(--deep-blue) ;
+    border: 1px solid var(--lighter-blue);
+    border-radius:10px ;
+    width: 100px;
+    color: var(--white);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
+}
+
+.buttini {
+    padding: 10px;
+    background-color: var(--deep-blue) ;
+    border: 1px solid var(--lighter-blue);
+    border-radius:10px ;
+    width: 100px;
+    color: var(--white);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
+}
+
+.pade {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--ubuntu-medium);
+    color: royalblue;
+    max-width: 250px;
+    min-height: 150px;
+    background-color: #fff;
+    border: 5px solid var(--deep-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 14px 14px 20px #abd4fd,
+    -14px -14px 20px rgb(247, 245, 245);
+
+}
+
+.pressIt {
+    padding: 10px;
+    background-color: var(--deep-blue) ;
+    border: 1px solid var(--lighter-blue);
+    /* border-radius:10px ; */
+    cursor: pointer;
+    width: 100px;
+    color: var(--white);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
+}
+
+.coverup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--ubuntu-medium);
+    color: royalblue;
+    max-width: 250px;
+    min-height: 150px;
+    background-color: #fff;
+    border: 5px solid var(--deep-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 14px 14px 20px #abd4fd,
+    -14px -14px 20px rgb(247, 245, 245);
+    z-index: 1;
+
+}
+
+.d-fas {
+    font-size: 35px;
+    color: royalblue;
+    border-radius: 50%;
+    border:1px  yellow;
+    text-shadow: 2px 2px 5px grey;
+    animation-name: animation;
+    animation-duration: 1s;
+}
+
+@keyframes animation {
+    0%{
+        font-size: 5px;
+    }
+
+    30%{
+        font-size: 75px;
+    }
+
+    70%{
+        font-size: 100x;
+    }
+
+    100%{
+        font-size: 20px;
+    }
+}

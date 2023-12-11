@@ -1,0 +1,19 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+<h2 class="ofhtwo"><i class="fas fa-cash-register"></i> Pay to get code to generate Voucher</h2>
+<%- include ('./partials/messages') %> 
+<form action="/admin/pay" method="POST" class="voucher-form">
+    <label class="email-label" for="email">Email:</label>
+    <input type="text" id="email" name="email">
+    <br>
+    <label  class="email-amount" for="amount">Amount:</label>
+    <input type="number" value="2500" id="amount" name="amount" readonly>
+    <br>
+    <button class="clickbutton" type="submit">Pay with PayStack</button>
+  </form>
+  
+  <footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+  <%- include ('./include/footer.ejs') %> 

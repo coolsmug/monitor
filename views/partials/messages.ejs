@@ -1,0 +1,91 @@
+<% if(typeof errors!= 'undefined') { %>
+
+        <% errors.every(function(error){ %>
+
+    <div class="every">
+        <p class="error"><%= error.msg %></p>
+        <button class="okbutton">OK</button>
+    </div>
+    
+<% }) %> 
+<% } %> 
+
+
+<% if (success_msg != '') { %>
+    <div class="closeds">
+        <div class="d-fas"><i class="fas fa-check-circle"></i></div>
+        <p class="fine"><%=success_msg%></p>
+        <button class="mainButton">OK</button>
+    </div>
+
+<% } %> 
+
+<% if(error_msg != '') { %>
+
+    <div class="pade">
+        <p class="fine">
+            <%= error_msg %>
+        </p>
+        <button class="buttini">OK</button>
+    </div>
+    
+    <% } %>
+    
+    <% if(error != '') {%> 
+        <div class="coverup">
+            <p class="fine">
+              
+                <%= error %> 
+                <button type="button" class="pressIt">OK</button>
+            </p>
+        </div>
+
+    <% } %>
+
+    <script>
+
+        const okayClosed = document.querySelector(".mainButton");
+        const everyErrors = document.querySelector(".closeds");
+    
+        const removeModals =  function() {
+            everyErrors.style.display = "none"
+        }
+
+        okayClosed.onclick = function(){
+            removeModals()
+        }
+    </script>
+
+<script>
+         const okayButton = document.querySelector(".okbutton");
+        const everyCrror = document.querySelector(".every");
+
+
+        const removeModal =  function() {
+           everyCrror.style.display = "none"
+        }
+
+        okayButton.addEventListener("click", removeModal);
+</script>
+       
+<script>
+          const okayClosedIt = document.querySelector(".buttini");
+      const everyErrorSed = document.querySelector(".pade");
+  
+      const removeModalIt =  function() {
+          everyErrorSed.style.display = "none"
+      }
+
+      okayClosedIt.addEventListener("click", removeModalIt)
+</script>
+         
+<script>
+      const okayClosedItAll = document.querySelector(".pressIt");
+      const everyErrorsDone = document.querySelector(".coverup");
+  
+      const removeModalItNow =  function() {
+          everyErrorsDone.style.display = "none"
+      }
+
+      okayClosedItAll.addEventListener("click", removeModalItNow)
+  </script>

@@ -1,0 +1,169 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="divide_route"><a href="http://">All Section</a><a href="http://">Add Section</a>
+   
+   
+</div>
+
+<div class="diverr">
+    <h4><i class="fas fa-puzzle-piece"></i> Create New Section</h4>
+    <div class="form_for_create">
+        <h4>Create First and Second term Section</h4>  
+        <%- include ('./partials/messages') %>
+        <form action="/session/add_section" method="POST">
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="roll_no">Roll No</label>
+                        <input 
+                        type="number"
+                        name="roll_no" 
+                    
+                        value="<%= typeof roll_no != 'undefined' ? roll_no : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="classof">Class of</label>
+                        <input 
+                        type="classof" 
+                        name="classof" 
+                        placeholder="example:. 2022/2023"  
+                        value="<%= typeof classof != 'undefined' ? classof : '' %>" />
+                    </div>
+                    
+                </div>
+        
+                <div class="mb-3">
+                <div class="hop">
+                    <label for="name">Name</label>
+                    <select name="name" id="name">
+                        <option value="">Select...</option>
+                        <option value="First-Term">First-Term</option>
+                        <option value="Second-Term">Second-Term</option>
+                    </select>
+                </div>
+                </div>
+                
+                <div class="mb-3">
+                <div class="hop">
+                        <label for="dating">From:</label>
+                        <input 
+                        type="date" 
+                        name="date_started" 
+                        class="form-control" 
+                        id="dating"  
+                        value="<%= typeof date_started != 'undefined' ? date_started : '' %>" />
+                </div>
+                <div class="hop">
+                        <label for="dating">To:</label>
+                        <input 
+                        type="date" 
+                        name="date_ended" 
+                        class="form-control" 
+                        id="dating"  
+                        value="<%= typeof date_ended != 'undefined' ? date_ended : '' %>"/>
+                </div>
+                </div>
+            </div>    
+
+            <div class="mb-3">
+               <input type="submit" value="Ok? Create">
+            </div>
+            
+        
+        </form>
+    </div>
+
+</div>
+
+
+<div class="diverr child-diverr">
+    <h4>Create Third Term Section here</h4>  
+    <div class="form_for_create">
+
+        <form action="/session/add_third_section" method="POST" id="oilLong">
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="roll_no">Roll No</label>
+                        <input 
+                        type="number"
+                        name="roll_no" 
+                    
+                        value="<%= typeof roll_no != 'undefined' ? roll_no : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="classof">Class of</label>
+                        <input 
+                        type="classof" 
+                        name="classof" 
+                        placeholder="example:. 2022/2023"  
+                        value="<%= typeof classof != 'undefined' ? classof : '' %>" />
+                    </div>
+                    
+                </div>
+        
+                <div class="mb-3">
+                <div class="hop">
+                    <label for="name">Name</label>
+                    <select name="name" id="name">
+                        <option value="">Select...</option>
+                        <option value="Third-Term">Third-Term</option>
+                        
+                    </select>
+                </div>
+                </div>
+                
+                <div class="mb-3">
+                <div class="hop">
+                        <label for="dating">From:</label>
+                        <input 
+                        type="date" 
+                        name="date_started" 
+                        class="form-control" 
+                        id="dating"  
+                        value="<%= typeof date_started != 'undefined' ? date_started : '' %>" />
+                </div>
+                <div class="hop">
+                        <label for="dating">To:</label>
+                        <input 
+                        type="date" 
+                        name="date_ended" 
+                        class="form-control" 
+                        id="dating"  
+                        value="<%= typeof date_ended != 'undefined' ? date_ended : '' %>"/>
+                </div>
+                </div>
+            </div>    
+
+            <div class="mb-3">
+               <input type="submit" value="Ok? Create">
+            </div>
+            
+        
+        </form>
+    </div>
+
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<style>
+    body {
+        min-height: 120vh;
+    }
+
+    .diverr {
+        margin-bottom: 70px;
+       
+    }
+    .child-diverr {
+        margin-top: 0px;
+       
+    }
+</style>
+
+<%- include ("./include/footer.ejs") %> 
+
+

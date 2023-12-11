@@ -1,0 +1,63 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+<div class="divide_route"><a href="http://">All Staffs </a> <a href="http://"> Add Staff</a>  
+  
+
+</div>
+
+<div class="diverr">
+    <h4> <i class="fas fa-chalkboard-teacher"> </i> Crate New Staff</h4>
+
+    <div class="form_for_create">
+
+        <%- include ('./partials/messages') %>
+        <form action="/school/add_staffs" method="POST" id="creatClassing">
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="roll">Roll Number:</label>
+                        <input 
+                        type="roll" 
+                        name="roll" 
+                        value="<%= typeof roll != 'undefined' ? roll : '' %>" />
+                    </div>
+                </div>
+                <div class="hop">
+                    <label for="name">Name:</label>
+                    <input 
+                    type="name" 
+                    name="name" 
+                    value="<%= typeof name != 'undefined' ? name : '' %>" />
+                </div>
+                <div class="hop">
+                    <label for="email">Email:</label>
+                    <input type="email" autocomplete="off" name="email" onkeyup="this.value=value.toLowerCase()" value="<%= typeof email != 'undefined' ? email : '' %>" />
+                </div>
+
+                <div class="hop">
+                    <label for="email">Password 1:</label>
+                    <input type="password" name="password" value="<%= typeof password != 'undefined' ?  password : '' %>" />
+                  </div>
+                  <div class="hop">
+                    <label for="email">Password 2:</label>
+                    <input type="password" name="password_2" value="<%= typeof password_2 != 'undefined' ?  password_2 : '' %>" />
+                  </div>
+               
+            </div>
+
+                <div class="mb-3">
+                    <input type="submit" value="Ok? Create One">
+                    </div>
+                
+          
+        </form>
+    
+        
+    </div>     
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<%- include ("./include/footer.ejs") %> 

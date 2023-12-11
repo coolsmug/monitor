@@ -1,0 +1,230 @@
+<%- include ("./include/result_header.ejs") %>
+<div class="all_in_one">
+    <header>
+      
+      <img src="/img/monitor-01.png" alt="">
+
+    </header>
+<div class="diver">
+    <h2>Learners Record Section</h2>
+</div>
+
+
+<div class="cover_table">
+    <div class="student-image">
+        <% if(users.img.contentType) {%> 
+            <img src="data:users/<%= users.img.contentType %>;base64,<%= users.img.data.toString('base64') %>" alt="" >
+       <% } else {%> 
+           <img src="/img/monitor_users_image.jpg" alt="" >
+           <% } %> 
+    </div>
+    <p><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= section.name %> Result Arrangement - <%= section.classof %> Session of <%= session.name %></p> 
+    
+    <form method="POST" id="blessing">
+        <div class="input">
+            <% if(subject) {%> 
+           <select name="name" id="name">
+            <option value="select subject">Select subject</option>
+            <% for (var i = 0; i < subject.length; i++) {%> 
+            <option value="<%= subject[i].name %> "><%= subject[i].name %></option>
+            <% } %> 
+           </select>
+           <% } %> 
+        </div>
+
+        <div class="input">
+            <input type="_learner" name="_learner"  value="<%= users._id %>" readonly/>
+        </div>
+        <div class="input">
+            <input type="roll_no" name="roll_no"  value="<%= section.roll_no %>" readonly/>
+        </div>
+        <div class="input">
+            <input type="student_name" name="student_name"  value="<%= users.first_name %> <%= users.last_name %>" readonly/>
+        </div>
+        <div class="input">
+            <input type="classofs" name="classofs"  value="<%= session.classof %>" readonly/>
+        </div>
+        <div class="input">
+            <input type="term" name="term"  value="<%= section.name %>" readonly/>
+        </div>
+        <div class="div">
+            <input type="submit" value="Add Learner's Details">
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>1st CA Overall</th>
+                <th>Mark Obtained</th>
+                <th>2nd CA Overall</th>
+                <th>Mark Obtained</th>
+                <th>3rd CA Overall</th>
+                <th>Mark Obtained</th>
+                <th>Exam Overall</th>
+                <th>Mark Obtained</th>
+                <th>Total</th>
+                <th>Grade</th>
+                <th>Remarks</th>
+                <th>Action</th> 
+            </tr>
+        </thead>
+        <% if(exam) {%>
+        <tbody>
+           <% for (var i = 0; i < exam.length; i++) {%> 
+           
+            <form method="POST" id="myexam-<%= exam[i]._id %>" data-id=<%= exam[i]._id %>>
+                <tr>
+                    <td><input id="name" type="text" name="name" value="<%= exam[i].name %> "></td>
+                    <td><input id="overallfirstca" type="tex" name="overall_first_ca" value="<%= exam[i].overall_first_ca %>" ></td>
+                    <td><input id="markobtainedfirstca" type="tex" name="mark_obtained_first_ca" value="<%= exam[i].mark_obtained_first_ca %>"></td>
+                    <td><input id="overallsecondca" type="tex" name="overall_second_ca" value="<%= exam[i].overall_second_ca %>"></td>
+                    <td><input id="markotainedsecondca " type="tex" name="mark_otained_second_ca" value="<%= exam[i].mark_otained_second_ca %>"></td>
+                    <td><input id="overallthirdca " type="tex" name="overall_third_ca" value="<%= exam[i].overall_third_ca %>"></td>
+                    <td><input id="markotainedthirdca" type="tex" name="mark_otained_third_ca" value="<%= exam[i].mark_otained_third_ca %>"></td>
+                    <td><input id="examoverall" type="tex" name="exam_overall" value="<%= exam[i].exam_overall %>"></td>
+                    <td><input id="exammarkobtain" type="tex" name="exam_mark_obtain" value="<%= exam[i].exam_mark_obtain %>"></td>
+                    <td><input id="termtotal" type="te" name="term_total" value="<%= exam[i].term_total %>" readonly></td>
+                    <td><input id="grades" type="grade" name="grade" value="<%= exam[i].grade %>" readonly></td> 
+                    <td><input id="remark" type="text" name="remarks" value="<%= exam[i].remarks %>" readonly></td>
+                    <td class="td"><button type="submit"><i class="fas fa-save"></i></button> <a href="/result/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
+                </tr>
+            </form>
+
+            <% } %> 
+        </tbody>
+        <% } %> 
+    </table>  
+</div>
+
+<div class="vimo">
+
+  <form method="post" id="update_misc">
+    <p class="rer">Use the Learner's Details below to create Miscellaneous(Behavioural skills etc)</p>
+    <div class="student-detail">
+       
+        <div class="div_input">
+            <label for="roll_no">Roll No</label>
+            <input type="roll_no" name="roll_no"  value="<%= section.roll_no %>" readonly>
+        </div>
+        <div class="div_input">
+            <label for="student_name">Student Name</label>
+            <input type="student_name" name="student_name"  value="<%= users.first_name %> <%= users.middle_name %> <%= users.last_name %>" readonly>
+        </div>
+        <div class="div_input">
+            <label for="classofs">Class Of</label>
+            <input type="classofs" name="classofs"  value="<%= section.classof %>" readonly>
+        </div>
+        <div class="div_input">
+            <label for="term">Term</label>
+            <input type="term" name="term"  value="<%= section.name%>" readonly>
+        </div>
+        <div class="div_input">
+            <label for="_learner">Learner's ID</label>
+            <input type="_learner" name="_learner"  value="<%= users._id %>" readonly>
+        </div>
+        <div class="submits"><input type="submit" value="Create First Miscellaneous for <%= users.first_name %> <%= users.middle_name %> <%= users.last_name %> "></div>
+    </div>
+  </form>
+</div>
+
+
+<% if(misc) {%> 
+<% misc.forEach(function(mis){ %> 
+<div class="div_ahref"><a href="/result/miscellaneous-pace?id=<%= mis._id %>"> Edit <%= mis.term %> Miscellaneous for <%= mis.student_name %>  </a></div>
+<% }) %> 
+<% } %> 
+</div>
+<footer class="foot">
+  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+            function submitForm(form) {
+    var unindexed_arrayon = $(form).serializeArray();
+    var data = {};
+
+    $.map(unindexed_arrayon, function (x, i) {
+      data[x["name"]] = x["value"];
+    });
+
+    var id = $(form).attr("data-id");
+    var requests = {
+      url: `/result/update-exam/${id}`,
+      method: "POST",
+      data: data,
+    };
+
+    $.ajax(requests).done(function (response) {
+      alert("Exam Saved Successfully!");
+      location.reload();
+      console.log("Data Updated Successfully!");
+    });
+  }
+
+  $("form").each(function() {
+    $(this).submit(function(event) {
+      event.preventDefault();
+      submitForm(this);
+    });
+  }); 
+
+  
+
+  $(function() {
+  $('a.delete').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    if (confirm('Are you sure you want to delete this Exam?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Exam deleted successfully!');
+          location.reload(); // Reload the page to reflect the updated state
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Exam: ' + error);
+        }
+      });
+    }
+  });
+});
+  
+
+     $("#update_misc").submit(function (eventss) {
+   eventss.preventDefault();
+ 
+   var unindexed_array = $(this).serializeArray();
+   var data = {};
+ 
+   $.map(unindexed_array, function (n, i) {
+     data[n["name"]] = n["value"];
+   });
+ 
+   console.log(data);
+     // var id = $(form).attr("data-id");
+   var request = {
+     "url": `/result/register_miscellaneous`,
+     "method": "POST",
+     "data": data,
+     
+   };
+ 
+   $.ajax(request).done(function (response) {
+     alert("Data created Successfully!");
+     location.reload();
+     console.log("Data Updated Successfully!");
+   });
+ });
+
+ </script>
+
+
+
+
+<%- include ("./include/footer.ejs") %> 

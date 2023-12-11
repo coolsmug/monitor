@@ -1,0 +1,91 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="divide_route">
+    <a href="http://">All Classes </a>
+     <a href="http://"> Update Staff Statement</a>   
+</div>
+
+<div class="diverr">
+    <h4>Use this form to Update Staff Comments</h4>
+    <div class="form_for_create">
+    
+        <%- include ('./partials/messages') %>
+     <form method="PUT" id="edit-state">
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <input type="hidden" name="id" value="<%= staffs._id %> ">
+                        <label for="excellent"> Excellent Statement:</label>
+                        <input 
+                        type="excellent" 
+                        name="excellent" 
+                        value="<%= staffs.excellent%>" />
+                    </div>
+                    <div class="hop">
+                        <label for="very_good">Very good Statement:</label>
+                        <input type="very_good" name="very_good" value="<%= staffs.very_good %>" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="good">Good Statement:</label>
+                        <input type="good" name="good" value="<%= staffs.good %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="pass">Pass Statement:</label>
+                        <input type="pass" name="pass" value="<%= staffs.pass %>" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="poor">Poor Statement:</label>
+                        <input type="poor" name="poor" value="<%= staffs.poor %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="vpoor">Very poor Statement:</label>
+                        <input type="vpoor" name="vpoor" value="<%= staffs.vpoor %>" />
+                    </div>
+                </div>
+            </div>
+            
+             <div class="mb-3">
+                <input type="submit" value="Ok? Update">
+             </div>
+       
+     </form>
+ </div>  
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+  
+<%- include ("./include/footer.ejs") %> 
+
+<script>
+    
+    $("#edit-state").submit(function (params) {
+      params.preventDefault();
+    
+      let unindexed_arrays = $(this).serializeArray();
+      let data = {}
+    
+      $.map(unindexed_arrays, function (n, i) {
+        data[ n[ "name" ]] = n[ "value" ]
+      }); 
+      console.log(data);
+    
+      let request = {
+        "url" : `/school/update-staff-statement/${data.id}`,
+        "method" : "PUT",
+        "data" : data,
+      };
+    
+      $.ajax(request).done(function (response) {
+        alert("Session Updated Successfully!")
+        location.reload();
+        
+      });
+    });
+    </script>

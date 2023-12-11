@@ -1,0 +1,246 @@
+<%- include ("./include/header.ejs") %>
+
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="divide_route">
+    <a href="http://">All Learners </a> <a href="http://">  Add Learner</a>  
+</div>
+<div class="diverr">
+    <h4>Use this form to Update <%= user.first_name %> <%= user.last_name %>'s details </h4>
+    <div class="form_for_create">
+        <%- include ('./partials/messages') %>
+        
+         <form  method="POST" id="update_user">
+            <div class="all-single-form">
+               
+                <div class="mb-3">
+                    <div class="hop">
+                        <input type="hidden" name="id" value="<%= user._id %>">
+                        <label for="roll_no">Roll Number:</label>
+                    <input 
+                        type="number" 
+                        name="roll_no" 
+                        value="<%= user.roll_no %>">
+                    </div>
+
+                    <div class="hop">
+                        <label for="first_name">First Name:</label>
+                        <input 
+                            type="first_name" 
+                            name="first_name"  
+                            value="<%= user.first_name %>">
+                    </div>
+                        
+                </div>
+        
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="last_name">Last Name:</label>
+                        <input type="last_name" 
+                        name="last_name" 
+                        placeholder="Last Name: example family name"  
+                        value="<%= user.last_name %>">
+                    </div>
+
+                    <div class="hop">
+                        <label for="middle_name">Middle Name:</label>
+                        <input type="middle_name" 
+                        name="middle_name" 
+                        value="<%= user.middle_name %>">
+                    </div>
+                </div>
+        
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="classes">Class:</label>
+                        <input 
+                        type="classes" 
+                        name="classes"
+                        value="<%= user.classes %>">
+                    </div>
+                    <div class="hop">
+                        <label for="arm">Arm:</label>
+                        <input 
+                        type="arm" 
+                        name="arm" 
+                        value="<%= user.arm %>">
+                        
+                    </div>
+                </div>
+        
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="class-code">Class Code:</label>
+                        <input type="class_code" 
+                        name="class_code" 
+                        value="<%= user.class_code %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="email">Email:</label>
+                        <input type="email" 
+                        name="email" 
+                        onkeyup="this.value=value.toLowerCase()" 
+                        placeholder="Email: example@gmail.com" 
+                        value="<%= user.email %>" />
+                    </div>
+                </div>
+        
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="dob">Date of birth:</label>
+                        <input type="dob" name="dob" class="form-control farming" id="dating" placeholder="mm/day/year" value="<%= user.dob %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="age">Age:</label>
+                        <input type="age" 
+                        name="age" 
+                        value="<%=  user.age %>" / readonly>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="parent_number">Parent Phone No:</label>
+                        <input type="text" 
+                        name="parent_number" 
+                        value="<%= user.parent_number%>" />
+                    </div>
+
+                    <div class="hop">
+                        <label for="religion">Religion:</label>
+                        <input type="text" 
+                        name="religion" 
+                        value="<%= user.religion%>" />
+                    </div>
+                       
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="state">State:</label>
+                        <input type="text" 
+                        name="state" 
+                        value="<%= user.state%>" />
+                    </div>
+                    <div class="hop">
+                        <label for="lg">LG:</label>
+                        <input type="text" 
+                        name="lg" 
+                        value="<%= user.lg%>" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="dtes">
+                        <div class="hop">
+                            <label for="dating">Date Enrolled:</label>
+                            <input type="date_enrolled" name="date_enrolled" class="form-control" id="dating" value="<%= user.date_enrolled %>" />
+                        </div>
+                        <div class="hop">
+                            <label for="dating">Graduation Date:</label>
+                            <input type="date_ended" name="date_ended" class="form-control" id="dating" value="<%= user.date_ended %>"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="genotype">Genotype:</label>
+                        <select name="genotype" id="genotype">
+                        <option value="<%= user.genotype %>"><%= user.genotype %></option>
+                        <option value="AA">AA</option>
+                        <option value="AS">AS</option>
+                        <option value="AC">AC</option>
+                        <option value="SS">SS</option>
+                        <option value="SC">SC</option>
+                        </select>
+                    </div>
+                    <div class="hop">
+                        <label for="blood_group">Blood Group:</label>
+                        <select name="blood_group" id="blood_group">
+                        <option value="<%= user.blood_group %>"><%= user.blood_group %> </option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        </select>
+                    </div>
+                </div>
+             
+
+            </div>
+            <div class="mb-37">
+                <div class="hop">
+                    <label for="tribe">Tribe:</label>
+                    <input type="text" 
+                    name="tribe" 
+                    value="<%= user.tribe %>" />
+                </div>
+                <div class="hop">
+                    <div class="form-group">
+                        <label for="gender" class="text-light">Gender</label>
+                        <div class="radio inline">
+                            <input type="radio" id="radio-2" name="gender" value="Male" <%= user.gender=='Male' ? 'checked' : '' %>/>
+                            <label for="radio-2" class="radio-label">Male</label>
+                        </div>
+                        <div class="radio inline">
+                            <input type="radio" id="radio-3" name="gender" value="Female" <%= user.gender=='Female' ? 'checked' : '' %>>
+                            <label for="radio-3" class="radio-label">Female</label>
+                        </div>
+                    </div>
+                </div>
+               
+
+            </div>
+               
+
+               
+               
+                <div class="mb-3">
+                    <input type="submit" value="Ok? Update">
+                </div>
+                
+         
+         </form>
+        
+     </div>
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<style>
+    
+</style>
+<%- include ("./include/footer.ejs") %> 
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#update_user").submit(function (eventss) {
+  eventss.preventDefault();
+
+  var unindexed_array = $(this).serializeArray();
+  var data = {};
+
+  $.map(unindexed_array, function (n, i) {
+    data[n["name"]] = n["value"];
+  });
+
+  console.log(data);
+    // var id = $(form).attr("data-id");
+  var request = {
+    "url": `/admin/update-learner/${data.id}`,
+    "method": "POST",
+    "data": data,
+    
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Data Updated Successfully!");
+    location.reload();
+    console.log("Data Updated Successfully!");
+  });
+});
+</script>

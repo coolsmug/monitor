@@ -1,0 +1,158 @@
+<%- include ("./include/header.ejs") %>
+
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="divide_route">
+    <a href="http://"> All Learners </a> <a href="http://"> Add Learner</a> 
+     
+</div>
+<div class="diverr">
+    <h4><i class="fas fa-user-plus"></i> Add new Learner</h4>
+    <div class="form_for_create">
+    
+        <%- include ('./partials/messages') %> 
+
+        <form action="/learner/register" method="POST" id="theLearner">
+
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="roll_no">Roll No:</label>
+                        <input 
+                        type="number" 
+                        name="roll_no" 
+                        value="<%= typeof roll_no != 'undefined' ? roll_no : '' %>">
+                    </div>
+                
+                    <div class="hop">
+                        <label for="first_name">First Name:</label>
+                        <input 
+                        type="first_name" 
+                        name="first_name" 
+                        value="<%= typeof first_name != 'undefined' ? first_name : '' %>" >
+                    </div>
+
+                    <div class="hop">
+                        <label for="last_name">Famil Name:</label>
+                        <input type="last_name" name="last_name"  value="<%= typeof last_name != 'undefined' ? last_name : '' %>" >
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="classes">Class:</label> 
+                        <% if(current) {%> 
+                            <select name="classes" id="classes">
+                                <option ></option>
+                                <% for (var i = 0; i < current.length; i++) {%> 
+                                    <option value="<%= current[i].name %>"> <%= current[i].name %> of <%= current[i].arm %>-<%= current[i].class_code %></option>
+                                <% } %> 
+                            </select>
+                            <% } %> 
+                    </div>
+
+                    <div class="hop">
+                        <label for="arm">Arm:</label> 
+                        <% if(current) {%> 
+                        <select name="arm" id="arm">
+                            <option ></option>
+                            <% for (var i = 0; i < current.length; i++) {%> 
+                                <option value="<%= current[i].arm %> "><%= current[i].arm %> of <%= current[i].class_code %>-<%= current[i].name %> </option>
+                            <% } %> 
+                        </select>
+                        <% } %> 
+                    </div>
+                    
+                    <div class="hop">
+                        <label for="class_code">Class code:</label> 
+                        <% if(current) {%> 
+                        <select name="class_code" id="class_code">
+                            <option ></option>
+                            <% for (var i = 0; i < current.length; i++) {%> 
+                                <option value="<%= current[i].class_code %> "><%= current[i].class_code %> of <%= current[i].name %><%= current[i].arm %></option>
+                            <% } %> 
+                        </select>
+                        <% } %>
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="email">Email:</label>
+                        <input type="email" autocomplete="off" name="email" onkeyup="this.value=value.toLowerCase()" value="<%= typeof email != 'undefined' ? email : '' %>" />
+                    </div>
+
+                    <div class="hop">
+                        <label for="password">Password:</label>
+                        <input type="password" name="password" value="<%= typeof password != 'undefined' ? password : '' %>" />
+                    </div>
+
+                    <div class="hop">
+                        <label for="password2">Confirm Password:</label>
+                        <input type="password" name="password2" value="<%= typeof password2 != 'undefined' ? password2 : '' %>" />
+                    </div>
+        
+                </div>
+
+            </div>
+            <div class="mb-37">
+            
+                    <div class="hop">
+                        <label for="dating">Date Enrolled:</label>
+                        <input 
+                        type="date" 
+                        name="date_enrolled" 
+                        class="form-control" 
+                        id="dating" 
+                        value="<%= typeof date_enrolled != 'undefined' ? date_enrolled : '' %>" />
+                    </div>
+
+                    <div class="hop">
+                        <label for="dating">Graduation Date:</label>
+                        <input 
+                        type="date" 
+                        name="date_ended" 
+                        class="form-control" 
+                        id="dating" 
+                        value="<%= typeof date_ended != 'undefined' ? date_ended : '' %>" />
+                    </div>
+            
+                <div class="hop">
+                    <div class="form-group">
+                        <label for="gender" class="text-light">Gender:</label>
+                        <div class="radio inline">
+                            <input type="radio" id="radio-2" name="gender" value="Male"/>
+                            <label for="radio-2" class="radio-label">Male</label>
+                        </div>
+
+                        <div class="radio inline">
+                            <input type="radio" id="radio-3" name="gender"  value="Female"/>
+                            <label for="radio-3" class="radio-label">Female</label>
+                        </div>
+                    </div>
+                </div>
+
+            
+
+            </div>
+            
+
+
+            <div class="mb-3">
+            <input type="submit" value="Ok? Create learner">
+            </div>
+            
+        
+        </form>
+    
+    </div>
+
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+<%- include ("./include/footer.ejs") %> 

@@ -1,0 +1,59 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %>
+
+<div class="divide_route">
+    <a href="http://">All Subjects </a> <a href="http://"> Add Subject</a>  
+   
+</div>
+
+<div class="diverr">
+    <h4><i class="fas fa-book-open"></i> Create New Subject</h4>
+
+    <div class="form_for_create">
+
+        <%- include ('./partials/messages') %>
+   
+       <form action="/session/add_subject" method="POST" class="addStu" id="onloadAjax">
+
+        <div class="all-single-form"> 
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="number">Roll Number:</label>
+                    <input type="number" name="roll_no" value="<%= typeof roll_no != 'undefined' ? roll_no : '' %>" />
+                </div>
+                
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" value="<%= typeof name != 'undefined' ? name : '' %>"  />
+                </div>
+               
+            </div>
+                 <div class="mb-3">
+                    <div class="hop">
+                        <label for="dating">Category :</label>
+                        <select name="category" value="<%= typeof category != 'undefined' ?  category : '' %>" >
+                            <option value="select option">select option</option>
+                            <option value="All">All</option>
+                            <option value="Elective">Elective</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Senior">Senior</option>
+                    </div>
+                   
+                    </select>
+                </div>
+        </div>    
+    </div>     
+          
+    <div class="mb-3">
+        <input type="submit" value="Ok? Create">
+    </div>
+  
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+
+<%- include ("./include/footer.ejs") %> 

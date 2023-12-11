@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow&family=PT+Sans&display=swap');
+:root {
+    --deepest-blue: #355E3B; 
+    --deep-blue: #00A36C;
+    --light-blue: #46c846;
+    --lighter-blue: #7FFFD4;
+    --white: #ffffff;
+    --white_one: #f7f7f7;
+    --white_two: #e7e6e2;
+    --white_three: #e2e2e2;
+    --red: #c30010;
+    --red-1: #d1001f;
+    --red-2: #de0a26;
+    --red_:#FF0000;
+    --crimson:#DC143C;
+    --bad-red: #750000;
+    --ubuntu: 'Ubuntu', sans-serif ;
+    --ubuntu-light: 'Ubuntu light', sans-serif;
+    --ubuntu-regular: 'Ubuntu regular', sans-serif;
+    --ubuntu-bold: 'Ubuntu bold', sans-serif;
+    --ubuntu-medium: 'Ubuntu Medium', sans-serif;
+    --playfair: 'Playfair Display', sans-serif;
+    --playfair-light: 'Playfair Display Light', sans-serif;
+    --playfair-regular: 'Playfair Display Regular', sans-serif;
+    --playfair-medium: 'Playfair Display Medium', sans-serif;
+    --playfair-bold: 'Playfair Display Bold', sans-serif;
+    --montserrat: 'Montserrat', sans-serif;
+    --montserrat-light: 'Montserrat Light', sans-serif;
+    --montserrat-regular: 'Montserrat Regular', sans-serif;
+    --montserrat-bold: 'Montserrat Bold', sans-serif;
+    --montserrat-medium: 'Montserrat Medium', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    font-size: 13px;
+   
+}
+
+body::-webkit-scrollbar {
+    width: .5em;
+  }
+   
+  body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+   
+  body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--deep-blue)0% 50%, var(--deepest-blue)50% 100%);
+    outline: 1px solid slategrey;
+    border-radius: 35px;
+  }
+
+.body {
+    width: 1100px;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    font-family: var(--ubuntu-medium);
+    color: var(--white);
+    background: repeating-radial-gradient(circle, var(--lighter-blue)10px, var(--light-blue)10px
+    , var(--lighter-blue)20px, var(--light-blue)20px), repeating-linear-gradient(45deg, var(--lighter-blue)10px, var(--light-blue)10px
+    , var(--lighter-blue)20px, var(--light-blue)20px) ;
+    background-size: 50px 100px;
+   }
+
+
+.sidebar {
+    width: 15%;
+    min-height: 100%;
+    background: linear-gradient(45deg, var(--deepest-blue)0% 50%,
+    var(--light-blue)50% 70%, var(--lighter-blue)70% 100%);
+    text-align: center;
+    line-height: 30px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 50px;
+   
+}
+
+.sidebar p:not(.the) {
+   
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.student-name {
+    color: var(--deep-blue);
+    letter-spacing: 2px;
+}
+.class, .age {
+    color: var(--deepest-blue);
+    letter-spacing: 2px;
+}
+.student-image {
+    width: 80px;
+    height: 80px;
+    margin: auto;
+    border: 4px solid var(--deep-blue);
+    outline: 2px solid royalblue;
+    overflow: hidden;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    box-shadow: 2px 2px 5px rgb(0, 0, 0);
+
+}
+.headers {
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+.student-image img {
+    width: 100px;
+    height: 100px;
+   
+}
+
+#school-logo {
+    width: 130px;
+    position: relative;
+    left: 87%;
+    top: -78%;
+}
+
+#school-logo img {
+    width: 120px;
+    height: 120px;
+}
+
+
+.apart-from-side-bar {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    gap: 20px; 
+}
+
+.the-school-name {
+    font-family: var(--montserrat-bold);
+    font-weight: bolder;
+    font-size: 25px;
+    color: var(--lighter-blue);
+}
+.apart-from-side-bar .header {
+    background: var(--deepest-blue);
+    width: 100%;
+    line-height: 5px;
+    height: 130px; 
+    word-spacing: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.secondpost {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    margin: auto;
+    gap: 20px;
+    margin-top: 15px;
+   
+}
+
+.school-email, .school-web, .school-add{
+    text-align: justify;
+    color: var(--lighter-blue);
+}
+
+.headers_p {
+    color: var(--lighter-blue); 
+    letter-spacing: 3px;
+}
+
+.tables {
+    width: 100%;
+}
+
+.tboby thead tr {
+    background: linear-gradient(125deg,
+    var(--deepest-blue)0% 50%, var(--deep-blue)50% 100%);
+    
+}
+
+.tboby {
+    border-collapse: collapse;
+    margin-top: 5px;
+    width: 100%;
+    height: 450px;
+}
+
+.tboby tbody tr:nth-child(even){
+    background: var(--white_two);
+    color: var(--deepest-blue);
+}
+
+.tboby tbody tr:nth-child(odd){
+    background: var(--white);
+    color: var(--deepest-blue);
+}
+
+.tboby th, td{
+    padding-right: 0;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+}
+
+.tboby td {
+     font-size: 14px;
+}
+
+.table2 {
+    border-collapse: collapse;  
+    border:none;
+}
+
+
+.behavioural-assessment .table2 tr:nth-child(odd) {
+    background-color: var(--lighter-blue);
+}
+
+.behavioural-assessment td, .behavioural-assessment th {
+    color: var(--deepest-blue);
+}
+
+.behavioural-assessment .table2 tr:nth-child(even) {
+    background-color: var(--white_one);
+}
+
+.payable-fees table {
+    font-size: 11.5px;
+    background: radial-gradient(circle, var(--white_one), var(--lighter-blue));
+    color: var(--deepest-blue);
+
+}
+
+.behavioural-assessment td {
+    padding-left: 5px;
+    padding-right: 17px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.behavioural-assessment .table2 thead th:not(.bbb){
+    text-align: justify;
+}
+
+.behavioural-assessment th {
+    padding-left: 5px;
+    padding-right: 17px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.payable-fees table tr:nth-child(even) {
+    background-color: var(--white);
+}
+
+.payable-fees table tbody tr td:first-child{
+    font-weight: bolder;
+}
+
+.payable-fees td {
+    padding-left: 5px;
+    padding-right: 17px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.flex-comment {
+    background: radial-gradient(circle, var(--white_one), var(--lighter-blue));
+    margin: auto;
+    margin-top: 10px;
+    color: var(--deepest-blue);
+    border-bottom: 1px solid var(--light-blue); 
+}
+
+.flex-comment table tr td {
+    padding-left: 5px;
+    padding-right: 17px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.flex-comment table tbody tr td:first-child{
+    font-weight: bolder;
+}
+
+.flex-comment tr:nth-child(even) {
+    background-color: var(--white);
+    
+}
+
+.click {
+    margin: auto;
+    display:flex;
+    flex-direction: row;
+    margin-top:20px;
+    padding: 5px 11px; 
+    margin-left: 5px;
+    gap: 10px;
+
+}
+
+.click button {
+    outline: none;
+    border: none;
+    background-color: var(--deep-blue);
+    color: var(--white);
+    padding: 5px 11px; 
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.click button i {
+    font-size: 20px;
+    color: var(--lighter-blue);
+    transition: all .3s ease;
+    
+}
+
+.click button:hover {
+   background-color: #46c846;
+   letter-spacing: 6px;
+  
+}
+
+.click button:hover i{
+   margin-left: -4px;
+ }
+
+.omomi {
+    padding-right: 17px;
+}
+
+

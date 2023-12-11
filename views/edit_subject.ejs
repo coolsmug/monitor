@@ -1,0 +1,84 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %>
+<div class="divide_route">
+    <a href="http://">All Subject </a> <a href="http://"> Update Subject</a>    
+   
+</div>
+
+<div class="diverr">
+    <h4>Update <%= subject.name %>  Subject</h4>
+
+    <div class="form_for_create">
+
+        <%- include ('./partials/messages') %>
+   
+       <form  method="PUT" id="edit-subject">
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <input type="hidden" name="id" value="<%= subject._id %>">
+                    <div class="hop">
+                        <label for="roll_no">Roll Number:</label>
+                        <input type="number" name="roll_no"value="<%= subject.roll_no %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="name">Name:</label>
+                        <input type="text" name="name" value="<%= subject.name %>"  />
+                    </div>
+                    
+                </div>
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="dating">Category :</label>
+                        <select name="category" value="<%= subject.category %>" >
+                        <option value="<%= subject.category %>"><%= subject.category %></option>
+                        <option value="All">All</option>
+                        <option value="Elective">Elective</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Senior">Senior</option>
+                        </select>
+                    </div>
+                  
+                </div>
+            </div>
+           
+          
+           <div class="mb-3">
+              <input type="submit" value="Ok? Update">
+           </div>
+       </form>
+   </div>
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+<%- include ("./include/footer.ejs") %> 
+
+
+<script>
+    
+    $("#edit-subject").submit(function (params) {
+      params.preventDefault();
+    
+      let unindexed_arrays = $(this).serializeArray();
+      let data = {}
+    
+      $.map(unindexed_arrays, function (n, i) {
+        data[ n[ "name" ]] = n[ "value" ]
+      }); 
+      console.log(data);
+    
+      let request = {
+        "url" : `/admin/update-subject/${data.id}`,
+        "method" : "PUT",
+        "data" : data,
+      };
+    
+      $.ajax(request).done(function (response) {
+        alert("Session Updated Successfully!")
+        location.reload();
+        
+      });
+    });
+   
+</script>

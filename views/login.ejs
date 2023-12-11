@@ -1,0 +1,203 @@
+<%- include ('./include/header.ejs') %> 
+<%- include ('./partials/messages') %>
+<div class="all_contents_in_login">
+   
+        <img class="logo-mon" src="/img/monitor.png" alt="" width="200">
+        <div class="mon_n"><img src="/img/monitor_logo.png" alt="" width="200"></div>    
+   
+   
+    <div class="first-div-log">
+        <div class="login_header">
+            <h1>Welcome! to the Future</h1>
+            <h2>The most reliable E-Result and School Management</h2>
+            <h1>The Monitor</h1>
+            <h5> Powered by YiOL Tech <i class="fas fa-copyright"> </i> 2022 </h5>
+        </div>
+        <div class="div-svg"><img src="/img/Omth.png" alt=""></div>
+       
+    </div>
+   
+
+    <div class="second-div-log">
+        <div class="img-image"> <img src="/img/-coffee.png" alt="" width="200"></div>
+        <div class="forms">
+        
+            <div class="di-log-in"> 
+                <h1>Logins <i class="fas fa-exclamation"></i></h1>
+            </div>
+            <div class="staff_log">
+                    <h1 class="list_ones">Are you a Staff ?</h1>
+                <div class="hide_form">
+                    <form action="/school/staff_login" method="POST" class="hideit">
+                        <div>
+                           
+                            <input type="text" name="email" placeholder="Enter Email">
+                        </div>
+                        <div>
+                            
+                            <input type="password" name="password" placeholder="Enter Password">
+                        </div>
+                        <div>
+                            <input type="submit" value="Login">
+                        </div>    
+                    </form>
+                </div>
+            </div>
+       
+            <div class="admin_log">
+                    <h1 class="list_ones">Are you an Admin ?</h1>
+                <div class="hide_form">
+                    <form action="/admin/admin_login" method="POST" class="hideit">
+                        <div>
+                           
+                            <input type="text" name="email" placeholder="Enter Email">
+                        </div>
+                        <div>
+                            
+                            <input type="password" name="password" placeholder="Enter Password">
+                        </div>
+                        <div>
+                            <input type="submit" value="Login">
+                        </div>
+                     </form>
+                </div>
+            </div>
+        
+            <div class="parent_log">
+                    <h1 class="list_ones"> Are you a Parent or Learner ?</h1>
+                <div class="hide_form">
+                    <form action="/learner/login" method="POST" class="hideit">
+                        <div>
+                           
+                            <input type="text" name="email" placeholder="Enter Email">
+                        </div>
+                        <div>
+                            
+                            <input type="password" name="password" placeholder="Enter Password">
+                        </div>
+                        <div>
+                            <input type="submit" value="Login">
+                        </div>
+                    </form>
+                </div>
+            </div>
+          
+        </div>
+    </div>
+   
+
+   
+
+    <!-- <div class="formings">
+        <div class="square" style="--i:0;"></div>
+        <div class="square" style="--i:1;"></div>
+        <div class="square" style="--i:2;"></div>
+        <div class="square" style="--i:3;"></div>
+        <div class="square" style="--i:4;"></div> 
+    </div> -->
+
+   
+
+  
+  
+</div>
+
+
+
+
+  
+  
+  
+  
+
+   
+
+<%- include ('./include/footer.ejs') %> 
+
+<script>
+//     let open = document.getElementsByClassName("list_ones");
+
+// let i;
+
+// for(i = 0; i < open.length; i++) {
+//     open[i].onclick = function() {
+//         this.classList.toggle("actives");
+//         let hideit = this.nextElementSibling;
+//         if(hideit.style.maxHeight) {
+//             hideit.style.maxHeight = null;
+//             hideit.style.opacity = '0'
+//        }else {
+//             hideit.style.maxHeight = hideit.scrollHeight + "px";
+//             hideit.style.opacity = '1'
+//         }
+//     }    
+// }
+
+// let open = document.getElementsByClassName("list_ones");
+
+// let i;
+
+// for(i = 0; i < open.length; i++) {
+//     open[i].onclick = function() {
+//         // Toggle the "actives" class on the clicked element
+//         this.classList.toggle("actives");
+        
+//         // Find the next sibling element
+//         let hideit = this.nextElementSibling;
+        
+//         // Loop through all elements with the "list_ones" class
+//         for (let j = 0; j < open.length; j++) {
+//             // Check if the current element has maxHeight set
+//             if (open[j].nextElementSibling.style.maxHeight) {
+//                 // If so, unset it
+//                 open[j].nextElementSibling.style.maxHeight = null;
+//                 open[j].nextElementSibling.style.opacity = '0';
+//             }
+//         }
+        
+//         // Set the maxHeight of the clicked element's next sibling
+//         if (hideit.style.maxHeight) {
+//             hideit.style.maxHeight = null;
+//             hideit.style.opacity = '0';
+//         } else {
+//             hideit.style.maxHeight = hideit.scrollHeight + "px";
+//             hideit.style.opacity = '1';
+//         }
+//     }    
+// }
+let opens = document.getElementsByClassName("list_ones");
+
+let lastClicked = null;
+
+for(let i = 0; i < opens.length; i++) {
+    opens[i].onclick = function() {
+        // Toggle the "actives" class on the clicked element
+        this.classList.toggle("actives");
+
+        // Find the next sibling element
+        let hideit = this.nextElementSibling;
+
+        // Close the last clicked element if it exists and is not the current element
+        if (lastClicked && lastClicked !== this) {
+            lastClicked.nextElementSibling.style.maxHeight = null;
+            lastClicked.nextElementSibling.style.opacity = '0';
+            lastClicked.classList.remove("actives");
+        }
+
+        // Set the maxHeight of the clicked element's next sibling
+        if (hideit.style.maxHeight) {
+            hideit.style.maxHeight = null;
+            hideit.style.opacity = '0';
+        } else {
+            hideit.style.maxHeight = hideit.scrollHeight + "px";
+            hideit.style.opacity = '1';
+        }
+
+        // Set the last clicked element to the current element
+        lastClicked = this;
+    }
+}
+
+
+</script>
+

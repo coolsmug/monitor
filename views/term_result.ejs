@@ -1,0 +1,369 @@
+<%- include ("./include/_newHeader.ejs") %> 
+<div id="divid">
+    <div>
+
+    
+    <div class="body" id="htmlToimage">
+        
+        <div class="sidebar">
+            
+            <div class="student-image" >
+                <% if(!users.img) {%> 
+                    <img src="/img/monitor_user_image.jpg">
+               <% } else if(users.img.contentType){%> 
+                    <img src="data:user/<%= users.img.contentType %>;base64,<%= users.img.data.toString('base64') %>">
+                   <% } %> 
+            </div>
+           
+            <div class="student-name">
+                <p class="fullname"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>  </p>
+            </div>
+    
+            <div class="age">
+                <p class="student-age">Student Age:</p>
+                <p class="the"><%= users.age %> </p>
+            </div>
+    
+            <div class="class">
+                <p class="student-class">Student Class:</p>
+                
+                <p class="the"><%= users.classes %>/ <%= users.arm %> </p>
+                
+            </div>
+    
+            <div class="addmission-no">
+                <p class="addmin-no">Addmision No:</p>
+                <p class="the"><%= users.roll_no %> </p>
+            </div>
+            <% if(session) {%>
+            <div class="session-section">
+               
+                <p class="sess-sect">Session | Section:</p>
+                <p class="the"> <%= session.classof %>  | <%= section.name %> </p>
+
+            </div>
+            <% } %>
+           
+    
+            <div class="date-issue">
+                <p class="the-dates">Date Issue:</p>
+                <% if(users) {%> 
+                    <% let x = new Date() %> 
+                    <% let y = x.toDateString() %> 
+                <p class="the"> <%= y %> </p>
+                <% } %> 
+            </div>
+    
+            <div class="Result-serials">
+                <p class="sess-sect">Result Serial No:</p>
+                <% if(section)  {%>
+                <p class="the"><%= section.roll_no %> </p>
+                <% } %>
+            </div>
+    
+            <div class="TERMS">
+                <p class="the">This Result is issued by and remained the Property of the Issuer</p>
+            </div>
+    
+            <div class="qrcode">
+                <p>Verify Result Using QR Code</p>
+            </div>
+    
+        </div>
+         
+        <div class="apart-from-side-bar">
+            <div class="header" >
+                <% if(user) {%>
+                <div class="school-name">
+                    <p class="the-school-name"><%= user.school_name %></p>
+                </div>
+            
+                <div class="address">
+                    <p class="school-add"><i class="fas fa-map-marker-alt"></i> <%= user.address %> </p>  <p class="school-add"><i class="fas fa-map-marker-alt"></i> <%= user.address2 %> </p>
+                    <p class="school-web"><i class="fas fa-phone"></i> Mobile Phone: <%= user.phone_no %>. <i class="fas fa-mobile"></i> Mobile Phone: <%= user.phone_no2 %> </p> 
+                        <p class="school-email" style="color: yellow; text-shadow: 2px 2px 2px black;"><i class="fas fa-envelope-open-text"></i> Email: <%= user.email %>    |   <i class="fas fa-atlas"></i> Website: <%= user.website %></p>
+                      
+                
+                </div>
+                <div id="school-logo">
+                    <% if(!user.img) {%>
+                        <img src="/img/school_logo-01.png"> 
+                   <% } else if(user.img.contentType){%> 
+                        <img src="data:user/<%= user.img.contentType %>;base64,<%= user.img.data.toString('base64') %>">
+                       <% } %> 
+                </div>
+                <% } %>
+            </div>
+            
+            
+            
+           
+            <div class="tables" >
+                
+                <table class="tboby">
+                   
+                    <thead> 
+                        <tr>
+                            <th colspan="3"></th>
+                            <th colspan="6"><p class="headers_p">Continuous Assessment</p></th>
+                            <% if(section) {%>
+                            <th colspan="4"> <p class="headers_p">Academic Report for <%= section.name %> </p></th>
+                            <% } %>
+                        </tr>
+                        <tr> 
+                            <th>SUBJECTS</th>
+                            <th class="trans">Over all</th>
+                            <th class="trans">1st CA</th>
+                            <th class="trans">Over all</th>
+                            <th class="trans">2nd CA</th>
+                            <th class="trans">Over all</th>
+                            <th class="trans">3rd CA</th>
+                            <th class="trans">Over all</th>
+                            <th>Exam</th>
+                            <th>Total</th>
+                            <th>Grade</th>
+                            <th>Remarks</th>  
+                        </tr>
+                   </thead>
+                   <tbody>
+                    <% if(exam) {%> 
+                    <% for (var i = 0; i < exam.length; i++) {%> 
+                        <tr> 
+                            <td class="ro"><%=exam[i].name %> </td>
+                            <td><%=exam[i].overall_first_ca %></td>
+                            <td><%= exam[i].mark_obtained_first_ca %> </td >
+                            <td><%=exam[i].overall_second_ca %></td>
+                            <td><%= exam[i].mark_otained_second_ca %></td>
+                            <td><%=exam[i].overall_third_ca %></td>
+                            <td><%= exam[i].mark_otained_third_ca %></td>
+                            <td><%=exam[i].exam_overall %></td>
+                            <td><%= exam[i].exam_mark_obtain %></td>
+                            <td><%= exam[i].term_total %></td>
+                            <td><%= exam[i].grade %></td>
+                            <td class="ro"><%= exam[i].remarks%></td>
+                        </tr>
+                        <% } %> 
+                        <% } %> 
+                        <tr> 
+                            <td>TOTAL</td>
+                            
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="6"></td>
+                        </tr>
+                    </tbody>
+                    
+                    
+                </table>
+            </div>
+          
+          
+           <div class="secondpost" >
+             
+                <div class="behavioural-assessment">  
+    
+                    <table border="1" class="table2">
+                      
+                        <thead>
+                            <tr><th colspan="7" class="bbb">Behavioural Assessment $ Skills</th></tr>
+                            <tr>
+                                <th>BEHAVIOUR</th>
+                                <th>Grade</th> 
+                                <th>BEHAVIOUR</th>
+                                <th>Grade</th>
+                                <th>SKILLS</th>
+                                <th>Grade</th>  
+                           </tr>  
+                        </thead>
+                       
+                        <tbody>
+                            <% if( misc  ) {%> 
+                            <tr>
+                                <td>Punctuality</td>
+                                <td><%= misc.pun %> </td>
+                                <td>Spirit of Co-operation</td>
+                                <td><%= misc.spirit_o_co %></td> 
+                                <td>Hand Writing</td>
+                                <td><%= misc.h_w %></td> 
+                            </tr>
+                            <tr>
+                                <td>Attendance in Class</td>
+                                <td><%= misc.att_in_cl %> </td>
+                                <td>Sense of Responsibility</td>
+                                <td><%= misc.sense_o_r %></td> 
+                                <td>Musical Skill</td>
+                                <td><%= misc.m_s %></td> 
+                            </tr>
+                            <tr>
+                                <td>Neatness</td>
+                                <td><%= misc.neat %> </td>
+                                <td>Attentiveness</td>
+                                <td><%= misc.attent %></td> 
+                                <td>Sport</td>
+                                <td><%= misc.sport %></td> 
+                            </tr>
+                            <tr>
+                                <td>Politeness</td>
+                                <td><%= misc.pol %></td>
+                                <td>Honesty</td>
+                                <td><%= misc.honesty %></td> 
+                                <td>Crafts</td>
+                                <td><%= misc.craft %></td> 
+                            </tr>
+                            <tr>
+                                <td>Relationship with Staffs</td>
+                                <td><%= misc.r_w_s %></td>
+                                <td>Initiatives</td>
+                                <td><%= misc.iniatives %></td> 
+                                <td>Handling of Tools</td>
+                                <td><%= misc.h_o_t %></td> 
+                            </tr>
+                            <tr>
+                                <td>Relationship with Learners</td>
+                                <td><%= misc.r_w_l %></td>
+                                <td>Perseverance</td>
+                                <td><%= misc.per %></td> 
+                                <td>Drawing & Painting</td>
+                                <td><%= misc.d_and_p %></td> 
+                            </tr>
+                            <% } %> 
+                        </tbody>
+                       
+                       
+                    </table>  
+                </div> 
+                
+               
+                <div class="payable-fees">
+                    <table>
+                        <thead>
+                            <tr><th colspan="2">Fees, Debt And Attendance</th></tr>
+                        </thead>
+                        
+                        <tbody>
+                            <% if(misc) {%> 
+                            <tr><td>Next Time Fees</td><td class="opting"><%= misc.next_t_fee %></td></tr>
+                            <tr><td>Payable on or Before</td><td class="opting"><%= misc.payable %></td></tr>
+                            <tr><td>Debt on Ground</td><td class="opting"><%= misc.debt %></td></tr>
+                            <tr><td>No. of time School opened</td><td class="opting"><%= misc.no_of_t_s_opened %></td></tr>
+                            <tr><td>Total Attendance</td><td class="opting"><%= misc.total_att %></td></tr>
+                            <tr><td>% Attendance</td><td class="opting"><%= misc.per_att %></td></tr>
+                            <% } %> 
+                        </tbody>
+                    </table>
+                </div>
+                
+            
+            
+               
+            
+            </div>
+           
+            <div class="flex-comment">
+                <% if(misc) {%>
+               <table>
+                <tr><td>Teacher's Comment</td><td class="com"><%= misc.t_c %></td></tr>
+                <tr><td>Teacher's Name</td><td class="com"><%= misc.t_n %></td></tr>
+                <tr><td>Signature</td><td class="com"></td></tr>
+                <tr><td>Head Teacher's Comment</td><td class="com"><%= misc.h_t_c %></td></tr>
+                <tr><td>Signature</td><td class="com"></td></tr>
+               </table>
+               <% } %> 
+            </div>    
+            
+    
+        </div>
+    
+       
+    </div>
+</div>
+</div>
+
+<div class="click">
+     <button id="downloader" class="clickbtn">
+        <i class="fas fa-camera-retro"></i> 
+        Snap
+    </button> 
+    <button class="clickbtn" onclick='printDiv()'>
+        <i class="fas fa-print"></i> 
+        Print
+    </button>
+</div>
+
+
+
+
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+<%- include ("./include/footer.ejs") %> 
+
+<script>
+
+const printDiv = async ()=>{
+    try {
+        let schooLogo = document.querySelector(".body");
+       if( schooLogo.style.margin = "0px") {
+            schooLogo.style.margin = "auto"
+       }
+        var printContents = document.getElementById('divid').innerHTML
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+       await window.print();
+    } catch (error) {
+        console.error(error.message)
+    }
+
+ document.body.innerHTML = originalContents;  
+   
+$(document).ready(function() {
+
+$("#downloader").click(function() {
+  let schooLogo = document.querySelector(".body");
+  if( schooLogo.style.margin = "auto") {
+      schooLogo.style.margin = "0px"
+  }
+    var domNode = document.getElementById('htmlToimage');
+    domtoimage.toPng(domNode, {quality: 1}).then(function (dataUrl) {
+var link = document.createElement('a');
+link.download = 'monitor_E-result.jpeg';
+link.href = dataUrl;
+link.click();
+
+}).catch((err) => {
+if(err) console.log( err)
+})
+
+})
+})
+}
+
+   
+$(document).ready(function() {
+
+$("#downloader").click(function() {
+  let schooLogo = document.querySelector(".body");
+  if( schooLogo.style.margin = "auto") {
+      schooLogo.style.margin = "0px"
+  }
+    var domNode = document.getElementById('htmlToimage');
+    domtoimage.toPng(domNode, {quality: 1}).then(function (dataUrl) {
+var link = document.createElement('a');
+link.download = 'monitor_E-result.jpeg';
+link.href = dataUrl;
+link.click();
+
+}).catch((err) => {
+if(err) console.log( err)
+})
+
+})
+})
+</script>
+

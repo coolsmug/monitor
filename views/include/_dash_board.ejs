@@ -1,0 +1,198 @@
+
+<div class="p_head"><img src="/img/monitor.png" width="100"></div>
+<div class="ul-one" id="big-door">
+ 
+    <div class="div-timess"><i class="fas fa-times" id="tii"></i></div>
+    <ul>
+       
+        <li class="logOUT"><form action="/admin/logout" method="POST" class="logoutss">
+            <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i></button>
+        </form></li>
+        <p>Check result <i class="fas fa-hand-point-right"></i></p>
+        <li><button  class="btn btn-open">1st & 2nd Term</button></li>
+        <li><button  class="btn btn-opens">3rd Term</button></li>
+    </ul>
+  
+</div>
+<div class="div-bar divmenuHide"> <i class="shii fas fa-bars" id="shii"></i></div>
+
+
+
+
+<input type="checkbox" id="check">
+<label for="check" id="label">
+    <span class="material" id="menu">
+        <i class="fas fa-bars"></i>
+    </span>
+    <span class="material" id="cancel">
+       <i class="fas fa-times"></i>
+    </span>
+</label>
+
+<div class="modality">
+    <section class="modal hidden">
+      
+        <div class="flex">
+            <h1>First-Term & Second-Term</h1>
+            <button class="btn-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div> 
+            <form action="/result/check_result" method="GET">
+            <div class="inputss">
+                <label for="">Term:</label>
+                    <select name="name" id="name" required>
+                        <option value="First-Term">First-Term</option>
+                        <option value="Second-Term">Second-Term</option>
+                    </select>
+            </div>
+            <div class="inputss">
+                <label for="">Learner ID:</label>
+                <input type="text" name="_learner" value="" required>
+            </div>
+            <div class="inputss">
+                <label for="">Roll_No:</label>
+                <input type="text" name="roll_no" value="" required>
+            </div>
+            <div class="inputss">
+                <label for="">Class Of:</label>
+                <input type="text" name="classof" value="" required>
+            </div>
+            <div class="inputss">
+                <label for="">Enter Pin:</label>
+                <input type="text" name="code" value="">
+            </div>
+            <button class="btns">Fetch Result</button>
+
+            </form>
+        
+        </div>
+   
+    </section>
+    <div class="overlay hidden"></div>
+</div>
+
+
+
+<div class="modality">
+    <section class="modals hiddens">
+       
+      
+        <div> 
+            <div class="flexs">
+                <h1>Third-Term</h1>
+                <button class="btn-closes"><i class="fas fa-times"></i></button>
+            </div>
+            <form action="/third_term_exam/check_result" method="GET">
+            <div class="inputss">
+                <label for="">Term:</label>
+                <select name="name" id="name" required>
+                    <option value="Third-Term">Third-Term</option>
+                </select>
+            </div>
+            <div class="inputss">
+                <label for="">Learner ID:</label>
+                <input type="text" name="_learner" value="" required>
+            </div>
+            <div class="inputss">
+                <label for="">Roll_No:</label>
+                <input type="text" name="roll_no" value="" required>
+            </div>
+            <div class="inputss">
+                <label for="">Class Of:</label>
+                <input type="text" name="classof" value="" required>
+            </div>
+            <div class="inputss">
+                <label for="">Enter Pin:</label>
+                <input type="text" name="code" value="">
+            </div>
+            <button class="btns">Fetch Result</button>
+
+            </form>
+        
+        </div>
+   
+    </section>
+    <div class="overlays hiddens"></div>
+</div>
+
+<div class="side_bar">
+    <p><i class="fas fa-user-shield"></i> Admin Bar</p>
+    <div class="one">
+        <li class="list_two"><a href="/admin/admin_dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+    </div>
+    <div class="one">
+        <li class="list_one"><i class="fas fa-hourglass-start"></i> </i> Session & Section <i class="fas fa-puzzle-piece"></i> </li>
+        <div class="hidee">
+            <li>- <a href="/admin/create-session"> Create Session</a></li>
+            <li>- <a href="/admin/all-session/1"> Manage Session</a></li>
+            <li>- <a href="/admin/create-section"> Create Section</a></li>
+            <li>- <a href="/admin/all-section/1"> Manage Section</a></li>
+            <li>- <a href="/admin/all-thirdsection/1"> Manage 3rd Section</a></li>
+        </div>
+    </div>
+    <div class="one">
+        <li class="list_one"><i class="fas fa-home"></i> School </li>
+         <div class="hidee">
+            <li>-<a href="/school/school_management"> Create Proprietor Statement</a></li>
+            <li>-<a href="/school/create-staff"> Create staffs</a></li>
+            <li>-<a href="/school/create-staff-statement"> Create staffs Statement</a></li>
+            <li>-<a href="/school/school-detail"> School Details</a></li>
+            <li>-<a href="/school/manage_all"> Manage Proprietor, staffs and others</a></li>
+            <li>-<a href="/admin/create-currentclass"> Create Current Class</a></li>
+            <li>-<a href="/admin/all-currentclass/1"> Manage Current Class</a></li>
+        </div>
+    </div>
+    <div class="one">
+        <li class="list_one"><i class="fas fa-user-friends"></i> Student </li>
+         <div class="hidee">
+             <li>-<a href="/admin/create-learner"> Create Student</a></li>
+            <li>-<a href="/admin/all-learner/1"> Manage Students</a></li>
+        </div>
+    </div>
+   
+     <div class="one">
+        <li class="list_one"><i class="fas fa-ticket-alt"></i> Voucher & Subject <i class="fas fa-book"></i> </li>
+         <div class="hidee">
+            <li>-<a href="/admin/voucher-payment"> <i class="fas fa-cash-register"></i> Make Payment </a></li>
+            <li>-<a href="/admin/get-gen-voucher/1"> <i class="fas fa-ticket-alt"></i> Generate Voucher</a></li>
+            <li>-<a href="/admin/create-subject"> Create Sublect</a></li>
+            <li>-<a href="/admin/all-subject/1"> Manage Subjects</a></li>
+        </div>
+    </div>
+    <div class="one">
+        <li class="list_one"><i class="fas fa-chart-line"></i> Reports </li>
+         <div class="hidee">
+            <li>-<a href="/reports/learners"> Learners Report</a></li>
+            <li>-<a href="/reports/alumni/1"> Past Learners</a></li>
+            <li>-<a href="#"> Visitors</a></li>
+        </div>
+    </div>
+</div>
+
+
+
+<script> 
+    let closes = document.getElementById("tii");
+    let openn = document.getElementById("shii")
+    let thedoor = document.getElementById("big-door")
+  
+    function closIts() {
+      closes.onclick = ()=> {
+          thedoor.style.left = '-1000px'
+          thedoor.style.transition = 'all .7s ease-in-out'
+          thedoor.style.opacity = "0"
+         
+      }
+    }
+    closIts()
+  
+    function openIt() {
+      openn.onclick = ()=> {
+          thedoor.style.left = '0px'
+          thedoor.style.transition = 'all .7s ease-in-out'
+          thedoor.style.opacity = "1"
+      }
+    }
+    openIt()
+  
+</script>

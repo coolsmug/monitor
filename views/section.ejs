@@ -1,0 +1,103 @@
+<%- include ('./include/header.ejs') %> 
+
+<div class="middle_sweet">
+    <div class="div_header_two">
+
+    </div>
+    <div class="div_header">
+        <div class="img-div">
+            <img src="/img/monitor.png" alt="">
+        </div>
+      
+    </div>
+  
+
+        <div class="cover_of_div">
+       
+            <div class="div_one_of_three twothree">
+                <% if(!session.date_started) {%> 
+                    <% let date = session.date_started %>  
+                    <% }%> 
+                    <% if(session.date_started) {%> 
+                        <% let date = session.date_started.toDateString() %> 
+                       
+                <p  class="p_of_p">School's Section of <%= session.name %> <%= date %>  </p>
+                <% } %> 
+                <P  class="p_of_p"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %> </P>
+                <P class="p_of_p">With Roll Number <%= users.roll_no %> <%= classed.name %> </P> 
+              
+        
+                    <div class="form-for-report">
+                        <% for (var i = 0; i < section.length ; i++) {%> 
+                    
+                            <div class="div_divol">
+                                <a href="/result/exam-pace?id=<%= section[i]._id %>&name=<%= section[i].name %>&roll_no=<%=section[i].roll_no %>&id=<%= users._id %>&id=<%= classed._id %>&id=<%= session._id %>&classof=<%= session.classof %> ">
+                                    <div class="avi">
+                                       <p> <%= section[i].roll_no %> </p> 
+                                      
+                                    </div>
+                        
+                                    <div class="ddiv">
+                                       <p><%= section[i].name %> </p>
+                                    </div>
+                                </a>
+                                <div class="match">
+                                    <%= section[i].classof %>
+                                </div>
+                            </div>
+                            
+                            <% } %> 
+                            <% for (var a = 0; a < third.length ; a++) {%> 
+                    
+                                <div class="div_divol">
+                                    <a href="/third_term_exam/exam-pace-third?id=<%= third[a]._id %>&name=<%= third[a].name %>&roll_no=<%= third[a].roll_no %>&id=<%= users._id %>&id=<%= classed._id %>&id=<%= session._id %>&classof=<%= session.classof %>">
+                                        <div class="avi">
+                                           <p>  <%= third[a].roll_no %> </p> 
+                                          
+                                        </div>
+                            
+                                        <div class="ddiv">
+                                           <p><%= third[a].name %></p>
+                                        </div>
+                                    </a>
+                                    <div class="match">
+                                        <%= third[a].classof %>
+                                    </div>
+                                </div>
+                                
+                                <% } %> 
+               
+    
+                    </div>
+
+            
+    
+    
+            </div>
+</div>
+
+<style>
+    .ddiv{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 2px;
+        width: 120px;
+        top: 10px;
+        font-size: 14px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ddiv p {
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+<%- include ('./include/footer.ejs') %> 

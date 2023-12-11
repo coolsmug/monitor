@@ -1,0 +1,242 @@
+<%- include ("./include/result_header.ejs") %>
+
+<div class="all_in_one">
+    <header>
+      
+        <img src="/img/monitor-01.png" alt="">
+  
+      </header>
+    <div class="diver">
+        <h2>Learners Record Section</h2>
+    </div>
+    
+    
+    <div class="cover_table">
+        <div class="student-image">
+            <% if(users.img.contentType) {%> 
+                <img src="data:user/<%= users.img.contentType %>;base64,<%= users.img.data.toString('base64') %>" alt="" >
+           <% } else {%> 
+               <img src="/img/monitor_user_image.jpg" alt="" >
+               <% } %> 
+        </div>
+       <p><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= sections.name %> Result Arrangement - <%= sections.classof %> Session of <%= sessions.name %></p> 
+        <form  method="POST" id="myblessing">
+          
+            <div class="input">
+                <% if(subjects) {%> 
+               <select name="name" id="name">
+                <option value="select subject">Select subject</option>
+                <% for (var i = 0; i < subjects.length; i++) {%> 
+                <option value="<%= subjects[i].name %> "><%= subjects[i].name %></option>
+                <% } %> 
+               </select>
+               <% } %> 
+            </div>
+    
+            <div class="input">
+                <input type="_learner" name="_learner"  value="<%= users._id %>" readonly/>
+            </div>
+            <div class="input">
+                <input type="roll_no" name="roll_no"  value="<%= sections.roll_no %>" readonly/>
+            </div>
+            <div class="input">
+                <input type="student_name" name="student_name"  value="<%= users.first_name %> <%= users.last_name %>" readonly/>
+            </div>
+            <div class="input">
+                <input type="classofs" name="classofs"  value="<%= sessions.classof %>" readonly/>
+            </div>
+            <div class="input">
+                <input type="term" name="term"  value="<%= sections.name %>" readonly/>
+            </div>
+            <div class="input">
+                <input type="total_over_all" name="total_over_all" placeholder="total overall" value="<%= typeof  total_over_all != "undefined" ?  total_over_all : "" %> "/>
+            </div>
+            <div class="div">
+                <input type="submit" value="Add Learner's Details">
+            </div>
+        </form>
+    
+        <table>
+            <thead>
+                <tr>
+                   
+                    <th>Subject</th>
+                    <th>Total Overall</th>
+                    <th>Q1</th>
+                    <th>Q2</th>
+                    <th>1st CA Overall</th>
+                    <th>Mark Obtained</th>
+                    <th>2nd CA Overall</th>
+                    <th>Mark Obtained</th>
+                    <th>3rd CA Overall</th>
+                    <th>Mark Obtained</th>
+                    <th>Exam Overall</th>
+                    <th>Mark Obtained</th>
+                    <th>Total</th>
+                    <th>Session Total in %</th>
+                    <th>Grade</th>
+                    <th>Remarks</th>
+                    <th>Action</th> 
+                </tr>
+            </thead>
+            <% if(exams) {%>
+            <tbody>
+               <% for (var i = 0; i < exams.length; i++) {%> 
+               
+                <form method="POST" id="myexam-<%= exams[i]._id %>" data-id=<%= exams[i]._id %>>
+                    <tr>  
+                        <td><input type="text" name="name" value="<%= exams[i].name %> "></td>
+                        <td><input type="tex" name="total_over_all" value="<%= exams[i].total_over_all %> "></td>
+                        <td><input type="tex" name="qone" value="<%= exams[i].qone %>" ></td>
+                        <td><input type="tex" name="qtwo" value="<%= exams[i].qtwo %>" ></td>
+                        <td><input type="tex" name="overall_first_ca" value="<%= exams[i].overall_first_ca %>" ></td>
+                        <td><input type="tex" name="mark_obtained_first_ca" value="<%= exams[i].mark_obtained_first_ca %>"></td>
+                        <td><input type="tex" name="overall_second_ca" value="<%= exams[i].overall_second_ca %>"></td>
+                        <td><input type="tex" name="mark_otained_second_ca" value="<%= exams[i].mark_otained_second_ca %>"></td>
+                        <td><input type="tex" name="overall_third_ca" value="<%= exams[i].overall_third_ca %>"></td>
+                        <td><input type="tex" name="mark_otained_third_ca" value="<%= exams[i].mark_otained_third_ca %>"></td>
+                        <td><input type="tex" name="exam_overall" value="<%= exams[i].exam_overall %>"></td>
+                        <td><input type="tex" name="exam_mark_obtain" value="<%= exams[i].exam_mark_obtain %>"></td>
+                        <td><input type="te" name="term_total" value="<%= exams[i].term_total %>" readonly></td>
+                       
+                        <td><input type="tech" name="per_over_all" value="<%= exams[i].per_over_all %>" readonly></td>
+                        
+                        <td><input type="grade" name="grade" value="<%= exams[i].grade %>" readonly></td> 
+                        <td><input type="text" name="remarks" value="<%= exams[i].remarks %>" readonly></td>
+                        <td class="td"><button type="submit"><i class="fas fa-save"></i></button> <a href="/third_term_exam/deletedss/<%= exams[i]._id %>" class="delete" id="just_get_it" data-id="<%= exams[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
+                    </tr>
+                </form>
+                <% } %> 
+            </tbody>
+            <% } %> 
+        </table>
+    </div>
+
+    <div class="vimo">
+
+      <form method="post" id="update_misc">
+        <p class="rer">Use the Learner's Details below to create Miscellaneous(Behavioural skills etc)</p>
+        <div class="student-detail">
+           
+            <div class="div_input">
+                <label for="roll_no">Roll No</label>
+                <input type="roll_no" name="roll_no"  value="<%= sections.roll_no %>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="student_name">Student Name</label>
+                <input type="student_name" name="student_name"  value="<%= users.first_name %> <%= users.middle_name %> <%= users.last_name %>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="classofs">Class Of</label>
+                <input type="classofs" name="classofs"  value="<%= sections.classof %>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="term">Term</label>
+                <input type="term" name="term"  value="<%= sections.name%>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="_learner">Learner's ID</label>
+                <input type="_learner" name="_learner"  value="<%= users._id %>" readonly>
+            </div>
+            <div class="submits"><input type="submit" value="Create First Miscellaneous for <%= users.first_name %> <%= users.middle_name %> <%= users.last_name %> "></div>
+        </div>
+      </form>
+    </div>
+    
+    <% if(misc) {%> 
+    <% misc.forEach(function(mis){ %> 
+    <div class="div_ahref"><a href="/third_term_exam/miscellaneous-pace?id=<%= mis._id %>"> Edit <%= mis.term %> Miscellaneous for <%= mis.student_name %>  </a></div>
+    <% }) %> 
+    <% } %> 
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+            function submitForm(form) {
+    var unindexed_arrayon = $(form).serializeArray();
+    var data = {};
+
+    $.map(unindexed_arrayon, function (x, i) {
+      data[x["name"]] = x["value"];
+    });
+
+    var id = $(form).attr("data-id");
+    var requests = {
+      url: `/third_term_exam/update-exams/${id}`,
+      method: "POST",
+      data: data,
+    };
+
+    $.ajax(requests).done(function (response) {
+      alert("Exam Saved Successfully!");
+      location.reload();
+      console.log("Data Updated Successfully!");
+    });
+  }
+
+  $("form").each(function() {
+    $(this).submit(function(event) {
+      event.preventDefault();
+      submitForm(this);
+    });
+  }); 
+
+
+  
+  $(function() {
+  $('a.delete').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    if (confirm('Are you sure you want to delete this Exam?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Exam deleted successfully!');
+          location.reload(); // Reload the page to reflect the updated state
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Exam: ' + error);
+        }
+      });
+    }
+  });
+});
+
+$("#update_misc").submit(function (eventss) {
+   eventss.preventDefault();
+ 
+   var unindexed_array = $(this).serializeArray();
+   var data = {};
+ 
+   $.map(unindexed_array, function (n, i) {
+     data[n["name"]] = n["value"];
+   });
+ 
+   console.log(data);
+     // var id = $(form).attr("data-id");
+   var request = {
+     "url": `/result/register_miscellaneous`,
+     "method": "POST",
+     "data": data,
+     
+   };
+ 
+   $.ajax(request).done(function (response) {
+     alert("Data Updated Successfully!");
+     location.reload();
+     console.log("Data Updated Successfully!");
+   });
+ });
+  
+</script>
+
+<footer class="foot">
+  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+</footer>
+<%- include ("./include/footer.ejs") %> 
+

@@ -1,0 +1,612 @@
+<%- include ("./include/result_header.ejs") %>
+<header></header>
+<div class="diver">
+    <h2>Learners Miscellaneous, Behavioural and Skills Update for <%= section.name %>, <%= section.classof %>  </h2>
+
+</div>
+ <div class="misle">
+    <form action="/third_term_exam/register_miscellaneous" method="post">
+        <p class="rer">Students Details</p>
+        <div class="student-detail">
+           
+            <div class="div_input">
+                <label for="roll_no">Roll No</label>
+                <input type="roll_no" name="roll_no"  value="<%= section.roll_no %>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="student_name">Student Name</label>
+                <input type="student_name" name="student_name"  value="<%= user.first_name %><%= user.middle_name %> <%= user.last_name %>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="classofs">Class Of</label>
+                <input type="classofs" name="classofs"  value="<%= section.classof %>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="term">Term</label>
+                <input type="term" name="term"  value="<%= section.name%>" readonly>
+            </div>
+            <div class="div_input">
+                <label for="_learner">Learner's ID</label>
+                <input type="_learner" name="_learner"  value="<%= user._id %>" readonly>
+            </div>
+        </div>
+
+        <p>Behavioural Assessment</p>
+        <div class="behavioural">
+           
+            <div class="form-group">
+                <label for="gender" class="text-light">Punctuality</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pun" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pun"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pun" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pun"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pun" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pun"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Attendance in Class</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="att_in_cl" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="att_in_cl"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="att_in_cl" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="att_in_cl"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="att_in_cl" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="att_in_cl"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Neatness</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="neat" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="neat"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="neat" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="neat"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="neat" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="neat"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Politeness</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pol" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pol"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pol" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pol"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pol" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pol"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Staffs Relationship</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_s" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_s"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_s" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_s"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_s" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_s"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Learners Relationship</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_l" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_l"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_l" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_l"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_l" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_l"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Spirit of Co-operation</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="spirit_o_co" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="spirit_o_co"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="spirit_o_co" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="spirit_o_co"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="spirit_o_co" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="spirit_o_co"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Sense of Responsibility</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sense_o_r" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sense_o_r"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sense_o_r" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sense_o_r"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sense_o_r" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sense_o_r"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Attentiveness</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="attent" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="attent"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="attent" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="attent"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="attent" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="attent"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Honesty</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="honesty" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="honesty"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="honesty" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="honesty"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="honesty" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="honesty"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Initiatives</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="iniatives" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="iniatives"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="iniatives" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="iniatives"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="iniatives" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="iniatives"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Perseverance</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="per" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="per"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="per" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="per"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="per" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="per"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+        </div>
+
+        <p>Skills</p>
+        <div class="behavioural skill">
+           
+            <div class="form-group">
+                <label for="h_w" class="text-light">Hand Writing</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_w" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_w"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_w" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_w"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_w" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_w"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="m_s" class="text-light">Musical Skill</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="m_s" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="m_s"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="m_s" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="m_s"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="m_s" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="m_s"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="sport" class="text-light">Sport</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sport" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sport"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sport" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sport"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sport" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sport"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="craft" class="text-light">Crafts</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="craft" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="craft"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="craft" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="craft"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="craft" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="craft"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="h_o_t" class="text-light">Handling of Tools</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_o_t" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_o_t"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_o_t" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_o_t"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_o_t" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_o_t"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="d_and_p" class="text-light">Drawing & Painting</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="d_and_p" value="A"/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="d_and_p"  value="B"/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="d_and_p" value="C"/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="d_and_p"  value="D"/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="d_and_p" value="E"/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="d_and_p"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            
+        </div>
+
+        <p>Fees, Debt and Attendance</p>
+        <div class="student-detail">
+            
+            <div class="div_input">
+                <label for="next_t_fee">Next Time Fees</label>
+                <input type="next_t_fee" name="next_t_fee"  value="<%= typeof next_t_fee != 'undefined' ? next_t_fee : '' %>">
+            </div>
+            <div class="div_input">
+                <label for="payable">Payable on or Before</label>
+                <input type="payable" name="payable"  value="<%= typeof payable != 'undefined' ? payable : '' %>">
+            </div>
+            <div class="div_input">
+                <label for="debt">Debt on Ground</label>
+                <input type="debt" name="debt"  value="<%= typeof debt != 'undefined' ? debt : '' %>">
+            </div>
+            <div class="div_input">
+                <label for="no_of_t_s_opened">No. of time School opened</label>
+                <input type="no_of_t_s_opened" name="no_of_t_s_opened"  value="<%= typeof no_of_t_s_opened != 'undefined' ? no_of_t_s_opened : '' %>">
+            </div>
+            <div class="div_input">
+                <label for="total_att">Total Attendance</label>
+                <input type="total_att" name="total_att"  value="<%= typeof total_att != 'undefined' ? total_att : '' %>">
+            </div>
+            <div class="div_input">
+                <label for="per_att">% Attendance</label>
+                <input type="per_att" name="per_att"  value="<%= typeof per_att != 'undefined' ? per_att : '' %>">
+            </div>
+        </div>
+        <p>Head Master and Staffs Comment</p>
+        <div class="student-detail">
+    
+            <div class="div_input">
+                <label for="t_n">Teacher's Name</label>
+                <% if(staff) {%> 
+                <select name="t_n" id="t_n">
+                    <option value="Select">Select</option>
+                    <% for (var i = 0; i < staff.length; i++) {%> 
+                    <option value="<%= staff[i].name %>"><%= staff[i].name %></option>
+                    <% } %> 
+                </select>
+                <% } %> 
+            </div>
+
+            <div class="div_input">
+                <label for="t_c">Teacher's Comment</label>
+                <% if(scomment) {%> 
+                <select name="t_c" id="t_c">
+                    <option value="Select">Select</option>
+                    <option value="<%= scomment.excellent %>"><%= scomment.excellent %></option>
+                    <option value="<%= scomment.very_good %>"><%= scomment.very_good %></option>
+                    <option value="<%= scomment.good %>"><%= scomment.good %></option>
+                    <option value="<%= scomment.pass %>"><%= scomment.pass %></option>
+                    <option value="<%= scomment.poor %>"><%= scomment.poor %></option>
+                    <option value="<%= scomment.vpoor %>"><%= scomment.vpoor %></option>
+                   
+                </select>
+                <% } %> 
+            </div>
+             <div class="div_input">
+                <label for="h_t_c">Head Teacher's Comment</label>
+                <% if(prop) {%> 
+                <select name="h_t_c" id="h_t_c">
+                    <option value="Select">Select</option>
+                    <option value="<%= prop.excellent %>"><%= prop.excellent %></option>
+                    <option value="<%= prop.very_good %>"><%= prop.very_good %></option>
+                    <option value="<%= prop.good %>"><%= prop.good %></option>
+                    <option value="<%= prop.pass %>"><%= prop.pass %></option>
+                    <option value="<%= prop.poor %>"><%= prop.poor %></option>
+                    <option value="<%= prop.vpoor %>"><%= prop.vpoor %></option>
+                   
+                </select>
+                <% } %> 
+            </div>
+        </div>
+            <div class="submit"><input type="submit" value="Save"></div>
+    </form>
+ </div>
+
+ <footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<%- include ("./include/footer.ejs") %> 

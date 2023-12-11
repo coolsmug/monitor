@@ -1,0 +1,33 @@
+<%- include ('./include/header.ejs') %> 
+<div class="sider-bar-editing">
+    <button id="onTapp"></button>
+    <button id="onTapp"></button>
+</div>
+<div class="angular_style"></div>
+<div class="upload_image">
+    <form action="/edit-profile/<%= user._id %> " method="POST" enctype="multipart/form-data"  id="edit-profile">
+        <label for="image" id="image">Upload Image</label>
+        <input type="file" id="image" name="image" value="">
+        <input type="submit" value="Upload">
+    </form>
+</div>
+
+<div class="change_password">
+    <%- include ('./partials/messages.ejs') %>  
+    <form action="/learner/change-password" method="Post">
+        <label for="email">Your Email</label>
+        <input type="email" name="email" value="<%= typeof email != 'undefined' ? email : '' %>" id="email">
+
+        <label for="passwords">Enter previous password</label>
+        <input type="password" name="passwords" value="<%= typeof passwords != 'undefined' ? passwords : '' %>" id="password_one">
+        
+        <label for="password">Enter new password</label>
+        <input type="password" name="passwording" value="<%= typeof passwording != 'undefined' ? passwording : '' %>" id="password_two">
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<%- include ('./include/footer.ejs')  %> 

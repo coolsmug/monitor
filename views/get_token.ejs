@@ -1,0 +1,168 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+
+<%- include ('./partials/messages') %> 
+<form action="/admin/create-voucher" method="POST" class="voucher-form">
+    <label for="pin">Enter PIN Generated here:</label>
+    <input type="text" name="pin">
+    <input style="color:#fff ;" type="submit" value="Ok?, Generate">
+</form>
+
+<div class="div-all-in-one-voucher">
+    <div id="divid">
+        <div class="div-vouche-image">
+            <img id="image" src="/img/monitor.png" alt="Monitor" >
+            <h2>Result Checking Vouchers </h2>
+           
+        </div>
+        <% if(vouch) {%> 
+        <div class="cover-vourcher" >
+           
+            <% vouch.forEach(function(token) { %>
+                <% if(!token.expiry){ %> 
+                    <% var Date = token.expiry %> 
+               <% } %> <%  if(token.expiry) {%> 
+                  <% var Date = token.expiry.toDateString() %> 
+                 <% } %> 
+             
+        
+            <div class="div-voucher">
+                <div class="div-voucher-image">
+                    <img src="/img/monitor.png" alt="Monitor">
+                    <p class="p-one">E-School management voucher</p>
+                </div>
+               
+                <div class="voucher-code">
+                    <p class="p-one">PIN CODE</p> <p class="p-two">:</p> <p class="p-three"><%= token.code %></p>
+                </div>
+                <div class="voucher-code">
+                    <p class="p-one">SERIAL NO</p><p class="p-two">:</p><p class="p-three"><%= token.serial_no %></p>
+                </div>
+                <div class="voucher-code">
+                    <p class="p-one">Expiry date</p> <p class="p-two"> :</p> <p class="p-three"><%= Date %></p>
+                </div>
+                <div class="voucher-code">
+                    <p class="p-one">Customer support: 09018675469 or Email: coolsmug@gmail.com</p>
+                </div>
+                 <!-- <i class="fas fa-times timess"></i> -->
+            </div>
+            
+            <% }) %> 
+            
+        </div>
+        <% } %> 
+    </div>
+   <div class="click">
+        <button class="clickbtn" onclick='printDiv()'>
+            <i class="fas fa-print"></i> 
+            Print
+        </button>
+   </div>
+    
+    <% if (pages > 0) { %>
+        <ul class="pagination text-center">
+            <% if (current == 1) { %>
+                <li class="disabled"><a>First</a></li>
+            <% } else { %>
+                <li><a href="/admin/get-gen-voucher/1">First</a></li>
+            <% } %>
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="disabled"><a>...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <li class="active"><a><%= i %></a></li>
+                <% } else { %>
+                    <li><a href="/admin/get-gen-voucher/<%= i %>"><%= i %></a></li>
+                <% } %>
+                <% if (i == Number(current) + 4 && i < pages) { %>
+                    <li class="disabled"><a>...</a></li>
+                <% } %>
+            <% } %>
+            <% if (current == pages) { %>
+                <li class="disabled"><a>Last</a></li>
+            <% } else { %>
+                <li><a href="/admin/get-gen-voucher/<%= pages %>">Last</a></li>
+            <% } %>
+        </ul>
+    <% } %>
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+<%- include ('./include/footer.ejs') %> 
+
+<script>
+    const printDiv = async ()=>{
+    try {
+        var printContents = document.getElementById('divid').innerHTML
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+       await window.print();
+    } catch (error) {
+        console.error(error.message)
+    }
+ document.body.innerHTML = originalContents;  
+
+ let open = document.getElementsByClassName("list_one")
+
+let i;
+
+for(i = 0; i < open.length; i++) {
+    open[i].onclick = function() {
+        this.classList.toggle("active");
+        let hidee = this.nextElementSibling;
+        if(hidee.style.maxHeight) {
+            hidee.style.maxHeight = null;
+        }else {
+            hidee.style.maxHeight = hidee.scrollHeight + "px";
+        }
+    }    
+}
+
+}
+</script>
+
+<style>
+    .click {
+    margin-top:20px;
+    padding: 5px 11px; 
+}
+
+.click button {
+    outline: none;
+    border: none;
+    background-color: var(--deep-blue);
+    color: var(--white);
+    padding: 5px 11px; 
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.click button i {
+    font-size: 20px;
+    color: var(--lighter-blue);
+    transition: all .3s ease;
+    
+}
+
+.click button:hover {
+   background-color: #46c846;
+   letter-spacing: 6px;
+  
+}
+
+.click button:hover i{
+   margin-left: -4px;
+ }
+
+.omomi {
+    padding-right: 17px;
+}
+
+
+</style>

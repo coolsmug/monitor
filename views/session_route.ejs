@@ -1,0 +1,107 @@
+<%- include ('./include/header.ejs') %> 
+
+<div class="middle_sweet">
+    <div class="div_header_two">
+
+    </div>
+    <div class="div_header">
+        <div class="img-div">
+            <img src="/img/monitor.png" alt="">
+        </div>
+      
+    </div>
+
+    
+
+    <div class="cover_of_div">
+       
+
+        <div class="div_one_of_three twothree">
+            <p class="p_of_p"> School Sessions </p>
+                
+                    
+            <div class="form-for-report">
+                <% for(var i = 0; i < session.length; i++) {%> 
+            
+                    <div class="div_divol">
+                        <a href="/result/current_class/1?id=<%= session[i]._id %> "> 
+                            <div class="avi">
+                                <p><%= session[i].roll_no %></p> 
+                            </div>
+                
+                            <div class="ddiv">
+                                <p> <%= session[i].name %></p> 
+                            </div>
+                        </a>
+                        <div class="match">
+                            <p><%= session[i].classof %></p> 
+                        </div>
+                    </div>
+                    
+                    
+                    <% } %> 
+
+                    <% if (pages > 0) { %>
+                        <ul class="pagination text-center">
+                            <% if (current == 1) { %>
+                                <li class="disabled"><a>First</a></li>
+                            <% } else { %>
+                                <li><a href="/result/sessions/1">First</a></li>
+                            <% } %>
+                            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                            <% if (i !== 1) { %>
+                                <li class="disabled"><a>...</a></li>
+                            <% } %>
+                            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                                <% if (i == current) { %>
+                                    <li class="active"><a><%= i %></a></li>
+                                <% } else { %>
+                                    <li><a href="/result/sessions/<%= i %>"><%= i %></a></li>
+                                <% } %>
+                                <% if (i == Number(current) + 4 && i < pages) { %>
+                                    <li class="disabled"><a>...</a></li>
+                                <% } %>
+                            <% } %>
+                            <% if (current == pages) { %>
+                                <li class="disabled"><a>Last</a></li>
+                            <% } else { %>
+                                <li><a href="/result/sessions/<%= pages %>">Last</a></li>
+                            <% } %>
+                        </ul>
+                    <% } %>
+                    
+            </div> 
+                
+
+        </div>
+
+      
+
+    </div>
+
+</div>
+
+<style>
+    .ddiv{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 2px;
+        width: 120px;
+        top: 10px;
+        font-size: 15px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ddiv p {
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+<%- include ('./include/footer.ejs') %> 

@@ -1,0 +1,80 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<% if (user)  {%> 
+
+ <% if(!user.dob){ %> 
+       <% var Date = user.dob %> 
+  <% } %> <%  if(user.dob) {%> 
+     <% var Date = user.dob.toDateString()  %> 
+    <% } %> 
+
+    <% if(!user.date_enrolled){ %> 
+       <% var Dates = user.date_enrolled %> 
+  <% } %> <%  if(user.date_enrolled) {%> 
+     <% var Dates = user.date_enrolled.toDateString()  %> 
+    <% } %> 
+
+    <% if(!user.date_ended){ %> 
+       <% var Datess = user.date_ended %> 
+  <% } %> <%  if(user.date_ended) {%> 
+     <% var Datess = user.date_ended.toDateString()  %> 
+    <% } %>
+   
+ <div class="wonder">
+
+
+      <div class="wrapper">
+      
+     
+          <div class="avi aviss">
+              <% if(user.img.contentType) {%> 
+                <img src="data:user/<%= user.img.contentType %>;base64,<%= user.img.data.toString('base64') %>" alt="">
+                <% } else {%> 
+              <img src="/img/monitor_user_image.jpg" alt="" >
+              <% } %> 
+          </div>
+  <marquee > <h1 class="hhh"><%= user.first_name %> <%= user.last_name %> <%= user.middle_name %>'s  Details</h1></marquee>
+          <div class="mini-wrapp assiom">
+            <div class="din-min">
+              <p><span>Roll number : </span> <%= user.roll_no %> </p>
+              <p><span>First name : </span> <%= user.first_name %> </p>
+              <p><span>Last name : </span> <%= user.last_name %> </p>
+              <p><span>Middle name : </span> <%= user.middle_name %> </p>
+              <p><span>Email : </span> <%= user.email %> </p>
+              <p><span>Gender : </span> <%= user.gender %> </p>
+              <p><span>Date of birth : </span> <%= Date %> </p>
+           </div>
+  
+           <div class="din-min">
+            <p><span>Date enrolled : </span> <%= Dates %> </p>
+            <p><span>Graduating date : </span> <%= Datess %> </p>
+            <p><span>Class : </span> <%= user.classes %> </p>
+            <p><span>Age : </span> <%= user.age %> </p>
+            <p><span>Arm : </span> <%= user.arm %> </p>
+            <p><span>Parent's mobile : </span> <%= user.parent_number %> </p>
+            <p><span>Class code : </span> <%= user.class_code %> </p>
+           </div>
+
+           <div class="din-min">
+            <p><span>Blood group : </span> <%= user.blood_group %> </p>
+            <p><span>Genotype : </span> <%= user.genotype %> </p>
+            <p><span>State : </span> <%= user.state %> </p>
+            <p><span>Local govt. : </span> <%= user.lg %> </p>
+            <p><span>Religion : </span> <%= user.religion %> </p>
+            <p><span>Tribe : </span> <%= user.tribe %> </p>
+            <p><span>Status : </span> <%= user.status %> </p>
+           </div>
+
+        
+        </div>
+        
+       
+      </div>
+<% } %>
+</div> 
+<footer class="foot">
+   <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+ </footer>
+<%- include ("./include/footer.ejs") %> 

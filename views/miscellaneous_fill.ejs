@@ -1,0 +1,618 @@
+<%- include ("./include/result_header.ejs") %>
+<header></header>
+<div class="diver">
+    <h2>Learners Miscellaneous, Behavioural and Skills Update for <%= misc.term %>, <%= misc.classof %> 
+</div>
+ <div class="misle">
+    <form method="post" id="update_users">
+
+        <p>Behavioural Assessment</p>
+        <div class="behavioural">
+            <input type="hidden" name="id" value="<%= misc._id %> "/>
+            <div class="form-group">
+                <label for="gender" class="text-light">Punctuality</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pun" value="A" <%= misc.pun=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pun"  value="B" <%= misc.pun=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pun" value="C" <%= misc.pun=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pun"  value="D" <%= misc.pun=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pun" value="E" <%= misc.pun=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pun"  value="F" <%= misc.pun=='C' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Attendance in Class</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="att_in_cl" value="A" <%= misc.att_in_cl=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="att_in_cl"  value="B" <%= misc.att_in_cl=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="att_in_cl" value="C" <%= misc.att_in_cl=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="att_in_cl"  value="D" <%= misc.att_in_cl=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="att_in_cl" value="E" <%= misc.att_in_cl=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="att_in_cl"  value="F" <%= misc.att_in_cl=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Neatness</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="neat" value="A" <%= misc.neat=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="neat"  value="B" <%= misc.neat=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="neat" value="C" <%= misc.neat=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="neat"  value="D" <%= misc.neat=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="neat" value="E" <%= misc.neat=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="neat"  value="F" <%= misc.neat=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Politeness</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pol" value="A" <%= misc.pol=='A' ? 'checked' : '' %> />
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pol"  value="B" <%= misc.pol=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pol" value="C" <%= misc.pol=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pol"  value="D" <%= misc.pol=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="pol" value="E" <%= misc.pol=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="pol"  value="F" <%= misc.pol=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Staffs Relationship</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_s" value="A" <%= misc.r_w_s=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_s"  value="B" <%= misc.r_w_s=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_s" value="C" <%= misc.r_w_s=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_s"  value="D" <%= misc.r_w_s=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_s" value="E" <%= misc.r_w_s=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_s"  value="F" <%= misc.r_w_s=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Learners Relationship</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_l" value="A" <%= misc.r_w_l=='A' ? 'checked' : '' %> />
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_l"  value="B" <%= misc.r_w_l=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_l" value="C" <%= misc.r_w_l=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_l"  value="D" <%= misc.r_w_l=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="r_w_l" value="E" <%= misc.r_w_l=='F' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="r_w_l"  value="F"/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Spirit of Co-operation</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="spirit_o_co" value="A" <%= misc.spirit_o_co=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="spirit_o_co"  value="B" <%= misc.spirit_o_co=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="spirit_o_co" value="C" <%= misc.spirit_o_co=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="spirit_o_co"  value="D" <%= misc.spirit_o_co=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="spirit_o_co" value="E" <%= misc.spirit_o_co=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="spirit_o_co"  value="F" <%= misc.spirit_o_co=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Sense of Responsibility</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sense_o_r" value="A" <%= misc.sense_o_r=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sense_o_r"  value="B" <%= misc.sense_o_r=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sense_o_r" value="C" <%= misc.sense_o_r=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sense_o_r"  value="D" <%= misc.sense_o_r=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sense_o_r" value="E" <%= misc.sense_o_r=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sense_o_r"  value="F" <%= misc.sense_o_r=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Attentiveness</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="attent" value="A" <%= misc.attent=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="attent"  value="B" <%= misc.attent=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="attent" value="C" <%= misc.attent=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="attent"  value="D" <%= misc.attent=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="attent" value="E" <%= misc.attent=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="attent"  value="F" <%= misc.attent=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Honesty</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="honesty" value="A" <%= misc.honesty=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="honesty"  value="B" <%= misc.honesty=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="honesty" value="C" <%= misc.honesty=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="honesty"  value="D" <%= misc.honesty=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="honesty" value="E" <%= misc.honesty=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="honesty"  value="F" <%= misc.honesty=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Initiatives</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="iniatives" value="A" <%= misc.iniatives=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="iniatives"  value="B" <%= misc.iniatives=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="iniatives" value="C" <%= misc.iniatives=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="iniatives"  value="D" <%= misc.iniatives=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="iniatives" value="E" <%= misc.iniatives=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="iniatives"  value="F" <%= misc.iniatives=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="text-light">Perseverance</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="per" value="A" <%= misc.per=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="per"  value="B" <%= misc.per=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="per" value="C" <%= misc.per=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="per"  value="D" <%= misc.per=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="per" value="E" <%= misc.per=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="per"  value="F" <%= misc.per=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+        </div>
+
+        <p>Skills</p>
+        <div class="behavioural skill">
+           
+            <div class="form-group">
+                <label for="h_w" class="text-light">Hand Writing</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_w" value="A" <%= misc.h_w=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_w"  value="B" <%= misc.h_w=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_w" value="C" <%= misc.h_w=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_w"  value="D" <%= misc.h_w=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_w" value="E" <%= misc.h_w=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_w"  value="F" <%= misc.h_w=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="m_s" class="text-light">Musical Skill</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="m_s" value="A" <%= misc.m_s=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="m_s"  value="B" <%= misc.m_s=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="m_s" value="C" <%= misc.m_s=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="m_s"  value="D" <%= misc.m_s=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="m_s" value="E" <%= misc.m_s=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="m_s"  value="F" <%= misc.m_s=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="sport" class="text-light">Sport</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sport" value="A" <%= misc.sport=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sport"  value="B" <%= misc.sport=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sport" value="C" <%= misc.sport=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sport"  value="D" <%= misc.sport=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="sport" value="E" <%= misc.sport=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="sport"  value="F" <%= misc.sport=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="craft" class="text-light">Crafts</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="craft" value="A" <%= misc.craft=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="craft"  value="B" <%= misc.craft=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="craft" value="C" <%= misc.craft=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="craft"  value="D" <%= misc.craft=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="craft" value="E" <%= misc.craft=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="craft"  value="F" <%= misc.craft=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="h_o_t" class="text-light">Handling of Tools</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_o_t" value="A" <%= misc.h_o_t=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_o_t"  value="B" <%= misc.h_o_t=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_o_t" value="C" <%= misc.h_o_t=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_o_t"  value="D" <%= misc.h_o_t=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="h_o_t" value="E" <%= misc.h_o_t=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="h_o_t"  value="F" <%= misc.h_o_t=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label for="d_and_p" class="text-light">Drawing & Painting</label>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="d_and_p" value="A" <%= misc.d_and_p=='A' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">A</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="d_and_p"  value="B" <%= misc.d_and_p=='B' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">B</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="d_and_p" value="C" <%= misc.d_and_p=='C' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">C</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="d_and_p"  value="D" <%= misc.d_and_p=='D' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">D</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-2" name="d_and_p" value="E" <%= misc.d_and_p=='E' ? 'checked' : '' %>/>
+                    <label for="radio-2" class="radio-label">E</label>
+                </div>
+                <div class="radio inline">
+                    <input type="radio" id="radio-3" name="d_and_p"  value="F" <%= misc.d_and_p=='F' ? 'checked' : '' %>/>
+                    <label for="radio-3" class="radio-label">F</label>
+                </div>
+            </div> 
+            
+        </div>
+
+        <p>Fees, Debt and Attendance</p>
+        <div class="student-detail">
+            
+            <div class="div_input">
+                <label for="next_t_fee">Next Time Fees</label>
+                <input type="next_t_fee" name="next_t_fee"  value="<%= misc.next_t_fee %>">
+            </div>
+            <div class="div_input">
+                <label for="payable">Payable on or Before</label>
+                <input type="payable" name="payable"  value="<%= misc.payable %>">
+            </div>
+            <div class="div_input">
+                <label for="debt">Debt on Ground</label>
+                <input type="debt" name="debt"  value="<%= misc.debt %>">
+            </div>
+            <div class="div_input">
+                <label for="no_of_t_s_opened">No. of time School opened</label>
+                <input type="no_of_t_s_opened" name="no_of_t_s_opened"  value="<%= misc.no_of_t_s_opened %>">
+            </div>
+            <div class="div_input">
+                <label for="total_att">Total Attendance</label>
+                <input type="total_att" name="total_att"  value="<%= misc.total_att %>">
+            </div>
+            <div class="div_input">
+                <label for="per_att">% Attendance</label>
+                <input type="per_att" name="per_att"  value="<%= misc.per_att %> " readonly>
+            </div>
+        </div>
+        <p>Head Master and Staffs Comment</p>
+        <div class="student-detail">
+    
+            <div class="div_input">
+                <label for="t_n">Teacher's Name</label>
+                <% if(user) {%> 
+                <select name="t_n" id="t_n">
+                    <option value="Select">Select</option>
+                   
+                    <option value="<%= user.name %>"><%= user.name %></option>
+                   
+                </select>
+                <% } %> 
+               
+            </div>
+
+            <div class="div_input">
+                <label for="t_c">Teacher's Comment</label>
+                <% if(scomment) {%> 
+                <select name="t_c" id="t_c">
+                    <option value="Select">Select</option>
+                    <option value="<%= scomment.excellent %>"><%= scomment.excellent %></option>
+                    <option value="<%= scomment.very_good %>"><%= scomment.very_good %></option>
+                    <option value="<%= scomment.good %>"><%= scomment.good %></option>
+                    <option value="<%= scomment.pass %>"><%= scomment.pass %></option>
+                    <option value="<%= scomment.poor %>"><%= scomment.poor %></option>
+                    <option value="<%= scomment.vpoor %>"><%= scomment.vpoor %></option>
+                   
+                </select>
+                <% } %> 
+            </div>
+            <div class="div_input">
+                <label for="h_t_c">Head Teacher's Comment</label>
+                <% if(prop) {%> 
+                <select name="h_t_c" id="h_t_c">
+                    <option value="Select">Select</option>
+                    <option value="<%= prop.excellent %>"><%= prop.excellent %></option>
+                    <option value="<%= prop.very_good %>"><%= prop.very_good %></option>
+                    <option value="<%= prop.good %>"><%= prop.good %></option>
+                    <option value="<%= prop.pass %>"><%= prop.pass %></option>
+                    <option value="<%= prop.poor %>"><%= prop.poor %></option>
+                    <option value="<%= prop.vpoor %>"><%= prop.vpoor %></option>
+                   
+                </select>
+                <% } %> 
+            </div>
+        </div>
+            <div class="submit"><input type="submit" value="Save"></div>
+    </form>
+ </div>
+ <footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+ <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script type="text/javascript">
+
+ $("#update_users").submit(function (eventss) {
+  eventss.preventDefault();
+
+  var unindexed_array = $(this).serializeArray();
+  var data = {};
+
+  $.map(unindexed_array, function (n, i) {
+    data[n["name"]] = n["value"];
+  });
+
+  console.log(data);
+    
+  var request = {
+    "url": `/result/update_miscellaneous/${data.id}`,
+    "method": "POST",
+    "data": data,
+    
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Data Updated Successfully!");
+    location.reload();
+    console.log("Data Updated Successfully!");
+  });
+});
+
+ </script>
+<%- include ("./include/footer.ejs") %> 

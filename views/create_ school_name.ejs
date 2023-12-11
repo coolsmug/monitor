@@ -1,0 +1,73 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+<div class="divide_route">
+    <a href="http://">Manage All </a> <a href="http://">Add School Name & Add</a>  
+   
+</div>
+
+<div class="diverr">
+    <h4><i class="fas fa-building"></i> Create School Name and Address</h4>
+
+    <div class="form_for_create">
+        
+        <%- include ('./partials/messages') %>
+        <form action="/school/add_school" method="POST" id="creatClassing">
+
+            <div class="all-single-form">
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="school_name">School Name:</label>
+                        <input type="school_name" name="school_name" value="<%= typeof school_name != 'undefined' ? school_name : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="address">Address:</label>
+                        <input type="address" name="address" placeholder="Address" value="<%= typeof  address != 'undefined' ?  address : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="address">Address 2:</label>
+                        <input type="address2" name="address2" value="<%= typeof address != 'undefined' ? address : '' %>" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                  
+                    <div class="hop">
+                        <label for="phone_no">Phone No:</label>
+                        <input type="phone_no" name="phone_no" placeholder="Phone No" value="<%= typeof phone_no != 'undefined' ? phone_no : '' %>" />
+                    </div>
+
+                    <div class="hop">
+                        <label for="phone_no2">Phone No 2:</label>
+                        <input type="phone_no2" name="phone_no2" value="<%= typeof phone_no2 != 'undefined' ? phone_no2 : '' %>" />
+                    </div>
+                  
+                </div>
+                <div class="mb-3">
+                  <div class="hop">
+                    <label for="email">School Email:</label>
+                    <input type=" email" name="email" value="<%= typeof email != 'undefined' ?  email : '' %>" />
+                  </div>
+                  <div class="hop">
+                    <label for="website">School Website</label>
+                    <input type="website" name="website" value="<%= typeof website != 'undefined' ? website : '' %>" />
+                  </div>
+                  
+                </div>
+                <div class="mb-3">
+                    
+                
+                </div>
+
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Ok? Create">
+            </div>
+        
+        </form>
+
+        
+    </div>  
+</div>
+   
+<%- include ("./include/footer.ejs") %> 

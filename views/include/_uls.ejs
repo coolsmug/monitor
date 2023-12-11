@@ -1,0 +1,79 @@
+
+    <ul c>
+        <li> <form action="/school/logout" method="POST" class="logoutss">
+            <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i></button>
+        </form></li>
+        <li><a href="#" class="href">Home</a></li>
+    </ul>
+
+
+<style>
+    ul {
+        position: absolute;
+       margin-left: 30px;
+       right: 20px;
+       top: -1%;
+    }
+
+    ul li {
+        display: inline;
+        padding: 20px ;
+         transition: all .2s ease-in-out;
+        margin-left: 10px;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 25px 45px rgba(0, 0, 0, .1);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        -ms-border-radius: 10px;
+        -o-border-radius: 10px;
+        border-radius: 10px;
+    }
+
+    ul li a {
+        text-decoration: none;
+        color: var(--deepest-blue);
+        font-family: var(--playfair-bold);
+        font-weight: bolder;
+        transition: all .3s ease-in-out;
+    }
+
+    ul li:hover {
+        background: var(--deep-blue);
+        border-radius: 20px;
+        color: var(--white);
+        
+    }
+
+     ul li:hover i {
+        color: var(--white);
+     }
+
+    .href i{
+        position:relative;
+        color: var(--crimson);
+    }
+
+    .href i::after {
+        content:"Log-out";
+        position: absolute;
+        width: 100px;
+        visibility: hidden;
+        color: var(--light-blue);
+        font-family: var(--ubuntu-medium);
+        font-size: 12px;
+        top: 140%;
+        left: -14px;
+        transition: all .3s ease;
+        font-weight: bolder;
+       
+    }
+
+     ul li:hover .href i::after {
+        visibility: visible;
+        color: #fff;
+       
+     }
+</style>

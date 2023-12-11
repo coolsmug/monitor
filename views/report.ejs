@@ -1,0 +1,91 @@
+<%- include ("./include/header.ejs") %>
+<%- include ("./include/_dash_board.ejs") %>
+<div class="pagination_div">
+    <div class="form-for-report">
+        <form action="/reports/learners" method="GET">
+            <% if(users) {%>
+                <label for="output">Class:</label>
+                <select name="output" id="output">
+                    <option value="">...</option>
+                 <%  for(var n = 0; n < users.length; n++) {%>
+                     <option value="<%= users[n].name %> "><%= users[n].name %></option>
+                 <% } %> 
+                </select>
+                <% } %> 
+                <label for="input">Categories:</label>
+            <input class="ideal" type="text" name="input" value="" id="look_up">
+            <input type="submit" value="Ok? let search!">
+        </form>
+        <% for(var i = 0; i < user.length; i++) {%> 
+    
+            <div class="div_divol">
+                <a class="divol" href="/admin/learner-detail?id=<%= user[i]._id %>">
+                    <div class="avi">
+                       
+                        <% if(!user[i].img.contentType) { %> 
+                            <img src="/img/monitor_user_image.jpg">
+                       <% } else if(user[i].img.contentType){%> 
+                            <img src="data:user/<%= user[i].img.contentType %>;base64,<%= user[i].img.data.toString('base64') %>">
+                           <% } %> 
+                    </div>
+        
+                    <div class="ddiv">
+                        <p class="man"> <%= user[i].first_name %> <%= user[i].last_name %> </p>
+                        <p><%= user[i].middle_name %></p>
+                        <p><%= user[i].blood_group %>  <%= user[i].genotype %> <%= user[i].gender %></p>
+                    </div>
+                </a>
+                <div class="match">
+                    <p><%= user[i].state %></p> <p><%= user[i].lg %> </p>
+                    <p> <%= user[i].tribe %>, <%= user[i].religion %></p>
+                </div>
+            </div>
+          
+           
+            <% } %> 
+          
+    </div> 
+    
+   
+</div>
+
+ 
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+              
+
+<%- include ("./include/footer.ejs") %> 
+
+
+<style>
+    .avi {
+        width: 70;
+        height: 70;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .avi img {
+        width: 80;
+        height: 80;
+    }
+
+    .pagination {
+        margin-top: -50px;
+
+    }
+
+    .pagination_div {
+        width: 50%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 100px;
+       
+    }
+</style>

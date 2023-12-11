@@ -1,0 +1,60 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+
+<div class="div_promote">
+    <% for (var l = 0; l < user.length; l++) {%>
+    <form action="/result/promotion/<%= user[l]._id %>" method="post" class="promote">
+        <div class="avi aviss">        
+            <% if(!user[l].img.contentType) { %> 
+                <img src="/img/monitor_user_image.jpg">
+           <% } else if(user[l].img.contentType){%> 
+                <img src="data:user/<%= user[l].img.contentType %>;base64,<%= user[l].img.data.toString('base64') %>">
+               <% } %> 
+        </div>
+         <div class="dv_names">
+            <p><%= user[l].first_name %> <%= user[l].last_name %> <%= user[l].middle_name %> </p>
+         
+            <p><%= user[l].classes %> </p>
+        </div>
+        <div class="div_forms">
+            <label for="name">Class Name:</label>
+            <% if(classed) {%> 
+            <select name="name" id="name">
+                <option value="">...</option>
+                <% for (var x = 0; x < classed.length; x++ ) {%> 
+                <option value="<%= classed[x].name %> "> <%= classed[x].name %> of <%= classed[x].class_code %> of <%= classed[x].arm %>  </option>
+                <% } %> 
+               
+            </select>
+            <% } %> 
+        </div>
+        <div class="div_forms">
+            <label for="class_code">Class Code:</label>
+        <% if(classed) {%> 
+        <select name="class_code" id="class_code">
+            <option value="">...</option>
+            <% for (var x = 0; x < classed.length; x++ ) {%> 
+            <option value="<%= classed[x].class_code %> "><%= classed[x].class_code %> of <%= classed[x].name %> of <%= classed[x].arm %>  </option>
+            <% } %> 
+        </select>
+        <% } %> 
+        </div>  
+       
+        <div class="div_forms">
+            <input type="submit" value="Ok? promote!">
+        </div>
+       
+
+       
+    </form>
+    <% } %> 
+
+   
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+<%- include ("./include/footer.ejs") %> 
+

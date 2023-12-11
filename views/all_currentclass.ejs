@@ -1,0 +1,108 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="dele">
+    <h2 class="all"><i class="fas fa-home"></i> All Current Classes</h2>
+</div>
+<div class="table">
+   
+    <table>
+        <thead>
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Arm</th>
+                <th>Class code</th>
+                <th>capacity</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (var i = 0; i < classes.length; i++) { %> 
+            <tr>
+                <td><%= classes[i].roll_no %></td>
+                <td><%= classes[i].name %></td>
+                <td><%= classes[i].arm %></td>
+                <td><%= classes[i].class_code %></td>
+                <td><%= classes[i].capacity %></td>
+                <td><%= classes[i].status %></td>
+                <td>
+                     <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
+                    <div class="hideen">
+                        <a href="/admin/update-currentclass?id=<%= classes[i].id %>" class="btn border-shadow update" data-id="<%= classes[i].id %> ">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="/admin/delete_currentclass/<%= classes[i].id %>" class="btn border-shadow delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                        <a href="/result/promote?class_code=<%= classes[i].class_code %>&arm=<%= classes[i].arm %> " class="btn border-shadow info">
+                            <i class="fas fa-people-carry"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        <% } %> 
+            
+        </tbody>
+    </table>
+
+    <% if (pages > 0) { %>
+                <ul class="pagination text-center">
+                    <% if (current == 1) { %>
+                        <li class="disabled"><a>First</a></li>
+                    <% } else { %>
+                        <li><a href="/admin/all-currentclass/1">First</a></li>
+                    <% } %>
+                    <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                    <% if (i !== 1) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                    <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                        <% if (i == current) { %>
+                            <li class="active"><a><%= i %></a></li>
+                        <% } else { %>
+                            <li><a href="/admin/all-currentclass/<%= i %>"><%= i %></a></li>
+                        <% } %>
+                        <% if (i == Number(current) + 4 && i < pages) { %>
+                            <li class="disabled"><a>...</a></li>
+                        <% } %>
+                    <% } %>
+                    <% if (current == pages) { %>
+                        <li class="disabled"><a>Last</a></li>
+                    <% } else { %>
+                        <li><a href="/admin/all-currentclass/<%= pages %>">Last</a></li>
+                    <% } %>
+                </ul>
+            <% } %>
+
+           
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+</footer>
+<%- include ("./include/footer.ejs") %> 
+
+<script>
+    $(function() {
+  $('a.delete').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    if (confirm('Are you sure you want to delete this Class?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Class deleted successfully!');
+          location.reload(); // Reload the page to reflect the updated state
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Class: ' + error);
+        }
+      });
+    }
+  });
+});
+</script>
