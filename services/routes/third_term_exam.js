@@ -152,72 +152,47 @@ router.post("/update-exams/:id", async(req, res) => {
       });
   });
 
-  router.get("/exam-pace-third", async(req, res) => {
+// ---------------------------- Get Exam filling page ___________________--------  //
+  router.get("/exam-pace-third",ensureAuthenticated, async(req, res) => {
 
-    if (req.query.id) {
-        const id = req.query.id;
-        const name = req.query.name;
-        const roll_nos = req.query.roll_no;
-        const classofss = req.query.classof;
-        
-      await Subject
-                .find()
-                .select("name")
-                .exec((err, subjects) => {
-                   if(err) throw new Error(err)
-                   Learner.findById(id).exec((errOne, users)=> {
-                    if(errOne) throw new Error(errOne)
-                    Currentclass.findById(id).exec((errTwo, classeds) => {
-                        if(errTwo) throw new Error(errTwo)
-                        Session.findById(id).exec((errThree, sessions) => {
-                            if(errThree) throw Error(errThree)
-                            ThirdSection.findById(id).exec((errfour, sections)=> {
-                            if(errfour) throw new Error(errfour)
-                            Miscellaneous.find()
-                            .where("_learner")
-                            .equals(id)
-                            .where("term")
-                            .equals(name)
-                            .where("roll_no")
-                            .equals(roll_nos)
-                            .where("classofs")
-                            .equals(classofss).exec((errAmong, misc) => {
-                                if(errAmong) throw new Error(errAmong)
-                                Examing.find()
-                                .where("_learner")
-                                .equals(id)
-                                .where("term")
-                                .equals(name)
-                                .where("roll_no")
-                                .equals(roll_nos)
-                                .where("classofs")
-                                .equals(classofss)
-                                .exec((errfive, exams) => {
-                                 if(errfive) throw new Error(errfive)
-                                 res.render('third_exam_fill', {
-                                     exams: exams,
-                                     users: users,
-                                     classeds: classeds,
-                                     sessions: sessions, 
-                                     sections: sections,
-                                     subjects: subjects,
-                                     misc: misc,
-                                 })
-                                })
-                            })
-                           })
-                        })
-                    })
-                   })
-                })
-
-      
-
-        }
+    try {
+      const userId = req.query.userId;
+      const sessionId = req.query.sessionId;
+      const sectionId = req.query.sectionId;
+      const classId = req.query.classId;
+      const name = req.query.name;
+      const roll_nos = req.query.roll_no;
+      const classofss = req.query.classof;
+  
+      if (userId && sessionId && sectionId && classId) {
+        const subjects = await Subject.find({ schoolId: req.user.schoolId }).select("name").exec();
+        const users = await Learner.findById(userId).exec();
+        const classed = await Currentclass.findById(classId).exec();
+        const sessions = await Session.findById(sessionId).exec();
+        const sections = await ThirdSection.findById(sectionId).exec();
+        const misc = await Miscellaneous.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
+        const exams = await Examing.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss });
+  
+        res.render('third_exam_fill', {
+          exams: exams,
+          users: users,
+          user: req.user,
+          classed: classed,
+          sessions: sessions,
+          sections: sections,
+          subjects: subjects,
+          misc: misc,
+        });
+      } else {
+        res.render("success", { title: "Oops! Request Id not found" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
     })
 
   
-
 router.delete('/deletedss/:id', async(req, res) => {
     const id = req.params.id;
     await Examing.findByIdAndDelete(id)
@@ -239,97 +214,83 @@ router.delete('/deletedss/:id', async(req, res) => {
       });
   })
 
-router.get("/miscellaneous-pace", async(req, res) => {
+router.get("/miscellaneous-pace",ensureAuthenticated, async(req, res) => {
 
-    if (req.query.id) {
-        const id = req.query.id;
-        
-      await Proprietor
-                .findOne()
-                .select("excellent very_good good pass poor vpoor")
-                .exec((err, prop) => {
-                   if(err) throw new Error(err)
-                    Staff
-                    .find()
-                    .select("name")
-                    .exec((errfive, staff)=> {
-                        if (errfive) throw new Error(errfive)
-                        Staffstatement 
-                        .findOne()
-                        .select("excellent very_good good pass poor vpoor")
-                        .exec((errSix, scomment)=> {
-                            if (errSix) throw new Error(errSix)
-                            Miscellaneous.findById(id)
-                            .exec((errSeven, misc) => {
-                                if(errSeven) throw new Error(errSeven)
-                                res.render('miscellaneous_fill', {
-                                    misc: misc,
-                                    prop:  prop,
-                                    staff: staff,
-                                    scomment: scomment,
-                                })
-                            })
+  if (req.query.id) {
+    const id = req.query.id;
 
-                            })
-                         
-                           })
-                    
-                     
-    })
+    const misc = await Miscellaneous.findById(id).exec();
+    const prop = await Proprietor.findOne({schoolId: req.user.schoolId}).exec();
+    const scomment = await Staffstatement.findOne( { schoolId: req.user.schoolId } ).exec()
+    
+    res.render('miscellaneous_fill', {
+        misc: misc,
+        user: req.user,
+        prop:  prop,
+        scomment: scomment,
+    }) 
+  
 }
 })
 
-
-
 //----------------------------------------------------------Miscellaneous Ends----------------------------------------//
 
-router.get('/check_result', async (req, res) => {
-
-  if (req.query) {
+router.get('/check_result', ensureAuthenticated, async (req, res) => {
+  try {
     const { name, _learner, classof, roll_no, code } = req.query;
 
-    try {
-      const pin = await Voucher.findOne({ code: code });
-
-      if (pin && pin.expiry > Date.now()) {
-
-        if (pin.usage_count >= 16) {
-          return res.render('success', { title: "Oops! this pin has reached its usage limit" });
-        }
-
-        if (pin.userid != _learner && pin.used == true) {
-          return res.render('success', { title: "This pin has been assigned to a learner" });
-        }
-
-        const exam = await Examing.find({ _learner: _learner, term: name, classofs: classof, roll_no: roll_no }).exec();
-        const misc = await Miscellaneous.findOne().where("_learner").equals(_learner).where("term").equals(name).where("classofs").equals(classof).where("roll_no").equals(roll_no).exec();
-        const user = await Learner.findOne({ _id: _learner }).exec();
-        const sname = await Schoolname.findOne().exec();
-        const section = await ThirdSection.findOne({ roll_no : roll_no, name : name }).exec();
-        const session = await Session.findOne({ classof: classof }).exec();
-
-        if (exam && misc && user && sname && section && section) {
-          await Voucher.updateOne({ code: code }, { $set: { userid: _learner, used: true }, $inc: { usage_count: 1 } });
-          return res.render("term_result", { exam, misc, user, sname, section, session });
-        } else {
-          return res.render('success', { title: "One or more required database queries failed" });
-        }
-      }
-      else {
-        if (!pin) {
-          return res.render('success', { title: "Invalid voucher" });
-        } else {
-          return res.render('success', { title: "Oops! The pin you entered has expired" });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      return res.render('success', { title: error.message });
+    if (!(name && _learner && classof && roll_no && code)) {
+      return res.render('success', { title: "No query parameters provided: Information missing" });
     }
-  } else {
-    return res.render('success', { title: "No query parameters provided: Information missing" });
+
+    const alphaCode = generateRandomCode(2, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    const numerCode = generateRandomCode(6, '12345678901234567890123456789012345678901234567890123456789012345678901234567890');
+    const year = new Date().getFullYear();
+    const resultSerialNumber = `monresult${numerCode}/${alphaCode}-${year}`;
+
+    const pin = await Voucher.findOne({ code, schoolId: req.user._id });
+
+    if (pin && pin.expiry > Date.now()) {
+      if (pin.usage_count >= 30) {
+        return res.render('success', { title: "Oops! This pin has reached its usage limit" });
+      }
+
+      if (pin.userid != _learner && pin.used == true) {
+        return res.render('success', { title: "This pin has been assigned to a learner" });
+      }
+
+      const exam = await Examing.find({ _learner, term: name, classofs: classof, roll_no }).exec();
+      const misc = await Miscellaneous.findOne({ _learner, term: name, classofs: classof, roll_no }).exec();
+      const users = await Learner.findById(_learner).exec();
+      const section = await ThirdSection.findOne({ roll_no, name, classof, schoolId: req.user._id }).exec();
+      const session = await Session.findOne({ classof, schoolId: req.user._id }).exec();
+
+      if (exam) {
+        await Voucher.updateOne({ code }, { $set: { userid: _learner, used: true }, $inc: { usage_count: 1 } });
+        return res.render("third_term_result", { exam, misc, users, section, session, user: req.user, resultSerialNumber });
+      } else {
+        return res.render('success', { title: "One or more required database queries failed" });
+      }
+    } else {
+      if (!pin) {
+        return res.render('success', { title: "Invalid voucher not identified with your school Identity. As any Fraud Activities are punishable" });
+      } else {
+        return res.render('success', { title: "Oops! The pin you entered has expired" });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    return res.render('success', { title: "An error occurred. Please try again later." });
   }
-  });
+});
+
+function generateRandomCode(length, characters) {
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+}
 
 module.exports = router;
 

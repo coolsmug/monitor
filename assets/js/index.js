@@ -1,6 +1,6 @@
 let open = document.getElementsByClassName("list_one");
 
-let lastClicked = null;
+let lastClickeding = null;
 
 for(let i = 0; i < open.length; i++) {
     open[i].onclick = function() {
@@ -11,10 +11,10 @@ for(let i = 0; i < open.length; i++) {
         let hideit = this.nextElementSibling;
 
         // Close the last clicked element if it exists and is not the current element
-        if (lastClicked && lastClicked !== this) {
-            lastClicked.nextElementSibling.style.maxHeight = null;
-            lastClicked.nextElementSibling.style.opacity = '0';
-            lastClicked.classList.remove("active");
+        if (lastClickeding && lastClickeding !== this) {
+            lastClickeding.nextElementSibling.style.maxHeight = null;
+            lastClickeding.nextElementSibling.style.opacity = '0';
+            lastClickeding.classList.remove("active");
         }
 
         // Set the maxHeight of the clicked element's next sibling
@@ -27,30 +27,12 @@ for(let i = 0; i < open.length; i++) {
         }
 
         // Set the last clicked element to the current element
-        lastClicked = this;
+        lastClickeding = this;
     }
 }
 
 
 // for table hidden deyails-----------------------------------------------------------------------------//
-
-// var acc = document.getElementsByClassName("butn");
-// var a;
-
-// for (a = 0; a < acc.length; a++) {
-//   acc[a].addEventListener("click", function() {
-//     this.classList.toggle("active");
-//     var hidee = this.nextElementSibling;
-//     if (hidee.style.visibility === "visible") {
-//       hidee.style.visibility = "hidden";
-//       hidee.style.opacity = 0;
-
-//     } else {
-//       hidee.style.visibility = "visible";
-//       hidee.style.opacity = 1;
-//     }
-//   });
-// }
 
 let acc = document.getElementsByClassName("butn");
 
@@ -137,24 +119,7 @@ $("#update-section").submit(function (sect) {
   });
 });
 
-// if (window.location.pathname == "/admin/all-section") {
-//   $ondelete = $(".table tbody td a.delete");
-//   $ondelete.click(function () {
-//     var id = $(this).attr("section-id");
 
-//     var request = {
-//      "url": `/admin/deleted/${id}`,
-//      "method": "DELETE",
-//     };
-
-//     if (confirm("Do you really want to delete the record?")) {
-//       $.ajax(request).done(function (response) {
-//         alert("Data Delete Successfully!");
-//         location.reload();
-//       });
-//     }
-//   });
-// }
 
 //  class Ajax for Updating and deleting \\\\\\\\\\\\\\\\\\\\\\\\//
 
@@ -178,55 +143,235 @@ $("#edit-posts").submit(function (param) {
     $.ajax(requests).done(function(responses) {
     alert("Current class Updated Successfully!")
     location.reload()
-    console.log("Current class Updated Successfully!")
+    
   });
+});
+
+
+// switch button
+
+$(document).ready(function() {
+  let isProcessing = false;
+
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+  const debouncedClickHandler = debounce(function() {
+    if (!isProcessing) {
+      const switchId = $(this).find('input').data('user-id');
+      const updatedStatus = $(this).find('input').is(':checked');
+      var row = $(this).closest('tr');
+
+      isProcessing = true;
+
+      $.ajax({
+        url: `/admin/user-status/${switchId}`,
+        type: 'PATCH',
+        data: { status: updatedStatus },
+        success: function(data) {
+          // Update the switch status immediately without a page reload
+          $(this).find('input').prop('checked', updatedStatus);
+          alert('Status changed successfully');
+          row.remove();
+        },
+        error: function(error) {
+          console.error(error);
+        },
+        complete: function() {
+          isProcessing = false;
+        }
+      });
+    }
+  }, 500); // Adjust the debounce time as needed
+
+  $('.switch').click(debouncedClickHandler);
 });
 
 
 $(document).ready(function() {
-  $('.switch').click(function() {
-    const switchId = $(this).find('input').data('user-id');
-    const updatedStatus = $(this).find('input').is(':checked');
+  let isProcessing = false;
 
-    $.ajax({
-      url: `/admin/user-status/${switchId}`,
-      type: 'PATCH',
-      data: { status: updatedStatus },
-      success: function(data) {
-        alert('Status changed successfully')
-        location.reload()
-      },
-      error: function(error) {
-        console.error(error);
-      }
-    });
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+  const debouncedClickHandler = debounce(function() {
+    if (!isProcessing) {
+      const switchId = $(this).find('input').data('staff-id');
+      const updatedStatus = $(this).find('input').is(':checked');
+      var row = $(this).closest('tr');
+
+      isProcessing = true;
+
+      $.ajax({
+        url: `/school/staff-status/${switchId}`,
+        type: 'PATCH',
+        data: { status: updatedStatus },
+        success: function(data) {
+          // Update the switch status immediately without a page reload
+          $(this).find('input').prop('checked', updatedStatus);
+          alert('Status changed successfully');
+          row.remove();
+        },
+        error: function(error) {
+          console.error(error);
+        },
+        complete: function() {
+          isProcessing = false;
+        }
+      });
+    }
+  }, 500); // Adjust the debounce time as needed
+
+  $('.switcher').click(debouncedClickHandler);
+});
+
+
+
+
+$("#pull_out").submit(function (params) {
+  params.preventDefault();
+
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+  console.log(data);
+
+  let request = {
+    "url" : `/school/update-proprietor/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
   });
 });
 
 
-$(document).ready(function() {
-  $('.switcher').click(function() {
-    const switchId = $(this).find('input').data('staff-id');
-    const updatedStatus = $(this).find('input').is(':checked');
+$("#school").submit(function (params) {
+  params.preventDefault();
 
-    $.ajax({
-      url: `/school/staff-status/${switchId}`,
-      type: 'PATCH',
-      data: { status: updatedStatus },
-      success: function(data) {
-        alert('Status changed successfully')
-        location.reload()
-      },
-      error: function(error) {
-        console.error(error);
-      }
-    });
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+  console.log(data);
+
+  let request = {
+    "url" : `/school/update-school/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
   });
 });
 
 
-$("#blessing").submit(function (event) {
-  event.preventDefault();
+$("#pull_off").submit(function (params) {
+  params.preventDefault();
+
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+  console.log(data);
+
+  let request = {
+    "url" : `/admin/update-session/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
+  });
+});
+
+
+$("#edit-state").submit(function (params) {
+  params.preventDefault();
+
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+  console.log(data);
+
+  let request = {
+    "url" : `/school/update-staff-statement/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
+  });
+});
+
+$("#edit-subject").submit(function (params) {
+  params.preventDefault();
+
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+  console.log(data);
+
+  let request = {
+    "url" : `/admin/update-subject/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
+  });
+});
+
+
+$("#update_user").submit(function (eventss) {
+  eventss.preventDefault();
 
   var unindexed_array = $(this).serializeArray();
   var data = {};
@@ -236,22 +381,418 @@ $("#blessing").submit(function (event) {
   });
 
   console.log(data);
+    // var id = $(form).attr("data-id");
   var request = {
-    url: "/result/register_exam",
-    method: "POST",
-    data: data,
+    "url": `/admin/update-learner/${data.id}`,
+    "method": "POST",
+    "data": data,
+    
   };
 
   $.ajax(request).done(function (response) {
-    alert("Exam Created Successfully!");
-    location.reload()
-    console.log("Data Updated Successfully!");
+    alert("Data Updated Successfully!");
+    location.reload();
+
   });
 });
 
 
-$("#myblessing").submit(function (event) {
-  event.preventDefault();
+const copyBtnss = document.querySelectorAll('.copy-btn');
+
+function copyText(event) {
+  const row = event.target.closest('tr');
+  const text = row.querySelector('.avis').textContent;
+
+  // Use navigator.clipboard API if available and on a secure context
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert(`${text} copied!`))
+      .catch(err => {
+        console.error('Unable to copy text: ', err);
+        fallbackCopyText(text);
+      });
+  } else {
+    // Fallback for unsupported browsers or insecure contexts
+    fallbackCopyText(text);
+  }
+}
+
+function fallbackCopyText(text) {
+  const tempInput = document.createElement('input');
+  tempInput.value = text;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempInput);
+  alert(`${text} copied!`);
+}
+
+copyBtnss.forEach(btn => {
+  btn.addEventListener('click', copyText);
+});
+
+
+// =================Code for delete learner=========================//
+
+$(function() {
+  $('a.delete_learner').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+
+//
+
+let closesing = document.getElementById("tii");
+let opening = document.getElementById("shii")
+let oneNOW = document.getElementById("big-door")
+
+function closIts() {
+  closesing.onclick = ()=> {
+      oneNOW.style.left = '-1000px'
+      oneNOW.style.transition = 'all .7s ease-in-out'
+      oneNOW.style.opacity = "0"
+     
+  }
+}
+closIts()
+
+function openIt() {
+  opening.onclick = ()=> {
+      oneNOW.style.left = '0px'
+      oneNOW.style.transition = 'all .7s ease-in-out'
+      oneNOW.style.opacity = "1"
+  }
+}
+openIt()
+
+
+//for all school setting
+
+$(function() {
+  $('a.deleteOne').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr');
+   // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+$(function() {
+  $('a.deleteTwo').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr');
+   // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+
+$(function() {
+  $('a.deleteThree').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr');
+   // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+
+//all section delete
+
+$(function() 
+{$('a.deleteSection').click(function(e) {
+  e.preventDefault(); // Prevent the default behavior of the anchor tag
+  var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+  var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+  var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+  if (confirm('Are you sure you want to delete this data?')) {
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      data: { id: id },
+      success: function(result) {
+        alert('Data deleted successfully!');
+        row.remove(); // Remove the deleted row from the DOM
+      },
+      error: function(xhr, status, error) {
+        alert('Error deleting Data: ' + error);
+      }
+    });
+  }
+});
+});
+
+$(function() {
+  $('a.deleteSession').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+})
+
+$(function() {
+  $('a.deleteSubject').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+$(function() {
+  $('a.deleteThird').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+
+
+
+
+// =================Code for delete learner=========================//
+
+$(function() {
+  $('a.deleteOldLearner').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+
+//for Switch Past Learner
+$(document).ready(function() {
+  let isProcessing = false;
+
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+  const debouncedClickHandler = debounce(function() {
+    if (!isProcessing) {
+      const switchId = $(this).find('input').data('user-id');
+      const updatedStatus = $(this).find('input').is(':checked');
+      var row = $(this).closest('tr');
+
+      isProcessing = true;
+
+      $.ajax({
+        url: `/reports/user-status/${switchId}`,
+        type: 'PATCH',
+        data: { status: updatedStatus },
+        success: function(data) {
+          // Update the switch status immediately without a page reload
+          $(this).find('input').prop('checked', updatedStatus);
+          alert('Status changed successfully');
+          row.remove();
+        },
+        error: function(error) {
+          console.error(error);
+        },
+        complete: function() {
+          isProcessing = false;
+        }
+      });
+    }
+  }, 500); // Adjust the debounce time as needed
+
+  $('.switch').click(debouncedClickHandler);
+});
+
+
+//switch school
+$(document).ready(function() {
+  let isProcessing = false;
+
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+  const debouncedClickHandler = debounce(function() {
+    if (!isProcessing) {
+      const switchId = $(this).find('input').data('user-id');
+      const updatedStatus = $(this).find('input').is(':checked');
+      var row = $(this).closest('tr');
+
+      isProcessing = true;
+
+      $.ajax({
+        url: `/school/school-status/${switchId}`,
+        type: 'PATCH',
+        data: { status: updatedStatus },
+        success: function(data) {
+          // Update the switch status immediately without a page reload
+          $(this).find('input').prop('checked', updatedStatus);
+          alert('Status changed successfully');
+          row.remove();
+        },
+        error: function(error) {
+          console.error(error);
+        },
+        complete: function() {
+          isProcessing = false;
+        }
+      });
+    }
+  }, 500); // Adjust the debounce time as needed
+
+  $('.switch').click(debouncedClickHandler);
+});
+
+
+
+//Miscellaneous 
+$("#update_usersMille").submit(function (eventss) {
+  eventss.preventDefault();
 
   var unindexed_array = $(this).serializeArray();
   var data = {};
@@ -261,15 +802,112 @@ $("#myblessing").submit(function (event) {
   });
 
   console.log(data);
+    
   var request = {
-    url: "/third_term_exam/register_exams",
-    method: "POST",
-    data: data,
+    "url": `/result/update_miscellaneous/${data.id}`,
+    "method": "POST",
+    "data": data,
+    
   };
 
   $.ajax(request).done(function (response) {
-    alert("Exam Created Successfully!");
-    location.reload()
+    alert("Data Updated Successfully!");
+    location.reload();
     console.log("Data Updated Successfully!");
   });
 });
+
+
+//coutry and State
+$(document).ready(() => {
+$('#country').on('change', () => {
+  const countryName = $('select[name="country"]').val();
+  if (countryName) {
+    $.get(`/states/${countryName}`, (states) => {
+      $('select[name="state"]').empty().append('<option value="">-- Select a State --</option>');
+      $.each(states, (index, state) => {
+        $('select[name="state"]').append(`<option value="${state.name}">${state.name}</option>`);
+      });
+      $('select[name="state"]').prop('disabled', false);
+      $('select[name="city"]').empty().prop('disabled', true);
+    });
+  } else {
+    $('select[name="state"]').empty().prop('disabled', true);
+    $('select[name="city"]').empty().prop('disabled', true);
+  }
+});
+
+$('#state').on('change', () => {
+  const countryName= $('select[name="country"]').val();
+  const stateName = $('select[name="state"]').val();
+  if (countryName && stateName) {
+    $.get(`/cities/${countryName}/${stateName}`, (cities) => {
+      $('select[name="city"]').empty().append('<option value="">-- Select a City --</option>');
+      $.each(cities, (index, city) => {
+        $('select[name="city"]').append(`<option value="${city.name}">${city.name}</option>`);
+      });
+      $('select[name="city"]').prop('disabled', false);
+    });
+  } else {
+    $('select[name="city"]').empty().prop('disabled', true);
+  }
+});
+});
+
+
+
+
+//Create staff
+$("#creat-Classing").submit(function (params) {
+  params.preventDefault();
+
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+  console.log(data);
+
+  let request = {
+    "url" : `/school/update-staff/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
+  });
+});
+
+
+//third term Exam fill
+
+$("#update_misc").submit(function (eventss) {
+ eventss.preventDefault();
+
+ var unindexed_array = $(this).serializeArray();
+ var data = {};
+
+ $.map(unindexed_array, function (n, i) {
+   data[n["name"]] = n["value"];
+ });
+
+ console.log(data);
+   // var id = $(form).attr("data-id");
+ var request = {
+   "url": `/result/register_miscellaneous`,
+   "method": "POST",
+   "data": data,
+   
+ };
+
+ $.ajax(request).done(function (response) {
+   alert("Data Updated Successfully!");
+   location.reload();
+   console.log("Data Updated Successfully!");
+ });
+});
+

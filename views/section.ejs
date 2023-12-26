@@ -24,14 +24,14 @@
                 <p  class="p_of_p">School's Section of <%= session.name %> <%= date %>  </p>
                 <% } %> 
                 <P  class="p_of_p"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %> </P>
-                <P class="p_of_p">With Roll Number <%= users.roll_no %> <%= classed.name %> </P> 
+                <P class="p_of_p">With Admission No <%= users.roll_no %> <%= classed.name %> </P> 
               
         
                     <div class="form-for-report">
                         <% for (var i = 0; i < section.length ; i++) {%> 
                     
                             <div class="div_divol">
-                                <a href="/result/exam-pace?id=<%= section[i]._id %>&name=<%= section[i].name %>&roll_no=<%=section[i].roll_no %>&id=<%= users._id %>&id=<%= classed._id %>&id=<%= session._id %>&classof=<%= session.classof %> ">
+                                <a href="/result/exam-pace?sectionId=<%= section[i]._id %>&name=<%= section[i].name %>&roll_no=<%=section[i].roll_no %>&userId=<%= users._id %>&classId=<%= classed._id %>&sessionId=<%= session._id %>&classof=<%= session.classof %> ">
                                     <div class="avi">
                                        <p> <%= section[i].roll_no %> </p> 
                                       
@@ -50,7 +50,7 @@
                             <% for (var a = 0; a < third.length ; a++) {%> 
                     
                                 <div class="div_divol">
-                                    <a href="/third_term_exam/exam-pace-third?id=<%= third[a]._id %>&name=<%= third[a].name %>&roll_no=<%= third[a].roll_no %>&id=<%= users._id %>&id=<%= classed._id %>&id=<%= session._id %>&classof=<%= session.classof %>">
+                                    <a href="/third_term_exam/exam-pace-third?sectionId=<%= third[a]._id %>&name=<%= third[a].name %>&roll_no=<%=third[a].roll_no %>&userId=<%= users._id %>&classId=<%= classed._id %>&sessionId=<%= session._id %>&classof=<%= session.classof %> ">
                                         <div class="avi">
                                            <p>  <%= third[a].roll_no %> </p> 
                                           

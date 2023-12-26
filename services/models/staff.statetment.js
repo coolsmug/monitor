@@ -38,7 +38,11 @@ staffStatementSchema = new Schema ({
           type: mongoose.Schema.Types.ObjectId,
           required: true,
           ref: 'School'
-        }
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now // Set default value to the current date and time when the document is created
+      }
       },
       { timestamps: true }
 );

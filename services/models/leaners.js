@@ -25,7 +25,7 @@ const LearnerSchema = new Schema(
 
       trim: true,
 
-      minlength: 3,
+    
 
       required: true,
     },
@@ -35,7 +35,6 @@ const LearnerSchema = new Schema(
 
       trim: true,
 
-      minlength: 3,
 
       required: true,
     },
@@ -45,7 +44,6 @@ const LearnerSchema = new Schema(
 
       trim: true,
 
-      minlength: 3,
     },
 
     email: {
@@ -55,7 +53,6 @@ const LearnerSchema = new Schema(
     
       trim: true,
 
-      minlength: 3,
 
       required: true,
     },
@@ -109,8 +106,9 @@ const LearnerSchema = new Schema(
       trim: true,
     },
     img:{
-        data: Buffer,
-        contentType: String,
+      url: String,       // Cloudinary URL
+      publicId: String,  // Cloudinary Public ID
+     
     },
     religion: {
       type: String,

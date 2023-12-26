@@ -29,11 +29,11 @@
       
      
           <div class="avi aviss">
-              <% if(user.img.contentType) {%> 
-                <img src="data:user/<%= user.img.contentType %>;base64,<%= user.img.data.toString('base64') %>" alt="">
-                <% } else {%> 
-              <img src="/img/monitor_user_image.jpg" alt="" >
-              <% } %> 
+            <% if (!user.img.url) { %>
+               <img src="/img/monitor_user_image.jpg" alt="No Image">
+               <% } else if (user.img.url) { %>
+               <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="user Image">
+               <% } %>
           </div>
   <marquee > <h1 class="hhh"><%= user.first_name %> <%= user.last_name %> <%= user.middle_name %>'s  Details</h1></marquee>
           <div class="mini-wrapp assiom">

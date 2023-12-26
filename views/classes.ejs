@@ -20,7 +20,7 @@
                 <% for (var i = 0; i < classes.length ; i++) {%> 
             
                     <div class="div_divol">
-                        <a href="/result/learner-test-exam/1?id=<%= session._id %>&class_code=<%= classes[i].class_code %>&arm=<%= classes[i].arm %>&id=<%= classes[i]._id %>">
+                        <a href="/result/learner-test-exam/1?sessionId=<%= session._id %>&class_code=<%= classes[i].class_code %>&arm=<%= classes[i].arm %>&classId=<%= classes[i]._id %>">
                             <div class="avi">
                                <p><%= classes[i].roll_no %></p> 
                             </div>
@@ -42,7 +42,7 @@
                             <% if (current == 1) { %>
                                 <li class="disabled"><a>First</a></li>
                             <% } else { %>
-                                <li><a href="/result/current_class/1?id=<%= session._id %>">First</a></li>
+                                <li><a href="/result/current_class/1?sessionId=<%= session._id %>">First</a></li>
                             <% } %>
                             <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
                             <% if (i !== 1) { %>
@@ -52,7 +52,7 @@
                                 <% if (i == current) { %>
                                     <li class="active"><a><%= i %></a></li>
                                 <% } else { %>
-                                    <li><a href="/result/current_class/<%= i %>?id=<%= session._id %>"><%= i %></a></li>
+                                    <li><a href="/result/current_class/<%= i %>?sessionId=<%= session._id %>"><%= i %></a></li>
                                 <% } %>
                                 <% if (i == Number(current) + 4 && i < pages) { %>
                                     <li class="disabled"><a>...</a></li>
@@ -61,7 +61,7 @@
                             <% if (current == pages) { %>
                                 <li class="disabled"><a>Last</a></li>
                             <% } else { %>
-                                <li><a href="/result/current_class/<%= pages %>?id=<%= session._id %>">Last</a></li>
+                                <li><a href="/result/current_class/<%= pages %>?sessionId=<%= session._id %>">Last</a></li>
                             <% } %>
                         </ul>
                     <% } %>

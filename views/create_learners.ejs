@@ -18,11 +18,11 @@
             <div class="all-single-form">
                 <div class="mb-3">
                     <div class="hop">
-                        <label for="roll_no">Roll No:</label>
+                        <label for="roll_no">Admission No:</label>
                         <input 
-                        type="number" 
+                        type="text" 
                         name="roll_no" 
-                        value="<%= typeof roll_no != 'undefined' ? roll_no : '' %>">
+                        value="<%= learnerRollNo %>">
                     </div>
                 
                     <div class="hop">
@@ -82,7 +82,7 @@
                 <div class="mb-3">
                     <div class="hop">
                         <label for="email">Email:</label>
-                        <input type="email" autocomplete="off" name="email" onkeyup="this.value=value.toLowerCase()" value="<%= typeof email != 'undefined' ? email : '' %>" />
+                        <input type="email" autocomplete="off" name="email" onkeyup="this.value=value.toLowerCase()" value="<%= learnerRollNo %>@gmail.com<%= typeof email != 'undefined' ? email : '' %>" />
                     </div>
 
                     <div class="hop">

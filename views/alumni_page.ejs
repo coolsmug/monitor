@@ -59,7 +59,7 @@
                 <td><%= user[i].class_code %> </td>
                 <td><%= user[i].arm %> </td>
                 <td><%= user[i].gender %> </td>
-                <td><label class="switch">
+                <td><label class="switch switchPassLearner">
                     <input type="checkbox" id="mySwitch" data-user-id="<%= user[i]._id %> " <%= user[i].status== true ? 'checked' : '' %> >
                     <span class="slider">
 
@@ -71,7 +71,7 @@
                         <a  href="/admin/update-learner?id=<%= user[i]._id %>" class="btn border-shadow update">
                             <i class="fas fa-user-edit"></i>
                         </a>
-                        <a href="/admin/delete/<%= user[i]._id %> " class="btn border-shadow delete">
+                        <a href="/admin/delete/<%= user[i]._id %> " class="btn border-shadow deleteOldLearner">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                         <a href="/admin/learner-detail?id=<%= user[i]._id %>" class="btn border-shadow info">
@@ -120,94 +120,5 @@
 </footer>
 <%- include ("./include/footer.ejs") %> 
 
-<script>
-// =================Code for copying  Learner Id=========================//
-  const copyBtns = document.querySelectorAll('.copy-btn');
-
-function copyText(event) {
-  const row = event.target.closest('tr');
-  const text = row.querySelector('.avis').textContent;
-
-  // Try to use navigator.clipboard API
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-    alert(`${text} copied!`);
-  } else {
-    // Fallback method
-    const tempInput = document.createElement('input');
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-    alert(`${text} copied!`);
-  }
-}
-
-copyBtns.forEach(btn => {
-  btn.addEventListener('click', copyText);
-});
-
-// =================Code for copying  changing Status=========================//
-
-  $(document).ready(function() {
-  $('.switch').click(function() {
-    const switchId = $(this).find('input').data('user-id');
-    const updatedStatus = $(this).find('input').is(':checked');
-
-    $.ajax({
-      url: `/admin/user-status/${switchId}`,
-      type: 'PATCH',
-      data: { status: updatedStatus },
-      success: function(data) {
-        alert('Status changed successfully')
-        location.reload()
-      },
-      error: function(error) {
-        console.error(error);
-      }
-    });
-  });
-});
-
-// =================Code for delete learner=========================//
-
-$(function() {
-  $('a.delete').click(function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag
-    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
-    if (confirm('Are you sure you want to delete this user?')) {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        data: { id: id },
-        success: function(result) {
-          alert('User deleted successfully!');
-          location.reload(); // Reload the page to reflect the updated state
-        },
-        error: function(xhr, status, error) {
-          alert('Error deleting Exam: ' + error);
-        }
-      });
-    }
-  });
-});
-
-//   function myFunction(event) {
-    
-    //     try {
-    //         var copyText = event.target.parentNode.nextElementSibling.innerHTML;
-    //          navigator.clipboard.writeText(copyText)
-    //          alert(`${copyText} copied!, press Ok to use it`)
-    //          console.log(copyText)
-    //     } catch (err) {
-    //         if(err) throw err
-    //         console.error(err)
-    //     }
-       
-    //   }
-    
-</script>
 
 

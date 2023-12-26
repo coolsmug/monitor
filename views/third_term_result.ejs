@@ -6,32 +6,32 @@
    
             <div class="sidebar">
                 <div class="student-image">
-                    <% if(!user.img.contentType) {%> 
-                        <img src="/img/monitor_user_image.jpg">
-                   <% } else if(user.img.contentType){%> 
-                        <img src="data:user/<%= user.img.contentType %>;base64,<%= user.img.data.toString('base64') %>">
+                    <% if(users.img.url) {%> 
+                        <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
+                   <% } else {%> 
+                       <img src="/img/monitor_userss_image.jpg" alt="" >
                        <% } %> 
                 </div>
                
                 <div class="student-name">
-                    <p class="fullname"><%= user.first_name %> <%= user.last_name %> <%= user.middle_name %>  </p>
+                    <p class="fullname"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>  </p>
                 </div>
         
                 <div class="age">
                     <p class="student-age">Student Age:</p>
-                    <p class="the"><%= user.age %> </p>
+                    <p class="the"><%= users.age %> </p>
                 </div>
         
                 <div class="class">
                     <p class="student-class">Student Class:</p>
                   
-                    <p class="the"><%= user.classes %>/ <%= user.arm %> </p>
+                    <p class="the"><%= users.classes %>/ <%= users.arm %> </p>
                    
                 </div>
         
                 <div class="addmission-no">
                     <p class="addmin-no">Addmision No:</p>
-                    <p class="the"><%= user.roll_no %> </p>
+                    <p class="the"><%= users.roll_no %> </p>
                 </div>
         
                 <div class="session-section">
@@ -41,7 +41,7 @@
         
                 <div class="date-issue">
                     <p class="the-dates">Date Issue:</p>
-                    <% if(user) {%> 
+                    <% if(users) {%> 
                         <% let x = new Date() %> 
                         <% let y = x.toDateString() %> 
                     <p class="the"> <%= y %> </p>
@@ -69,22 +69,22 @@
                 <div class="header">
         
                     <div class="school-name">
-                        <p class="the-school-name"><%= sname.school_name %></p>
+                        <p class="the-school-name"><%= user.school_name %></p>
                     </div>
                 
                     <div class="address">
-                        <p class="school-add"><%= sname.address %> </p>  <p class="school-add"><%= sname.address2 %> </p>
+                        <p class="school-add"><%= user.address %> </p>  <p class="school-add"><%= user.address2 %> </p>
                         
-                            <p class="school-email"> <%= sname.email %>, <%= sname.website %></p>
-                            <p class="school-web"><i class="fas fa-phone"></i> <%= sname.phone_no %>. <i class="fas fa-mobile"></i> <%= sname.phone_no2 %> </p> 
+                            <p class="school-email"> <%= user.email %>, <%= user.website %></p>
+                            <p class="school-web"><i class="fas fa-phone"></i> <%= user.phone_no %>. <i class="fas fa-mobile"></i> <%= user.phone_no2 %> </p> 
                     
                     </div>
                     <div id="school-logo">
-                        <% if(!sname.img.contentType) {%>
-                            <img src="/img/school_logo-01.png"> 
-                       <% } else if(sname.img.contentType){%> 
-                            <img src="data:user/<%= sname.img.contentType %>;base64,<%= sname.img.data.toString('base64') %>">
-                           <% } %> 
+                        <% if(user.img.url) {%> 
+                            <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="Learner Image">
+                         <% } else {%> 
+                             <img src="/img/school_logo-01-01.png" alt="" width="200">
+                             <% } %> 
                     </div>
                 </div>
                 

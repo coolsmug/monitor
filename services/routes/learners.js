@@ -67,9 +67,10 @@ const multer = require('multer');
 router.post('/register', ensureAuthenticateds, (req, res) => {
 
     const { roll_no, classes, arm, first_name, last_name, password, 
-        password2, email, date_enrolled, date_ended, gender,class_code } = req.body;
+        password2, email, date_enrolled, date_ended, gender,class_code, learnerRollNo } = req.body;
 
     let errors = []
+    
     
     console.log(`Roll_No: ${roll_no} Class: ${classes} FirstName: ${first_name} 
     LastName: ${last_name} Email: ${email} Password: ${password} 
@@ -114,6 +115,7 @@ router.post('/register', ensureAuthenticateds, (req, res) => {
                       class_code: class_code,
                       current: current,
                       user: req.user,
+                      learnerRollNo,
                      
                   })
                   })
@@ -143,6 +145,7 @@ router.post('/register', ensureAuthenticateds, (req, res) => {
                         class_code: class_code,
                         current: current,
                         user: req.user,
+                        learnerRollNo,
                        
                     })
                     })
@@ -172,6 +175,7 @@ router.post('/register', ensureAuthenticateds, (req, res) => {
                         class_code: class_code,
                         current: current,
                         user: req.user,
+                        learnerRollNo,
                         
                        
                     })

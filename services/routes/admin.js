@@ -13,15 +13,24 @@ const { session } = require("passport");
 const Currentclass = require('../models/current_class');
 const Staff = require('../models/staff.js');
 const ThirdSection = require('../models/third._term_section')
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
+const SharpMulter  =  require("sharp-multer");
 const Voucher = require("../models/token");
 const VoucherPayment = require("../models/voucher_payment.js")
 // const request = require('request');
 const PAYSTACK = process.env.PAYSTACK_SECRET_KEY
 const paystack = require('paystack')(PAYSTACK);
 const Agenda = require('agenda');
+const cloudinary = require('cloudinary').v2;
+const file = require('../models/cloudinary')
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 
    /**
@@ -43,6 +52,50 @@ const Agenda = require('agenda');
     res.redirect('/admin/admin_dashboard');     
   }
 
+ 
+
+  router.post('/upload-image/:id', async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const user = await Learner.findById(id);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Check if a file is provided
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file provided' });
+      }
+  
+      const result = await cloudinary.uploader.upload(req.file.path);
+      console.log(result);
+
+  
+      // Check if the Cloudinary upload was successful
+      if (!result || !result.secure_url) {
+        return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
+      }
+  
+      // Update the user's img field with the Cloudinary URL
+      user.img = {
+        url: result.secure_url,
+        publicId: result.public_id  // Save the public ID if you need it for future deletions
+      };
+  
+      await user.save();
+      console.log(user.img);
+
+  
+      req.flash('success_msg', 'Image uploaded successfully');
+      return res.redirect('/admin/update-learner?id=' + id);
+      res.status(200).json( { message: "Image Uploaded" } )
+    } catch (error) {
+      console.error(error);
+     
+      res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+  });
 
 
   router.post("/admin_login", forwardAuthenticateds, (req, res, next) => {
@@ -52,7 +105,7 @@ const Agenda = require('agenda');
       }
       if (!admin) {
         req.flash('error_msg', "wrong info")
-        return res.redirect('/admin/admin_dashboard');
+        return res.redirect('/');
 
       }
       // Checking if user has not paid and trial session is still active
@@ -70,7 +123,7 @@ const Agenda = require('agenda');
           if (err) {
             return next(err);
         }
-        req.flash('success_msg', 'Your trial session has ended. Please subscribe using this page');
+        req.flash('error_msg', 'Your trial session has ended. Please subscribe using this page');
         res.redirect('/monitor')
         });
        
@@ -86,7 +139,7 @@ const Agenda = require('agenda');
         });
       } else {
         // Invalid fee status, redirect to homepage
-        req.flash('success_msg', "Invalid fees status")
+        req.flash('error_msg', "Invalid fees status")
         return res.redirect('/');
         
       }
@@ -274,6 +327,11 @@ router.post("/create-voucher", ensureAuthenticated, async(req, res) => {
                             {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
                             {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
                             {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
+                            {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
+                            {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
+                            {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
+                            {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
+          
                           ];
                             vouchers.forEach( async function(vouch){
                               Voucher.findOne({code: coded, serial_no: serial, schoolId: req.user._id}).exec((err, vouchs) => {
@@ -385,7 +443,7 @@ router.get('/get-gen-voucher/:page', ensureAuthenticated, async(req, res) => {
                     .skip((perPage * page) - perPage)
                     .limit(perPage)
                     .exec((err, vouch) => {
-                      Voucher.count({used: false}).exec((errOne, count) => {
+                      Voucher.count({used: false, schoolId: req.user._id}).exec((errOne, count) => {
                           if(errOne) throw new Error(err)
                           if(err) throw new Error(err)
                           res.render('get_token', {
@@ -436,7 +494,7 @@ router.post('/pay', ensureAuthenticated,
             }
           ]
         },
-        callback_url: " https://0a4b-102-89-47-136.ngrok-free.app/admin/callback",
+        callback_url: "https://709d-105-119-3-45.ngrok-free.app/admin/callback",
       });
       res.redirect(payment.data.authorization_url);
     }
@@ -514,7 +572,26 @@ router.get("/create-class", ensureAuthenticated, async(req, res) => {
 
 
 router.get("/create-learner",ensureAuthenticated, async(req, res) => {
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let alphaCode = '';
+  for (let i = 0; i < 1; i++) {
+    alphaCode += alpha.charAt(Math.floor(Math.random() * alpha.length));
+  }
 
+  const numer = "1234567890";
+  let numerCode = '';
+  for (let i = 0; i < 2; i++) {
+    numerCode += numer.charAt(Math.floor(Math.random() * numer.length));
+  }
+
+  var day = new Date();
+  var year = day.getFullYear();
+ 
+  const schoolName = req.user.school_name
+  const userSchool = schoolName.split('');
+  const schoolAbb = userSchool[0] + userSchool[1] + userSchool[2];
+
+  const learnerRollNo = `${schoolAbb}/${numerCode}${alphaCode}/${year}`;
     await Currentclass
             .find({schoolId: req.user._id} )
             .select("name class_code arm")
@@ -523,6 +600,7 @@ router.get("/create-learner",ensureAuthenticated, async(req, res) => {
               res.render('create_learners', {
                 current: current,
                 user: req.user,
+                learnerRollNo,
               })
             
             })
@@ -636,7 +714,7 @@ router.get("/all-section/:page", ensureAuthenticated, (req, res) => {
         .sort({roll_no : 1})
         .limit(perPage)
         .exec(function(err, section) {
-            Section.count().exec(function(err, count) {
+            Section.count({schoolId: req.user._id}).exec(function(err, count) {
                 if (err) return next(err)
                 res.render('all_sections', {
                     section: section,
@@ -657,13 +735,13 @@ router.get("/all-thirdsection/:page", ensureAuthenticated, (req, res) => {
      var page = req.params.page || 1
  
    ThirdSection
-         .find({ schoolId: req.user._id})
+         .find( { schoolId: req.user._id } )
          .select("roll_no name date_started date_ended datenow classof")
          .skip((perPage * page) - perPage)
          .sort({roll_no : 1})
          .limit(perPage)
          .exec(function(err, third) {
-            ThirdSection.count().exec(function(err, count) {
+            ThirdSection.count({schoolId: req.user._id}).exec(function(err, count) {
                  if (err) return next(err)
                  res.render('all_thirdterm', {
                      third: third,
@@ -811,9 +889,9 @@ router.get('/all-learner/:page', ensureAuthenticated, async(req, res, next) => {
         .sort({roll_no : 1})
         .limit(perPage)
         .exec(function(err,learner) {
-            Learner.count().exec(function(err, count) {
+            Learner.count({schoolId: req.user._id}).exec(function(err, count) {
                 if (err) return next(err)
-                console.log(req.user)
+               
                 res.render('all_learners', {
                     learner: learner,
                     user: req.user,
@@ -843,7 +921,7 @@ router.get("/update-learner", ensureAuthenticated, async(req, res) => {
   }
 });
 
-router.get("/delete/:id", async(req, res) => {
+router.delete("/delete/:id", async(req, res) => {
   const id = req.params.id;
     await Learner.findByIdAndDelete(id)
     .then((data) => {
@@ -906,15 +984,27 @@ router.post("/update-learner/:id", ensureAuthenticated, async(req, res) => {
                             user
                                 .save()
                                 .then(() => {
-                                  res.json("Miscellaneous Updated...");
+                                  res.json("Learner Data Updated Successfully...");
                                 })
-                                .catch((err) => res.status(400).json("Error:" + err));
+                                .catch((err) => {
+                                res.status(400).json("Error:" + err)
+                                console.log(err)
+                              }
+                                );
                           }).catch((err) => {
                             res.status(400).json("Error: " + err);
+                            console.log(err)
                           });
                         
   
 });
+
+
+
+//'''''''''''''''''''Upload Users Image'''''''''''''''''''''''''''//
+
+
+
 
 
 // const agenda = new Agenda();
@@ -930,7 +1020,7 @@ router.post("/update-learner/:id", ensureAuthenticated, async(req, res) => {
 // agenda.start();
 
 
-router.get('/learner-detail', async(req, res) => {
+router.get('/learner-detail',ensureAuthenticated, async(req, res) => {
   if(req.query.id) {
     const id = req.query.id;
 
@@ -939,6 +1029,7 @@ router.get('/learner-detail', async(req, res) => {
         //  res.status(404).send({ message: "User not found" });
           res.render('learner_detail', { 
             user : user,
+            users: req.user,
           });
        
        
@@ -989,7 +1080,9 @@ router.get("/all-subject/:page", ensureAuthenticated, async(req, res, next) => {
         .sort({roll_no : 1})
         .limit(perPage)
         .exec(function(err, subject) {
-            Subject.count().exec(function(err, count) {
+            Subject.count(
+              { schoolId: req.user._id }
+            ).exec(function(err, count) {
                 if (err) return next(err)
                 res.render('all_subjects', {
                     subject: subject,

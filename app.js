@@ -19,6 +19,8 @@ const grid = require("gridfs-stream");
 const Learner = require("./services/models/leaners");
 const Schoolname = require("./services/models/school.name");
 const SharpMulter  =  require("sharp-multer");
+const cloudinary = require('cloudinary').v2;
+
 
 
 const PORT = process.env.PORT || 5000;
@@ -30,6 +32,7 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(cors());
  
+
 //bodyParser
 app.set("view engine", "ejs");
 app.use(express.urlencoded( { extended : false } ));
@@ -57,11 +60,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(function(req, res, next) {
-//   if(!req.user)
-//   res.header('Cache-Control', 'no-cache', 'private', 'no-store', 'must-revalidate', 'max-stale=0', 'post-check=0', 'pre-check=0')
-//   next()
-// })
+
+// cloudinary
+
+const upload = multer({ dest: 'uploads/' });
+app.use(upload.single('img'));
+
+
+
+app.use(function(req, res, next) {
+  if(!req.user)
+  res.header('Cache-Control', 'no-cache', 'private', 'no-store', 'must-revalidate', 'max-stale=0', 'post-check=0', 'pre-check=0')
+  next()
+})
 
 //load Assest
 app.use('/css', express.static(path.resolve(__dirname, "assets/css")))
@@ -72,6 +83,7 @@ app.use('/js', express.static(path.resolve(__dirname, "assets/js")))
 app.use((error, req, res, next) => {
   console.log("This is the rejected field ->", error.field);
 });
+
 
 app.use( (req, res, next) =>{
 
@@ -111,63 +123,42 @@ app.get('/edit-profile', async(req, res) => {
 
 //setting up Multer//
 
-const storage =  
- SharpMulter ({
-              destination:(req, file, callback) =>callback(null, "uploads"),
-              imageOptions:{
-               fileFormat: "jpg",
-               quality: 50,
-               resize: { width: 170, 
-                height: 170  },
-                 }
-           });
+// const storage =  
+//  SharpMulter ({
+//               destination:(req, file, callback) =>callback(null, "uploads"),
+//               imageOptions:{
+//                fileFormat: "jpg",
+//                quality: 50,
+//                resize: { width: 170, 
+//                 height: 170  },
+//                  }
+//            });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
-app.post('/edit-profile/:id', upload.single("image"), async(req, res) => {
-  const id = req.params.id;
-     await Learner.findById(id)
-            .then((user) => {
+// app.post('/edit-profile/:id', upload.single("image"), async(req, res) => {
+//   const id = req.params.id;
+//      await Learner.findById(id)
+//             .then((user) => {
               
-                user.img = {
-                  data: fs.readFileSync(
-                      path.join( __dirname + "/uploads/" + req.file.filename)
-                  ),
-                  contentType: "image/png",
-                };
-              user
-                .save()
-                .then(() => {
-                  res.json("User Image Uploaded...")
-                })
-                .catch((err) => res.status(400).json(`Error${err}`))
+//                 user.img = {
+//                   data: fs.readFileSync(
+//                       path.join( __dirname + "/uploads/" + req.file.filename)
+//                   ),
+//                   contentType: "image/png",
+//                 };
+//               user
+//                 .save()
+//                 .then(() => {
+//                   res.json("User Image Uploaded...")
+//                 })
+//                 .catch((err) => res.status(400).json(`Error${err}`))
 
-            })
-            .catch((err) => res.status(400).json(`Error${err}`))
-})
+//             })
+//             .catch((err) => res.status(400).json(`Error${err}`))
+// })
 
-const uploading = multer({ storage });
-app.post('/edit-profile_school/:id', uploading.single("image"), async(req, res) => {
-  const id = req.params.id;
-     await Schoolname.findById(id)
-            .then((school) => {
-              
-              school.img = {
-                  data: fs.readFileSync(
-                      path.join( __dirname + "/uploads/" + req.file.filename)
-                  ),
-                  contentType: "image/png",
-                };
-              school
-                .save()
-                .then(() => {
-                  res.json("School Logo Uploaded successfully!..., Press back button to return to the previous page")
-                })
-                .catch((err) => res.status(400).json(`Error${err}`))
 
-            })
-            .catch((err) => res.status(400).json(`Error${err}`))
-})
 
 
 

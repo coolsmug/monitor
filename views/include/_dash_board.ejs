@@ -1,5 +1,11 @@
 
-<div class="p_head"><img src="/img/monitor.png" width="100"></div>
+<div class="p_head">
+    <% if(user.img.url) {%> 
+        <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="Learner Image" width="100">
+     <% } else {%> 
+         <img src="/img/school_logo-01-01.png" alt="" width="100">
+         <% } %> 
+</div>
 <div class="ul-one" id="big-door">
  
     <div class="div-timess"><i class="fas fa-times" id="tii"></i></div>
@@ -40,7 +46,7 @@
             <form action="/result/check_result" method="GET">
             <div class="inputss">
                 <label for="">Term:</label>
-                    <select name="name" id="name" required>
+                    <select name="name" required>
                         <option value="First-Term">First-Term</option>
                         <option value="Second-Term">Second-Term</option>
                     </select>
@@ -169,30 +175,32 @@
     </div>
 </div>
 
-
-
-<script> 
+<style>
+    #big-door {
+          transition: all 0.7s ease-in-out; /* Move the transition property here */
+    }
+  </style>
+  
+  <script>
     let closes = document.getElementById("tii");
-    let openn = document.getElementById("shii")
-    let thedoor = document.getElementById("big-door")
+    let openn = document.getElementById("shii");
+    let thedoor = document.getElementById("big-door");
   
     function closIts() {
-      closes.onclick = ()=> {
-          thedoor.style.left = '-1000px'
-          thedoor.style.transition = 'all .7s ease-in-out'
-          thedoor.style.opacity = "0"
-         
-      }
+      closes.onclick = () => {
+        thedoor.style.left = '-1000px';
+        thedoor.style.opacity = "0";
+      };
     }
-    closIts()
+    closIts();
   
     function openIt() {
-      openn.onclick = ()=> {
-          thedoor.style.left = '0px'
-          thedoor.style.transition = 'all .7s ease-in-out'
-          thedoor.style.opacity = "1"
-      }
+      openn.onclick = () => {
+        thedoor.style.left = '0px';
+        thedoor.style.opacity = "1";
+      };
     }
-    openIt()
+    openIt();
+  </script>
   
-</script>
+

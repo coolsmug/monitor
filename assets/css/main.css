@@ -201,3 +201,68 @@
         font-size: 20px;
     }
 }
+
+.togeda {
+    margin-top: 200px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    /* gap: 100px; */
+}
+
+.togeda .imag_pj {
+    width: 50%;
+}
+.tegeda form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font: var(--montserrat-regular);
+    background-color: var(--lighter-blue);
+}
+
+.togeda .all-single-form, .togeda .mb-3{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 10px;
+    font: var(--montserrat-regular);
+}
+
+.togeda .hop {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    width: 100%;
+   
+}
+
+form input, form select {
+    border: none;
+    outline: none;
+    padding: 8px 12px;
+    outline: 1px solid var(--deep-blue);
+  
+    border-radius: 5px;
+    width: 100%;
+    font: var(--montserrat-regular);
+   
+}
+
+.togeda footer {
+
+}
+
+
+
+

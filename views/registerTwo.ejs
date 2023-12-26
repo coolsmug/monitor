@@ -1,0 +1,61 @@
+<%- include ("./include/main_header.ejs") %> 
+
+<%- include ('./partials/messages') %>
+
+<div class="togeda">
+    <div class="imag_pj">
+        <img src="" alt="">
+      </div>
+      
+      <div class="form_reg">
+        <form action="/monitor-step2-registration" method="POST">
+ 
+            <div class="all-single-form">
+        
+                    <div class="hop">
+                        <input type="hidden" name="userId" value="<%= userId %>">
+                        <label for="school_motto">School Motto:</label>
+                        <input type="school_motto" name="school_motto" value="<%= typeof school_motto != 'undefined' ? school_motto : '' %>" />
+                    </div>
+                    
+                    <div class="hop">
+                      <label for="country">Country:</label>
+                      <select id="country" name="country">
+                        <option value="">Select Country</option>
+                        <% countries.forEach((country)=> { %> 
+                          <option value="<%= country.name %>"><%= country.name %></option>
+                          <% }) %> 
+                        
+                      </select>
+                    
+                      <label for="state">State:</label>
+                      <select id="state" name="state" disabled>
+                        <option value="">Select State</option>
+                      </select>
+        
+                      <label for="city">City</label>
+                      <select id="city" name="city" disabled>
+                        <option value="">-- Select a City --</option>
+                      </select>
+                    </div>
+                   
+               
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Ok? Next">
+            </div>
+        
+        </form>
+      </div>
+</div>
+
+
+
+
+
+
+<footer class="foot">
+  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+</footer>
+
+<%- include ("./include/footer.ejs") %> 

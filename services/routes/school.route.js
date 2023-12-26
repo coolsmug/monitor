@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const express = require("express");
 const router = express.Router();
 const Proprietor = require("../models/proprietor")
@@ -7,8 +11,17 @@ const Staff = require('../models/staff');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { session } = require("passport");
-// const multer = require('multer');
-// var upload = require("../config/multers.js");
+const cloudinary = require('cloudinary').v2;
+const file = require('../models/cloudinary')
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
@@ -23,7 +36,7 @@ const forwardAuthenticated = function(req, res, next) {
   if (!req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/admin/admin_dashboard');     
+  res.redirect('/home-page');  
 }
 
 router.get("/school_management",  ensureAuthenticated, async(req, res) => {
@@ -166,69 +179,6 @@ router.get("/update-proprietor",ensureAuthenticated, (req, res) => {
     // ***************************************************************************STAFFS ROUTE________________________________??//
  
   //dashboard security login 
-  const ensureAuthenticateds = function(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    req.flash('error_msg', 'Please log in to view that resource');
-    res.redirect('/');
-  
-  }
-
-  const forwardAuthenticateds = function(req, res, next) {
-    if (!req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/home-page');     
-  }
-
-
-    router.post("/staff_login", forwardAuthenticated, (req, res, next) => {
-      passport.authenticate("staff-login", (err, user, info)=> {
-        if (err) {
-         return next(err) 
-        } else{
-          if(user) {
-            req.logIn(user, function(err) {
-              if (err) {
-                return next(err);
-              }
-            
-              req.flash('success_msg', 'You are welcome'+ req.user.first_name);
-              res.redirect("/home-page");
-              
-            })
-           
-          }
-          if (!user) {
-            req.logOut(function (err) {
-              if (err) {
-                  return next(err);
-              }
-              req.flash('success_msg', 'Your session terminated and Access Denied');
-              res.redirect('/')
-          })
-          }
-        }
-       
-        
-      
-        req.flash('success_msg', 'You are welcome');
-      })(req, res, next);
-    });
-
-    router.post('/logout',  ensureAuthenticated, (req, res, next) => {
-      req.logOut(function (err) {
-          if (err) {
-              return next(err);
-          }
-          req.flash('success_msg', 'Your Session Terminated, see you next time');
-          res.redirect('/')
-      })
-       
-  
-  })
-
 
     router.get('/create-staff',ensureAuthenticated, async(req, res) => {
         await res.render("student", {user: req.user})
@@ -519,27 +469,27 @@ router.put("/update-school/:id",ensureAuthenticated, (req, res) => {
 
 })
 
-router.delete("/delete_school/:id", async(req, res) => {
-    const id = req.params.id;
-    await School.findByIdAndDelete(id)
-    .then((data) => {
-      if (!data) {
-        res
-          .status(404)
-          .send({ message: `Cannot Delete with id ${id}. May be id is wrong` });
-      } else {
-        res.send({
-          message: "Statement was deleted successfully!",
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Could not delete Statement with id=" + id + "with err:" + err,
-      });
-    });
+// router.delete("/delete_school/:id", async(req, res) => {
+//     const id = req.params.id;
+//     await School.findByIdAndDelete(id)
+//     .then((data) => {
+//       if (!data) {
+//         res
+//           .status(404)
+//           .send({ message: `Cannot Delete with id ${id}. May be id is wrong` });
+//       } else {
+//         res.send({
+//           message: "Statement was deleted successfully!",
+//         });
+//       }
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message: "Could not delete Statement with id=" + id + "with err:" + err,
+//       });
+//     });
 
-});
+// });
 
 router.get("/school-detail", ensureAuthenticated, async (req, res) => {
   try {
@@ -548,6 +498,64 @@ router.get("/school-detail", ensureAuthenticated, async (req, res) => {
     res.render('school_detail', {school, user: req.user})
   } catch (error) {
     res.render("error404", {title: "Error 404" + ' ' + error})
+  }
+});
+
+
+
+router.post('/upload-image/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const user = await School.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if a file is provided
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file provided' });
+    }
+
+    const result = await cloudinary.uploader.upload(req.file.path);
+    console.log(result);
+
+
+    // Check if the Cloudinary upload was successful
+    if (!result || !result.secure_url) {
+      return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
+    }
+
+    // Update the user's img field with the Cloudinary URL
+    user.img = {
+      url: result.secure_url,
+      publicId: result.public_id  // Save the public ID if you need it for future deletions
+    };
+
+    await user.save();
+    console.log(user.img);
+    
+
+    req.flash('success_msg', 'Image uploaded successfully');
+    return res.redirect('/school/update-school?id=' + id);
+    res.status(200).json( { message: "Image Uploaded" } )
+  } catch (error) {
+    console.error(error);
+   
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+});
+
+router.patch('/school-status/:id', async (req, res) => {
+  const id = req.params.id;
+  const { status } = req.body;
+
+  try {
+    const switchDoc = await School.findByIdAndUpdate(id, { status }, { new: true });
+    if (!switchDoc) return res.status(404).send('switch not found');
+    res.send(switchDoc);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 

@@ -1,117 +1,53 @@
 <%- include ("./include/main_header.ejs") %> 
 
-<%- include ('./partials/messages') %>
-<form action="/submit" method="POST">
 
-    <div class="all-single-form">
-    
-            <div class="hop">
-                <label for="school_name">School Name:</label>
-                <input type="school_name" name="school_name" value="<%= typeof school_name != 'undefined' ? school_name : '' %>" />
-            </div>
-            
-            <div class="hop">
-              <label for="country">Country:</label>
-              <select id="country" name="country">
-                <option value="">Select Country</option>
-                <% countries.forEach((country)=> { %> 
-                  <option value="<%= country.name %>"><%= country.name %></option>
-                  <% }) %> 
-                
-              </select>
-            
-              <label for="state">State:</label>
-              <select id="state" name="state" disabled>
-                <option value="">Select State</option>
-              </select>
 
-              <label for="city">City</label>
-              <select id="city" name="city" disabled>
-                <option value="">-- Select a City --</option>
-              </select>
-            </div>
-            <div class="hop">
-                <label for="address">Address:</label>
-                <input type="address" name="address" placeholder="Address" value="<%= typeof  address != 'undefined' ?  address : '' %>" />
-            </div>
-            <div class="hop">
-                <label for="address">Address 2:</label>
-                <input type="address2" name="address2" value="<%= typeof address != 'undefined' ? address : '' %>" />
-            </div>
-          
-            <div class="hop">
-                <label for="phone_no">Phone No:</label>
-                <input type="phone_no" name="phone_no" placeholder="Phone No" value="<%= typeof phone_no != 'undefined' ? phone_no : '' %>" />
-            </div>
-
-            <div class="hop">
-                <label for="phone_no2">Phone No 2:</label>
-                <input type="phone_no2" name="phone_no2" value="<%= typeof phone_no2 != 'undefined' ? phone_no2 : '' %>" />
-            </div>
-          
-          <div class="hop">
-            <label for="email">School Email:</label>
-            <input type=" email" name="email" value="<%= typeof email != 'undefined' ?  email : '' %>" />
-          </div>
-          <div class="hop">
-            <label for="email">Password 1:</label>
-            <input type="password" name="password" value="<%= typeof password != 'undefined' ?  password : '' %>" />
-          </div>
-          <div class="hop">
-            <label for="email">Password 2:</label>
-            <input type="password" name="password_2" value="<%= typeof password_2 != 'undefined' ?  password_2 : '' %>" />
-          </div>
-
-          <div class="hop">
-            <label for="website">School Website</label>
-            <input type="website" name="website" value="<%= typeof website != 'undefined' ? website : '' %>" />
-          </div>
-
+  <div class="togeda">
+    <div class="imag_pj">
+      <img src="/img/monitor_user_image.jpg" alt="" width="200">
     </div>
-    <div class="mb-3">
-        <input type="submit" value="Ok? Create">
-    </div>
-
-</form>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
-<script type="text/javascript">
   
-$(document).ready(() => {
-  $('#country').on('change', () => {
-    const countryName = $('select[name="country"]').val();
-    if (countryName) {
-      $.get(`/states/${countryName}`, (states) => {
-        $('select[name="state"]').empty().append('<option value="">-- Select a State --</option>');
-        $.each(states, (index, state) => {
-          $('select[name="state"]').append(`<option value="${state.name}">${state.name}</option>`);
-        });
-        $('select[name="state"]').prop('disabled', false);
-        $('select[name="city"]').empty().prop('disabled', true);
-      });
-    } else {
-      $('select[name="state"]').empty().prop('disabled', true);
-      $('select[name="city"]').empty().prop('disabled', true);
-    }
-  });
+    <%- include ('./partials/messages') %>
+      <form action="/submit" method="POST">
+  
+          <div class="all-single-form">
+    
+              <div class="hop">
+                <label for="school_id">School ID:</label>
+                <input type="school_id" name="school_id" value="<%= schoolId %>" />
+              </div>
+    
+              <div class="hop">
+                  <label for="school_name">School Name:</label>
+                  <input type="school_name" name="school_name" value="<%= typeof school_name != 'undefined' ? school_name : '' %>" />
+              </div>
+              <div class="hop">
+                <label for="email">School Email:</label>
+                <input type=" email" name="email" value="<%= typeof email != 'undefined' ?  email : '' %>" />
+              </div>
+              <div class="hop">
+                <label for="email">Password 1:</label>
+                <input type="password" name="password" value="<%= typeof password != 'undefined' ?  password : '' %>" />
+              </div>
+              <div class="hop">
+                <label for="email">Password 2:</label>
+                <input type="password" name="password_2" value="<%= typeof password_2 != 'undefined' ?  password_2 : '' %>" />
+              </div>
+          </div>
+          
+        <div class="mb-3">
+            <input type="submit" value="Ok? Create">
+        </div>
+    
+      </form>
+  
+  </div>
 
-  $('#state').on('change', () => {
-    const countryName= $('select[name="country"]').val();
-    const stateName = $('select[name="state"]').val();
-    if (countryName && stateName) {
-      $.get(`/cities/${countryName}/${stateName}`, (cities) => {
-        $('select[name="city"]').empty().append('<option value="">-- Select a City --</option>');
-        $.each(cities, (index, city) => {
-          $('select[name="city"]').append(`<option value="${city.name}">${city.name}</option>`);
-        });
-        $('select[name="city"]').prop('disabled', false);
-      });
-    } else {
-      $('select[name="city"]').empty().prop('disabled', true);
-    }
-  });
-});
-</script>
+  <style>
+    
+  </style>
+
+
 
 <!-- $(document).ready(() => {
   // Function to retrieve the list of states for a given country

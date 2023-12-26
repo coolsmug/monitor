@@ -24,6 +24,13 @@ const School = require("../models/school.name");
       res.redirect('/');
     
     }
+    
+    const forwardAuthenticated = function(req, res, next) {
+      if (!req.isAuthenticated()) {
+        return next();
+      }
+      res.redirect('/home-page');  
+    }
 
 
 
@@ -34,10 +41,57 @@ router.get('/', async(req, res) => {
 router.get('/home-page', ensureAuthenticated ,(req, res, next) => {
   res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   res.setHeader('Expires', '-1');
-  res.setHeader('Pragma', 'no-cache');
-    console.log(req);
+  res.setHeader('Pragma', 'no-cache'); 
+  
   res.render('home', { user: req.user})
-})
+});
+
+
+// staff logni--------------------------------
+
+router.post("/staff_login", forwardAuthenticated, (req, res, next) => {
+  passport.authenticate("staff-login", (err, user, info)=> {
+    if (err) {
+     return next(err) 
+    } else{
+      if(user) {
+        req.logIn(user, function(err) {
+          if (err) {
+            return next(err);
+          }
+        
+          req.flash('success_msg', 'You are welcome'+ req.user.first_name);
+          res.redirect("/home-page");
+          
+        });
+       
+      }
+      if (!user) {
+        req.logOut(function (err) {
+          if (err) {
+              return next(err);
+          }
+          req.flash('success_msg', 'Your session terminated and Access Denied');
+          res.redirect('/')
+      })
+      }
+    }
+  
+    req.flash('success_msg', 'You are welcome');
+  })(req, res, next);
+});
+
+router.post('/logout',  ensureAuthenticated, (req, res, next) => {
+  req.logOut(function (err) {
+      if (err) {
+          return next(err);
+      }
+      req.flash('success_msg', 'Your Session Terminated, see you next time');
+      res.redirect('/')
+  });
+   
+
+});
 
 State.getStatesOfCountryByName = function(countryName) {
   // Find the country object by name
@@ -63,9 +117,27 @@ City.getCitiesOfStateByName = function(countryName, stateName) {
 
 
 router.get('/monitor', async(req, res) => {
-  const countries = Country.getAllCountries()
+ 
   // Render the form with the list of countries
-  await res.render('monitor-home-page', { countries });
+
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                let alphaCode = '';
+                for (let i = 0; i < 2; i++) {
+                  alphaCode += alpha.charAt(Math.floor(Math.random() * alpha.length));
+                }
+
+                const numer = "12345678901234567890123456789012345678901234567890123456789012345678901234567890";
+                let numerCode = '';
+                for (let i = 0; i < 3; i++) {
+                  numerCode += numer.charAt(Math.floor(Math.random() * numer.length));
+                }
+
+                var day = new Date();
+                var year = day.getFullYear();
+
+                const schoolId = `MON${numerCode}/${alphaCode}-${year}`
+
+  await res.render('monitor-home-page', { schoolId });
 })
 
 router.get('/states/:countryName', async(req, res) => {
@@ -84,27 +156,11 @@ router.get('/cities/:countryName/:stateName', (req, res) => {
 
 // Route handler for submitting the form
 router.post('/submit', async(req, res) => {{
-                const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                let alphaCode = '';
-                for (let i = 0; i < 2; i++) {
-                  alphaCode += alpha.charAt(Math.floor(Math.random() * alpha.length));
-                }
-
-                const numer = "12345678901234567890123456789012345678901234567890123456789012345678901234567890";
-                let numerCode = '';
-                for (let i = 0; i < 3; i++) {
-                  numerCode += numer.charAt(Math.floor(Math.random() * numer.length));
-                }
-
-                var day = new Date();
-                var year = day.getFullYear();
-
-                const schoolId = `${numerCode}/${alphaCode}-${year}`
-
-                const { school_name, country, state, city, address, 
-                  address2, phone_no, phone_no2, email, password, password_2, website} = req.body;
+                
+                const {school_id, school_name, email, password, password_2} = req.body;
                   let errors = [];
-                  if(!school_name || !country || !state || !city || !address || !address2 || !phone_no || !phone_no2 || !email || !password || !password_2 || !website){
+
+                  if(!school_id || !school_name || !email || !password || !password_2){
                     errors.push( { msg: "Please fill in all fields" } )
                   }
 
@@ -119,60 +175,37 @@ router.post('/submit', async(req, res) => {{
                     const countries = Country.getAllCountries()
                     res.render("monitor-home-page", {
                       errors: errors,
-                      school_name: school_name, 
-                      country: country, 
-                      state: state,
-                      city: city,
-                      address: address, 
-                      address2: address2, 
-                      phone_no: phone_no, 
-                      phone_no2: phone_no2, 
+                      school_id: school_id,
+                      school_name: school_name,
                       email: email, 
                       password: password, 
                       password_2: password, 
-                      website: website,
-                      countries
-
                     })
                   } else {
                     await School.findOne({email: email}).exec((err, school) => {
                       if(school) {
                         errors.push ( { msg: "Oops! User already associated with this Email" });
-                            const countries = Country.getAllCountries()
+                            
                         res.render("monitor-home-page", {
                           errors: errors,
-                          school_name: school_name, 
-                          country: country, 
-                          state: state, 
-                          city: city,
-                          address: address, 
-                          address2: address2, 
-                          phone_no: phone_no, 
-                          phone_no2: phone_no2, 
+                          school_id: school_id,
+                          school_name: school_name,
                           email: email, 
                           password: password, 
                           password_2: password, 
-                          website: website,
-                          countries
 
                         })
                       } else {
                         const currentDate = new Date();
                         var fourteen = new Date(currentDate.getTime() + (100 * 24 * 60 * 60 * 1000));
                         const newSchool = new School({
-                          school_id: schoolId,
-                          school_name: school_name, 
-                          country: country, 
-                          state: state, 
-                          city: city,
-                          address: address, 
-                          address2: address2, 
-                          phone_no: phone_no,
-                          phone_no2: phone_no2,
+                          school_id: school_id,
+                          school_name: school_name,
                           email: email, 
-                          password: password, 
-                          website: website,
+                          password: password,
                           expiry: fourteen,
+                          
+                          
                         });
 
                         bcrypt.genSalt(10, (err, salt)=> {
@@ -184,19 +217,19 @@ router.post('/submit', async(req, res) => {{
 
                               newSchool
                                   .save()
-                                  .then((value) => {
+                                  .then((savedUser) => {
                                     req.flash(
                                       "success_msg",
                                       `Successfully Registered,
-                                      ${newSchool.school_id } 
+                                      ${savedUser.school_id } 
                                       is your ID,
                                       copy it before clicking OK.
                                       You have only ${fourteen} days trial`
                                     
                                     )
-                                    res.redirect('/monitor')
+                                    res.redirect(`/registration-step2?userId=${savedUser._id}`)
                                   })
-                                  .catch( value => console.log(value))
+                                  .catch( error => console.log(error))
                             })
                         })
                       }
@@ -205,6 +238,79 @@ router.post('/submit', async(req, res) => {{
 
 
 }})
+
+
+router.get('/registration-step2', async (req, res) => {
+  try {
+    const countries = Country.getAllCountries()
+      const userId = req.query.userId
+      await res.render("registerTwo", {userId, countries} )
+  } catch (error) {
+      console.log(error)
+  }
+})
+
+router.post('/monitor-step2-registration', async (req, res) => {
+  const userId = req.body.userId || req.query.userId;
+
+  try {
+    
+      const updatedUser = await School.findByIdAndUpdate(
+          userId,
+          {
+            school_motto: req.body.school_motto,
+            country: req.body.country, 
+            state: req.body.state, 
+            city: req.body.city,
+            
+          },
+          { new: true } // To return the updated document
+      );
+
+      if (!updatedUser) {
+          // Handle the case where the user with the given ID was not found
+          return res.redirect(`/registration-step2?error=true&userId=${userId}`);
+      }
+
+      res.redirect(`/registration-step3?userId=${userId}`);
+  } catch (error) {
+      console.error(error);
+      res.redirect(`/registration-step2?error=true&userId=${userId}`);
+  }
+});
+
+router.get('/registration-step3', (req, res) => {
+  const userId = req.query.userId;
+  res.render('registrationThree', { userId });
+});
+
+router.post('/step3', async (req, res) => {
+  const userId = req.body.userId || req.query.userId;
+
+  try {
+      const updatedUser = await School.findByIdAndUpdate(
+          userId,
+          {
+            address: req.body.address, 
+            address2: req.body.address2, 
+            phone_no: req.body.phone_no,
+            phone_no2: req.body.phone_no2,
+            website: req.body.website,
+          },
+          { new: true } // To return the updated document
+      );
+
+      if (!updatedUser) {
+          // Handle the case where the user with the given ID was not found
+          res.redirect(`/registration-step3?error=true&userId=${userId}`);
+      }
+
+      res.redirect(`/admin/admin_dashboard`);
+  } catch (error) {
+      console.error(error);
+      res.redirect(`/registration-step3?error=true&userId=${userId}`);
+  }
+});
 
 
 

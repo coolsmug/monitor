@@ -12,7 +12,7 @@
     <div class="form_for_create">
     
         <%- include ('./partials/messages') %>
-        <form method="PUT" id="pull_out">
+        <form method="PUT" id="pull_off">
 
         <div class="all-single-form">
 
@@ -87,29 +87,3 @@
 <%- include ("./include/footer.ejs") %> 
 
 
-<script>
-    
-$("#pull_out").submit(function (params) {
-  params.preventDefault();
-
-  let unindexed_arrays = $(this).serializeArray();
-  let data = {}
-
-  $.map(unindexed_arrays, function (n, i) {
-    data[ n[ "name" ]] = n[ "value" ]
-  }); 
-  console.log(data);
-
-  let request = {
-    "url" : `/admin/update-session/${data.id}`,
-    "method" : "PUT",
-    "data" : data,
-  };
-
-  $.ajax(request).done(function (response) {
-    alert("Session Updated Successfully!")
-    location.reload();
-    
-  });
-});
-</script>

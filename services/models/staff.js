@@ -41,6 +41,10 @@ const staffSchema = new Schema ({
   
         required: true,
       },
+      createdAt: {
+        type: Date,
+        default: Date.now // Set default value to the current date and time when the document is created
+    }
 })
 
 const Staff = mongoose.model('Staff', staffSchema);

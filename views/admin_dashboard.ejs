@@ -59,31 +59,7 @@
     </footer>   
 
 
-    <script>
-        let closes = document.getElementById("tii");
-        let openn = document.getElementById("shii")
-        let thedoor = document.getElementById("big-door")
-      
-        function closIts() {
-          closes.onclick = ()=> {
-              thedoor.style.left = '-1000px'
-              thedoor.style.transition = 'all .7s ease-in-out'
-              thedoor.style.opacity = "0"
-             
-          }
-        }
-        closIts()
-      
-        function openIt() {
-          openn.onclick = ()=> {
-              thedoor.style.left = '0px'
-              thedoor.style.transition = 'all .7s ease-in-out'
-              thedoor.style.opacity = "1"
-          }
-        }
-        openIt()
-      
-      </script>
+
 
 
 <%- include ('./include/footer.ejs') %> 

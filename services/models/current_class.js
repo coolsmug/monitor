@@ -39,6 +39,7 @@ const CurrentClassSchema = new Schema ({
         type: Date,
         default: Date.now,
     },
+    
 
 },
  { timestamps: true }

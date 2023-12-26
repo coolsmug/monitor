@@ -130,15 +130,13 @@ router.get('/alumni/:page', async(req, res) => {
 
     var perPage = 9;
     var page = req.params.page || 1 
-    await Learner.find()
-                    .where('status')
-                    .equals(false)
+    await Learner.find( { status : false, schoolId: req.user._id } )
                     .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
                     .sort({ roll_no : 1 })
                     .skip((perPage * page) - perPage)
                     .limit(perPage)
                     .exec((err, user) => {
-                        Learner.count()
+                        Learner.count( { schoolId: req.user._id })
                                 .where("status")
                                 .equals(false)
                                 .exec((errOne, count) => {
@@ -152,6 +150,19 @@ router.get('/alumni/:page', async(req, res) => {
                        
                     })
 })
+
+router.patch('/user-status/:id', async (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+  
+    try {
+      const switchDoc = await Learner.findByIdAndUpdate(id, { status }, { new: true });
+      if (!switchDoc) return res.status(404).send('switch not found');
+      res.send(switchDoc);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  });
 
 
 module.exports = router

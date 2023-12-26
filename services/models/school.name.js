@@ -11,33 +11,37 @@ SchoolSchema = new Schema({
         type: String,
         required: true,
     },
+    school_motto: {
+        type : String,
+        
+    },
     country: {
         type : String,
-        required: true,
+       
     },
     state: {
         type : String,
-        required: true,
+       
     },
     city: {
         type : String,
-        required: true,
+        
     },
     address: {
         type : String,
-        required: true,
+       
     },
     address2: {
         type : String,
-        required: true,
+        
     },
     phone_no : {
         type:String,
-        required: true,
+        
     },
     phone_no2 : {
         type:String,
-        required: true,
+        
     },
     email: {
         type: String,
@@ -49,12 +53,13 @@ SchoolSchema = new Schema({
       },
     website: {
         type: String,
-        required: true,
+       
     },
-    img: {
-        data: Buffer,
-        contentType: String,
-    },
+    img:{
+        url: String,       // Cloudinary URL
+        publicId: String,  // Cloudinary Public ID 
+      
+      },
     fees:{ 
         type: String, 
         default: 'pending' 
@@ -67,6 +72,10 @@ SchoolSchema = new Schema({
         type: Date,
         required: true
       },
+      createdAt: {
+        type: Date,
+        default: Date.now // Set default value to the current date and time when the document is created
+    }
 
 
 }, { timestamps: true })

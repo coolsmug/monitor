@@ -16,14 +16,16 @@
         <div class="div_one_of_three twothree">
             <p class="p_of_p"> All Learners in <%= classed.name %> </p>
             <p class="p_of_p"><%= session.name %> </p>
-            <p class="p_of_p"> <%= session.date_started %></p>
-          
+            <% if (session.date_started) {%>
+                <% var date = session.date_started.toDateString() %>
+           <p style="margin: 0; padding: 0; margin-top: 10px; font-weight: bold;">Created On:</p> <p class="p_of_p" style="font-size: 12px; font-weight: none; text-shadow: none;"> <%= date %></p>
+          <% } %>
     
                 <div class="form-for-report">
                     <% for (var i = 0; i < users.length ; i++) {%> 
                 
                         <div class="div_divol">
-                            <a href="/result/section-test-exam?id=<%= session._id %>&classof=<%= session.classof %>&id=<%= users[i]._id %>&id=<%= classed._id %>">
+                            <a href="/result/section-test-exam?sessionId=<%= session._id %>&classof=<%= session.classof %>&userId=<%= users[i]._id %>&classId=<%= classed._id %>">
                                 <div class="avi">
                                    <p><%= users[i].roll_no %> </p> 
                                   

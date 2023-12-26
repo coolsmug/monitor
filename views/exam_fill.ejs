@@ -12,8 +12,8 @@
 
 <div class="cover_table">
     <div class="student-image">
-        <% if(users.img.contentType) {%> 
-            <img src="data:users/<%= users.img.contentType %>;base64,<%= users.img.data.toString('base64') %>" alt="" >
+        <% if(users.img.url) {%> 
+            <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
        <% } else {%> 
            <img src="/img/monitor_users_image.jpg" alt="" >
            <% } %> 
@@ -74,7 +74,7 @@
         <tbody>
            <% for (var i = 0; i < exam.length; i++) {%> 
            
-            <form method="POST" id="myexam-<%= exam[i]._id %>" data-id=<%= exam[i]._id %>>
+            <form method="POST" class="exam" id="myexam-<%= exam[i]._id %>" data-id=<%= exam[i]._id %>>
                 <tr>
                     <td><input id="name" type="text" name="name" value="<%= exam[i].name %> "></td>
                     <td><input id="overallfirstca" type="tex" name="overall_first_ca" value="<%= exam[i].overall_first_ca %>" ></td>
@@ -88,7 +88,7 @@
                     <td><input id="termtotal" type="te" name="term_total" value="<%= exam[i].term_total %>" readonly></td>
                     <td><input id="grades" type="grade" name="grade" value="<%= exam[i].grade %>" readonly></td> 
                     <td><input id="remark" type="text" name="remarks" value="<%= exam[i].remarks %>" readonly></td>
-                    <td class="td"><button type="submit"><i class="fas fa-save"></i></button> <a href="/result/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
+                    <td class="td"><button type="submit"><i class="fas fa-save" onclick="submitForm()"></i></button> <a href="/result/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
                 </tr>
             </form>
 
@@ -101,8 +101,8 @@
 <div class="vimo">
 
   <form method="post" id="update_misc">
-    <p class="rer">Use the Learner's Details below to create Miscellaneous(Behavioural skills etc)</p>
-    <div class="student-detail">
+    
+    <div class="student-detail  hidethis">
        
         <div class="div_input">
             <label for="roll_no">Roll No</label>
@@ -124,7 +124,10 @@
             <label for="_learner">Learner's ID</label>
             <input type="_learner" name="_learner"  value="<%= users._id %>" readonly>
         </div>
-        <div class="submits"><input type="submit" value="Create First Miscellaneous for <%= users.first_name %> <%= users.middle_name %> <%= users.last_name %> "></div>
+       
+    </div>
+    <div class="student-details">
+      <div class="submits"><input type="submit" value="Create <%= section.name %> Miscellaneous for <%= users.first_name %> <%= users.middle_name %> <%= users.last_name %> "></div>
     </div>
   </form>
 </div>
@@ -142,7 +145,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript">
-            function submitForm(form) {
+       function submitForm(form) {
     var unindexed_arrayon = $(form).serializeArray();
     var data = {};
 
@@ -169,7 +172,8 @@
       event.preventDefault();
       submitForm(this);
     });
-  }); 
+  });
+
 
   
 
@@ -177,7 +181,8 @@
   $('a.delete').click(function(e) {
     e.preventDefault(); // Prevent the default behavior of the anchor tag
     var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var id = $(this).data('id'); 
+    var row = $(this).closest('tr')// Get the ID of the resource to be deleted from a data-* attribute
     if (confirm('Are you sure you want to delete this Exam?')) {
       $.ajax({
         url: url,
@@ -185,7 +190,7 @@
         data: { id: id },
         success: function(result) {
           alert('Exam deleted successfully!');
-          location.reload(); // Reload the page to reflect the updated state
+          row.remove(); 
         },
         error: function(xhr, status, error) {
           alert('Error deleting Exam: ' + error);
@@ -221,6 +226,30 @@
      console.log("Data Updated Successfully!");
    });
  });
+
+ $("#blessing").submit(function (evente) {
+  evente.preventDefault();
+
+  var unindexed_arraye = $(this).serializeArray();
+  var data = {};
+
+  $.map(unindexed_arraye, function (n, i) {
+    data[n["name"]] = n["value"];
+  });
+
+  console.log(data);
+  var requests = {
+    url: "/result/register_exam",
+    method: "POST",
+    data: data,
+  };
+
+  $.ajax(requests).done(function (response) {
+    alert("Exam Created Successfully!");
+    location.reload()
+    console.log("Data Updated Successfully!");
+  });
+});
 
  </script>
 

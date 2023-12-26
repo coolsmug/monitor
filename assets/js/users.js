@@ -5,24 +5,22 @@ const closeModalBtn = document.querySelector(".btn-close");
 
 const openModal = function () {
   modal.classList.remove("hidden");
-  modal.style.opactiy = "0"
+ 
   overlay.classList.remove("hidden");
-  overlay.style.opactiy = "0"
+
 };
 
 openModalBtn.addEventListener("click", openModal);
 
 const closeModal = function () {
   modal.classList.add("hidden");
-  modal.style.opactiy = "1"
+ 
   overlay.classList.add("hidden");
-  overlay.style.opactiy = "1"
+  
 };
 
 closeModalBtn.addEventListener("click", closeModal);
 overlay.addEventListener("click", closeModal);
-
-
 
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape" && !modal.classList.contains("hidden")) {
@@ -57,8 +55,6 @@ document.addEventListener("keydown", function (e) {
     closeModals()
   }
 });
-
-
 
 
 

@@ -8,10 +8,10 @@
         <div class="sidebar">
             
             <div class="student-image" >
-                <% if(!users.img) {%> 
-                    <img src="/img/monitor_user_image.jpg">
-               <% } else if(users.img.contentType){%> 
-                    <img src="data:user/<%= users.img.contentType %>;base64,<%= users.img.data.toString('base64') %>">
+                <% if(users.img.url) {%> 
+                    <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
+               <% } else {%> 
+                   <img src="/img/monitor_users_image.jpg" alt="" >
                    <% } %> 
             </div>
            
@@ -27,7 +27,7 @@
             <div class="class">
                 <p class="student-class">Student Class:</p>
                 
-                <p class="the"><%= users.classes %>/ <%= users.arm %> </p>
+                <p class="the"><%= users.classes %> <%= users.arm %> </p>
                 
             </div>
     
@@ -39,7 +39,7 @@
             <div class="session-section">
                
                 <p class="sess-sect">Session | Section:</p>
-                <p class="the"> <%= session.classof %>  | <%= section.name %> </p>
+                <p class="the"><%= session.name %> <%= session.classof %>  | <%= section.name %> </p>
 
             </div>
             <% } %>
@@ -56,8 +56,9 @@
     
             <div class="Result-serials">
                 <p class="sess-sect">Result Serial No:</p>
+
                 <% if(section)  {%>
-                <p class="the"><%= section.roll_no %> </p>
+                <p class="the"><%= resultSerialNumber %> </p>
                 <% } %>
             </div>
     
@@ -85,12 +86,12 @@
                       
                 
                 </div>
-                <div id="school-logo">
-                    <% if(!user.img) {%>
-                        <img src="/img/school_logo-01.png"> 
-                   <% } else if(user.img.contentType){%> 
-                        <img src="data:user/<%= user.img.contentType %>;base64,<%= user.img.data.toString('base64') %>">
-                       <% } %> 
+                <div id="school-logo" class="nowing">
+                    <% if(user.img.url) {%> 
+                        <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="Learner Image">
+                     <% } else {%> 
+                         <img src="/img/school_logo-01-01.png" alt="" width="200">
+                         <% } %> 
                 </div>
                 <% } %>
             </div>
@@ -103,12 +104,15 @@
                 <table class="tboby">
                    
                     <thead> 
-                        <tr>
-                            <th colspan="3"></th>
-                            <th colspan="6"><p class="headers_p">Continuous Assessment</p></th>
-                            <% if(section) {%>
-                            <th colspan="4"> <p class="headers_p">Academic Report for <%= section.name %> </p></th>
-                            <% } %>
+                        <tr >
+                            <div class="lap">
+                                <th colspan="1"></th>
+                                <th colspan="4"><p class="headers_p">Continuous Assessment</p></th>
+                                <% if(section) {%>
+                                <th colspan="4"> <p class="headers_p">Academic Report for <%= section.name %> </p></th>
+                                <th colspan="2"></th>
+                                <% } %>
+                            </div>
                         </tr>
                         <tr> 
                             <th>SUBJECTS</th>
@@ -117,8 +121,10 @@
                             <th class="trans">Over all</th>
                             <th class="trans">2nd CA</th>
                             <th class="trans">Over all</th>
+                            <% if(exam.overall_third_ca) {%>
                             <th class="trans">3rd CA</th>
                             <th class="trans">Over all</th>
+                            <% } %>
                             <th>Exam</th>
                             <th>Total</th>
                             <th>Grade</th>
@@ -126,35 +132,58 @@
                         </tr>
                    </thead>
                    <tbody>
-                    <% if(exam) {%> 
+                    <% if (exam && exam.length > 0) {%> 
+                        <% var totalOverall = 0, totalFirstCA = 0, totalSecondCA = 0, totalThirdCA = 0, 
+                        totalExamOverall = 0, totalExamMark = 0, totalTermTotal = 0, totalFirstCaAll = 0, totalSecondCaAll = 0, totalThirdCaAll = 0; %>
                     <% for (var i = 0; i < exam.length; i++) {%> 
+                       
+             
                         <tr> 
                             <td class="ro"><%=exam[i].name %> </td>
-                            <td><%=exam[i].overall_first_ca %></td>
+                            <td class="overall"><%=exam[i].overall_first_ca %></td>
                             <td><%= exam[i].mark_obtained_first_ca %> </td >
-                            <td><%=exam[i].overall_second_ca %></td>
+                            <td class="overall"><%=exam[i].overall_second_ca %></td>
                             <td><%= exam[i].mark_otained_second_ca %></td>
-                            <td><%=exam[i].overall_third_ca %></td>
+                            <% if(exam.overall_third_ca) {%>
+                            <td class="overall"><%=exam[i].overall_third_ca %></td>
                             <td><%= exam[i].mark_otained_third_ca %></td>
-                            <td><%=exam[i].exam_overall %></td>
+                            <% } %>
+                            <td class="overall"><%=exam[i].exam_overall %></td>
                             <td><%= exam[i].exam_mark_obtain %></td>
                             <td><%= exam[i].term_total %></td>
                             <td><%= exam[i].grade %></td>
                             <td class="ro"><%= exam[i].remarks%></td>
+                            <% totalOverall += exam[i].overall_first_ca + exam[i].overall_second_ca + (exam.overall_third_ca ? exam[i].overall_third_ca : 0) + exam[i].exam_overall; %>
+                            <% totalFirstCA += exam[i].mark_obtained_first_ca; %>
+                            <% totalFirstCaAll += exam[i].overall_first_ca; %>
+                            <% totalSecondCA += exam[i].mark_otained_second_ca; %>
+                            <% totalSecondCaAll += exam[i].overall_second_ca; %>
+                            <% totalThirdCA += exam[i].mark_otained_third_ca; %>
+                            <% totalThirdCaAll += exam[i].overall_third_ca; %>
+                            <% totalExamOverall += exam[i].exam_overall; %>
+                            <% totalExamMark += exam[i].exam_mark_obtain; %>
+                            <% totalTermTotal += exam[i].term_total; %>
                         </tr>
                         <% } %> 
-                        <% } %> 
+                        
                         <tr> 
                             <td>TOTAL</td>
                             
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="6"></td>
+                            <td><%= totalFirstCaAll %></td>
+                            <td><%= totalFirstCA %></td>
+                            <td><%= totalSecondCaAll %></td>
+                            <td><%= totalSecondCA %></td>
+                            <% if(exam.overall_third_ca) {%>
+                            <td><%= totalThirdCaAll %></td>
+                            <td><%= totalThirdCA %></td>
+                            <% } %>
+                            <td><%= totalExamOverall %></td>
+                            <td><%= totalExamMark %></td>
+                            <td><%= totalTermTotal %></td>
+                            <td colspan="2"><p><%= totalTermTotal %>/<%= totalOverall %></p></td>
+                            <td colspan="3"></td>
                         </tr>
+                        <% } %> 
                     </tbody>
                     
                     
@@ -243,9 +272,10 @@
                         <thead>
                             <tr><th colspan="2">Fees, Debt And Attendance</th></tr>
                         </thead>
-                        
+                      
                         <tbody>
                             <% if(misc) {%> 
+                            <tr><td>Resumption Date</td><td class="opting"><%= misc.resumpDay %></td></tr>
                             <tr><td>Next Time Fees</td><td class="opting"><%= misc.next_t_fee %></td></tr>
                             <tr><td>Payable on or Before</td><td class="opting"><%= misc.payable %></td></tr>
                             <tr><td>Debt on Ground</td><td class="opting"><%= misc.debt %></td></tr>
@@ -288,7 +318,7 @@
         <i class="fas fa-camera-retro"></i> 
         Snap
     </button> 
-    <button class="clickbtn" onclick='printDiv()'>
+    <button class="clickbtn" onclick='printDivs()'>
         <i class="fas fa-print"></i> 
         Print
     </button>
@@ -306,7 +336,7 @@
 
 <script>
 
-const printDiv = async ()=>{
+const printDivs = async ()=>{
     try {
         let schooLogo = document.querySelector(".body");
        if( schooLogo.style.margin = "0px") {
@@ -367,3 +397,12 @@ if(err) console.log( err)
 })
 </script>
 
+<style>
+    .nowing {
+        margin-top: -20px;
+        
+    }
+    .overall{
+        color: blueviolet;
+    }
+</style>

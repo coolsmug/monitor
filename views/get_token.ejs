@@ -96,36 +96,6 @@
 
 <%- include ('./include/footer.ejs') %> 
 
-<script>
-    const printDiv = async ()=>{
-    try {
-        var printContents = document.getElementById('divid').innerHTML
-        var originalContents = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-       await window.print();
-    } catch (error) {
-        console.error(error.message)
-    }
- document.body.innerHTML = originalContents;  
-
- let open = document.getElementsByClassName("list_one")
-
-let i;
-
-for(i = 0; i < open.length; i++) {
-    open[i].onclick = function() {
-        this.classList.toggle("active");
-        let hidee = this.nextElementSibling;
-        if(hidee.style.maxHeight) {
-            hidee.style.maxHeight = null;
-        }else {
-            hidee.style.maxHeight = hidee.scrollHeight + "px";
-        }
-    }    
-}
-
-}
-</script>
 
 <style>
     .click {

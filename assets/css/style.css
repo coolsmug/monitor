@@ -45,9 +45,8 @@ body {
      var(--white)0% 20%, 
      var(--white_one)20% 40%, var(--white)40% 60%,
        var(--white_one)60% 70%, 
-     var(--white)70% 80%, var(--white_one)80% 100% ) ;
-     background-size: contain;
-     background-repeat: no-repeat;
+     var(--white)70% 80%, var(--white_one)80% 100% );
+     max-height: 100vh;
 }
 
 body::-webkit-scrollbar {
@@ -198,6 +197,7 @@ body::-webkit-scrollbar-thumb {
 /******************************* Admin dashboard******************************/
 .p_head {
     width: 100%;
+    height: 50px;
     background: var(--white);
     box-shadow: 2px 2px 5px grey;
     position: -webkit-sticky;
@@ -207,11 +207,17 @@ body::-webkit-scrollbar-thumb {
 }
 
 .p_head img {
-    width: 170px;
+    width: 100px;
     padding: 7px;
-    background: var(--white);
-    box-shadow: 2px 2px 5px grey;
+    filter: drop-shadow(2px 2px 5px rgba(128, 128, 128, 0.572));
+    
+    transition: scale .3s ease-in;
 }
+.p_head img:hover {
+    scale: 1.5;
+    transform: translateY(7px);
+    }
+
 .ul-one {
     position: -webkit-sticky;
     position: sticky;
@@ -222,7 +228,8 @@ body::-webkit-scrollbar-thumb {
 }
 .logOUT {
     position: absolute;
-    right: 20%;
+    left: 400px;
+    top: 10%;
 }
 
 .logOUT button {
@@ -354,22 +361,22 @@ label #cancel {
     position: fixed;
     box-sizing: border-box;
     left: -260px;
-    z-index: 2;
+    z-index: 8888;
     top: 52px;
     transition: all .5s ease-out;
     -webkit-transition: all .5s ease-out;
     -moz-transition: all .5s ease-out;
     -ms-transition: all .5s ease-out;
     -o-transition: all .5s ease-out;
-     /* background: 
+     background: 
     radial-gradient(circle,
-     var(--deepest-blue)0% 30%, 
-     var(--deep-blue)30% 60%, var(--deepest-blue)60% 90% ); */
+     var(--light-blue)0% 20%,  var(--deepest-blue)20% 40%,
+     var(--deep-blue)40% 70%, var(--deepest-blue)70% 90%  );
     width: 250px;
     outline: 1px solid var(--white);
     box-shadow: 1px 1px 3px grey;
     /* position: fixed; */
-    background:  var(--deepest-blue);
+    /* background:  var(--deepest-blue); */
 }
 
 .side_bar p {
@@ -1748,8 +1755,8 @@ header img::after {
     text-shadow: 2px 2px 5px rgb(1, 1, 1);
 }
 .avi {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 110px;
     margin: auto;
     border: 4px solid var(--white_three);
     overflow: hidden;
@@ -1760,7 +1767,7 @@ header img::after {
 }
 
 .avi img {
-    width: 100px;
+    width: 90px;
     height: 100px;
     transition: scale .3s ease-in;
    

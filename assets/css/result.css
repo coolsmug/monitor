@@ -336,6 +336,8 @@ select {
     background-color: rgb(129, 9, 9);
     outline: 2px solid var(--white);
 }
+
+
 .td{
     display: flex;
     flex-direction: row;
@@ -390,6 +392,26 @@ p:not(.cover_table p):after{
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
+}
+
+.student-details {
+    display: flex;
+    justify-content: center;   
+}
+
+.student-details input {
+    padding: 5px 9px;
+    margin-top: 20px;
+    border-radius: 100px;
+    border:5px solid var(--white);
+    background: linear-gradient(180deg, royalblue 0% 50%, rgb(4, 4, 168) 50% 100%) ;
+    box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.286), -2px -2px 7px rgba(0, 0, 0, 0.253);
+    color: #ffffff;
+}
+
+.hidethis {
+    display: none;
+    
 }
 
 .behavioural {
