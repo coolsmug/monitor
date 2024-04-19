@@ -10,69 +10,6 @@ const Staff = require('../models/staff.js');
 const ThirdSection = require('../models/third._term_section')
 
 
-// router.get("/reports", async(req, res) => {
-//     await res.render('report')
-// })
-
-// router.get("/learners", async(req, res) => {
-//     if (req.query) {
-        
-//     const { these } = req.query;
-//     await Learner.find({
-//         $or: [
-//            {first_name: { $regex: these, $options: "i" }},
-//            {last_name: { $regex: these, $options: "i" }},
-//            {middle_name: { $regex: these, $options: "i" }},
-//            {gender: { $regex: these, $options: "i" }},
-//            {blood_group: { $regex: these, $options: "i" }},
-//            {genotype: { $regex: these, $options: "i" }},
-          
-//         ],
-//     }).exec((err, user) => {
-//                     if (err) {
-//                         throw new Error(err)
-//                         res.status(404).json("Error receiving:"+ err)
-//                     }else if(user){
-//                         res.render("report", { user: user })
-//                     }else if(!user) {
-//                         res.status(301).json("User not found or Maybe you should check your spelling")
-//                     }
-//                 })
-//             }
-// })
-
-
-// router.get("/learners", async(req, res) => {
-//     if (req.query) {
-
-//     const { input } = req.query;
-//     await Learner.aggregate(
-       
-//         [
-//             {
-//               '$match': {
-//                 'gender': input,
-//                 'status': 'Active'
-//               }
-//             }
-//           ]
-//         //    {last_name: { $regex: these, $options: "i" }},
-//         //    {middle_name: { $regex: these, $options: "i" }},
-//         //    {gender: { $regex: these, $options: "i" }},
-//         //    {blood_group: { $regex: these, $options: "i" }},
-//         //    {genotype: { $regex: these, $options: "i" }},
-//     ).exec((err, user) => {
-//                     if (err) {
-//                         throw new Error(err)
-//                         res.status(404).json("Error receiving:"+ err)
-//                     }else if(user){
-//                         res.render("report", { user: user })
-//                     }else if(!user) {
-//                         res.status(301).json("User not found or Maybe you should check your spelling")
-//                     }
-//                 })
-//             }
-// })
 
 const ensureAuthenticated = function(req, res, next) {
     if (req.isAuthenticated()) {
@@ -90,43 +27,60 @@ const ensureAuthenticated = function(req, res, next) {
     res.redirect('/learner/student-profile');     
   }
 
-router.get("/learners", async(req, res) => {
-    if (req.query) {
-       
-        const { input } = req.query;
-        const { output } = req.query;
-        await Learner
-        .find({
-            "$or": [{ "gender": input},
-            {"email": input},
-            {"genotype" : input}, 
-            {"blood_group": input},
-            {"religion" : input}, 
-            {"state" : input}, 
-            {"lg" : input}, 
-            {"tribe" : input}],
+  const ITEMS_PER_PAGE = 1; // Adjust this value based on the number of items you want per page
 
-            "$and": [
-                {"status" : true},
-                { "classes" : output}
-            ]
-        })
-        .exec((err, user, input) => {
-             if(err) throw new Error(err)
-            Currentclass.find()
-                    .sort({roll_no : 1})
-                    .exec((err1, users) => {
-                        res.render('report', {
-                            user : user,
-                            users : users,
-                    })
-            
-        })
-    })
-}
-})
+  router.get("/learners/:page", ensureAuthenticated, async (req, res) => {
+      try {
+          const page = parseInt(req.params.page) || 1;
+          const output = req.query.output;
+          const  input = req.query.input;
+  
+          const query = {
+              "$or": [
+                  { "gender": input },
+                  { "email": input },
+                  { "genotype": input },
+                  { "blood_group": input },
+                  { "religion": input },
+                  { "state": input },
+                  { "lg": input },
+                  { "tribe": input }
+              ],
+              "$and": [
+                  { "status": true },
+                  { "schoolId": req.user._id },
+                  { "classes": output }
+              ]
+          };
+  
+          const totalItems = await Learner.countDocuments(query);
+          const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  
+          const learners = await Learner.find(query)
+              .sort({ roll_no: 1 })
+              .skip((page - 1) * ITEMS_PER_PAGE)
+              .limit(ITEMS_PER_PAGE)
+              .exec();
+  
+          const users = await Currentclass.find().sort({ roll_no: 1 }).exec();
+  
+          res.render('report', {
+              learner: learners,
+              users: users,
+              currentPage: page,
+              totalPages: totalPages,
+              user: req.user,
+              output,
+              input
+          });
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal server error' });
+      }
+  });
+  
 
-router.get('/alumni/:page', async(req, res) => {
+router.get('/alumni/:page',  ensureAuthenticated, async(req, res) => {
 
     var perPage = 9;
     var page = req.params.page || 1 
@@ -142,7 +96,8 @@ router.get('/alumni/:page', async(req, res) => {
                                 .exec((errOne, count) => {
                             if(errOne) throw new Error(errOne)
                             res.render('alumni_page', {
-                                user : user,
+                                user : req.user,
+                                users : user,
                                 current: page,
                                 pages: Math.ceil(count / perPage)
                             })

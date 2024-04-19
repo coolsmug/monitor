@@ -1,9 +1,15 @@
-
+<div id="customPopup" class="popup">
+    <div class="popup-content">
+      <p>Status changed successfully!</p>
+      <button id="closePopup">Close</button>
+    </div>
+  </div>
+  
 <div class="p_head">
     <% if(user.img.url) {%> 
-        <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="Learner Image" width="100">
+        <img src="<%= user.img.url %>" alt="Learner Image" width="100">
      <% } else {%> 
-         <img src="/img/school_logo-01-01.png" alt="" width="100">
+         <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521762/school_logo-01_rf6ogn.png" alt="" width="100">
          <% } %> 
 </div>
 <div class="ul-one" id="big-door">
@@ -43,7 +49,7 @@
             <button class="btn-close"><i class="fas fa-times"></i></button>
         </div>
         <div> 
-            <form action="/result/check_result" method="GET">
+            <form action="/admin/check_result" method="GET">
             <div class="inputss">
                 <label for="">Term:</label>
                     <select name="name" required>
@@ -52,8 +58,8 @@
                     </select>
             </div>
             <div class="inputss">
-                <label for="">Learner ID:</label>
-                <input type="text" name="_learner" value="" required>
+                <label for="">Admin No:</label>
+                <input type="text" name="admin_no" value="" required>
             </div>
             <div class="inputss">
                 <label for="">Roll_No:</label>
@@ -88,7 +94,7 @@
                 <h1>Third-Term</h1>
                 <button class="btn-closes"><i class="fas fa-times"></i></button>
             </div>
-            <form action="/third_term_exam/check_result" method="GET">
+            <form action="/admin/check_third_result" method="GET">
             <div class="inputss">
                 <label for="">Term:</label>
                 <select name="name" id="name" required>
@@ -96,8 +102,8 @@
                 </select>
             </div>
             <div class="inputss">
-                <label for="">Learner ID:</label>
-                <input type="text" name="_learner" value="" required>
+                <label for="">Admin No:</label>
+                <input type="text" name="admin_no" value="" required>
             </div>
             <div class="inputss">
                 <label for="">Roll_No:</label>
@@ -139,11 +145,11 @@
     <div class="one">
         <li class="list_one"><i class="fas fa-home"></i> School </li>
          <div class="hidee">
-            <li>-<a href="/school/school_management"> Create Proprietor Statement</a></li>
-            <li>-<a href="/school/create-staff"> Create staffs</a></li>
-            <li>-<a href="/school/create-staff-statement"> Create staffs Statement</a></li>
-            <li>-<a href="/school/school-detail"> School Details</a></li>
-            <li>-<a href="/school/manage_all"> Manage Proprietor, staffs and others</a></li>
+            <li>-<a href="/admin/school_management"> Create Proprietor Statement</a></li>
+            <li>-<a href="/admin/all-staffs">All Staffs</a></li>
+            <li>-<a href="/admin/create-staff-statement"> Create staffs Statement</a></li>
+            <li>-<a href="/admin/school-detail"> School Details</a></li>
+            <li>-<a href="/admin/manage_all"> Manage Proprietor & Staffs' Statements</a></li>
             <li>-<a href="/admin/create-currentclass"> Create Current Class</a></li>
             <li>-<a href="/admin/all-currentclass/1"> Manage Current Class</a></li>
         </div>
@@ -168,8 +174,8 @@
     <div class="one">
         <li class="list_one"><i class="fas fa-chart-line"></i> Reports </li>
          <div class="hidee">
-            <li>-<a href="/reports/learners"> Learners Report</a></li>
-            <li>-<a href="/reports/alumni/1"> Past Learners</a></li>
+            <li>-<a href="/admin/learners/0"> Learners Report</a></li>
+            <li>-<a href="/admin/alumni/1"> Past Learners</a></li>
             <li>-<a href="#"> Visitors</a></li>
         </div>
     </div>
@@ -181,7 +187,15 @@
     }
   </style>
   
-  <script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+  
+     // Close pop-up box on button click
+  $('#closePopup').click(function() {
+    $('#customPopup').hide();
+  });
+  
     let closes = document.getElementById("tii");
     let openn = document.getElementById("shii");
     let thedoor = document.getElementById("big-door");
@@ -201,6 +215,7 @@
       };
     }
     openIt();
+    
   </script>
   
 

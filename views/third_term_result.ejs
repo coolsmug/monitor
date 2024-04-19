@@ -9,7 +9,7 @@
                     <% if(users.img.url) {%> 
                         <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
                    <% } else {%> 
-                       <img src="/img/monitor_userss_image.jpg" alt="" >
+                       <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
                        <% } %> 
                 </div>
                
@@ -36,7 +36,7 @@
         
                 <div class="session-section">
                     <p class="sess-sect">Session | Section:</p>
-                    <p class="the"> <%= session.classof %>  | <%= section.name %> </p>
+                    <p class="the"><%= session.name %> <%= session.classof %>  | <%= section.name %> </p>
                 </div>
         
                 <div class="date-issue">
@@ -50,7 +50,7 @@
         
                 <div class="Result-serials">
                     <p class="sess-sect">Result Serial No:</p>
-                    <p class="the"><%= section.roll_no %> </p>
+                    <p class="the"><%= resultSerialNumber %> </p>
                 </div>
         
                 <div class="TERMS">
@@ -73,11 +73,9 @@
                     </div>
                 
                     <div class="address">
-                        <p class="school-add"><%= user.address %> </p>  <p class="school-add"><%= user.address2 %> </p>
-                        
-                            <p class="school-email"> <%= user.email %>, <%= user.website %></p>
-                            <p class="school-web"><i class="fas fa-phone"></i> <%= user.phone_no %>. <i class="fas fa-mobile"></i> <%= user.phone_no2 %> </p> 
-                    
+                        <p class="school-add"><i class="fas fa-map-marker-alt"></i> <%= user.address %> </p>  <p class="school-add"><i class="fas fa-map-marker-alt"></i> <%= user.address2 %> </p>
+                        <p class="school-web"><i class="fas fa-phone"></i> Mobile Phone: <%= user.phone_no %>. <i class="fas fa-mobile"></i> Mobile Phone: <%= user.phone_no2 %> </p> 
+                            <p class="school-email"><i class="fas fa-envelope-open-text"></i> Email: <%= user.email %>    |   <i class="fas fa-atlas"></i> Website: <%= user.website %></p>
                     </div>
                     <div id="school-logo">
                         <% if(user.img.url) {%> 
@@ -101,60 +99,106 @@
                                 <th colspan="4"> <p class="headers_p">Academic Report for <%= section.name %> </p></th>
                             </tr>
                             <tr>   
-                                <th>SUBJECTS</th>
+                                <th colspan="3">SUBJECTS</th>
                                 <th>Q1</th> 
                                 <th>Q2</th>
-                                <th class="trans">Over all</th>
+                                <th class="trans"><div><p>Obt'able</p><p>Mark</p></div></th>
                                 <th class="trans">1st CA</th>
-                                <th class="trans">Over all</th>
+                                <th class="trans"><div><p>Obt'able</p><p>Mark</p></th>
                                 <th class="trans">2nd CA</th>
-                                <th class="trans">Over all</th>
+                                <% if(exam.overall_third_ca) {%>
+                                <th class="trans"><div><p>Obt'able</p><p>Mark</p></th>
                                 <th class="trans">3rd CA</th>
-                                <th class="trans">Over all</th>
-                                <th class="trans">Q3 Exam</th>
-                                <th class="trans">Total</th>
-                                <th class="trans">Session in %</th>
+                                <% } %>
+                                <th class="trans"><div><p>Obt'able</p><p>Mark</p></th>
+                                <th class="trans"><div><p>Exam</p><p>Mark</p><p>Obtained</p></div></th>
+                                <th class="trans"><div><p>Q3</p><p>Total</p><p>Mark</p></div></th>
+                                <th class="trans"><div><p>Total</p>
+                                    <p>Session</p>
+                                    <p>in %age</p></div></th>
                                 <th class="trans">Grade</th>
                                 <th class="trans">Remarks</th>  
                             </tr>
                        </thead>
                        
                        <tbody>
-                        <% if(exam) {%> 
+                        <% if (exam && exam.length > 0) {%> 
+                            <% var totalOverall = 0, totalQone = 0, totalQtwo = 0, totalFirstCA = 0, totalSecondCA = 0, totalThirdCA = 0, 
+                        totalExamOverall = 0, totalExamMark = 0, totalTermTotal = 0, totalFirstCaAll = 0, totalSecondCaAll = 0, totalThirdCaAll = 0;
+                        var totalper_over_al = 0  %>
                         <% for (var i = 0; i < exam.length; i++) {%> 
                             <tr> 
-                                <td class="namings"><%=exam[i].name %> </td>
+                                <td class="namings" colspan="3"><%= exam[i].name %></td>
                                 <td><%=exam[i].qone %></td>
                                 <td><%=exam[i].qtwo %></td>
-                                <td><%=exam[i].overall_first_ca %></td>
+                                <td class="black"><%=exam[i].overall_first_ca %></td>
                                 <td><%= exam[i].mark_obtained_first_ca %> </td >
-                                <td><%=exam[i].overall_second_ca %></td>
+                                <td class="black"><%=exam[i].overall_second_ca %></td>
                                 <td><%= exam[i].mark_otained_second_ca %></td>
-                                <td><%=exam[i].overall_third_ca %></td>
+                                <% if(exam.overall_third_ca) {%>
+                                <td class="black"><%=exam[i].overall_third_ca %></td>
                                 <td><%= exam[i].mark_otained_third_ca %></td>
-                                <td><%=exam[i].exam_overall %></td>
+                                <% } %>
+                                <td class="black"><%=exam[i].exam_overall %></td>
                                 <td><%= exam[i].exam_mark_obtain %></td>
-                                <td><%= exam[i].term_total %></td>
+                                <td ><%= exam[i].term_total %></td>
                                 <td><%= exam[i].per_over_all %></td>
                                 <td><%= exam[i].grade %></td>
                                 <td><%= exam[i].remarks%></td>
-        
+                                <% totalOverall += exam[i].overall_first_ca + exam[i].overall_second_ca + (exam.overall_third_ca ? exam[i].overall_third_ca : 0) + exam[i].exam_overall; %>
+                                <% totalScore = (exam[i].per_over_all.length * 100) - 100 %>
+                                <% totalQone += exam[i].qone; %>
+                                <% totalQtwo += exam[i].qtwo; %>
+                                <% totalFirstCA += exam[i].mark_obtained_first_ca; %>
+                                <% totalFirstCaAll += exam[i].overall_first_ca; %>
+                                <% totalSecondCA += exam[i].mark_otained_second_ca; %>
+                                <% totalSecondCaAll += exam[i].overall_second_ca; %>
+                                <% totalThirdCA += exam[i].mark_otained_third_ca; %>
+                                <% totalThirdCaAll += exam[i].overall_third_ca; %>
+                                <% totalExamOverall += exam[i].exam_overall; %>
+                                <% totalExamMark += exam[i].exam_mark_obtain; %>
+                                <% totalTermTotal += exam[i].term_total; %>
+                                <% var total = totalper_over_al += Number(exam[i].per_over_all) %>
+                                <% var cumulative = (total/totalScore) * 100 %>
                             </tr>
                             <% } %> 
-                            <% } %> 
+                           
                            
                         
                             <tr> 
-                                <td>TOTAL</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td colspan="8"></td>
+                                <td colspan="3">TOTAL</td>
+                                <td><%= totalQone %></td>
+                                <td><%= totalQtwo %></td>
+                                <td class="black"><%= totalFirstCaAll %></td>
+                                <td><%= totalFirstCA %></td>
+                                <td class="black"><%= totalSecondCaAll %></td>
+                                <td><%= totalSecondCA %></td>
+                                <% if(exam.overall_third_ca) {%>
+                                <td class="black"><%= totalThirdCaAll %></td>
+                                <td><%= totalThirdCA %></td>
+                                <% } %>
+                                <td class="black"><%= totalExamOverall %></td>
+                                <td><%= totalExamMark %></td>
+                                <td ><%= totalTermTotal %>/<%= totalOverall %></td>
+                                <td colspan="2"></td>
+                                <td colspan="2"></td>
+                                
                             </tr>
+                            <tr> 
+                                <td colspan=""><p>CUMULATIVE IN %</p></td>
+                                <td colspan=""><p></p></td>
+                                <td colspan=""></td>
+
+                                
+                                
+                                <td colspan="5"></td>
+                                <td colspan="4"></td>
+                                
+                                <td colspan="2" class="red"><p><%= cumulative.toFixed(2)+"%"%></p></td>
+                                <td colspan="2"></td>
+                                
+                            </tr>
+                            <% } %> 
                         </tbody>
                         
                         
@@ -354,3 +398,4 @@
     })
     })
     </script>
+

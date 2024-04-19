@@ -2,45 +2,44 @@
 <%- include ('./partials/messages') %>
 <div class="allss">
     <div class="mon">
-        <img src="/img/monitor.png" alt="" width="200">
+        <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="" width="200">
         <form action="/learner/logout" method="POST" class="logoutss">
             <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i></button>
         </form>
-    </div>
-    <div class="profile">
-        <p>
-            You are welcome <%= user.first_name %>!
-        </p>
-        <img class="imgs" src="/img/img_8.jpg" alt="" width="100">
         <div class="imgss">
-            <% if(user.img.contentType) {%> 
-                 <img src="data:user/<%= user.img.contentType %>;base64,<%= user.img.data.toString('base64') %>" alt="" >
+            <% if(user.img.url) {%> 
+                 <img src="<%= user.img.url %>" alt="Learner Image" >
             <% } else {%> 
-                <img src="/img/monitor_user_image.jpg" alt="" >
+                <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
                 <% } %> 
-        </div>  
+        </div> 
+    </div>
+
+
+    <div class="profile">
+     
+       
+        <div class="checking">
+            <h5>Check result <i class="fas fa-hand-point-down"></i></h5>
+            <ul>             
+                <li><button  class="btn btn-open">1st & 2nd term</button></li>
+                <li><button  class="btn btn-opens">3rd Term </button></li>
+            </ul>
+            <a href="/learner/edit-profile?id=<%= user._id %>" id="aahref">Edit profile</a>
+        </div>
+
     </div>
 
     <div class="profile_name">
-        <p><i class="fas fa-chess-rook"> Roll Number:</i> <%= user.roll_no %></p>
-        <p><i class="fas fa-user"></i> <%= user.first_name %> <%= user.last_name %> <%= user.middle_name %> </p>
-        <p><i class="fas fa-envelope"></i> <%= user.email %></p>
-        <p><i class="fas fa-code"> Class code:</i> <%= user.class_code %></p>
-        <p><i class="fas fa-democrat"> Arm:</i> <%= user.arm %></p>
+        <h4><p>Admin No:</p><%= user.roll_no %></h4>
+        <h4><P>Name:</P><%= user.first_name %> <%= user.last_name %> <%= user.middle_name %> </h4>
+        <h4><p>Email:</p><%= user.email %></h4>
+        <h4><p>Arm:</p><%= user.arm %></h4>
     </div>
+
+        
+    
    
-        <a href="/edit-profile?id=<%= user._id %>" id="aahref">Edit profile</a>
-    
-    <div class="checking">
-       
-        <ul>
-           
-            <p>Check result <i class="fas fa-hand-point-down"></i></p>
-            <li><button  class="btn btn-open">1st & 2nd term</button></li>
-            <li><button  class="btn btn-opens">3rd Term </button></li>
-        </ul>
-    
-    </div>
    
 
     <div class="modality">
@@ -59,16 +58,31 @@
                     </select>
                 </div>
                 <div class="inputss">
-                    <label for="">Learner ID:</label>
-                    <input type="text" name="_learner" value="<%= user._id %>" required>
+                    <label for="">Admin No:</label>
+                    <input type="text" name="admin_no" value="<%= user.roll_no %>" required>
                 </div>
                 <div class="inputss">
                     <label for="">Roll_No:</label>
-                    <input type="text" name="roll_no" value="" required>
+                    <% if(session) {%> 
+                        <select name="roll_no" id="classes">
+                            <option >select</option>
+                            <% for (var i = 0; i < session.length; i++) {%> 
+                                <option value="<%= session[i].roll_no %>"><%= session[i].roll_no %></option>
+                            <% } %> 
+                        </select>
+                        <% } %> 
                 </div>
                 <div class="inputss">
                     <label for="">Class Of:</label>
-                    <input type="text" name="classof" value="" required>
+                    <% if(session) {%> 
+                        <select name="classof" id="classes">
+                            <option >select</option>
+                            <% for (var i = 0; i < session.length; i++) {%> 
+                                <option value="<%= session[i].classof %>"><%= session[i].classof %></option>
+                            <% } %> 
+                        </select>
+                        <% } %> 
+                   
                 </div>
                 <div class="inputss">
                     <label for="">Enter Pin:</label>
@@ -103,16 +117,31 @@
                     </select>
                 </div>
                 <div class="inputss">
-                    <label for="">Learner ID:</label>
-                    <input type="text" name="_learner" value="<%= user._id %>">
+                    <label for="">Admin No:</label>
+                    <input type="text" name="admin_no" value="<%= user.roll_no %>">
                 </div>
                 <div class="inputss">
                     <label for="">Roll_No:</label>
-                    <input type="text" name="roll_no" value="" required>
+                    <% if(session) {%> 
+                        <select name="roll_no" id="classes">
+                            <option >select</option>
+                            <% for (var i = 0; i < session.length; i++) {%> 
+                                <option value="<%= session[i].roll_no %>"><%= session[i].roll_no %></option>
+                            <% } %> 
+                        </select>
+                        <% } %> 
                 </div>
                 <div class="inputss">
                     <label for="">Class Of:</label>
-                    <input type="text" name="classof" value="" required>
+                    <% if(session) {%> 
+                        <select name="classof" id="classes">
+                            <option >select</option>
+                            <% for (var i = 0; i < session.length; i++) {%> 
+                                <option value="<%= session[i].classof %>"><%= session[i].classof %></option>
+                            <% } %> 
+                        </select>
+                        <% } %> 
+                   
                 </div>
                 <div class="inputss">
                     <label for="">Enter Pin:</label>

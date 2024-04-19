@@ -23,10 +23,10 @@
                <td>Proprietor's Name</td> <td>  <%= comment[i].full_name %></td>  <td>
                 <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
                <div class="hideen">
-                   <a href="/school/update-proprietor?id=<%= comment[i].id %>" class="btn border-shadow update">
+                   <a href="/admin/update-proprietor?id=<%= comment[i].id %>" class="btn border-shadow update">
                        <i class="fas fa-user-edit"></i>
                    </a>
-                   <a href="/school/delete_proprietor/<%= comment[i].id %>" class="btn border-shadow deleteOne" data-id="<%= comment[i].id %>">
+                   <a href="/admin/delete_proprietor/<%= comment[i].id %>" class="btn border-shadow deleteOne" data-id="<%= comment[i].id %>">
                        <i class="fas fa-trash-alt"></i>
                    </a>
                </div>
@@ -80,10 +80,10 @@
                <td>
                     <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
                     <div class="hideen">
-                        <a href="/school/update-staff-statement?id=<%= sst[i].id %>" class="btn border-shadow update">
+                        <a href="/admin/update-staff-statement?id=<%= sst[i].id %>" class="btn border-shadow update">
                             <i class="fas fa-user-edit"></i>
                         </a>
-                        <a href="/school/delete_staff-statement/<%= sst[i].id %>" class="btn border-shadow deleteTwo" data-id="<%= sst[i].id %>">
+                        <a href="/admin/delete_staff-statement/<%= sst[i].id %>" class="btn border-shadow deleteTwo" data-id="<%= sst[i].id %>">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </div>
@@ -111,48 +111,6 @@
     </table>
 </div>
 
-<div class="dele">
-    <h2 class="all"> <i class="fas fa-chalkboard-teacher"></i> All Staffs </h2>
-</div>
-<div class="table">
-       
-        <table>
-            <thead>
-                <tr>
-                    <th>Roll No</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (var i = 0; i < staff.length; i++){ %> 
-                <tr>
-                    <td><%= staff[i].roll %></td>
-                    <td><%= staff[i].name %></td>
-                    <td><label class="switcher">
-                        <input type="checkbox" id="mySwitch" data-staff-id="<%= staff[i]._id %> " <%= staff[i].status == true ? 'checked' : '' %> >
-                        <span class="slider">
-
-                        </span>
-                </label></td>
-                    <td>
-                         <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
-                        <div class="hideen">
-                            <a href="/school/update-staff?id=<%= staff[i].id %> " class="btn border-shadow update">
-                                <i class="fas fa-user-edit"></i>
-                            </a>
-                            <a href="/school/delete_staff/<%= staff[i].id %>" class="btn border-shadow deleteThree" data-id="<%= staff[i].id %>">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                <% } %> 
-                
-            </tbody>
-     </table>
-</div>
 
 
 <footer class="foot">

@@ -1,8 +1,13 @@
 <%- include ("./include/result_header.ejs") %>
+
 <div class="all_in_one">
     <header>
       
-      <img src="/img/monitor-01.png" alt="">
+      <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="">
+      
+      <div class="div-a">
+        <a href="/staff/staff-route" style="text-decoration: none; position: absolute; right: 20px; top: 50px; font-weight: bolder; color: #fff; ">home</a>
+      </div>
 
     </header>
 <div class="diver">
@@ -15,10 +20,10 @@
         <% if(users.img.url) {%> 
             <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
        <% } else {%> 
-           <img src="/img/monitor_users_image.jpg" alt="" >
+           <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
            <% } %> 
     </div>
-    <p><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= section.name %> Result Arrangement - <%= section.classof %> Session of <%= session.name %></p> 
+    <p style="font-size: 12px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= section.name %> Result Arrangement - <%= section.classof %> Session of <%= session.name %></p> 
     
     <form method="POST" id="blessing">
         <div class="input">
@@ -88,7 +93,7 @@
                     <td><input id="termtotal" type="te" name="term_total" value="<%= exam[i].term_total %>" readonly></td>
                     <td><input id="grades" type="grade" name="grade" value="<%= exam[i].grade %>" readonly></td> 
                     <td><input id="remark" type="text" name="remarks" value="<%= exam[i].remarks %>" readonly></td>
-                    <td class="td"><button type="submit"><i class="fas fa-save" onclick="submitForm()"></i></button> <a href="/result/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
+                    <td class="td"><button type="submit"><i class="fas fa-save" onclick="submitForm()"></i></button> <a href="/staff/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
                 </tr>
             </form>
 
@@ -135,7 +140,7 @@
 
 <% if(misc) {%> 
 <% misc.forEach(function(mis){ %> 
-<div class="div_ahref"><a href="/result/miscellaneous-pace?id=<%= mis._id %>"> Edit <%= mis.term %> Miscellaneous for <%= mis.student_name %>  </a></div>
+<div class="div_ahref"><a href="/staff/miscellaneous-pace?id=<%= mis._id %>"> Edit <%= mis.term %> Miscellaneous for <%= mis.student_name %>  </a></div>
 <% }) %> 
 <% } %> 
 </div>
@@ -155,7 +160,7 @@
 
     var id = $(form).attr("data-id");
     var requests = {
-      url: `/result/update-exam/${id}`,
+      url: `/staff/update-exam/${id}`,
       method: "POST",
       data: data,
     };
@@ -214,7 +219,7 @@
    console.log(data);
      // var id = $(form).attr("data-id");
    var request = {
-     "url": `/result/register_miscellaneous`,
+     "url": `/staff/register_miscellaneous`,
      "method": "POST",
      "data": data,
      
@@ -239,7 +244,7 @@
 
   console.log(data);
   var requests = {
-    url: "/result/register_exam",
+    url: "/staff/register_exam",
     method: "POST",
     data: data,
   };

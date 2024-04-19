@@ -13,7 +13,7 @@
     
         <%- include ('./partials/messages') %> 
 
-        <form action="/learner/register" method="POST" id="theLearner">
+        <form action="/admin/registerLearner" method="POST" id="theLearner">
 
             <div class="all-single-form">
                 <div class="mb-3">
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="hop">
-                        <label for="last_name">Famil Name:</label>
+                        <label for="last_name">Family Name:</label>
                         <input type="last_name" name="last_name"  value="<%= typeof last_name != 'undefined' ? last_name : '' %>" >
                     </div>
                 </div>
@@ -42,39 +42,43 @@
 
                 <div class="mb-3">
                     <div class="hop">
-                        <label for="classes">Class:</label> 
+                        <label for="classes">Class choice: <h6 style="color: red;">select learners class option</h6></label> 
                         <% if(current) {%> 
-                            <select name="classes" id="classes">
+                            <select name="classId" id="classes">
                                 <option ></option>
                                 <% for (var i = 0; i < current.length; i++) {%> 
-                                    <option value="<%= current[i].name %>"> <%= current[i].name %> of <%= current[i].arm %>-<%= current[i].class_code %></option>
+                                    <option value="<%= current[i]._id%>"><%= current[i].name %> of <%= current[i].arm %></option>
                                 <% } %> 
                             </select>
                             <% } %> 
                     </div>
 
+                </div>
+                <div class="mb-3">
                     <div class="hop">
-                        <label for="arm">Arm:</label> 
+                        <label for="classes">CLass <h6 style="color: red;">what is the class choosen</h6></label> 
                         <% if(current) {%> 
-                        <select name="arm" id="arm">
-                            <option ></option>
-                            <% for (var i = 0; i < current.length; i++) {%> 
-                                <option value="<%= current[i].arm %> "><%= current[i].arm %> of <%= current[i].class_code %>-<%= current[i].name %> </option>
+                            <select name="classes" id="classes">
+                                <option ></option>
+                                <% for (var i = 0; i < current.length; i++) {%> 
+                                    <option value="<%= current[i].name %>"><%= current[i].name %></option>
+                                <% } %> 
+                            </select>
                             <% } %> 
-                        </select>
-                        <% } %> 
                     </div>
-                    
+
+                </div>
+                <div class="mb-3">
                     <div class="hop">
-                        <label for="class_code">Class code:</label> 
+                        <label for="classes">Arm: <h6 style="color: red;">what is the class arm choosen</h6></label> 
                         <% if(current) {%> 
-                        <select name="class_code" id="class_code">
-                            <option ></option>
-                            <% for (var i = 0; i < current.length; i++) {%> 
-                                <option value="<%= current[i].class_code %> "><%= current[i].class_code %> of <%= current[i].name %><%= current[i].arm %></option>
+                            <select name="arm" id="classes">
+                                <option ></option>
+                                <% for (var i = 0; i < current.length; i++) {%> 
+                                    <option value="<%= current[i].arm %>"><%= current[i].arm %></option>
+                                <% } %> 
+                            </select>
                             <% } %> 
-                        </select>
-                        <% } %>
                     </div>
 
                 </div>

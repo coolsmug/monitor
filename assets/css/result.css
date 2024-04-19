@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow&family=PT+Sans&display=swap');
 :root {
-    --deepest-blue: #355E3B; 
-    --deep-blue: #00A36C;
-    --light-blue: #90EE90;
-    --lighter-blue: #7FFFD4;
+    --deepest-blue: #033767; 
+    --deep-blue: #295daf;
+    --light-blue: #09abf0;
+    --lighter-blue:#75bff4;
     --white: #ffffff;
     --white_one: #f7f7f7;
     --white_two: #e7e6e2;
@@ -43,7 +43,17 @@ body{
     align-items: center;
     flex-wrap: wrap;
     font-family: 'PT Sans';
+    animation: fadeIn 3s ease forwards;
 }
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
 body::-webkit-scrollbar {
     width: .5em;
@@ -408,7 +418,10 @@ p:not(.cover_table p):after{
     box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.286), -2px -2px 7px rgba(0, 0, 0, 0.253);
     color: #ffffff;
 }
-
+.black {
+    color: black;
+    font-weight: bolder;
+}
 .hidethis {
     display: none;
     

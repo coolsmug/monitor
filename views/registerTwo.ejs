@@ -1,61 +1,105 @@
-<%- include ("./include/main_header.ejs") %> 
-
+<%- include ("./include/reg.ejs") %>
 <%- include ('./partials/messages') %>
 
 <div class="togeda">
-    <div class="imag_pj">
-        <img src="" alt="">
+    
+      <div class="imag_pj">
+        <img src="/img/img_1.jpg" alt="" width="200">
+
       </div>
-      
-      <div class="form_reg">
-        <form action="/monitor-step2-registration" method="POST">
+
  
-            <div class="all-single-form">
-        
-                    <div class="hop">
-                        <input type="hidden" name="userId" value="<%= userId %>">
-                        <label for="school_motto">School Motto:</label>
-                        <input type="school_motto" name="school_motto" value="<%= typeof school_motto != 'undefined' ? school_motto : '' %>" />
-                    </div>
-                    
-                    <div class="hop">
-                      <label for="country">Country:</label>
-                      <select id="country" name="country">
-                        <option value="">Select Country</option>
-                        <% countries.forEach((country)=> { %> 
-                          <option value="<%= country.name %>"><%= country.name %></option>
-                          <% }) %> 
-                        
-                      </select>
-                    
-                      <label for="state">State:</label>
-                      <select id="state" name="state" disabled>
-                        <option value="">Select State</option>
-                      </select>
-        
-                      <label for="city">City</label>
-                      <select id="city" name="city" disabled>
-                        <option value="">-- Select a City --</option>
-                      </select>
-                    </div>
-                   
-               
-            </div>
-            <div class="mb-3">
-                <input type="submit" value="Ok? Next">
-            </div>
-        
-        </form>
+      <div class="login-box">
+      <h2>Motto & Location</h2>
+      <form action="/monitor-step2-registration" method="POST">
+
+
+
+      <div class="user-box">
+      <input type="hidden" name="userId" value="<%= userId %>">
+
+      <input type="school_motto" name="school_motto" value="<%= typeof school_motto != 'undefined' ? school_motto : '' %>" />
+      <label for="school_motto">School Motto:</label>
+      </div>
+
+      <div class="user-box">
+
+      <select id="country" name="country">
+      <option value="">Select Country</option>
+      <% countries.forEach((country)=> { %> 
+      <option value="<%= country.name %>"><%= country.name %></option>
+      <% }) %> 
+
+      </select>
+
+
+      <select id="state" name="state" disabled>
+      <option value="">Select State</option>
+      </select>
+
+
+      <select id="city" name="city" disabled>
+      <option value="">-- Select a City --</option>
+      </select>
+
+      </div>
+
+
+
+      <button>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      Next
+      </button>
+      </form>
       </div>
 </div>
 
+      <footer class="foot">
+        <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+      <footer/>
 
-
-
-
-
-<footer class="foot">
-  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
-</footer>
 
 <%- include ("./include/footer.ejs") %> 
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(() => {
+  $('#country').on('change', () => {
+    const countryCode = $('select[name="country"]').val();
+    if (countryCode) {
+      $.get(`/states/${countryCode}`, (states) => {
+        $('select[name="state"]').empty().append('<option value="">-- Select a State --</option>');
+        $.each(states, (index, state) => {
+          $('select[name="state"]').append(`<option value="${state.name}">${state.name}</option>`);
+        });
+        $('select[name="state"]').prop('disabled', false);
+        $('select[name="city"]').empty().prop('disabled', true);
+      });
+    } else {
+      $('select[name="state"]').empty().prop('disabled', true);
+      $('select[name="city"]').empty().prop('disabled', true);
+    }
+  });
+
+  $('#state').on('change', () => {
+  const countryCode = $('select[name="country"]').val();
+  const stateName = $('select[name="state"]').val();
+  if (countryCode && stateName) {
+    $.get(`/cities/${countryCode}/${stateName}`, (cities) => {
+      $('select[name="city"]').empty().append('<option value="">-- Select a City --</option>');
+      $.each(cities, (index, city) => {
+        $('select[name="city"]').append(`<option value="${city.name}">${city.name}</option>`); // Append city.name
+      });
+      $('select[name="city"]').prop('disabled', false);
+    });
+  } else {
+    $('select[name="city"]').empty().prop('disabled', true);
+  }
+});
+
+});
+</script>

@@ -221,7 +221,7 @@ $(document).ready(function() {
       isProcessing = true;
 
       $.ajax({
-        url: `/school/staff-status/${switchId}`,
+        url: `/admin/staff-status/${switchId}`,
         type: 'PATCH',
         data: { status: updatedStatus },
         success: function(data) {
@@ -258,7 +258,7 @@ $("#pull_out").submit(function (params) {
   console.log(data);
 
   let request = {
-    "url" : `/school/update-proprietor/${data.id}`,
+    "url" : `/admin/update-proprietor/${data.id}`,
     "method" : "PUT",
     "data" : data,
   };
@@ -283,7 +283,7 @@ $("#school").submit(function (params) {
   console.log(data);
 
   let request = {
-    "url" : `/school/update-school/${data.id}`,
+    "url" : `/admin/update-school/${data.id}`,
     "method" : "PUT",
     "data" : data,
   };
@@ -333,7 +333,7 @@ $("#edit-state").submit(function (params) {
   console.log(data);
 
   let request = {
-    "url" : `/school/update-staff-statement/${data.id}`,
+    "url" : `/admin/update-staff-statement/${data.id}`,
     "method" : "PUT",
     "data" : data,
   };
@@ -563,6 +563,31 @@ $(function() {
   });
 });
 
+$(function() {
+  $('a.staffClasses').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('tr');
+   // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to remove this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
 
 //all section delete
 
@@ -718,7 +743,7 @@ $(document).ready(function() {
       isProcessing = true;
 
       $.ajax({
-        url: `/reports/user-status/${switchId}`,
+        url: `/admin/olduser-status/${switchId}`,
         type: 'PATCH',
         data: { status: updatedStatus },
         success: function(data) {
@@ -766,14 +791,14 @@ $(document).ready(function() {
       isProcessing = true;
 
       $.ajax({
-        url: `/school/school-status/${switchId}`,
+        url: `/admin/school-status/${switchId}`,
         type: 'PATCH',
         data: { status: updatedStatus },
         success: function(data) {
           // Update the switch status immediately without a page reload
           $(this).find('input').prop('checked', updatedStatus);
-          alert('Status changed successfully');
-          row.remove();
+          $('#customPopup').show();
+        row.remove();
         },
         error: function(error) {
           console.error(error);
@@ -804,7 +829,7 @@ $("#update_usersMille").submit(function (eventss) {
   console.log(data);
     
   var request = {
-    "url": `/result/update_miscellaneous/${data.id}`,
+    "url": `/staff/update_miscellaneous/${data.id}`,
     "method": "POST",
     "data": data,
     
@@ -819,40 +844,40 @@ $("#update_usersMille").submit(function (eventss) {
 
 
 //coutry and State
-$(document).ready(() => {
-$('#country').on('change', () => {
-  const countryName = $('select[name="country"]').val();
-  if (countryName) {
-    $.get(`/states/${countryName}`, (states) => {
-      $('select[name="state"]').empty().append('<option value="">-- Select a State --</option>');
-      $.each(states, (index, state) => {
-        $('select[name="state"]').append(`<option value="${state.name}">${state.name}</option>`);
-      });
-      $('select[name="state"]').prop('disabled', false);
-      $('select[name="city"]').empty().prop('disabled', true);
-    });
-  } else {
-    $('select[name="state"]').empty().prop('disabled', true);
-    $('select[name="city"]').empty().prop('disabled', true);
-  }
-});
+// $(document).ready(() => {
+// $('#country').on('change', () => {
+//   const countryName = $('select[name="country"]').val();
+//   if (countryName) {
+//     $.get(`/states/${countryName}`, (states) => {
+//       $('select[name="state"]').empty().append('<option value="">-- Select a State --</option>');
+//       $.each(states, (index, state) => {
+//         $('select[name="state"]').append(`<option value="${state.name}">${state.name}</option>`);
+//       });
+//       $('select[name="state"]').prop('disabled', false);
+//       $('select[name="city"]').empty().prop('disabled', true);
+//     });
+//   } else {
+//     $('select[name="state"]').empty().prop('disabled', true);
+//     $('select[name="city"]').empty().prop('disabled', true);
+//   }
+// });
 
-$('#state').on('change', () => {
-  const countryName= $('select[name="country"]').val();
-  const stateName = $('select[name="state"]').val();
-  if (countryName && stateName) {
-    $.get(`/cities/${countryName}/${stateName}`, (cities) => {
-      $('select[name="city"]').empty().append('<option value="">-- Select a City --</option>');
-      $.each(cities, (index, city) => {
-        $('select[name="city"]').append(`<option value="${city.name}">${city.name}</option>`);
-      });
-      $('select[name="city"]').prop('disabled', false);
-    });
-  } else {
-    $('select[name="city"]').empty().prop('disabled', true);
-  }
-});
-});
+// $('#state').on('change', () => {
+//   const countryName= $('select[name="country"]').val();
+//   const stateName = $('select[name="state"]').val();
+//   if (countryName && stateName) {
+//     $.get(`/cities/${countryName}/${stateName}`, (cities) => {
+//       $('select[name="city"]').empty().append('<option value="">-- Select a City --</option>');
+//       $.each(cities, (index, city) => {
+//         $('select[name="city"]').append(`<option value="${city.name}">${city.name}</option>`);
+//       });
+//       $('select[name="city"]').prop('disabled', false);
+//     });
+//   } else {
+//     $('select[name="city"]').empty().prop('disabled', true);
+//   }
+// });
+// });
 
 
 
@@ -870,7 +895,7 @@ $("#creat-Classing").submit(function (params) {
   console.log(data);
 
   let request = {
-    "url" : `/school/update-staff/${data.id}`,
+    "url" : `/admin/update-staff/${data.id}`,
     "method" : "PUT",
     "data" : data,
   };
@@ -898,7 +923,7 @@ $("#update_misc").submit(function (eventss) {
  console.log(data);
    // var id = $(form).attr("data-id");
  var request = {
-   "url": `/result/register_miscellaneous`,
+   "url": `/staff/register_miscellaneous`,
    "method": "POST",
    "data": data,
    

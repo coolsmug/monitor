@@ -4,12 +4,21 @@
     <div class="div_header_two">
 
     </div>
-    <div class="div_header">
-        <div class="img-div">
-            <img src="/img/monitor.png" alt="">
+    <header class="staff-route">
+        <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="" width="200">
+       
+          <div>
+            <form action="/staff/logout" method="POST" class="logoutss">
+                <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i>Logout</button>
+            </form>
+          </div>    
+        
+              
+          <div class="div-a">
+            <a href="/staff/staff-route">home</a>
         </div>
-      
-    </div>
+       
+    </header>
   
 
         <div class="cover_of_div">
@@ -21,17 +30,17 @@
                     <% if(session.date_started) {%> 
                         <% let date = session.date_started.toDateString() %> 
                        
-                <p  class="p_of_p">School's Section of <%= session.name %> <%= date %>  </p>
+                <p  class="p_of_p" >School's Section of <%= session.name %> <%= date %>  </p>
                 <% } %> 
-                <P  class="p_of_p"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %> </P>
-                <P class="p_of_p">With Admission No <%= users.roll_no %> <%= classed.name %> </P> 
+                <P  class="p_of_p" style="font-size: 12px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %> </P>
+                <P class="p_of_p" style="font-size: 12px; font-weight: none; text-shadow: none;">With Admission No <%= users.roll_no %> <%= classed.name %> </P> 
               
         
                     <div class="form-for-report">
                         <% for (var i = 0; i < section.length ; i++) {%> 
                     
                             <div class="div_divol">
-                                <a href="/result/exam-pace?sectionId=<%= section[i]._id %>&name=<%= section[i].name %>&roll_no=<%=section[i].roll_no %>&userId=<%= users._id %>&classId=<%= classed._id %>&sessionId=<%= session._id %>&classof=<%= session.classof %> ">
+                                <a href="/staff/exam-pace?sectionId=<%= section[i]._id %>&name=<%= section[i].name %>&roll_no=<%=section[i].roll_no %>&userId=<%= users._id %>&classId=<%= classed._id %>&sessionId=<%= session._id %>&classof=<%= session.classof %> ">
                                     <div class="avi">
                                        <p> <%= section[i].roll_no %> </p> 
                                       
@@ -50,7 +59,7 @@
                             <% for (var a = 0; a < third.length ; a++) {%> 
                     
                                 <div class="div_divol">
-                                    <a href="/third_term_exam/exam-pace-third?sectionId=<%= third[a]._id %>&name=<%= third[a].name %>&roll_no=<%=third[a].roll_no %>&userId=<%= users._id %>&classId=<%= classed._id %>&sessionId=<%= session._id %>&classof=<%= session.classof %> ">
+                                    <a href="/staff/exam-pace-third?sectionId=<%= third[a]._id %>&name=<%= third[a].name %>&roll_no=<%=third[a].roll_no %>&userId=<%= users._id %>&classId=<%= classed._id %>&sessionId=<%= session._id %>&classof=<%= session.classof %> ">
                                         <div class="avi">
                                            <p>  <%= third[a].roll_no %> </p> 
                                           

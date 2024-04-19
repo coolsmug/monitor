@@ -7,7 +7,7 @@
             <% if(user.img.url) {%> 
               <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="Learner Image">
            <% } else {%> 
-               <img src="/img/school_logo-01-01.png" alt="" width="200">
+               <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521762/school_logo-01_rf6ogn.png" alt="" width="200">
                <% } %> 
               
         </div>
@@ -34,7 +34,7 @@
         <h5>Date Created: <%= school.timestamps %></h5>
 
         <div class="form_delete_school">
-<h1><a href="/school/update-school?id=<%= school._id %>"><i class="fas fa-edit"></i></a>Edit</h1>
+<h1><a href="/admin/update-school?id=<%= school._id %>"><i class="fas fa-edit"></i></a>Edit</h1>
         </div>
         <div class="form_delete_school">
           <p> Suspend Account</p>

@@ -1,12 +1,20 @@
 <%- include ('./include/header.ejs') %> 
 <div class="bodys">
-    <header>
+    <header class="staff-route">
         <img src="/img/monitor.png" alt="" width="200">
-        <%- include ("./include/_uls.ejs") %> 
+       
+          <div>
+            <form action="/staff/logout" method="POST" class="logoutss">
+                <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i>Logout</button>
+            </form>
+          </div>    
+        
+              
+         
     </header>
 
     <div class="management_route">
-      <a href="/result/sessions/1"><i class="fas fa-tasks"> </i> Students Result Management <i class="fas fa-user-graduate" id="fa-user-graduate"></i></a>
+      <a href="/staff/sessions/1"><i class="fas fa-tasks"> </i> Students Result Management <i class="fas fa-user-graduate" id="fa-user-graduate"></i></a>
     </div>
 
     <div class="design_wrap">
@@ -23,7 +31,7 @@
 
             </div>
             <div class="image_8">
-                <img src="/img/img_8.jpg" alt="" srcset="" width="200">
+                <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713523184/img_8_pajwbk.jpg" alt="" srcset="" width="200">
             </div>
         </div>
     </div>

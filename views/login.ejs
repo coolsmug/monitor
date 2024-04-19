@@ -2,18 +2,21 @@
 <%- include ('./partials/messages') %>
 <div class="all_contents_in_login">
    
-        <img class="logo-mon" src="/img/monitor.png" alt="" width="200">
-        <div class="mon_n"><img src="/img/monitor_logo.png" alt="" width="200"></div>    
+    <img class="logo-mon" src="/img/monitor.png" alt="" width="200">
+         
    
    
     <div class="first-div-log">
         <div class="login_header">
-            <h1>Welcome! to the Future</h1>
-            <h2>The most reliable E-Result and School Management</h2>
-            <h1>The Monitor</h1>
-            <h5> Powered by YiOL Tech <i class="fas fa-copyright"> </i> 2022 </h5>
+            <div class="allh">
+                <h3>Welcome! to the Future</h3>
+                <h5>The most reliable E-Result and School Management</h5>
+                <h1>monitor</h1>
+                <h6> Powered by YiOL Tech <i class="fas fa-copyright"> </i> 2022 </h6>
+            </div>
+            
         </div>
-        <div class="div-svg"><img src="/img/Omth.png" alt=""></div>
+        <div class="div-svg"><img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713523166/94853_wfyskp.png" alt=""></div>
        
     </div>
    
@@ -25,41 +28,49 @@
             <div class="di-log-in"> 
                 <h1>Logins <i class="fas fa-exclamation"></i></h1>
             </div>
-            <div class="staff_log">
-                    <h1 class="list_ones">Are you a Staff ?</h1>
-                <div class="hide_form">
-                    <form action="/staff_login" method="POST" class="hideit">
-                        <div>
-                           
-                            <input type="text" name="email" placeholder="Enter Email">
-                        </div>
-                        <div>
-                            
-                            <input type="password" name="password" placeholder="Enter Password">
-                        </div>
-                        <div>
-                            <input type="submit" value="Login">
-                        </div>    
-                    </form>
-                </div>
-            </div>
-       
+
             <div class="admin_log">
+
                     <h1 class="list_ones">Are you an Admin ?</h1>
+                
                 <div class="hide_form">
                     <form action="/admin/admin_login" method="POST" class="hideit">
                         <div>
-                           
                             <input type="text" name="email" placeholder="Enter Email">
                         </div>
-                        <div>
-                            
-                            <input type="password" name="password" placeholder="Enter Password">
+
+                        <div> 
+                            <input type="password" id="pass2" name="password" placeholder="Enter Password">
                         </div>
+
+                        <i class="fas fa-eye-slash fa-eye" onclick="togglePasswordVisibility('pass2')"></i>
                         <div>
                             <input type="submit" value="Login">
                         </div>
-                     </form>
+                    </form>
+                </div>
+            </div>
+
+            <div class="staff_log">
+
+                    <h1 class="list_ones">Are you a Staff ?</h1>
+
+                <div class="hide_form">
+
+                    <form action="/staff/staff_login" method="POST" class="hideit">
+                        <div>
+                            <input type="text" name="email" placeholder="Enter Email">
+                        </div>
+
+                        <div>
+                            <input type="password" id="pass1" name="password" placeholder="Enter Password">
+                        </div>
+
+                            <i class="fas fa-eye-slash fa-eye" onclick="togglePasswordVisibility('pass1')"></i>
+                        <div>
+                            <input type="submit" value="Login">
+                        </div>
+                        </form> 
                 </div>
             </div>
         
@@ -73,13 +84,18 @@
                         </div>
                         <div>
                             
-                            <input type="password" name="password" placeholder="Enter Password">
+                            <input type="password" id="pass3" name="password" placeholder="Enter Password" >
                         </div>
+                        <i class="fas fa-eye-slash fa-eye" onclick="togglePasswordVisibility('pass3')"></i>
                         <div>
                             <input type="submit" value="Login">
                         </div>
                     </form>
                 </div>
+            </div>
+
+            <div class="forget-password">
+                <a href="/forget-password">Forget Password?</a>
             </div>
           
         </div>
@@ -102,69 +118,37 @@
   
 </div>
 
-
-
-
-  
-  
-  
-  
-
    
 
 <%- include ('./include/footer.ejs') %> 
 
+<script>
+        let eyeClosed = document.getElementsByClassName('fa-eye');
+ let eyeOpened = document.getElementsByClassName('fa-eye-slash');
+ 
+ // Adding a click event listener to each element in the collection
+ for (let i = 0; i < eyeClosed.length; i++) {
+     eyeClosed[i].addEventListener('click', function() {
+         // Toggle between 'fa-eye' and 'fa-eye-slash'
+         // this.classList.toggle('fa-eye');
+         this.classList.toggle('fa-eye-slash');
+     });
+ }
+
+function togglePasswordVisibility(fieldId) {
+    var x = document.getElementById(fieldId);
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}
+
+</script>
+
 <script >
-//     let open = document.getElementsByClassName("list_ones");
+    // Assuming eyeClosed and eyeOpened are arrays of element
 
-// let i;
-
-// for(i = 0; i < open.length; i++) {
-//     open[i].onclick = function() {
-//         this.classList.toggle("actives");
-//         let hideit = this.nextElementSibling;
-//         if(hideit.style.maxHeight) {
-//             hideit.style.maxHeight = null;
-//             hideit.style.opacity = '0'
-//        }else {
-//             hideit.style.maxHeight = hideit.scrollHeight + "px";
-//             hideit.style.opacity = '1'
-//         }
-//     }    
-// }
-
-// let open = document.getElementsByClassName("list_ones");
-
-// let i;
-
-// for(i = 0; i < open.length; i++) {
-//     open[i].onclick = function() {
-//         // Toggle the "actives" class on the clicked element
-//         this.classList.toggle("actives");
-        
-//         // Find the next sibling element
-//         let hideit = this.nextElementSibling;
-        
-//         // Loop through all elements with the "list_ones" class
-//         for (let j = 0; j < open.length; j++) {
-//             // Check if the current element has maxHeight set
-//             if (open[j].nextElementSibling.style.maxHeight) {
-//                 // If so, unset it
-//                 open[j].nextElementSibling.style.maxHeight = null;
-//                 open[j].nextElementSibling.style.opacity = '0';
-//             }
-//         }
-        
-//         // Set the maxHeight of the clicked element's next sibling
-//         if (hideit.style.maxHeight) {
-//             hideit.style.maxHeight = null;
-//             hideit.style.opacity = '0';
-//         } else {
-//             hideit.style.maxHeight = hideit.scrollHeight + "px";
-//             hideit.style.opacity = '1';
-//         }
-//     }    
-// }
 let opens = document.getElementsByClassName("list_ones");
 
 let lastClicked = null;
@@ -199,5 +183,40 @@ for(let i = 0; i < opens.length; i++) {
 }
 
 
+
 </script>
 
+
+
+ 
+ <style>
+    .fas {
+        color: var(--light-blue);
+        right: 0;
+        cursor: pointer;
+    }
+     .all_messagesing {
+         top: 50%;
+     }
+ 
+     .forget_pass {
+        
+         display: flex;
+         flex-direction: row;
+         flex-wrap: wrap;
+         justify-content: space-between;
+         align-items: center;
+     }
+ 
+     .forget_pass a, .forget_pass i {
+         color: var(--orange1);
+     }
+
+     .forget-password a{
+        color: var(--lighter-blue);
+        font-family: 'PT' 'san';
+        font-size: 12px;
+     }
+
+
+ </style>

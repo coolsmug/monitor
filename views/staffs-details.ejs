@@ -1,0 +1,177 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="staff-detail">
+    <%- include ('./partials/messages') %> 
+           <h3>Staff's Details</h3> 
+
+     <div class="dreout">
+        <a href="/school/all-staffs">All Staffs</a>
+     </div>      
+    <table>
+       
+        <tbody>
+            <tr>
+               <td> <div class="image"><img src="" alt="staff image"></div></div><td>
+               <td> <h4><%= staff.name %></h4></td>
+               <td><h4><%= staff.address %></h4> </td>
+               <td><h4> <%= staff.mobile_phone %></h4></td>
+               <td><h4><%= staff.status %></h4></td>
+               <td><h4><%= staff.email %></h4></td>
+               <td>
+                <form action="/admin/allocate_class?id=<%= staff._id %>" method="post">
+                    <h5>Assign class</h5>
+                  
+                    <select name="classID" id="">
+                        <option value="">select class</option>
+                        <% classes.forEach((staffclass) => { %>
+                       
+                        <option value="<%= staffclass._id %>"><%= staffclass.name %></option>
+                        <% }) %>
+                    </select>
+               
+                <input type="submit" value="allocate">
+            </form>
+               </td>
+            </tr>
+            <tr>
+                <% for (let i = 0; i < allocatedClasses.length; i++) { %>
+                    <% const sclass = allocatedClasses[i]; %>
+                    <% if (sclass) { %>
+                        <h4>Assigned Class</h4>
+                      <li><%= sclass.name %> 
+                        <a href="/admin/disallocate/<%= staff._id %>?classed=<%= sclass._id %>">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </li>
+                    <% } %>
+                  <% } %>
+                
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<%- include ("./include/footer.ejs") %>
+
+<style>
+.staff-detail {
+    display: flex !important;
+    flex-direction: column;
+    width: 70%;
+    background-color: #fff;
+    margin: auto;
+    margin-top: 100px;
+    gap: 20px;
+    padding: 20px;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+
+}
+.dreout a{
+  
+    color: var(--light-blue);
+   
+    font-weight: bolder;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+li {
+    font-style: none;
+    font-weight: bolder;
+    font-family:var(--ubuntu);
+    list-style-type:upper-roman;
+}
+h4{
+    padding: 0;
+    margin: 0;
+    color: var(--deepest-blue);
+}
+
+li a{
+    font-style: none;
+    font-weight: bolder;
+    font-family:Arial, Helvetica, sans-serif;
+    color:var(--crimson);
+}
+
+
+.table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  
+    
+}
+.tabe form {
+    width: 100px;
+   
+}
+
+input {
+    outline: none;
+    border: none;
+    padding: 6px 12px;
+    background-color: var(--deep-blue);
+    color: var(--lighter-blue);
+    font-family:var(--ubuntu);
+    cursor: pointer;
+    outline: var(--light-blue);
+}
+
+</style>
+
+<script>
+
+</script>
+
+<!-- //     let open = document.getElementsByClassName("list_ones");
+
+// let i;
+
+// for(i = 0; i < open.length; i++) {
+//     open[i].onclick = function() {
+//         this.classList.toggle("actives");
+//         let hideit = this.nextElementSibling;
+//         if(hideit.style.maxHeight) {
+//             hideit.style.maxHeight = null;
+//             hideit.style.opacity = '0'
+//        }else {
+//             hideit.style.maxHeight = hideit.scrollHeight + "px";
+//             hideit.style.opacity = '1'
+//         }
+//     }    
+// }
+
+// let open = document.getElementsByClassName("list_ones");
+
+// let i;
+
+// for(i = 0; i < open.length; i++) {
+//     open[i].onclick = function() {
+//         // Toggle the "actives" class on the clicked element
+//         this.classList.toggle("actives");
+        
+//         // Find the next sibling element
+//         let hideit = this.nextElementSibling;
+        
+//         // Loop through all elements with the "list_ones" class
+//         for (let j = 0; j < open.length; j++) {
+//             // Check if the current element has maxHeight set
+//             if (open[j].nextElementSibling.style.maxHeight) {
+//                 // If so, unset it
+//                 open[j].nextElementSibling.style.maxHeight = null;
+//                 open[j].nextElementSibling.style.opacity = '0';
+//             }
+//         }
+        
+//         // Set the maxHeight of the clicked element's next sibling
+//         if (hideit.style.maxHeight) {
+//             hideit.style.maxHeight = null;
+//             hideit.style.opacity = '0';
+//         } else {
+//             hideit.style.maxHeight = hideit.scrollHeight + "px";
+//             hideit.style.opacity = '1';
+//         }
+//     }    
+// } -->

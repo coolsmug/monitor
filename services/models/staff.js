@@ -25,10 +25,18 @@ const staffSchema = new Schema ({
         required: true,
         ref: 'School'
       },
-      
+      classId: [
+        String
+      ],
       password: {
         type: String,
         required: true,
+      },
+      mobile_phone: {
+        type: String,
+      },
+      address : {
+        type: String,
       },
       email: {
         type: String,

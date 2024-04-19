@@ -9,15 +9,23 @@ const LearnerSchema = new Schema(
       trim: true,
     },
 
-    classes: {
-      type: String,
-      trim: true,
+    classId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Currentclass'
     },
 
     arm: {
       type: String,
-      required: true,
+
       trim: true,
+
+    },
+    classes: {
+      type: String,
+
+      trim: true,
+
     },
 
     first_name: {
@@ -25,8 +33,7 @@ const LearnerSchema = new Schema(
 
       trim: true,
 
-    
-
+  
       required: true,
     },
 
@@ -82,11 +89,6 @@ const LearnerSchema = new Schema(
       type: Date,
     },
 
-    class_code :{
-      type: String,
-      reuired: true,
-      trim: true,
-    },
     date_enrolled: {
       type: Date,
     },
@@ -108,7 +110,6 @@ const LearnerSchema = new Schema(
     img:{
       url: String,       // Cloudinary URL
       publicId: String,  // Cloudinary Public ID
-     
     },
     religion: {
       type: String,

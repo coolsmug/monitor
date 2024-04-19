@@ -1,45 +1,36 @@
 <%- include ("./include/header.ejs") %> 
 <%- include ("./include/_dash_board.ejs") %> 
 
-
+<div class="divh4"><h1>Class: <%= presentClass.name %></h1> <h1>Arm: <%= presentClass.arm %></h1></div>
 <div class="div_promote">
-    <% for (var l = 0; l < user.length; l++) {%>
-    <form action="/result/promotion/<%= user[l]._id %>" method="post" class="promote">
+    <%- include ('./partials/messages') %> 
+    <% for (var l = 0; l < users.length; l++) {%>
+    <form action="/admin/promotion/<%= users[l]._id %>" method="post" class="promote">
         <div class="avi aviss">        
-            <% if(!user[l].img.contentType) { %> 
-                <img src="/img/monitor_user_image.jpg">
-           <% } else if(user[l].img.contentType){%> 
-                <img src="data:user/<%= user[l].img.contentType %>;base64,<%= user[l].img.data.toString('base64') %>">
+            <% if(!users[l].img.url) { %> 
+                <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png">
+           <% } else if(users[l].img.url){%> 
+                <img src="<%= users[l].img.url %>">
                <% } %> 
         </div>
          <div class="dv_names">
-            <p><%= user[l].first_name %> <%= user[l].last_name %> <%= user[l].middle_name %> </p>
+            <p><%= users[l].first_name %> <%= users[l].last_name %> <%= users[l].middle_name %> </p>
          
-            <p><%= user[l].classes %> </p>
+            <p><%= users[l].classes %> </p>
         </div>
         <div class="div_forms">
             <label for="name">Class Name:</label>
             <% if(classed) {%> 
-            <select name="name" id="name">
+            <select name="id" id="name">
                 <option value="">...</option>
                 <% for (var x = 0; x < classed.length; x++ ) {%> 
-                <option value="<%= classed[x].name %> "> <%= classed[x].name %> of <%= classed[x].class_code %> of <%= classed[x].arm %>  </option>
+                <option value="<%= classed[x]._id %>"> <%= classed[x].name %> of <%= classed[x].class_code %> of <%= classed[x].arm %>  </option>
                 <% } %> 
                
             </select>
             <% } %> 
         </div>
-        <div class="div_forms">
-            <label for="class_code">Class Code:</label>
-        <% if(classed) {%> 
-        <select name="class_code" id="class_code">
-            <option value="">...</option>
-            <% for (var x = 0; x < classed.length; x++ ) {%> 
-            <option value="<%= classed[x].class_code %> "><%= classed[x].class_code %> of <%= classed[x].name %> of <%= classed[x].arm %>  </option>
-            <% } %> 
-        </select>
-        <% } %> 
-        </div>  
+        
        
         <div class="div_forms">
             <input type="submit" value="Ok? promote!">
@@ -50,6 +41,36 @@
     </form>
     <% } %> 
 
+  
+    <form action="/admin/promotionall" method="post" class="promote">
+        <div class="div_forms">
+            <label for="classId">Select Class to Promote:</label>
+            <select name="classId" id="classId">
+                <!-- Populate this select element with options for available classes -->
+                <!-- For example, you could loop through classes and generate options dynamically -->
+                <% for (var i = 0; i < classed.length; i++) { %>
+                    <option value="<%= classed[i]._id %>"><%= classed[i].name %></option>
+                <% } %>
+            </select>
+        </div>
+    
+        <div class="div_forms">
+            <label for="newClassId">New Class ID:</label>
+            <select name="newClassId" id="classId">
+                <option>Select new class</option>
+                <!-- Populate this select element with options for available classes -->
+                <!-- For example, you could loop through classes and generate options dynamically -->
+                <% for (var i = 0; i < classed.length; i++) { %>
+                    <option value="<%= classed[i]._id %>"><%= classed[i].name %></option>
+                <% } %>
+            </select>
+            
+        </div>
+        
+        <div class="div_forms">
+            <input type="submit" value="Promote Learners">
+        </div>
+    </form>
    
 </div>
 
@@ -58,3 +79,15 @@
   </footer>
 <%- include ("./include/footer.ejs") %> 
 
+<style>
+    .divh4 {
+        width: 50%;
+        margin: auto;
+    }
+
+    .divh4 h1 {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color: royalblue;
+        text-align: center;
+    }
+</style>

@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow&family=PT+Sans&display=swap');
 :root {
-    --deepest-blue: #355E3B; 
-    --deep-blue: #00A36C;
-    --light-blue: #46c846;
-    --lighter-blue: #7FFFD4;
+    --deepest-blue: #033767; 
+    --deep-blue: #295daf;
+    --light-blue: #09abf0;
+    --lighter-blue:#75bff4 ;
     --white: #ffffff;
     --white_one: #f7f7f7;
     --white_two: #e7e6e2;
@@ -47,7 +47,18 @@ body {
        var(--white_one)60% 70%, 
      var(--white)70% 80%, var(--white_one)80% 100% );
      max-height: 100vh;
+     animation: fadeIn 3s ease forwards;
 }
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
 
 body::-webkit-scrollbar {
   width: .5em;
@@ -72,13 +83,13 @@ body::-webkit-scrollbar-thumb {
     width: 100%;
 }
 .modality label {
-    color: var(--lighter-blue);
+    color: black;
     font-weight: bolder;
 }
 
 .modal, .modals h1{
     font-size: 11px;
-    color: skyblue; 
+    color:black; 
 }
 .modal, .modals {
     position: absolute;
@@ -88,9 +99,9 @@ body::-webkit-scrollbar-thumb {
     background: 
     radial-gradient(circle,
      var(--deepest-blue)0% 20%, 
-     #3f7148 20% 40%,  #43794c 40% 60%,
-     #457d50 60% 70%, 
-     #50915d 70% 100%) ;
+     var(--deep-blue)20% 40%, var(--light-blue)40% 60%,
+     #6bb2fe 60% 70%, 
+     #80bbf9 70% 100%) ;
      background-size: cover;
      background-repeat: no-repeat;
     gap: 0.2rem;
@@ -140,6 +151,9 @@ body::-webkit-scrollbar-thumb {
     text-align: center;
     font-size: 1em;
   }
+
+
+  
 
   .btns:hover {
     background: repeating-radial-gradient(circle, #0096FF 0% 30%, #5bb5f5 30% 60%);
@@ -370,7 +384,7 @@ label #cancel {
     -o-transition: all .5s ease-out;
      background: 
     radial-gradient(circle,
-     var(--light-blue)0% 20%,  var(--deepest-blue)20% 40%,
+     var(--deep-blue)0% 20%,  var(--deepest-blue)20% 40%,
      var(--deep-blue)40% 70%, var(--deepest-blue)70% 90%  );
     width: 250px;
     outline: 1px solid var(--white);
@@ -570,8 +584,8 @@ label #menu {
 }
 
 .dashboard div:nth-child(3) {
-    background: linear-gradient(to left, var(--crimson)0% 65%,
-    var(--red-1) 65% 100%);   
+    background: linear-gradient(to left, rgb(244, 60, 60) 0% 65%,
+    rgb(231, 58, 58) 65% 100%);   
 }
 .dashboard div:nth-child(4) {
     background: linear-gradient(to left, #c0d347 0% 65%, #b1c240 65% 100%);
@@ -581,7 +595,7 @@ label #menu {
     #e268cd 65% 100%);   
 }
 .dashboard div:nth-child(6) {
-    background: linear-gradient(to left, #866b08 0% 65%, #725b07 65% 100%);
+    background: linear-gradient(to left, #eeca48 0% 65%, #dcb837 65% 100%);
 }
 
 .figure {
@@ -610,22 +624,30 @@ label #menu {
 .foot {
     margin: auto;
     background:linear-gradient(to bottom, var(--deepest-blue), var(--deep-blue));
-    width: 70%;
+    width: 80%;
+    margin-top: 400px;
     height: 50px;
-    margin-top: 200px;
+    
+    box-shadow: 2px 2px 7px var(--bs-gray-400);
+    padding: 10px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1;
-    color: var(--white_three);
-    font-family: var(--ubuntu);
+    text-align: center;
 }
 
 .foot h3 {
-    font-weight: 100;
+    font-weight: bolder;
     font-family: var(--montserrat-regular);
-    font-size: 15px;
+    font-size: 15px; 
+    font-family: 'PT sans';
+    text-align: center;
+    color: var(--white_one);
+    word-spacing: 2px;
+    letter-spacing: 1px;
 }
+
 
 @media only screen and (max-width: 1258px) {
     .dashboard {
@@ -682,7 +704,7 @@ label #menu {
 /* *************************loging******************************************** */
 /* #0000ff00 */
 .all_contents_in_login {
-    background: linear-gradient(to right, var(--white)0% 50%, rgb(11, 34, 20) 50% 100%);
+    background: linear-gradient(to right, var(--white)0% 50%, rgb(26, 29, 59) 50% 100%);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -701,7 +723,7 @@ label #menu {
     left: 55%;
 }
 
-.login_header h1:nth-child(1) {
+.login_header h3 {
     font-family: var(--montserrat-regular);
     font-weight: bold;
     font-size: 30px;
@@ -709,7 +731,7 @@ label #menu {
     margin-bottom: -15px;
 }
 
-.login_header h2:nth-child(even) {
+.login_header h5 {
     font-family: var(--montserrat-medium);
     font-weight: bold;
     font-size: 15px;
@@ -718,7 +740,7 @@ label #menu {
     margin-bottom: -25px;
 }
 
-.login_header h1:nth-of-type(2) {
+.login_header h1 {
     font-family: var(--playfair-bold);
     font-weight: bolder;
     font-size: 45px;
@@ -727,7 +749,7 @@ label #menu {
    
 }
 
-.login_header h5 {
+.login_header h6 {
     color: var(--white);
 }
 
@@ -773,10 +795,6 @@ label #menu {
 
 }
 
-
-.staff_log, .admin_log, .parent_log {
-      
-}
 
 .list_ones {
     font-family: 'PT sans';
@@ -914,9 +932,14 @@ label #menu {
     width: 450px
 }
 
+
+
+
+
 @media only screen and (max-width: 1560px) {
     .div-svg{
         left: 150px;
+        
     }
 
     .mon_n img{
@@ -956,158 +979,270 @@ label #menu {
    }
 
    @media only screen and (max-width:894px ){
+
+ 
+
     .all_contents_in_login {
-        background: linear-gradient(to top, var(--white)0% 50%, rgb(11, 34, 20) 50% 100%);
-        height: 100vh;
+      
+        background: linear-gradient(to top, var(--white)0% 50%, rgb(18, 16, 46) 50% 100%);
+        width: 100%;
+        height: 100%;
+    }
+
+    .first-div-log {
+      
+        margin-top: 100px;
+        width: 100%;
+    }
+
+
+    .login_header h1 {
+        font-size: 80px;
+     }
+     .login_header h3 {
+         font-size: 40px;
+      }
+      .login_header h5 {
+         font-size: 20px;
+      }
+       .login_header h6 {
+        font-size: 20px;
+     }
+
+     .second-div-log {
+        position: relative;
+     }
+ 
+    
+    .div-svg{
+        top: 600px;
+        width: 100%;
+       display: flex;
+       justify-content: center;
+    }
+
+    .div-svg img {
+        width: 500px;
+        
+    }
+
+
+    .login_header{
+        top: 70px;
+        width: 100%;
+        left: 0;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
     }
 
-    
-    .div-svg{
-        left: 20px;
-        top: 100px;
+    .allh {
+       
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* left: 0px; */
     }
 
-    .div-svg img {
-        width: 320px;
-        
-    }
-
-    .mon_n img{
-        width: 100px;
-        right: 40px;
-        top: 25px;
-    }
-
-    .login_header{
-        right: 0px;
-        top: 100px;
-    }
-
-    .forms {
-        right: 5px;
-        bottom: 180px;
+    .second-div-log {
+        top: 1000px;
+        width: 100%;
+       display: flex;
+       justify-content: center;
+       flex-direction: column;
 
     }
 
-    .img-image {
-        left: 0;
-        bottom: 160px;
-    }
+
    }
+
 
    @media only screen and (max-width:671px ){
     .all_contents_in_login {
-        background: linear-gradient(to top, var(--white)0% 30%, rgb(11, 34, 20) 30% 100%);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        background: linear-gradient(to top, var(--white)0% 50%, rgb(18, 16, 46) 50% 100%);
+        width: 100%;
+        height: 100%;
         
     }
 
     .first-div-log {
-        position: absolute;
-        top: -2%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 50px; 
+        margin-top: 100px;
+        width: 100%;
     }
 
+    .login_header h1 {
+        font-size: 80px;
+     }
+     .login_header h3 {
+         font-size: 40px;
+      }
+      .login_header h5 {
+         font-size: 20px;
+      }
+       .login_header h6 {
+        font-size: 20px;
+     }
+
+     .second-div-log {
+        position: relative;
+     }
+
     .second-div-log{
-        position: absolute;
-        top: 770px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 50px;
+        top: 1000px;
+        width: 100%;
+       display: flex;
+       justify-content: center;
+       flex-direction: column;
     }
 
     .login_header {
-        position: relative;
-        text-align: center;
+        top: 70px;
+        width: 100%;
         left: 0;
-        margin-bottom: -60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
 
+    }
+
+    .allh {
+       
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* left: 0px; */
+    }
+
+    .div-svg{
+        top: 600px;
+        width: 100%;
+       display: flex;
+       justify-content: center;
+    }
+
+    .div-svg img {
+        width: 400px;
+        
+    }
+
+    
+
+   
+
+  
+
+   }
+
+
+   @media only screen and (max-width:650px ) {
+    .div-svg img {
+        width: 300px;
+
+    }
+    .all_contents_in_login {
+      
+        background: linear-gradient(to top, var(--white)0% 30%, rgb(18, 16, 46) 30% 100%);
+        width: 100%;
+        height: 100vh;
+    }
+
+    .logo-mon {
+        width: 100px;
+    }  
+
+
+    .div-svg{
+        top: 400px;
+        width: 100%;
+       display: flex;
+       justify-content: center;
+    }
+
+    .login_header{
+        top: 100px;
+        width: 100%;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .allh { 
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* left: 0px; */
+    }
+    .forms {
+        padding-left: 40px;
+       
+    }
+
+    .second-div-log {
+        top: 800px;
+        width: 100%;
+       display: flex;
+       justify-content: center;
+       flex-direction: column;
+
+    }
+    .login_header h1 {
+        font-size: 60px;
+     }
+     .login_header h3 {
+         font-size: 20px;
+      }
+      .login_header h5 {
+         font-size: 10px;
+      }
+       .login_header h6 {
+        font-size: 10px;
+     }
+   }
+
+   @media only screen and (orientation: landscape ) {
+    .div-svg img {
+        width: 350px;
+        margin-left: 70px;
+    }
+
+    .mon_n img{
+        width: 150px;
+        top: 150px;
+        right: 20px;
+    }
+
+    .img-image img {
+        width: 250px;
+    }
+   }
+
+   @media only screen and (min-width: 640px ) {
+    .login_header {
+      top: 40px;
     }
     .div-svg{
-        position: relative;
-        width: 300px;
-        margin-left: -20px;
+        top: 300px;
     }
 
-    .mon_n img{
-        width: 70px;
-        top: 20px;
-        right: 20px;
-    }
+    .second-div-log {
+        top: 900px;
+       
 
-    .forms {
-        position: relative;
-    }
-
-    .img-image {
-        position: relative;
     }
 
    }
 
-   @media only screen and (orientation: landscape ) {
-    .div-svg img {
-        width: 350px;
-        margin-left: 70px;
-    }
-
-    .mon_n img{
-        width: 150px;
-        top: 150px;
-        right: 20px;
-    }
-
-    .img-image img {
-        width: 250px;
-    }
-   }
-
-   @media only screen and (max-width:400px ) {
-    .div-svg img {
-        width: 300px;
-
-    }
-   }
-
-   @media only screen and (orientation: landscape ) {
-    .div-svg img {
-        width: 350px;
-        margin-left: 70px;
-    }
-
-    .mon_n img{
-        width: 150px;
-        top: 150px;
-        right: 20px;
-    }
-
-    .img-image img {
-        width: 250px;
-    }
-   }
-
-   @media only screen and (min-width:640px ) {
-    .div-svg img {
-        margin-left: 0px;
-
-    }
-
-    .first-div-log {
-        top: -50px;
-    }
-   }
+   
 
   
 /* **************************login end************************ */
@@ -1123,7 +1258,7 @@ label #menu {
             #3f83f8c0 40%,
             #0000ff00 80%,
             transparent 80%),
-            url('/img/img_6.jpg');
+            url(https://res.cloudinary.com/dj6xdawqc/image/upload/v1713523200/img_9_btolwi.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -1132,10 +1267,13 @@ label #menu {
 }
 header {
    
-    position: relative;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
     width: 100%;
     min-height: 50px;
-    padding-left: 20px;
+    padding: 10px;
     backdrop-filter: blur(15px);
         box-shadow: 4px 4px 10px rgba(0, 0, 0, .3);
             border: 2px solid rgba(255, 255, 255, 0.5);
@@ -1150,12 +1288,12 @@ header {
 }
 
 header img {
-    position: relative;
+  
     width: 250px;
     padding: 20px;
 }
 
-header img::after {
+/* header img::after {
     position: absolute;
     content: '';
     width: 200px;
@@ -1169,6 +1307,57 @@ header img::after {
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
+} */
+
+
+.staff-route div a {
+    text-decoration: none;
+    font-style: none;
+    font-size: 20px;
+font-family: var(--montserrat-medium);
+background-color: var(--deep-blue);
+color: #fff;
+padding: 5px 10px;
+transition: .2s ease-in-out;
+}
+
+
+.staff-route div a:hover {
+    background-color: var(--light-blue);
+color: var(--white);
+padding: 7px 12px;
+font-family: var(--montserrat-bold);
+border: solid 1px var(--lighter-blue) ;
+box-shadow: 2px 5px grey;
+}
+
+
+.staff-route form {
+   
+   width: 100px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 5px 10px;
+   font-family: var(--montserrat-medium);
+
+}
+.staff-route form button {
+    width: 100px;
+    background-color: var(--deep-blue);
+    color: #fff;
+    padding: 5px 10px;
+    transition: .2s ease-in-out;
+    
+ }
+ .staff-route form button i{
+    background-color: var(--deep-blue);
+    color: #fff;
+  
+    transition: .2s ease-in-out;
+ }
+.div-a {
+    margin-top: 20px;
 }
 
 .management_route {
@@ -1513,6 +1702,7 @@ header img::after {
 }
 
 .closeds {
+    z-index: 999;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1532,7 +1722,6 @@ header img::after {
     border-radius: 10px;
     box-shadow: 14px 14px 20px #abd4fd,
     -14px -14px 20px rgb(247, 245, 245);
-    z-index: 1;
 
 }
 
@@ -1736,39 +1925,46 @@ header img::after {
     background-color: pink;
 }
 
-
 .avis {
-    background-color: var(--deep-blue);
-    color: gold;
-    width: 50px;
-    overflow: hidden;
-    border: 2px outset var(--deepest-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
+
+.avis p{
+    padding: 0;
+    margin: 0;
+} 
 
 .avis button {
     width: 50px;
+    background: none;
+    border: none;
+    outline: none;
 }
 
 .avis button i {
     font-size: 25px;
-    color:#00f260;
+    color: var(--light-blue);
     text-shadow: 2px 2px 5px rgb(1, 1, 1);
+    padding: 0;
+    margin: 0;
 }
 .avi {
-    width: 100px;
-    height: 110px;
+    width: 75px;
+    height: 85px;
     margin: auto;
     border: 4px solid var(--white_three);
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: baseline;
-    box-shadow: 2px 2px 5px black;
+   
 }
 
 .avi img {
-    width: 90px;
-    height: 100px;
+    width: 70px;
+    height: 80px;
     transition: scale .3s ease-in;
    
 }
@@ -1823,7 +2019,7 @@ header img::after {
   }
    
   .tabled::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--deep-blue)0% 50%, var(--deepest-blue)50% 100%);
+    background: linear-gradient(90deg, var(--deep-blue)0% 50%, var(--deepest-blue)50% 100%);
     outline: 1px solid slategrey;
     border-radius: 35px;
   }
@@ -1951,7 +2147,7 @@ header img::after {
  }
 
    .table table tbody tr:nth-child(even) {
-    background: var(--white_two) ;
+    background: var(--white_one) ;
     color: var(--deepest-blue);
     transition: all .1s ease-in-out;
  }
@@ -1963,7 +2159,7 @@ header img::after {
  }
 
  .table table tbody tr:hover {
-    background: rgb(252, 202, 211);
+    background: rgb(87, 249, 252);
  }
 
   
@@ -2413,7 +2609,7 @@ header img::after {
     z-index: 1;
 }
 
-.div_header {
+/* .div_header {
     position: relative;
     width: 90%;
     height: 40px;
@@ -2437,7 +2633,7 @@ header img::after {
 
 .div_header img {
     width: 200px;
-}
+} */
 
 .div_one_of_three{
     display: flex;
@@ -2533,56 +2729,51 @@ header img::after {
     background-color: var(--lighter-blue);
     box-sizing: border-box;
     padding: 5px;
-    padding-left: 20px;
+  
   }
 
   .mon img {
     position: relative;
-    margin: 0px;
-
-  }
-  .profile{
-    position: relative;
-    display: flex;
-    height: 300px;
-    justify-content: center;
-    background-color: var(--deepest-blue);
-   
   }
 
-  .profile .imgss {
+  .mon .imgss {
     position: absolute;
-    margin-top: 200px ;
+    background-color: grey;
     border-radius: 50%;
-    width: 170px;
-    height: 170px;
-    z-index: 1;
+    width: 90px;
+    height: 90px;
     display: flex;
     justify-content: center;
     align-items: baseline;
     border: 8px solid var(--deepest-blue);
     overflow: hidden;
+    border: 2px solid grey;
+    right: 15px;
+    top: 10px;
+    z-index: 1;
   }
 
-  .profile .imgss img {
-    position: relative;
+  .mon .imgss img {
     transition: scale .5s ease-in-out;
-    width: 170px;
-    height: 170px;
+    width: 80px;
+    height: 90px;
+    z-index: 1;
+
   }
 
-  .profile .imgss img:hover{
+  .mon .imgss img:hover{
         scale: 1.05;
   }
 
-  .profile .imgs {
-    position: absolute;
-    width: 70%;
-    height: 96%;
-    top: 3px;
+  .profile{
+    position: relative;
+    display: flex;
+    height: 150px;
+    justify-content: center;
+    background-color: var(--deepest-blue);
   }
-
-  .profile p {
+ 
+  .profile_name p {
     padding: 10px;
     font-size: 17px;
     color: var(--white);
@@ -2591,34 +2782,30 @@ header img::after {
     background-color: rgba(67, 183, 117, 0.546);
     text-shadow: 2px 2px 2px pink;
     z-index: 1;
+
   }
+  
+  .profile_name h4 {
+    padding: 5px;
+    color: var(--deep-blue);
+   }
+ 
 
   .profile_name {
-    width: 14%;
-    margin: auto;
-    margin-top: 70px;
-    text-align: center;
-  }
-
-  .profile_name p {
-    font-family: var(--ubuntu-medium);
-    background: none;
-    color: var(--deep-blue);
-  }
-
-  .profile_name p i {
-    color: royalblue;
+   max-width: 250px;
+   background-color:  var(--white_three);
+    max-height: 100vh;
   }
 
   #aahref {
-    top: 400px;
     position: absolute;
-    right: 0px;
+    top:110px;
+    right: 10px;
     text-decoration: none;
     font-family: var(--ubuntu-medium);
     color: var(--lighter-blue) ;
     font-size: 17px;
-    padding: 7px 15px;
+    padding: 5px 13px;
     background-color: var(--deep-blue);
     border-radius: 30px;
     border:5px solid var(--lighter-blue);
@@ -2628,19 +2815,19 @@ header img::after {
   }
  
   .checking{
-    margin-top: -250px;
     display: flex;
-    gap: 40px;
     flex-direction: column;
-    margin-left: -50px;
+    padding: 10px;
+    justify-content: center;
+    margin-left: -40px;
+
   }
-.checking ul p {
-    color: rgb(184, 86, 17);
-    font-size: 20px;
+.checking h5 {
+    text-align: center;
+    color: rgb(250, 242, 237);
     font-weight: bolder;
     margin-bottom: 0;
     font-family: var(--montserrat-medium);
-    border: 2px solid  rgb(184, 86, 17);
     
 }
 
@@ -2651,9 +2838,7 @@ header img::after {
 .checking ul{
     display: flex;
     gap: 20px;
-    flex-direction: column;
-    width: 195px;
-   
+    flex-direction: row; 
 }
 
 .allss {
@@ -2664,7 +2849,7 @@ header img::after {
     z-index: 1;
     position: absolute;
     background-color: none;
-    right: 10px;
+    right: 100px;
     top: 10px;
 }
 
@@ -2675,7 +2860,7 @@ header img::after {
     background: none;
     background-color: none;
     position: relative;
-    right: 30px;
+  
     width: 50px;
     margin-top: 10px;
     
@@ -2706,6 +2891,68 @@ header img::after {
     opacity: 1;
 }
 
+/* @media for learners profile */
+
+@media only screen and (max-width: 500px) {
+    #aahref  {
+        font-size: 12px;
+        padding: 3px 10px;
+        border:3px solid var(--lighter-blue);
+        top: 120px;
+    }
+
+    .mon {
+        height: 35px;
+    
+      }
+    
+      .mon img {
+        position: relative;
+        width: 130px;
+      }
+      .mon .imgss {
+       
+        width: 70px;
+        height: 70px;
+      
+        border: 2px solid var(--light-blue);
+        overflow: hidden;
+    
+      }
+    
+      .mon .imgss img {
+        transition: scale .5s ease-in-out;
+        width: 60px;
+        height: 70px;
+        z-index: 1;
+    
+      }
+
+      .mon .logoutss button{
+        width: 30px;
+        margin-top: 0;
+        
+    }
+
+    .logoutss {
+     
+        top: 3px;
+    }
+
+    .mon .logoutss button i {
+        font-size: 20px;
+        position: relative;
+    
+    }
+
+    .checking ul li button {
+        padding: 3px;
+        font-size: .7em;
+        width: 100px;
+
+    }
+}
+
 /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++$match styling begins +++++++++++++++++++++++++++++++++ */
 
 .form-for-report {
@@ -2724,21 +2971,64 @@ header img::after {
 .form-for-report form {
     display: flex;
     flex-direction: column;
-    background-color: var(--white);
+    background-color: var(--deep-blue);
     box-shadow: 14px 14px 20px #cbced1,
     -14px -14px 20px rgb(249, 246, 246);
     padding: 20px;
+    gap: 20px;
+    color: #fff;
+   
 }
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 1000;
+  }
+  
+  .popup-content {
+    text-align: center;
+  }
+  
+  #closePopup {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
 
 .form-for-report form input {
     padding: 7px 14px;
     border: none;
     outline: none;
     border-radius: 10px;
+    background-color: var(--white_one);
+    transition: .5s ease-in-out;
 }
 
 .form-for-report form input[type=text]:focus{
-    outline: 1px solid var(--light-blue);
+    outline: 1px solid var(--white);
+     transition: .5s ease-in-out;
+
+}
+
+.form-for-report form input[type=submit]{
+    background-color: var(--deepest-blue);;
+    color: #fff;
+}
+
+.form-for-report form input[type=submit]:focus{
+    background-color: var(--deep-blue);
+    outline: 3px solid var(--white);
+    box-shadow: 2px 2px 5px grey;
 }
 
 .divol {
@@ -3006,6 +3296,8 @@ header img::after {
     justify-content: center;
     /* align-items:stretch; */
     background-color: #fff;
+    color: var(--deepest-blue);
+    text-shadow: 2px 2px 5px rgb(169, 169, 169);
     padding: 20px;
     align-items: center;
     box-shadow: 14px 14px 20px rgba(0, 0, 0, 0.196),
@@ -3319,7 +3611,10 @@ input:checked +.slider:before {
     border-radius: 50%;
     padding: 5px;
 
-}
+};
+
+
+
 
 
 

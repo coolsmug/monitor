@@ -20,6 +20,7 @@ const Learner = require("./services/models/leaners");
 const Schoolname = require("./services/models/school.name");
 const SharpMulter  =  require("sharp-multer");
 const cloudinary = require('cloudinary').v2;
+const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
 
 
@@ -51,6 +52,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
+
 // app.use(nocache())
 
 app.use((req, res, next) => {
@@ -69,10 +71,12 @@ app.use(upload.single('img'));
 
 
 app.use(function(req, res, next) {
-  if(!req.user)
-  res.header('Cache-Control', 'no-cache', 'private', 'no-store', 'must-revalidate', 'max-stale=0', 'post-check=0', 'pre-check=0')
-  next()
-})
+  if (!req.user) {
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  }
+  next();
+});
+
 
 //load Assest
 app.use('/css', express.static(path.resolve(__dirname, "assets/css")))
@@ -81,45 +85,25 @@ app.use('/js', express.static(path.resolve(__dirname, "assets/js")))
 
 
 app.use((error, req, res, next) => {
-  console.log("This is the rejected field ->", error.field);
+  console.error("Error:", error.message); // Log the error message
+  res.status(error.status || 500).send({ error: error.message }); // Send an error response
 });
 
 
-app.use( (req, res, next) =>{
 
-res.header("Access-Control-Allow-origin", "*" , "fonts.googleapis.com", "fonts.gstatic.com")
-
-res.header("Access-Control-Allow-Methods", "GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE")
-
-res.header("Access-Control-Allow-Headers", "Origin",
-
-"X-Requested-With", "Content-Type", "Accept")
-
-next()
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*", "fonts.googleapis.com", "fonts.gstatic.com");
+  res.header("Access-Control-Allow-Methods", "GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
+
 
 app.use('/', require('./services/routes/index'))
 app.use("/admin", require("./services/routes/admin"));
-app.use('/learner', require("./services/routes/learners"))
-app.use("/session", require("./services/routes/session"));
-app.use("/result", require("./services/routes/result.js"))
-app.use('/school', require('./services/routes/school.route'))
-app.use('/third_term_exam', require('./services/routes/third_term_exam') );
-app.use("/reports", require('./services/routes/reports'))
+app.use('/learner', require("./services/routes/learners"));
+app.use("/staff", require("./services/routes/staff"));
 
-app.get('/edit-profile', async(req, res) => {
-  if(req.query.id) {
-      const id = req.query.id;
-      await Learner.findById(id)
-          .then((user) => {
-              if(!user){ res.status(404).send({ message : `oops! user with this ${id} not found`})}
-              if(user){ res.render('upload_image', { user: user })}
-          })
-          .catch((err) => {
-              res.status(500).send( { message: `oops! user with this ${id} not found`})
-          });
-  }
-})
 
 //setting up Multer//
 

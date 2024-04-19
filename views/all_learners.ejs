@@ -10,13 +10,11 @@
         <thead>
             <tr>
                 <th>S/N</th>
-                <th>Admin No</th>
                 <th>Image</th>
-                <th>Learner ID</th>
+                <th>Admin No</th>
                 <th>Name</th>
                 <th>Enrollment Date</th>
                 <th>Graduation Date</th>
-                <th>Class Code</th>
                 <th>Class</th>
                 <th>Arm</th>
                 <th>Gender</th>
@@ -42,13 +40,13 @@
                 
             <tr>
                 <td><%= i + 1 %></td>
-                <td style="padding-left:20px; font-size: 17px;"><%= learner[i].roll_no %> ‣</td>
+               
                 <td>
                   
                     <!-- Example -->
                     <div class="avi">
                         <% if (!learner[i].img.url) { %>
-                        <img src="/img/monitor_user_image.jpg" alt="No Image">
+                        <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="No Image">
                         <% } else if (learner[i].img.url) { %>
                         <img src="<%= learner[i].img.url.replace('http://', 'https://') %>" alt="Learner Image">
                         <% } %>
@@ -57,12 +55,20 @@
                    
                 </td>
                
-                <td><div class="avis"><%= learner[i]._id %><button class="copy-btn"><i class="fas fa-clipboard"></i></button></div></td>
+                <td>
+                    <div class="avis">
+                        <p>
+                            <%= learner[i].roll_no %>
+                        </p>
+                        <button class="copy-btn">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </td>
              
                 <td><%= learner[i].first_name %> <%= learner[i].last_name %> </td>
                 <td><%= Date %> </td>   
                 <td><%= Dates %> </td>
-                <td><%= learner[i].class_code %> </td>
                 <td><%= learner[i].classes %> </td>
                 <td><%= learner[i].arm %> </td>
                 <td><%= learner[i].gender %> </td>

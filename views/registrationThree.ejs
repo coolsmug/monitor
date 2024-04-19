@@ -1,60 +1,70 @@
-<%- include ("./include/main_header.ejs") %> 
+<%- include ("./include/reg.ejs") %> 
 
 <%- include ('./partials/messages') %>
 
 <div class="togeda">
     <div class="imag_pj">
-        <img src="" alt="">
-      </div>
+      <img src="/img/img_1.jpg" alt="" width="200">
+       
+    </div>
+
+
+    
       
-      <div class="form_reg">
-        <form action="/step3" method="POST">
- 
-            <div class="all-single-form">
-        
-                  <div class="hop">
-                    <input type="hidden" name="userId" value="<%= userId %>">
-                        <label for="address">Address:</label>
-                        <input type="address" name="address" placeholder="Address" value="<%= typeof  address != 'undefined' ?  address : '' %>" />
+       <div class="login-box">
+        <h2>Contact</h2>
+          <form action="/step3" method="POST">
+          
+                    <div class="user-box">
+                      <input type="hidden" name="userId" value="<%= userId %>">
+                          
+                          <input type="address" name="address" value="<%= typeof  address != 'undefined' ?  address : '' %>" />
+                          <label for="address">Address:</label>
+                      </div>
+                      <div class="user-box">
+                          
+                          <input type="address2" name="address2" value="<%= typeof address != 'undefined' ? address : '' %>" />
+                          <label for="address">Address 2:</label>
+                      </div>
+                    
+                      <div class="user-box">
+                        
+                          <input type="phone_no" name="phone_no"  value="<%= typeof phone_no != 'undefined' ? phone_no : '' %>" />
+                          <label for="phone_no">Phone No:</label>
+                      </div>
+          
+                      <div class="user-box">
+                        
+                          <input type="phone_no2" name="phone_no2" value="<%= typeof phone_no2 != 'undefined' ? phone_no2 : '' %>" />
+                          <label for="phone_no2">Phone No 2:</label>
+                      </div>
+          
+                    <div class="user-box">
+                      
+                      <input type="website" name="website" value="<%= typeof website != 'undefined' ? website : '' %>" />
+                      <label for="website">School Website</label>
                     </div>
-                    <div class="hop">
-                        <label for="address">Address 2:</label>
-                        <input type="address2" name="address2" value="<%= typeof address != 'undefined' ? address : '' %>" />
-                    </div>
-                  
-                    <div class="hop">
-                        <label for="phone_no">Phone No:</label>
-                        <input type="phone_no" name="phone_no" placeholder="Phone No" value="<%= typeof phone_no != 'undefined' ? phone_no : '' %>" />
-                    </div>
-        
-                    <div class="hop">
-                        <label for="phone_no2">Phone No 2:</label>
-                        <input type="phone_no2" name="phone_no2" value="<%= typeof phone_no2 != 'undefined' ? phone_no2 : '' %>" />
-                    </div>
-             
-        
-                  <div class="hop">
-                    <label for="website">School Website</label>
-                    <input type="website" name="website" value="<%= typeof website != 'undefined' ? website : '' %>" />
-                  </div>
-        
-            </div>
-            <div class="mb-3">
-                <input type="submit" value="Ok? Create">
-            </div>
-        
-        </form>
-      </div>
+          
+          
+              <button>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Submit
+              </button>
+          
+          </form>
+      
+        </div>
+      
 </div>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
-<script type="text/javascript">
-  
-
 
 <footer class="foot">
   <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
-</footer>
+<footer/>
+
+
+
 
 <%- include ("./include/footer.ejs") %> 

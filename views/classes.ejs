@@ -1,15 +1,25 @@
 <%- include ('./include/header.ejs') %> 
 
+
 <div class="middle_sweet">
     <div class="div_header_two">
 
     </div>
-    <div class="div_header">
-        <div class="img-div">
-            <img src="/img/monitor.png" alt="">
+     <header class="staff-route">
+        <img src="/img/monitor.png" alt="" width="200">
+       
+          <div>
+            <form action="/staff/logout" method="POST" class="logoutss">
+                <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i>Logout</button>
+            </form>
+          </div>    
+        
+              
+          <div class="div-a">
+            <a href="">home</a>
         </div>
-      
-    </div>
+       
+    </header>
 
     <div class="cover_of_div">
        
@@ -20,7 +30,7 @@
                 <% for (var i = 0; i < classes.length ; i++) {%> 
             
                     <div class="div_divol">
-                        <a href="/result/learner-test-exam/1?sessionId=<%= session._id %>&class_code=<%= classes[i].class_code %>&arm=<%= classes[i].arm %>&classId=<%= classes[i]._id %>">
+                        <a href="/staff/learner-test-exam/1?sessionId=<%= session._id %>&classId=<%= classes[i]._id %>">
                             <div class="avi">
                                <p><%= classes[i].roll_no %></p> 
                             </div>
@@ -37,34 +47,6 @@
                     
                     <% } %> 
 
-                    <% if (pages > 0) { %>
-                        <ul class="pagination text-center">
-                            <% if (current == 1) { %>
-                                <li class="disabled"><a>First</a></li>
-                            <% } else { %>
-                                <li><a href="/result/current_class/1?sessionId=<%= session._id %>">First</a></li>
-                            <% } %>
-                            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
-                            <% if (i !== 1) { %>
-                                <li class="disabled"><a>...</a></li>
-                            <% } %>
-                            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
-                                <% if (i == current) { %>
-                                    <li class="active"><a><%= i %></a></li>
-                                <% } else { %>
-                                    <li><a href="/result/current_class/<%= i %>?sessionId=<%= session._id %>"><%= i %></a></li>
-                                <% } %>
-                                <% if (i == Number(current) + 4 && i < pages) { %>
-                                    <li class="disabled"><a>...</a></li>
-                                <% } %>
-                            <% } %>
-                            <% if (current == pages) { %>
-                                <li class="disabled"><a>Last</a></li>
-                            <% } else { %>
-                                <li><a href="/result/current_class/<%= pages %>?sessionId=<%= session._id %>">Last</a></li>
-                            <% } %>
-                        </ul>
-                    <% } %>
             </div>
         </div>
       

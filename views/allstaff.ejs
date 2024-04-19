@@ -1,0 +1,156 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+
+<div class="dele">
+    <h2 class="all"> <i class="fas fa-chalkboard-teacher"></i> All Staffs </h2>
+   
+<div class="table">
+    <h3><a href="/admin/create_staff">Add new Staffs</a></h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll No</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (var i = 0; i < staff.length; i++){ %> 
+                <tr>
+                    <td><%= staff[i].roll %></td>
+                    <td><%= staff[i].name %></td>
+                    <td><label class="switcher">
+                        <input type="checkbox" id="mySwitch" data-staff-id="<%= staff[i]._id %> " <%= staff[i].status == true ? 'checked' : '' %> >
+                        <span class="slider">
+
+                        </span>
+                </label></td>
+                    <td>
+                         <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="hideen">
+                            <a href="/admin/update-staff?id=<%= staff[i].id %> " class="btn border-shadow update">
+                                <i class="fas fa-user-edit"></i>
+                            </a>
+                            <a href="/admin/delete_staff/<%= staff[i].id %>" class="btn border-shadow staffClasses" data-id="<%= staff[i].id %>">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                            <a href="/admin/staffdetail?id=<%= staff[i].id %>" class="btn border-shadow">
+                                <i class="fas fa-info"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <% } %> 
+                
+            </tbody>
+     </table>
+</div>
+
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+  </footer>
+
+
+<style>
+
+  
+    .table table {
+        box-shadow: 2px 2px 5px rgb(157, 157, 157), -2px -2px 5px rgb(255, 255, 255);
+      
+    }
+    .table table tbody td:nth-child(odd) {
+        background: var(--white);
+        color: var(--deepest-blue);
+         transition: all .1s ease-in-out;
+         border-top: 1px solid #fff;
+         border-right: 1px solid #fff;
+     }
+    
+     .table table tbody td:nth-child(even) {
+        background: var(--white_two);
+        color: var(--deepest-blue);
+        transition: all .1s ease-in-out;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+     }
+    
+   .table th {
+        padding: 8px;
+        vertical-align: top;
+        font-size: 17px;
+        text-align: left;
+        border-top: 1px solid var(--border)
+    }
+       
+    </style>
+
+    <!-- styling for staffs status -->
+
+
+    <style>
+        .switcher {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+    
+        .switcher input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+    
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+    
+        .slider:before {
+            position: absolute;
+            content: '';
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+    
+        input:checked + .slider {
+            background-color: var(--deep-blue);
+    
+        }
+    
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196f3;
+        }
+    
+        input:checked +.slider:before {
+            -webkit-transform:  translateX(26px);
+            -ms-transform:  translateX(26px);
+            transform:  translateX(26px);
+    
+        }
+    
+        .slider {
+            border-radius: 34px;
+        }
+    
+        .slider:before {
+            border-radius: 50%;
+        }
+    </style>
+
+<%- include ("./include/footer.ejs") %> 

@@ -23,6 +23,19 @@ const sessionSchema = new Schema(
       required: true,
       ref: 'School'
     },
+    sectionId: [
+      {
+        section: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Section',
+        },
+        text: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     classof: {
       type: String,
       trim: true,

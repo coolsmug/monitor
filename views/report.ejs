@@ -2,13 +2,14 @@
 <%- include ("./include/_dash_board.ejs") %>
 <div class="pagination_div">
     <div class="form-for-report">
-        <form action="/reports/learners" method="GET">
+        <form action="/admin/learners/1" method="GET">
             <% if(users) {%>
                 <label for="output">Class:</label>
                 <select name="output" id="output">
-                    <option value="">...</option>
+                    <option value="">Select Class</option>
                  <%  for(var n = 0; n < users.length; n++) {%>
-                     <option value="<%= users[n].name %> "><%= users[n].name %></option>
+                    <% const toString = users[n]._id.toString() %>
+                     <option value="<%= toString %>"><%= users[n].name %></option>
                  <% } %> 
                 </select>
                 <% } %> 
@@ -16,35 +17,65 @@
             <input class="ideal" type="text" name="input" value="" id="look_up">
             <input type="submit" value="Ok? let search!">
         </form>
-        <% for(var i = 0; i < user.length; i++) {%> 
+        <% for(var i = 0; i < learner.length; i++) {%> 
     
             <div class="div_divol">
-                <a class="divol" href="/admin/learner-detail?id=<%= user[i]._id %>">
+                <a class="divol" href="/admin/learner-detail?id=<%= learner[i]._id %>">
                     <div class="avi">
                        
-                        <% if(!user[i].img.contentType) { %> 
-                            <img src="/img/monitor_user_image.jpg">
-                       <% } else if(user[i].img.contentType){%> 
-                            <img src="data:user/<%= user[i].img.contentType %>;base64,<%= user[i].img.data.toString('base64') %>">
+                        <% if(!learner[i].img.url) { %> 
+                            <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png">
+                       <% } else if(learner[i].img.url){%> 
+                            <img src="<%= learner[i].img.url %>">
                            <% } %> 
                     </div>
         
                     <div class="ddiv">
-                        <p class="man"> <%= user[i].first_name %> <%= user[i].last_name %> </p>
-                        <p><%= user[i].middle_name %></p>
-                        <p><%= user[i].blood_group %>  <%= user[i].genotype %> <%= user[i].gender %></p>
+                        <p class="man"> <%= learner[i].first_name %> <%= learner[i].last_name %> </p>
+                        <p><%= learner[i].middle_name %></p>
+                        <p><%= learner[i].blood_group %>  <%= learner[i].genotype %> <%= learner[i].gender %></p>
                     </div>
                 </a>
                 <div class="match">
-                    <p><%= user[i].state %></p> <p><%= user[i].lg %> </p>
-                    <p> <%= user[i].tribe %>, <%= user[i].religion %></p>
+                    <p><%= learner[i].state %></p> <p><%= learner[i].lg %> </p>
+                    <p> <%= learner[i].tribe %>, <%= learner[i].religion %></p>
                 </div>
             </div>
           
            
             <% } %> 
+            <% if (totalPages > 0) { %>
+                <ul class="pagination text-center">
+                    <% if (currentPage == 1) { %>
+                        <li class="disabled"><a>First</a></li>
+                    <% } else { %>
+                        <li><a href="/admin/learners/1?output=<%= output %>+&input=<%= input %>">First</a></li>
+                    <% } %>
+                    <% var i = (Number(currentPage) > 5 ? Number(currentPage) - 4 : 1) %>
+                    <% if (i !== 1) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                    <% for (; i <= (Number(currentPage) + 4) && i <= totalPages; i++) { %>
+                        <% if (i == currentPage) { %>
+                            <li class="active"><a><%= i %></a></li>
+                        <% } else { %>
+                            <li><a href="/admin/learners/<%= i %>?output=<%= output %>+&input=<%= input %>"><%= i %></a></li>
+                        <% } %>
+                        <% if (i == Number(currentPage) + 4 && i < totalPages) { %>
+                            <li class="disabled"><a>...</a></li>
+                        <% } %>
+                    <% } %>
+                    <% if (currentPage == totalPages) { %>
+                        <li class="disabled"><a>Last</a></li>
+                    <% } else { %>
+                        <li><a href="/admin/learners/<%= totalPages %>?output=<%= output %>+&input=<%= input %>">Last</a></li>
+                    <% } %>
+                </ul>
+            <% } %>
           
     </div> 
+
+
     
    
 </div>
@@ -74,7 +105,7 @@
     }
 
     .pagination {
-        margin-top: -50px;
+        /* margin-top: -50px; */
 
     }
 

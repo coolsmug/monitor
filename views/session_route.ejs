@@ -4,12 +4,21 @@
     <div class="div_header_two">
 
     </div>
-    <div class="div_header">
-        <div class="img-div">
-            <img src="/img/monitor.png" alt="">
+    <header class="staff-route">
+        <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="" width="200">
+       
+          <div class="form-button">
+            <form action="/staff/logout" method="POST" class="logoutss">
+                <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i>Logout</button>
+            </form>
+          </divc>    
+        
+              
+        <div class="div-a">
+            <a href="/staff/staff-route">home</a>
         </div>
-      
-    </div>
+       
+    </header>
 
     
 
@@ -24,7 +33,7 @@
                 <% for(var i = 0; i < session.length; i++) {%> 
             
                     <div class="div_divol">
-                        <a href="/result/current_class/1?sessionId=<%= session[i]._id %> "> 
+                        <a href="/staff/current_class?sessionId=<%= session[i]._id %> "> 
                             <div class="avi">
                                 <p><%= session[i].roll_no %></p> 
                             </div>
@@ -46,7 +55,7 @@
                             <% if (current == 1) { %>
                                 <li class="disabled"><a>First</a></li>
                             <% } else { %>
-                                <li><a href="/result/sessions/1">First</a></li>
+                                <li><a href="/staff/sessions/1">First</a></li>
                             <% } %>
                             <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
                             <% if (i !== 1) { %>
@@ -56,7 +65,7 @@
                                 <% if (i == current) { %>
                                     <li class="active"><a><%= i %></a></li>
                                 <% } else { %>
-                                    <li><a href="/result/sessions/<%= i %>"><%= i %></a></li>
+                                    <li><a href="/staff/sessions/<%= i %>"><%= i %></a></li>
                                 <% } %>
                                 <% if (i == Number(current) + 4 && i < pages) { %>
                                     <li class="disabled"><a>...</a></li>
@@ -65,7 +74,7 @@
                             <% if (current == pages) { %>
                                 <li class="disabled"><a>Last</a></li>
                             <% } else { %>
-                                <li><a href="/result/sessions/<%= pages %>">Last</a></li>
+                                <li><a href="/staff/sessions/<%= pages %>">Last</a></li>
                             <% } %>
                         </ul>
                     <% } %>

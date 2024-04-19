@@ -24,9 +24,13 @@ const VoucherSchema = new Schema( {
         type: Boolean,
         default: false
       },
+      print: {
+        type: Boolean,
+        default: false
+      },
       userid: {
-        type: mongoose.Types.ObjectId,
-        trim: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Learner',
       },
       schoolId: {
         type: mongoose.Schema.Types.ObjectId,

@@ -4,12 +4,21 @@
     <div class="div_header_two">
 
     </div>
-    <div class="div_header">
-        <div class="img-div">
-            <img src="/img/monitor.png" alt="">
+    <header class="staff-route">
+        <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="" width="200">
+       
+          <div>
+            <form action="/staff/logout" method="POST" class="logoutss">
+                <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i>Logout</button>
+            </form>
+          </div>    
+        
+              
+          <div class="div-a">
+            <a href="/staff/staff-route">home</a>
         </div>
-      
-    </div>
+       
+    </header>
 
     <div class="cover_of_div">
        
@@ -25,10 +34,13 @@
                     <% for (var i = 0; i < users.length ; i++) {%> 
                 
                         <div class="div_divol">
-                            <a href="/result/section-test-exam?sessionId=<%= session._id %>&classof=<%= session.classof %>&userId=<%= users[i]._id %>&classId=<%= classed._id %>">
+                            <a href="/staff/section-test-exam?sessionId=<%= session._id %>&classof=<%= session.classof %>&userId=<%= users[i]._id %>&classId=<%= classed._id %>">
                                 <div class="avi">
-                                   <p><%= users[i].roll_no %> </p> 
-                                  
+                                    <% if (!users[i].img.url) { %>
+                                        <img src="/img/monitor_user_image.jpg" alt="No Image" style="width: 50px; height: 50px;">
+                                        <% } else if (users[i].img.url) { %>
+                                        <img src="<%= users[i].img.url.replace('http://', 'https://') %>" alt="Learner Image" style="width: 50px; height: 50px;">
+                                        <% } %>
                                 </div>
                     
                                 <div class="ddiv">
@@ -36,7 +48,7 @@
                                 </div>
                             </a>
                             <div class="match">
-                               <p> <%= users[i].classes %>  - <%= users[i].class_code %> - <%= users[i].arm %></p>
+                               <p> <%= classed.name %> <%= classed.arm %></p>
                             </div>
                         </div>
                         

@@ -65,7 +65,6 @@ const examSchema = new Schema(
 
       type: mongoose.Types.ObjectId,
       trim: true,
-  
       
       },
       createdAt: {

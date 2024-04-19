@@ -23,44 +23,44 @@
             </tr>
         </thead>
         <tbody>
-            <% for (var i = 0; i < user.length; i++) {%> 
+            <% for (var i = 0; i < users.length; i++) {%> 
                 
-                <% if(!user[i].date_enrolled){ %> 
-                    <% var Date = user[i].date_enrolled %> 
-               <% } %> <%  if(user[i].date_enrolled) {%> 
-                  <% var Date = user[i].date_enrolled.toDateString() %> 
+                <% if(!users[i].date_enrolled){ %> 
+                    <% var Date = users[i].date_enrolled %> 
+               <% } %> <%  if(users[i].date_enrolled) {%> 
+                  <% var Date = users[i].date_enrolled.toDateString() %> 
                  <% } %> 
              
-                 <% if(!user[i].date_ended){ %> 
-                    <% var Dates = user[i].date_ended %> 
-               <% } %> <%  if(user[i].date_ended) {%> 
-                  <% var Dates = user[i].date_ended.toDateString()  %> 
+                 <% if(!users[i].date_ended){ %> 
+                    <% var Dates = users[i].date_ended %> 
+               <% } %> <%  if(users[i].date_ended) {%> 
+                  <% var Dates = users[i].date_ended.toDateString()  %> 
                  <% } %> 
              
                 
             <tr>
-                <td style="padding-left:20px; font-size: 17px;"><%= user[i].roll_no %> ‣</td>
+                <td style="padding-left:20px; font-size: 17px;"><%= users[i].roll_no %> ‣</td>
                 <td>
                   
                     <div class="avi">
                        
-                        <% if(!user[i].img.contentType) {%> 
+                        <% if(!users[i].img.url) {%> 
                             <img src="/img/monitor_user_image.jpg">
-                       <% } else if(user[i].img.contentType){%> 
-                            <img src="data:user/<%= user[i].img.contentType %>;base64,<%= user[i].img.data.toString('base64') %>">
+                       <% } else if(users[i].img.url){%> 
+                            <img src="<%= users[i].img.url %>">
                            <% } %> 
                     </div>
                    
                 </td>
-                <td><div class="avis"><%= user[i]._id %><button class="copy-btn"><i class="fas fa-clipboard"></i></button></div></td>
-                <td><%= user[i].first_name %> <%= user[i].last_name %> </td>
+                <td><div class="avis"><%= users[i]._id %><button class="copy-btn"><i class="fas fa-clipboard"></i></button></div></td>
+                <td><%= users[i].first_name %> <%= users[i].last_name %> </td>
                 <td><%= Date %> </td>   
                 <td><%= Dates %> </td>
-                <td><%= user[i].class_code %> </td>
-                <td><%= user[i].arm %> </td>
-                <td><%= user[i].gender %> </td>
+                <td><%= users[i].class_code %> </td>
+                <td><%= users[i].arm %> </td>
+                <td><%= users[i].gender %> </td>
                 <td><label class="switch switchPassLearner">
-                    <input type="checkbox" id="mySwitch" data-user-id="<%= user[i]._id %> " <%= user[i].status== true ? 'checked' : '' %> >
+                    <input type="checkbox" id="mySwitch" data-user-id="<%= users[i]._id %> " <%= users[i].status== true ? 'checked' : '' %> >
                     <span class="slider">
 
                     </span>
@@ -68,13 +68,13 @@
                 <td class="last_div">
                      <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
                     <div class="hideen">
-                        <a  href="/admin/update-learner?id=<%= user[i]._id %>" class="btn border-shadow update">
+                        <a  href="/admin/update-learner?id=<%= users[i]._id %>" class="btn border-shadow update">
                             <i class="fas fa-user-edit"></i>
                         </a>
-                        <a href="/admin/delete/<%= user[i]._id %> " class="btn border-shadow deleteOldLearner">
+                        <a href="/admin/delete/<%= users[i]._id %> " class="btn border-shadow deleteOldLearner">
                             <i class="fas fa-trash-alt"></i>
                         </a>
-                        <a href="/admin/learner-detail?id=<%= user[i]._id %>" class="btn border-shadow info">
+                        <a href="/admin/learner-detail?id=<%= users[i]._id %>" class="btn border-shadow info">
                             <i class="fas fa-info-circle"></i>
                         </a>
                     </div>

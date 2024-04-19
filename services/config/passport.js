@@ -85,23 +85,27 @@ module.exports = function (passport) {
   });
 
   
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await Learner.findById(id);
-    const admin = await School.findById(id);
-    const staff = await Staff.findById(id);
-
-    if (user) {
-      done(null, user);
-    } else if (admin) {
-      done(null, admin);
-    } else if (staff) {
-      done(null, staff);
-    } else {
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await Learner.findById(id);
+      if (user) {
+        done(null, user);
+        return;
+      }
+      const admin = await School.findById(id);
+      if (admin) {
+        done(null, admin);
+        return;
+      }
+      const staff = await Staff.findById(id);
+      if (staff) {
+        done(null, staff);
+        return;
+      }
       done(new Error('User not found.'));
+    } catch (error) {
+      done(error);
     }
-  } catch (error) {
-    done(error);
-  }
-});
+  });
+  
 }

@@ -54,7 +54,7 @@
         <% } %> 
     </div>
    <div class="click">
-        <button class="clickbtn" onclick='printDiv()'>
+        <button class="clickbtn" onclick='printDivs()'>
             <i class="fas fa-print"></i> 
             Print
         </button>
@@ -135,4 +135,41 @@
 }
 
 
+
 </style>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+   
+    const printDivs = async () => {
+        try {
+            var printContents = document.getElementById('divid').innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            await window.print();
+
+            // Collect voucher codes from the printed vouchers
+            const voucherCodes = Array.from(document.querySelectorAll('.div-voucher'))
+                .map(voucher => voucher.querySelector('.p-three').innerText.trim());
+
+            // Send AJAX request to update 'print' field of vouchers
+            const response = await fetch('/admin/update-print-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ voucherCodes })
+            });
+
+            // Check if the request was successful
+            if (!response.ok) {
+                throw new Error('Failed to update print status');
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+
+</script>

@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow&family=PT+Sans&display=swap');
 :root {
-    --deepest-blue: #355E3B; 
-    --deep-blue: #00A36C;
-    --light-blue: #90EE90;
-    --lighter-blue: #7FFFD4;
+    --deepest-blue: #033767; 
+    --deep-blue: #295daf;
+    --light-blue: #09abf0;
+    --lighter-blue:#75bff4;
     --white: #ffffff;
     --white_one: #f7f7f7;
     --white_two: #e7e6e2;
@@ -34,7 +34,17 @@
 
 * {
     box-sizing: border-box;
+    animation: fadeIn 3s ease forwards;
 }
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
 
 
@@ -50,7 +60,7 @@
     background-color: #fff;
     border: 5px solid var(--deep-blue);
     display: flex;
-    flex-direction: column;
+    flex-direction: column;flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -214,54 +224,6 @@
     /* gap: 100px; */
 }
 
-.togeda .imag_pj {
-    width: 50%;
-}
-.tegeda form {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font: var(--montserrat-regular);
-    background-color: var(--lighter-blue);
-}
-
-.togeda .all-single-form, .togeda .mb-3{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-    padding: 10px;
-    font: var(--montserrat-regular);
-}
-
-.togeda .hop {
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    width: 100%;
-   
-}
-
-form input, form select {
-    border: none;
-    outline: none;
-    padding: 8px 12px;
-    outline: 1px solid var(--deep-blue);
-  
-    border-radius: 5px;
-    width: 100%;
-    font: var(--montserrat-regular);
-   
-}
-
-.togeda footer {
-
-}
 
 
 

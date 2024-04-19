@@ -11,7 +11,7 @@
                 <% if(users.img.url) {%> 
                     <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
                <% } else {%> 
-                   <img src="/img/monitor_users_image.jpg" alt="" >
+                   <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
                    <% } %> 
             </div>
            
@@ -57,9 +57,9 @@
             <div class="Result-serials">
                 <p class="sess-sect">Result Serial No:</p>
 
-                <% if(section)  {%>
+               
                 <p class="the"><%= resultSerialNumber %> </p>
-                <% } %>
+               
             </div>
     
             <div class="TERMS">
@@ -82,7 +82,7 @@
                 <div class="address">
                     <p class="school-add"><i class="fas fa-map-marker-alt"></i> <%= user.address %> </p>  <p class="school-add"><i class="fas fa-map-marker-alt"></i> <%= user.address2 %> </p>
                     <p class="school-web"><i class="fas fa-phone"></i> Mobile Phone: <%= user.phone_no %>. <i class="fas fa-mobile"></i> Mobile Phone: <%= user.phone_no2 %> </p> 
-                        <p class="school-email" style="color: yellow; text-shadow: 2px 2px 2px black;"><i class="fas fa-envelope-open-text"></i> Email: <%= user.email %>    |   <i class="fas fa-atlas"></i> Website: <%= user.website %></p>
+                        <p class="school-email" ><i class="fas fa-envelope-open-text"></i> Email: <%= user.email %>    |   <i class="fas fa-atlas"></i> Website: <%= user.website %></p>
                       
                 
                 </div>
@@ -90,7 +90,7 @@
                     <% if(user.img.url) {%> 
                         <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="Learner Image">
                      <% } else {%> 
-                         <img src="/img/school_logo-01-01.png" alt="" width="200">
+                         <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521762/school_logo-01_rf6ogn.png" alt="" width="200">
                          <% } %> 
                 </div>
                 <% } %>
@@ -140,20 +140,21 @@
              
                         <tr> 
                             <td class="ro"><%=exam[i].name %> </td>
-                            <td class="overall"><%=exam[i].overall_first_ca %></td>
+                            <td class="black"><%=exam[i].overall_first_ca %></td>
                             <td><%= exam[i].mark_obtained_first_ca %> </td >
-                            <td class="overall"><%=exam[i].overall_second_ca %></td>
+                            <td class="black"><%=exam[i].overall_second_ca %></td>
                             <td><%= exam[i].mark_otained_second_ca %></td>
                             <% if(exam.overall_third_ca) {%>
-                            <td class="overall"><%=exam[i].overall_third_ca %></td>
+                            <td class="black"><%=exam[i].overall_third_ca %></td>
                             <td><%= exam[i].mark_otained_third_ca %></td>
                             <% } %>
-                            <td class="overall"><%=exam[i].exam_overall %></td>
+                            <td class="black"><%=exam[i].exam_overall %></td>
                             <td><%= exam[i].exam_mark_obtain %></td>
                             <td><%= exam[i].term_total %></td>
                             <td><%= exam[i].grade %></td>
                             <td class="ro"><%= exam[i].remarks%></td>
                             <% totalOverall += exam[i].overall_first_ca + exam[i].overall_second_ca + (exam.overall_third_ca ? exam[i].overall_third_ca : 0) + exam[i].exam_overall; %>
+                           
                             <% totalFirstCA += exam[i].mark_obtained_first_ca; %>
                             <% totalFirstCaAll += exam[i].overall_first_ca; %>
                             <% totalSecondCA += exam[i].mark_otained_second_ca; %>
@@ -169,15 +170,15 @@
                         <tr> 
                             <td>TOTAL</td>
                             
-                            <td><%= totalFirstCaAll %></td>
+                            <td class="black"><%= totalFirstCaAll %></td>
                             <td><%= totalFirstCA %></td>
-                            <td><%= totalSecondCaAll %></td>
+                            <td class="black"><%= totalSecondCaAll %></td>
                             <td><%= totalSecondCA %></td>
                             <% if(exam.overall_third_ca) {%>
-                            <td><%= totalThirdCaAll %></td>
+                            <td class="black"><%= totalThirdCaAll %></td>
                             <td><%= totalThirdCA %></td>
                             <% } %>
-                            <td><%= totalExamOverall %></td>
+                            <td class="black"><%= totalExamOverall %></td>
                             <td><%= totalExamMark %></td>
                             <td><%= totalTermTotal %></td>
                             <td colspan="2"><p><%= totalTermTotal %>/<%= totalOverall %></p></td>
