@@ -19,6 +19,7 @@
                 <th>Arm</th>
                 <th>Gender</th>
                 <th>Status</th>
+                <th>Delete</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -56,14 +57,7 @@
                 </td>
                
                 <td>
-                    <div class="avis">
-                        <p>
-                            <%= learner[i].roll_no %>
-                        </p>
-                        <button class="copy-btn">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
+                    <div class="avis"><p><%= learner[i].roll_no %></p><button class="copy-btn"><i class="fas fa-copy"></i></button></div>
                 </td>
              
                 <td><%= learner[i].first_name %> <%= learner[i].last_name %> </td>
@@ -72,26 +66,36 @@
                 <td><%= learner[i].classes %> </td>
                 <td><%= learner[i].arm %> </td>
                 <td><%= learner[i].gender %> </td>
-                <td><label class="switch">
-                        <input type="checkbox" id="mySwitch" data-user-id="<%= learner[i]._id %> " <%= learner[i].status== true ? 'checked' : '' %> >
+                <td>
+                    <label class="switch">
+                        <input type="checkbox" id="mySwitch" data-user-id="<%= learner[i]._id %>" <%= learner[i].status == true ? 'checked' : '' %> >
                         <span class="slider">
 
                         </span>
-                </label></td>
+                    </label>
+                </td>
+                <td>
+                    
+                    <label class="switching">
+                        <input type="checkbox"  data-learner-id="<%= learner[i]._id %>" <%= learner[i].deletes == false ? 'checked' : '' %> >
+                        <span class="slider">
+
+                        </span>
+                    </label>
+                </td>
                 <td class="last_div">
                      <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
                     <div class="hideen">
                         <a  href="/admin/update-learner?id=<%= learner[i]._id %>" class="btn border-shadow update">
                             <i class="fas fa-user-edit"></i>
                         </a>
-                        <a href="/admin/delete/<%= learner[i]._id %> " class="btn border-shadow delete delete_learner" data-id="<%= learner[i]._id %>">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
+                       
                         <a href="/admin/learner-detail?id=<%= learner[i]._id %>" class="btn border-shadow info">
                             <i class="fas fa-info-circle"></i>
                         </a>
                     </div>
                 </td>
+               
             </tr>
            <% } %>
         </tbody>

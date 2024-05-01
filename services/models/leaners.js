@@ -99,6 +99,10 @@ const LearnerSchema = new Schema(
       type: Boolean, 
       default: false,
     },
+    deletes: { 
+      type: Boolean, 
+      default: false,
+    },
     blood_group: {
       type: String,
       trim: true,

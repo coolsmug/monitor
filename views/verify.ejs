@@ -1,0 +1,45 @@
+<%- include ("./include/reg.ejs") %> 
+
+<%- include ('./partials/messages') %>
+
+<div class="togeda">
+    <div class="imag_pj">
+      <img src="/img/img_1.jpg" alt="" width="200">
+       
+    </div>
+
+
+    
+      
+       <div class="login-box">
+        <h2>Verify Your Email</h2>
+          <form action="/verify-email" method="POST">
+          
+                    <div class="user-box">
+                      <input type="hidden" name="userId" value="<%= userId %>">
+                          
+                          <input type="recovery" name="recovery" value="<%= typeof  recovery != 'undefined' ?  recovery : '' %>" />
+                          <label for="recovery">Email:</label>
+                      </div>
+                <button>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    Submit
+              </button>
+          
+          </form>
+      
+        </div>
+      
+</div>
+
+<footer class="foot">
+  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+<footer/>
+
+
+
+
+<%- include ("./include/footer.ejs") %> 

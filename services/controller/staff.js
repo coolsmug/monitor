@@ -18,6 +18,8 @@ const { session } = require("passport");
 const multer = require('multer')
 const qs = require('qs');
 var toFixed = require('tofixed');
+const Position = require("../models/positionFirstTerm");
+
 
 
 const getSessionForstaff = async ( req , res ) => {
@@ -287,9 +289,11 @@ const updateExam = async ( req , res ) => {
             exam.mark_otained_third_ca = req.body.mark_otained_third_ca;
             exam.exam_overall = req.body.exam_overall;
             exam.exam_mark_obtain = req.body.exam_mark_obtain;
+            exam.editted_name = req.body.editted_name;
             exam.term_total = totaled;
             exam.grade = grade;
             exam.remarks = remarks;
+            
             exam
                .save()
                .then(() => {
@@ -356,7 +360,8 @@ const getExamSpace = async ( req , res ) => {
           const classed = await Currentclass.findById(classId).exec();
           const session = await Session.findById(sessionId).exec();
           const section = await Section.findById(sectionId).exec();
-          const misc = await Miscellaneous.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
+          const misc = await Miscellaneous.findOne({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
+          const position = await Position.findOne({ learnerId: userId, term: name, classofs: classofss }).exec();
           const exams = await Exam.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss });
     
           res.render('exam_fill', {
@@ -368,6 +373,8 @@ const getExamSpace = async ( req , res ) => {
             section: section,
             subject: subjects,
             misc: misc,
+            position: position,
+           
           });
         } else {
           res.render("error404.ejs", { title: "Oops! Request Id not found" });
@@ -606,6 +613,115 @@ const getStaffdashboard = async ( req , res) => {
 
 
 //---------------------------------Exam--------------------------------------------------------
+const registerPosition = async ( req , res ) => {
+  try {
+    const { classofs, learnerId, term, classId} = req.body;
+    const newPosition = await Position.findOne({ learnerId: learnerId, term: term, classofs: classofs, classId: classId });
+    if(newPosition) {
+      req.flash("error_msg", "Position already created for this Learner");
+      res.redirect("/staff/error");
+    } else {
+      const position = new Position({
+        classofs: classofs,
+        learnerId: learnerId,
+        classId: classId,
+        term: term,
+        schoolId: req.user.schoolId,
+        user: req.user
+    });
+
+    position.save()
+            .then((value) => {
+              console.log(value);
+                        req.flash("success_msg", "Position Added Successfully!");
+                        res.render("success", { title: "Position Added Successfully!" });
+            }) .catch((error) => {
+              console.error(error);
+              req.flash("error_msg", "An error occurred while saving the Learner position");
+              res.redirect("/staff/error"); // Redirect to an error page or handle as per your requirement
+          });
+
+    }
+  } catch (err) {
+    console.error(error);
+    req.flash("error_msg", "An error occurred");
+    res.redirect("/staff/error"); 
+  }
+};
+
+const updatePosition = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { total_score } = req.body;
+
+    // Find the position document by its ID
+    const position = await Position.findById(id);
+
+    if (!position) {
+      // If position not found, return a 404 error
+      return res.status(404).json({ error: "Position not found" });
+      console.log('data not found')
+    }
+
+    // Update the total_score field
+   
+    position.total_score = total_score;
+
+    // Save the updated position document
+    await position.save();
+
+    // Send a success response
+    res.status(200).json({ message: "Position updated successfully" });
+  } catch (err) {
+    // Handle errors
+    console.error(err.message);
+    res.status(500).json({ error: "Internal Server Error", message: err.message });
+  }
+};
+
+const updateLearnerPosition = async (req, res) => {
+  try {
+    const { name, classof, classId } = req.query;
+
+    // Fetch all position documents sorted by total_score in descending order
+    const positions = await Position.find({ term: name, classofs: classof, classId: classId })
+      .sort({ total_score: -1 })
+      .exec();
+
+    if (!positions.length) {
+      return res.status(404).json({ error: "No positions found" });
+    }
+
+    // Initialize variables to track position and previous score
+    let currentPosition = 1;
+    let prevScore = positions[0].total_score;
+
+    // Loop through each position document to update the position field
+    positions.forEach((position, index) => {
+      // Compare the current learner's score with the previous learner's score
+      if (position.total_score < prevScore) {
+        // If the score is less than the previous score, update the position
+        currentPosition = index + 1;
+      }
+      // Update the position field
+      position.position = currentPosition;
+      // Update the previous score for the next iteration
+      prevScore = position.total_score;
+    });
+
+    // Save all updated position documents back to the database
+    await Promise.all(positions.map(position => position.save()));
+
+    // Send a success response
+    res.status(200).json({ message: "Positions updated successfully" });
+  } catch (err) {
+    // Handle errors
+    console.error(err.message);
+    res.status(500).json({ error: "Internal Server Error", message: err.message });
+  }
+};
+
+
 
 const registerThirdTermExam = async ( req , res ) => {
   try {
@@ -708,6 +824,7 @@ const updateThirdTermExam = async ( req , res ) => {
        exam.mark_otained_third_ca = req.body.mark_otained_third_ca;
        exam.exam_overall = req.body.exam_overall;
        exam.exam_mark_obtain = req.body.exam_mark_obtain;
+       exam.editted_name = req.body.editted_name;
        exam.term_total = total;
        exam.per_over_all = toFixed(multiple, 2);
        exam.grade = grade;
@@ -747,7 +864,8 @@ const getThirdTermExam = async ( req , res ) => {
       const classed = await Currentclass.findById(classId).exec();
       const sessions = await Session.findById(sessionId).exec();
       const sections = await ThirdSection.findById(sectionId).exec();
-      const misc = await Miscellaneous.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
+      const misc = await Miscellaneous.findOne({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
+      const position = await Position.findOne({ learnerId: userId, term: name, classofs: classofss }).exec();
       const exams = await Examing.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss });
 
       res.render('third_exam_fill', {
@@ -759,6 +877,7 @@ const getThirdTermExam = async ( req , res ) => {
         sections: sections,
         subjects: subjects,
         misc: misc,
+        position: position,
       });
     } else {
       res.render("success", { title: "Oops! Request Id not found" });
@@ -852,6 +971,9 @@ module.exports = {
     getThirdTermExam,
     deleteThirdTermExam,
     getThirdTermMisc,
-    stafflogOut
+    stafflogOut,
+    registerPosition,
+    updatePosition,
+    updateLearnerPosition,
 };
   

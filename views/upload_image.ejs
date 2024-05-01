@@ -3,9 +3,9 @@
 <div class="allss">
     <div class="mon">
         <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="" width="200">
-        <form action="/learner/logout" method="POST" class="logoutss">
-            <button type="submit" class="nnnnn"><a href="#"> <i class="fas fa-arrow-circle-left"></i> </a></button>
-        </form>
+      
+            <button type="submit" class="nnnnn" id="og-url"><a href="#"> <i class="fas fa-arrow-circle-left"></i> </a></button>
+      
         <div class="imgss">
             <% if(user.img.url) {%> 
                  <img src="<%= user.img.url %>" alt="Learner Image" >
@@ -114,3 +114,7 @@
 
 
 
+<script >
+    var currentUrl = window.location.href;
+ document.getElementById('og-url').content = currentUrl;
+</script>

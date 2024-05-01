@@ -15,6 +15,7 @@ const Staff = require('../models/staff');
 const Recovery = require('../models/emailRecovery');
 const nodemailer = require('nodemailer');
 const smtpPool = require('nodemailer-smtp-pool');
+const Verification = require('../models/verificationCode');
 
 const GMAIL_PASSWORD = process.env.GMAIL_PASSWORD;
 
@@ -292,14 +293,150 @@ State.getStatesOfCountryByName = function(countryName) {
             // Handle the case where the user with the given ID was not found
             res.redirect(`/registration-step3?error=true&userId=${userId}`);
         }
+        else {
+          const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+          let voucherCode = '';
+          for (let i = 0; i < 6; i++) {
+            voucherCode += characters.charAt(Math.floor(Math.random() * characters.length));
+          };
+          var day = new Date();
+          var year = day.getFullYear();
+          const currentDate = new Date();
+          var fourteen = new Date(currentDate.getTime() + (1 * 24 * 60 * 60 * 1000));
   
-        res.redirect(`/admin/admin_dashboard`);
+  
+          const code = await new Verification({ 
+            recovery: voucherCode,
+            expiry: fourteen,
+            user_email: updatedUser.email,
+          }).save();
+          const html = `
+            <html>
+              <head>
+                <style>
+                  /* Define your CSS styles here */
+                  body {
+                    font-family: Arial, sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                  }
+                  h2 {
+                    color: #ff0000;
+                  }
+                  p {
+                    line-height: 1.5;
+                  }
+                </style>
+              </head>
+              <body>
+                <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="Company Logo">
+                <h2>Monitor School Management App Recovery Code</h2>
+                <p>${code.recovery}</p>
+              </body>
+            </html>
+          `;
+          const mailOptions = {
+            from: 'monitorschoolmanagementapp@gmail.com',
+            to: updatedUser.email,
+            subject: 'Use the below Code to verify your Email',
+            html: html
+          };
+          const smtpConfig = {
+            host: 'smtp.gmail.com',
+            port: 465,
+            auth: {
+              user:'monitorschoolmanagementapp@gmail.com',
+              pass:GMAIL_PASSWORD,
+            },
+            pool: true,
+            maxConnections: 5,
+            maxMessages: 100,
+            rateDelta: 1000,
+            rateLimit: 1000,
+          };
+          const transporter = nodemailer.createTransport(smtpPool(smtpConfig));
+          await transporter.sendMail(mailOptions);
+  
+          req.flash('success_msg', 'Verification Code has been sent to the Email you provided. If not found in your inbox check your Spam mail');
+          res.redirect(`/go-verify?userId=${userId}`);
+        }
+
+       
     } catch (error) {
         console.error(error);
-        res.redirect(`/registration-step3?error=true&userId=${userId}`);
+         res.redirect(`/registration-step3?error=true&userId=${userId}`);
     }
   };
 
+  const emailVerification = async ( req , res ) => {
+    try {
+      const userId = req.query.userId;
+      res.render('verify', { userId });
+    } catch (err) {
+      if(err) 
+      console.log(err.message)
+      res.status(500).send('error_msg', 'Internal Server Error' + ' ' + err.message);
+    }
+  }
+
+  const verifyEmailWithCode = async (req, res) => {
+    try {
+      const userId = req.body.userId || req.query.userId;
+      const { recovery } = req.body;
+      let errors = [];
+  
+      if (!recovery) {
+        errors.push({ msg: "Please fill in all fields" });
+      }
+  
+      if (errors.length > 0) {
+        req.flash('error_msg', "Error registration: " + errors[0].msg);
+        return res.redirect(`/go-verify?error=true&userId=${userId}`);
+      }
+  
+      const verify = await Verification.findOne({ recovery }).exec();
+      const school = await School.findById(userId).exec();
+  
+      if (!verify) {
+        errors.push({ msg: "Invalid verification code" });
+      }
+  
+      if (!school) {
+        errors.push({ msg: "Oops! School not found" });
+      }
+  
+      if (verify && school && verify.isUsed === true) {
+        errors.push({ msg: "Oops! Code already used" });
+      }
+  
+      if (verify && school && verify.expiry < Date.now()) {
+        errors.push({ msg: "Oops! Code is expired. Try getting a new code" });
+    }
+
+      if (verify && school && verify.user_email !== school.email ) {
+        errors.push({ msg: "invalid code" });
+      }
+  
+      if (errors.length > 0) {
+        req.flash('error_msg', errors[0].msg);
+        return res.redirect(`/go-verify?error=true&userId=${userId}`);
+      }
+  
+      verify.isUsed = true;
+      school.verified = true;
+  
+      await verify.save();
+      await school.save();
+  
+      req.flash('success_msg', 'Your email is verified. Please log in.');
+      res.redirect('/admin/admin_dashboard');
+    } catch (err) {
+      console.error(err);
+      req.flash('error_msg', "An error occurred while processing your request. Please try again later.");
+      res.redirect(`/go-verify?userId=${userId}`);
+    }
+  };
+  
   const getLoginPage = async (req , res) => {
     await res.render('login')
   }
@@ -405,7 +542,7 @@ State.getStatesOfCountryByName = function(countryName) {
                 </style>
               </head>
               <body>
-                <img src="/assets/img/monitor_logo.png" alt="Company Logo">
+                <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="Company Logo">
                 <h2>Monitor School Management App Recovery Code</h2>
                 <p>${code.recovery}</p>
               </body>
@@ -432,7 +569,7 @@ State.getStatesOfCountryByName = function(countryName) {
           };
           const transporter = nodemailer.createTransport(smtpPool(smtpConfig));
           await transporter.sendMail(mailOptions);
-          req.flash('success_msg', 'Recovery Code sent to the Email you provided');
+          req.flash('success_msg', '<h3>Recovery Code has been sent to the Email you provided.<br> If not found in your inbox check your Spam mail</h3>');
           res.redirect('/recover-password');
         }
     } catch (err) {
@@ -570,4 +707,6 @@ module.exports = {
     getRecoverPasswordPage,
     resetPassword,
     recoverGmailPassword,
+    emailVerification,
+    verifyEmailWithCode,
 }

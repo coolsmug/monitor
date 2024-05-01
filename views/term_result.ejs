@@ -295,13 +295,57 @@
             </div>
            
             <div class="flex-comment">
-                <% if(misc) {%>
+               
                <table>
-                <tr><td>Teacher's Comment</td><td class="com"><%= misc.t_c %></td></tr>
-                <tr><td>Teacher's Name</td><td class="com"><%= misc.t_n %></td></tr>
-                <tr><td>Signature</td><td class="com"></td></tr>
-                <tr><td>Head Teacher's Comment</td><td class="com"><%= misc.h_t_c %></td></tr>
-                <tr><td>Signature</td><td class="com"></td></tr>
+               
+                    
+                <%
+                var pos = position.position;
+                var posi = pos.split('');
+                var lastDigit = posi[posi.length - 1]; // Get the last digit of the position
+                var secondLastDigit = posi[posi.length - 2]; // Get the second-last digit of the position
+                console.log(secondLastDigit)
+                console.log(lastDigit)
+                var rate;
+                if (secondLastDigit === '1' || (lastDigit === '1' && (secondLastDigit !== '1' && secondLastDigit !== '2' && secondLastDigit !== '3'))) {
+                    // For numbers ending in '11', '12', or '13', or when the last digit is '1' but not '11', '12', or '13', always use 'th'
+                    rate = 'th';
+                  } else {
+                  // For all other cases, determine the suffix based on the last digit
+                  switch (lastDigit) {
+                    case '1':
+                      rate = 'st';
+                      break;
+                    case '2':
+                      rate = 'nd';
+                      break;
+                    case '3':
+                      rate = 'rd';
+                      break;
+                    default:
+                      rate = 'th';
+                  }
+                }
+                %>
+                
+                <tr>
+                  <td>Learner's Position</td>
+                  <td class="com">
+                    <h1><%= pos %><%= rate %></h1>
+                  </td>
+                </tr>
+                
+                
+                
+
+                
+                        
+                <% if(misc) {%>
+                    <tr><td>Teacher's Comment</td><td class="com"><%= misc.t_c %></td></tr>
+                    <tr><td>Teacher's Name</td><td class="com"><%= misc.t_n %></td></tr>
+                    <tr><td>Signature</td><td class="com"></td></tr>
+                    <tr><td>Head Teacher's Comment</td><td class="com"><%= misc.h_t_c %></td></tr>
+                    <tr><td>Signature</td><td class="com"></td></tr>
                </table>
                <% } %> 
             </div>    

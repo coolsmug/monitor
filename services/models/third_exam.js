@@ -18,6 +18,10 @@ const thirdExamSchema = new Schema(
       trim: true,
      
     },
+    editted_name: {
+      type: String,
+      trim: true,
+    },
     classofs : {
       type: String,
       trim: true,

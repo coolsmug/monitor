@@ -66,6 +66,10 @@ SchoolSchema = new Schema({
     },
     status: { 
         type: Boolean, 
+        default: true,
+      },
+    verified: { 
+        type: Boolean, 
         default: false,
       },
     expiry: {

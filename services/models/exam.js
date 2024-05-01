@@ -17,6 +17,10 @@ const examSchema = new Schema(
       type: String,
       trim: true,
     },
+    editted_name: {
+      type: String,
+      trim: true,
+    },
     classofs : {
       type: String,
       trim: true,

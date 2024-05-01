@@ -8,10 +8,11 @@
       <div class="div-a">
         <a href="/staff/staff-route" style="text-decoration: none; position: absolute; right: 20px; top: 50px; font-weight: bolder; color: #fff; ">home</a>
       </div>
-
+     
     </header>
 <div class="diver">
     <h2>Learners Record Section</h2>
+   
 </div>
 
 
@@ -23,9 +24,10 @@
            <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
            <% } %> 
     </div>
-    <p style="font-size: 12px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= section.name %> Result Arrangement - <%= section.classof %> Session of <%= session.name %></p> 
+    <p style="font-size: 15px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= section.name %> Result Arrangement - <%= section.classof %> Session of <%= session.name %></p> 
     
     <form method="POST" id="blessing">
+      <h2 style="font-size: 12px; color: seagreen;">Use this form to add Exam for Learner</h2>
         <div class="input">
             <% if(subject) {%> 
            <select name="name" id="name">
@@ -38,24 +40,51 @@
         </div>
 
         <div class="input">
-            <input type="_learner" name="_learner"  value="<%= users._id %>" readonly/>
+            <input type="hidden" name="_learner"  value="<%= users._id %>" readonly/>
         </div>
         <div class="input">
-            <input type="roll_no" name="roll_no"  value="<%= section.roll_no %>" readonly/>
+            <input type="hidden" name="roll_no"  value="<%= section.roll_no %>" readonly/>
         </div>
         <div class="input">
-            <input type="student_name" name="student_name"  value="<%= users.first_name %> <%= users.last_name %>" readonly/>
+            <input type="hidden" name="student_name"  value="<%= users.first_name %> <%= users.last_name %>" readonly/>
         </div>
         <div class="input">
-            <input type="classofs" name="classofs"  value="<%= session.classof %>" readonly/>
+            <input type="hidden" name="classofs"  value="<%= session.classof %>" readonly/>
         </div>
         <div class="input">
-            <input type="term" name="term"  value="<%= section.name %>" readonly/>
+            <input type="hidden" name="term"  value="<%= section.name %>" readonly/>
         </div>
         <div class="div">
-            <input type="submit" value="Add Learner's Details">
+            <input type="submit" value="Add Exam">
         </div>
     </form>
+
+        <div class="pos">
+           
+            <form method="POST" id="position" >
+              <h2 style="font-size: 12px; color: var(--crimson);">Click below to initiate Position for Learner. <br> NB: do this after Recording all the exams</h2>
+                <div class="input">
+                  <div class="input">
+                    <input type="hidden" name="term"  value="<%= section.name %>" readonly/>
+                </div>
+
+                <div class="input">
+                    <input type="hidden" name="learnerId"  value="<%= users._id %>" readonly/>
+                </div>
+                <div class="input">
+                  <input type="hidden" name="classId"  value="<%= classed._id %>" readonly/>
+                </div>
+
+                <div class="input">
+                    <input type="hidden" name="classofs"  value="<%= session.classof %>" readonly/>
+                </div>
+              
+                <div class="div">
+                    <input type="submit" value="Initiate">
+                </div>
+            </form>
+        </div>
+  
 
     <table>
         <thead>
@@ -72,14 +101,20 @@
                 <th>Total</th>
                 <th>Grade</th>
                 <th>Remarks</th>
-                <th>Action</th> 
+                <th>Action</th>
+                
+                <th>Last Modified by</th> 
             </tr>
         </thead>
-        <% if(exam) {%>
+       
         <tbody>
-           <% for (var i = 0; i < exam.length; i++) {%> 
+          <% if (exam && exam.length > 0) {%> 
+            <% var totalOverall = 0, totalFirstCA = 0, totalSecondCA = 0, totalThirdCA = 0, 
+            totalExamOverall = 0, totalExamMark = 0, totalTermTotal = 0, totalFirstCaAll = 0, totalSecondCaAll = 0, totalThirdCaAll = 0; %>
+        <% for (var i = 0; i < exam.length; i++) {%> 
            
             <form method="POST" class="exam" id="myexam-<%= exam[i]._id %>" data-id=<%= exam[i]._id %>>
+             
                 <tr>
                     <td><input id="name" type="text" name="name" value="<%= exam[i].name %> "></td>
                     <td><input id="overallfirstca" type="tex" name="overall_first_ca" value="<%= exam[i].overall_first_ca %>" ></td>
@@ -93,13 +128,62 @@
                     <td><input id="termtotal" type="te" name="term_total" value="<%= exam[i].term_total %>" readonly></td>
                     <td><input id="grades" type="grade" name="grade" value="<%= exam[i].grade %>" readonly></td> 
                     <td><input id="remark" type="text" name="remarks" value="<%= exam[i].remarks %>" readonly></td>
+                    <input  type="hidden" name="editted_name" value="<%= user.name %>" readonly>
                     <td class="td"><button type="submit"><i class="fas fa-save" onclick="submitForm()"></i></button> <a href="/staff/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
+                    <td><p style="font-size: 10px;" ><%= exam[i].editted_name %></p></td>
+                    <% totalOverall += exam[i].overall_first_ca + exam[i].overall_second_ca + (exam.overall_third_ca ? exam[i].overall_third_ca : 0) + exam[i].exam_overall; %>
+                           
+                            <% totalFirstCA += exam[i].mark_obtained_first_ca; %>
+                            <% totalFirstCaAll += exam[i].overall_first_ca; %>
+                            <% totalSecondCA += exam[i].mark_otained_second_ca; %>
+                            <% totalSecondCaAll += exam[i].overall_second_ca; %>
+                            <% totalThirdCA += exam[i].mark_otained_third_ca; %>
+                            <% totalThirdCaAll += exam[i].overall_third_ca; %>
+                            <% totalExamOverall += exam[i].exam_overall; %>
+                            <% totalExamMark += exam[i].exam_mark_obtain; %>
+                            <% totalTermTotal += exam[i].term_total; %>
                 </tr>
+                
             </form>
 
+
             <% } %> 
+            <% if(position) {%>
+             
+                <form method="put"  id="setPosition" >
+                  <tr> 
+                    <td><p style="font-size: 17px;">TOTAL</p> </td>
+                
+                    <input type="hidden" name="id" value="<%= position._id %> "/>
+                    <td><p style="font-size: 15px;"><%= session.classof %></p></td>
+                    <td><p style="font-size: 15px;"><%= totalFirstCA %></p></td>
+                    <td ><p style="font-size: 15px;"><%= section.name %></p></td>
+                    <td><p style="font-size: 15px;"><%= totalSecondCA %></p></td>
+                   
+                    <td ><%= totalThirdCaAll %></td>
+                    <td><p style="font-size: 15px;"><%= totalThirdCA %></p></td>
+                   
+                    <td><p style="font-size: 15px; color: green;">User Id </p> <p style="font-size: 10px; overflow:hidden; width: 50px; "><%= users._id %></p></td>
+                    <td><p style="font-size: 15px;"><%= totalExamMark %></p> </td>
+                    <td><p style="font-size: 15px;"><%= totalTermTotal %></p></td>
+                    <td colspan="2">
+                      <input id="termtotal" type="number" name="total_score" value="<%= totalTermTotal %>" readonly>
+                    </td>
+                   
+                    <td>
+                      <p style="font-size: 12px;">Save to set position</p>
+                      <input style="cursor: pointer; color: var(--lighter-blue); background-color: var(--deep-blue);" type="submit" value="Save">
+                    </td>
+                  </tr>
+                </form>
+           
+        
+          <% } %>
+        
+            <% } %> 
+         
         </tbody>
-        <% } %> 
+       
     </table>  
 </div>
 
@@ -139,9 +223,19 @@
 
 
 <% if(misc) {%> 
-<% misc.forEach(function(mis){ %> 
-<div class="div_ahref"><a href="/staff/miscellaneous-pace?id=<%= mis._id %>"> Edit <%= mis.term %> Miscellaneous for <%= mis.student_name %>  </a></div>
-<% }) %> 
+
+<div class="div_ahref"><a href="/staff/miscellaneous-pace?id=<%= misc._id %>"> Edit <%= misc.term %> Miscellaneous for <%= misc.student_name %>  </a></div>
+  <div class="button-position">
+    <p style="font-size: 15px;">Click below to set position for all Learners in <%= classed.name %> <%= classed.arm %>. <br> NB: After recording all the Learners exams when you would have set all their position</p>
+    <form id="updatePositionForm">
+      <!-- Include form fields for 'name', 'classof', and 'classId' -->
+      <input type="hidden" name="name" value="<%= section.name %>">
+      <input type="hidden" name="classof" value="<%= session.classof %>">
+      <input type="hidden" name="classId" value="<%= classed._id %>">
+      
+      <button type="submit" >Click to Set Positions </button>
+    </form>
+  </div>
 <% } %> 
 </div>
 <footer class="foot">
@@ -256,9 +350,100 @@
   });
 });
 
+
+
+$("#position").submit(function (evente) {
+  evente.preventDefault();
+
+  var unindexed_arraye = $(this).serializeArray();
+  var data = {};
+
+  $.map(unindexed_arraye, function (n, i) {
+    data[n["name"]] = n["value"];
+  });
+
+  console.log(data);
+
+  var requests = {
+    url: `/staff/register-position`,
+    method: "POST",
+    data: data,
+  };
+
+  $.ajax(requests).done(function (response) {
+    alert("Position set Successfully!");
+    location.reload()
+    console.log("Data Updated Successfully!");
+  });
+});
+
+$("#setPosition").submit(function(eventss) {
+  eventss.preventDefault();
+
+  var unindexed_array = $(this).serializeArray();
+  var data = {};
+
+  $.map(unindexed_array, function(n, i) {
+    data[n["name"]] = n["value"];
+  });
+
+  console.log(data);
+
+  var request = {
+    url: `/staff/update-position/${data.id}`,
+    method: "PUT", // Use PUT method
+    data: data,
+  };
+
+  $.ajax(request)
+    .done(function(response) {
+      alert("Data updated successfully!");
+      location.reload();
+    })
+    .fail(function(xhr, status, error) {
+      console.error(xhr.responseText);
+      alert("Error updating data: " + error);
+    });
+});
+
+
+
+  // jQuery script to handle form submission
+  $(document).ready(function() {
+    $('#updatePositionForm').submit(function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get form data
+      var formData = $(this).serialize();
+
+      // AJAX request to update learner positions
+      $.ajax({
+        url: '/staff/update-learner-position', // Your server endpoint
+        method: 'GET',
+        data: formData,
+        success: function(response) {
+          // Handle success response
+          console.log(response);
+          alert("Positions updated successfully");
+        },
+        error: function(xhr, status, error) {
+          // Handle error response
+          console.error(xhr.responseText);
+          alert("Error updating positions: " + error);
+        }
+      });
+    });
+  });
+
+
+
  </script>
 
-
+<style>
+  .hide{
+    display: hidden;
+  }
+</style>
 
 
 <%- include ("./include/footer.ejs") %> 

@@ -26,6 +26,9 @@ const {
     deleteThirdTermExam,
     getThirdTermMisc,
     stafflogOut,
+    registerPosition,
+    updatePosition,
+    updateLearnerPosition,
 } = require('../controller/staff');
 
 
@@ -50,6 +53,9 @@ staffRoute.route('/exam-pace-third').get( staffEnsureLoggedIn, getThirdTermExam 
 staffRoute.route('/deletedss/:id').delete( staffEnsureLoggedIn, deleteThirdTermExam, );
 staffRoute.route('/miscellaneous-pace').get( staffEnsureLoggedIn, getThirdTermMisc);
 staffRoute.route('/logout').post( stafflogOut );
+staffRoute.route('/register-position').post( staffEnsureLoggedIn, registerPosition );
+staffRoute.route('/update-position/:id').put( staffEnsureLoggedIn, updatePosition);
+staffRoute.route('/update-learner-position').get( staffEnsureLoggedIn, updateLearnerPosition);
 
 
 

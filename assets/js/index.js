@@ -434,29 +434,29 @@ copyBtnss.forEach(btn => {
 
 // =================Code for delete learner=========================//
 
-$(function() {
-  $('a.delete_learner').click(function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag
-    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
-    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
+// $(function() {
+//   $('a.delete_learner').click(function(e) {
+//     e.preventDefault(); // Prevent the default behavior of the anchor tag
+//     var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+//     var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+//     var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
 
-    if (confirm('Are you sure you want to delete this data?')) {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        data: { id: id },
-        success: function(result) {
-          alert('Data deleted successfully!');
-          row.remove(); // Remove the deleted row from the DOM
-        },
-        error: function(xhr, status, error) {
-          alert('Error deleting Data: ' + error);
-        }
-      });
-    }
-  });
-});
+//     if (confirm('Are you sure you want to delete this data?')) {
+//       $.ajax({
+//         url: url,
+//         type: 'DELETE',
+//         data: { id: id },
+//         success: function(result) {
+//           alert('Data deleted successfully!');
+//           row.remove(); // Remove the deleted row from the DOM
+//         },
+//         error: function(xhr, status, error) {
+//           alert('Error deleting Data: ' + error);
+//         }
+//       });
+//     }
+//   });
+// });
 
 
 //
@@ -763,6 +763,56 @@ $(document).ready(function() {
   }, 500); // Adjust the debounce time as needed
 
   $('.switch').click(debouncedClickHandler);
+});
+
+
+
+//delete to true
+
+$(document).ready(function() {
+  let isProcessing = false;
+
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+  const debouncedClickHandler = debounce(function() {
+    if (!isProcessing) {
+      const switchId = $(this).find('input').data('learner-id');
+      const updatedStatus = $(this).find('input').is(':checked');
+      var row = $(this).closest('tr');
+
+      isProcessing = true;
+
+      $.ajax({
+        url: `/admin/delete-learner/${switchId}`,
+        type: 'PATCH',
+        data: { deletes: updatedStatus },
+        success: function(data) {
+          // Update the switch status immediately without a page reload
+          $(this).find('input').prop('checked', updatedStatus);
+          alert('Learners Deleted Succesfully');
+          // row.remove();
+        },
+        error: function(error) {
+          console.error(error);
+        },
+        complete: function() {
+          isProcessing = false;
+        }
+      });
+    }
+  }, 500); // Adjust the debounce time as needed
+
+  $('.switching').click(debouncedClickHandler);
 });
 
 

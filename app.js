@@ -32,13 +32,14 @@ connectDB();
 const app = express();
 app.use(morgan('tiny'));
 app.use(cors());
- 
+
+
 
 //bodyParser
 app.set("view engine", "ejs");
 app.use(express.urlencoded( { extended : false } ));
 app.use(express.json());
-app.use(flash());
+app.use(flash({ html: true }));
 
 app.use(
   session({

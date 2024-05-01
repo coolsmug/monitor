@@ -17,6 +17,8 @@ const {
   getRecoverPasswordPage,
   resetPassword,
   recoverGmailPassword,
+  emailVerification,
+  verifyEmailWithCode,
 } = require('../controller/index');
 
 homepageRoute.route('/monitor').get(getMonitorHomePage)
@@ -32,6 +34,8 @@ homepageRoute.route('/forget-password').get( getForgetPasswordPAge)
 homepageRoute.route('/recover-password').get(getRecoverPasswordPage)
 homepageRoute.route('/get-code').post(resetPassword)
 homepageRoute.route('/recover-gmail-password').post(recoverGmailPassword)
+homepageRoute.route('/go-verify').get(emailVerification)
+homepageRoute.route('/verify-email').post(verifyEmailWithCode)
 
 
 

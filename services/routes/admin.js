@@ -97,7 +97,7 @@ const {
 adminRoute.route('/registerLearner').post( adminEnsureLoggedIn, registerLearner);
 adminRoute.route('/update-learner').get(adminEnsureLoggedIn, getUpdateLearnerPage);
 adminRoute.route('/update-learner/:id').post(adminEnsureLoggedIn, updateLearner);
-adminRoute.route('/delete/:id').delete( adminEnsureLoggedIn, deleteLearner);
+adminRoute.route('/delete-learner/:id').patch( adminEnsureLoggedIn, deleteLearner);
 adminRoute.route('/user-status/:id').patch(adminEnsureLoggedIn, learnersStatus);
 adminRoute.route('/learner-detail').get(adminEnsureLoggedIn, learnersDetails);
 adminRoute.route('/upload-image/:id').post(adminEnsureLoggedIn, uploadLearnerImage);
@@ -122,7 +122,7 @@ adminRoute.route('/staff-status/:id').patch(adminEnsureLoggedIn, staffStatus);
 adminRoute.route('/staffdetail').get(adminEnsureLoggedIn, staffDetails);
 adminRoute.route('/allocate_class').post(adminEnsureLoggedIn, allocateStaffClass);
 adminRoute.route('/disallocate/:id').get(adminEnsureLoggedIn, disallocateStaffClass);
-adminRoute.route('/create-staff-statement').post(adminEnsureLoggedIn, createStaffStatement);
+adminRoute.route('/add_staffs_statement').post(adminEnsureLoggedIn, createStaffStatement);
 adminRoute.route('/update-staff-statement').get(adminEnsureLoggedIn, getUpdateStatementPage);
 adminRoute.route('/update-staff-statement/:id').post(adminEnsureLoggedIn, updateStaffState);
 adminRoute.route('/delete_staff-statement/:id').delete(adminEnsureLoggedIn, deleteStaffState);

@@ -27,6 +27,7 @@ const path = require('path');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
+const Position = require("../models/positionFirstTerm");
 
 // Multer configuration for file uploads
 const upload = multer({
@@ -242,31 +243,20 @@ const updateLearner = async ( req, res ) => {
 };
 
 
-const deleteLearner = async ( req, res ) => {
+const deleteLearner =  async ( req , res ) => {
+ 
+    const id = req.params.id;
+    const { deletes } = req.body; 
+
     try {
-        const id = req.params.id;
-        await Learner.findByIdAndDelete(id)
-        .then((data) => {
-          if (!data) {
-            res
-              .status(404)
-              .send({ message: `Cannot Delete with id ${id}. May be id is wrong` });
-          } else {
-            res.send({
-              message: "User was deleted successfully!",
-            });
-          }
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message: "Could not delete User with id=" + id + "with err:" + err,
-          });
-        });
-    } catch (error) {
-        console.log(error)
-        res.status(500).send('Internal Server Error' + ' ' + error);
+      const switchManaging = await Learner.findByIdAndUpdate(id, { deletes }, { new: true });
+      if (!switchManaging) return res.status(404).send('switch not found');
+      res.send(switchManaging);
+    } catch (err) {
+      res.status(500).send(err.message);
     }
 };
+
 
 const learnersStatus = async ( req , res ) => {
     try {
@@ -412,52 +402,62 @@ const adminLogin = async ( req , res, next ) => {
       req.flash('error_msg', "wrong info")
       return res.redirect('/');
 
-    }
-    // Checking if user has not paid and trial session is still active
-    if (admin.fees === "pending" && admin.expiry > Date.now()) {
-      req.logIn(admin, function(err) {
-        if (err) {
-          return next(err);
-        }
-        req.flash('success_msg', `You are welcome to ${admin.school_name}`);
-        return res.redirect('/admin/admin_dashboard');
-      });
-    } else if (admin.fees === "pending" && admin.expiry < Date.now()) {
-      // Trial session has expired, log out the user
-      req.logout((err) => {
-        if (err) {
-          return next(err);
-      }
-      req.flash('error_msg', 'Your trial session has ended. Please subscribe using this page');
-      res.redirect('/monitor')
-      });
-     
-     
-    }else if(admin.status === false ){
-      req.logOut(function (err) {
-        if (err) {
-            return next(err);
-        }
-        req.flash('error_msg', 'Oops! your school has been suspended temporarily, contact the Developer');
-        res.redirect('/')
-    });
-    } else if (admin.fees === "paid") {
-      // User has paid, log in the user
-      req.logIn(admin, function(err) {
+    }  if (admin && admin.fees === "pending" && admin.expiry > Date.now()) {
+      
+      if(admin.status === false ){
+       
+         req.flash('error_msg', "Your School is Temporarily Suspended. Contact the Developer")
+          return res.redirect('/');
+      } 
+      if(admin.verified  === false ){
+        req.flash('error_msg', "Your Email is not Verified yet.")
+          return res.redirect('/');
+      } else {
+           req.logIn(admin, function(err) {
         if (err) {
           return next(err);
         }
         req.flash('success_msg', 'You are welcome');
         return res.redirect('/admin/admin_dashboard');
       });
-    } else {
-      // Invalid fee status, redirect to homepage
-      req.flash('error_msg', "Invalid fees status")
-      return res.redirect('/');
-      
     }
+
+    }else if (admin.fees === "paid")  {
+
+        if(admin.status === false ){
+         req.flash('error_msg', "Your School is Temporarily Suspended. Contact the Developer")
+          return res.redirect('/');
+      } 
+          else if(admin.verified  === false ){
+         req.flash('error_msg', "Your Email is not Verified yet.")
+          return res.redirect('/');
+      } else {
+           req.logIn(admin, function(err) {
+        if (err) {
+          return next(err);
+        }
+        req.flash('success_msg', 'You are welcome');
+        return res.redirect('/admin/admin_dashboard');
+      });
+    
+      }
+
+    
+    } else if (admin.fees === "pending" && admin.expiry < Date.now())  {
+           req.logOut(function (err) {
+          if (err) {
+              return next(err);
+          }
+          req.flash('error_msg', `Your Trial verison has ended Please Contact the developer`);
+          res.redirect('/')
+      });
+    }
+    // Checking if user has not paid and trial session is still active
+   
   })(req, res, next);
 }
+
+
 
 const adminlogOut = async ( req , res ) => {
   req.logOut(function (err) {
@@ -1065,7 +1065,7 @@ const createStaff = async ( req , res ) => {
                                   "success_msg",
                                   "A staff Registered !"
                                 );
-                                res.redirect('/admin/create-staff')
+                                res.redirect('/admin/create_staff')
                             })
                             .catch(value => console.log(value))
                     }))
@@ -1181,12 +1181,12 @@ const staffDetails = async ( req , res ) => {
       if (!staff) {
         return res.render("error404", { title: "Error 500: Oops! Section not found", user: req.user });
       }
-      const classes = await Classes.find({ schoolId: req.user._id }).select("_id name");
+      const classes = await Classes.find({ schoolId: req.user._id }).select("_id name arm");
       const classesIds = staff.classId; // Array of class ids allocated to the staff
 
       // Fetch details of allocated classes
       const allocatedClasses = await Promise.all(classesIds.map(async (classId) => {
-        const sclass = await Classes.findById(classId).select("name");
+        const sclass = await Classes.findById(classId).select("name _id arm");
         return sclass;
       }));
       console.log (allocatedClasses,)
@@ -1207,7 +1207,7 @@ const staffDetails = async ( req , res ) => {
   } catch (error) {
     console.log(error);
     res.render("error404", {
-      title: "Internal Server Error",
+      title: "Internal Server Error"+ error,
       user: req.user,
     });
   }
@@ -1256,7 +1256,7 @@ const disallocateStaffClass = async ( req , res ) => {
   try {
     await Staff.updateOne({ _id: staffId }, { $pull: { classId: classNameToRemove } });
    
-    req.flash("success_msg", "Class allocated successfully");
+    req.flash("success_msg", "Class disallocated successfully");
     res.redirect(`/admin/staffdetail?id=${staffId}`);
   } catch (err) {
     console.error(err);
@@ -2467,7 +2467,7 @@ const getAllLearner = async ( req , res ) => {
     var page = req.params.page || 1
 
     await Learner
-        .find({ status : true,  schoolId: req.user._id })
+        .find({ status : true,   schoolId: req.user._id })
         .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
         .skip((perPage * page) - perPage)
         .sort({roll_no : 1})
@@ -2778,7 +2778,7 @@ const checkResultFirstAndSecond = async ( req , res ) => {
     console.log(learnerToString);
       
     if (pin && pin.expiry > Date.now()) {
-      if (pin.usage_count >= 3 ) {
+      if (pin.usage_count >= 30 ) {
         return res.render('success', { title: "Oops! This pin has reached its usage limit" });
       }
 
@@ -2792,10 +2792,11 @@ const checkResultFirstAndSecond = async ( req , res ) => {
       const users = await Learner.findById(learnerId).exec();
       const section = await Section.findOne({ roll_no, name, classof, schoolId: req.user._id }).exec();
       const session = await Session.findOne({ classof, schoolId: req.user._id }).exec();
+      const position = await Position.findOne({learnerId: learnerId, term: name, classofs: classof, classId: learner.classId }).exec()
 
       if (exam) {
         await Voucher.updateOne({ code }, { $set: { userid: learner._id, used: true }, $inc: { usage_count: 1 } });
-        return res.render("term_result", { exam, misc, users, section, session, user: req.user, resultSerialNumber });
+        return res.render("term_result", { position, exam, misc, users, section, session, user: req.user, resultSerialNumber });
       } else {
         return res.render('success', { title: "One or more required database queries failed" });
       }
@@ -2867,10 +2868,11 @@ const chseckThirdTermResult = async ( req , res ) => {
       const users = await Learner.findById(learnerId).exec();
       const section = await ThirdSection.findOne({ roll_no, name, classof, schoolId: req.user._id }).exec();
       const session = await Session.findOne({ classof, schoolId: req.user._id }).exec();
+      const position = await Position.findOne({learnerId: learnerId, term: name, classofs: classof, classId: learner.classId }).exec();
 
       if (exam) {
         await Voucher.updateOne({ code }, { $set: { userid: learner._id, used: true }, $inc: { usage_count: 1 } });
-        return res.render("third_term_result", { exam, misc, users, section, session, user: req.user, resultSerialNumber });
+        return res.render("third_term_result", { position, exam, misc, users, section, session, user: req.user, resultSerialNumber });
       } else {
         return res.render('success', { title: "One or more required database queries failed" });
       }
