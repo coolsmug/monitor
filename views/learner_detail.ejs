@@ -26,55 +26,60 @@
 
 
       <div class="wrapper">
-      
+         <div class="wrapall">
+            <div class="avi aviss">
+               <% if (!users.img.url) { %>
+                  <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="No Image">
+                  <% } else if (users.img.url) { %>
+                  <img src="<%= users.img.url.replace('http://', 'https://') %>" alt="user Image">
+                  <% } %>
+             </div>
+     <marquee > <h1 class="hhh"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s  Details</h1></marquee>
+             <div class="mini-wrapp assiom">
+               <div class="din-min">
+                 <p><span>Roll number : </span> <%= users.roll_no %> </p>
+                 <p><span>First name : </span> <%= users.first_name %> </p>
+                 <p><span>Last name : </span> <%= users.last_name %> </p>
+                 <p><span>Middle name : </span> <%= users.middle_name %> </p>
+                 <p><span>Email : </span> <%= users.email %> </p>
+                 <p><span>Gender : </span> <%= users.gender %> </p>
+                 <p><span>Date of birth : </span> <%= Date %> </p>
+              </div>
      
-          <div class="avi aviss">
-            <% if (!users.img.url) { %>
-               <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="No Image">
-               <% } else if (users.img.url) { %>
-               <img src="<%= users.img.url.replace('http://', 'https://') %>" alt="user Image">
-               <% } %>
-          </div>
-  <marquee > <h1 class="hhh"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s  Details</h1></marquee>
-          <div class="mini-wrapp assiom">
-            <div class="din-min">
-              <p><span>Roll number : </span> <%= users.roll_no %> </p>
-              <p><span>First name : </span> <%= users.first_name %> </p>
-              <p><span>Last name : </span> <%= users.last_name %> </p>
-              <p><span>Middle name : </span> <%= users.middle_name %> </p>
-              <p><span>Email : </span> <%= users.email %> </p>
-              <p><span>Gender : </span> <%= users.gender %> </p>
-              <p><span>Date of birth : </span> <%= Date %> </p>
-           </div>
-  
-           <div class="din-min">
-            <p><span>Date enrolled : </span> <%= Dates %> </p>
-            <p><span>Graduating date : </span> <%= Datess %> </p>
-            <p><span>Class : </span> <%= users.classes %> </p>
-            <p><span>Age : </span> <%= users.age %> </p>
-            <p><span>Arm : </span> <%= users.arm %> </p>
-            <p><span>Parent's mobile : </span> <%= users.parent_number %> </p>
-            <p><span>Class code : </span> <%= users.class_code %> </p>
-           </div>
-
-           <div class="din-min">
-            <p><span>Blood group : </span> <%= users.blood_group %> </p>
-            <p><span>Genotype : </span> <%= users.genotype %> </p>
-            <p><span>State : </span> <%= users.state %> </p>
-            <p><span>Local govt. : </span> <%= users.lg %> </p>
-            <p><span>Religion : </span> <%= users.religion %> </p>
-            <p><span>Tribe : </span> <%= users.tribe %> </p>
-            <p><span>Status : </span> <%= users.status %> </p>
-           </div>
-
+              <div class="din-min">
+               <p><span>Date enrolled : </span> <%= Dates %> </p>
+               <p><span>Graduating date : </span> <%= Datess %> </p>
+               <p><span>Class : </span> <%= users.classes %> </p>
+               <p><span>Age : </span> <%= users.age %> </p>
+               <p><span>Arm : </span> <%= users.arm %> </p>
+               <p><span>Parent's mobile : </span> <%= users.parent_number %> </p>
+               <p><span>Class code : </span> <%= users.class_code %> </p>
+              </div>
+   
+              <div class="din-min">
+               <p><span>Blood group : </span> <%= users.blood_group %> </p>
+               <p><span>Genotype : </span> <%= users.genotype %> </p>
+               <p><span>State : </span> <%= users.state %> </p>
+               <p><span>Local govt. : </span> <%= users.lg %> </p>
+               <p><span>Religion : </span> <%= users.religion %> </p>
+               <p><span>Tribe : </span> <%= users.tribe %> </p>
+               <p><span>Status : </span> <%= users.status %> </p>
+              </div>
+         </div>
+          
         
         </div>
+      <div class="route_are">
+         <a href="/admin/update-learner?id=<%= users._id %>"><i class="bi bi-pencil-fill" style="font-size: 1rem; color: #007bff;"></i>Edit</a>
+         <a href="/admin/learners-cbt?id=<%= users._id %>">Check Learner's CBT score</a>
+      </div>
         
        
       </div>
 <% } %>
 </div> 
 <footer class="foot">
-   <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
- </footer>
+   <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer>   
 <%- include ("./include/footer.ejs") %> 
+

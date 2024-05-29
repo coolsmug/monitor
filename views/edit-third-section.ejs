@@ -1,0 +1,84 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+
+<div class="diverr">
+    <h4><i class="fas fa-puzzle-piece"></i> Update <%= section.name %> section</h4>
+    <div class="form_for_create">
+     
+        <%- include ('./partials/messages') %>
+        <form method="PUT" id="update-third-section">
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <input 
+                        type="hidden" 
+                        name="id" 
+                        value="<%= section._id %>">
+
+                        <label for="roll_no">Roll No:</label>
+                        <input 
+                        type="number"
+                        name="roll_no" 
+                        value="<%= section.roll_no %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="classof">Class of:</label>
+                        <input 
+                        type="classof" 
+                        name="classof" 
+ 
+                        value="<%= section.classof %>" />
+                    </div>
+                    
+                </div>
+        
+                <div class="mb-3">
+                <div class="hop">
+                    <label for="name">Name:</label>
+                    <input 
+                    type="text" 
+                    name="name" 
+                    placeholder="Name"  
+                    value="<%= section.name %>" />
+                </div>
+                </div>
+                
+                <div class="mb-3">
+                <div class="hop">
+                        <label for="dating">From:</label>
+                        <input 
+                        type="text" 
+                        name="date_started" 
+                        class="form-control" 
+                        id="dating"  
+                        value="<%= section.date_started %>" />
+                </div>
+                <div class="hop">
+                        <label for="dating">To:</label>
+                        <input 
+                        type="text" 
+                        name="date_ended" 
+                        class="form-control" 
+                        id="dating"  
+                        value="<%= section.date_ended %>"/>
+                </div>
+                </div>
+            </div>    
+
+            <div class="mb-3">
+               <input type="submit" value="Ok? Update">
+            </div>
+            
+        
+        </form>
+    </div>
+
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer>   
+
+
+<%- include ("./include/footer.ejs") %> 

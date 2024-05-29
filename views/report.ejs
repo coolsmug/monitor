@@ -49,7 +49,7 @@
                     <% if (currentPage == 1) { %>
                         <li class="disabled"><a>First</a></li>
                     <% } else { %>
-                        <li><a href="/admin/learners/1?output=<%= output %>+&input=<%= input %>">First</a></li>
+                        <li><a href="/admin/learners/1?output=<%= output %>&input=<%= input %>">First</a></li>
                     <% } %>
                     <% var i = (Number(currentPage) > 5 ? Number(currentPage) - 4 : 1) %>
                     <% if (i !== 1) { %>
@@ -59,7 +59,7 @@
                         <% if (i == currentPage) { %>
                             <li class="active"><a><%= i %></a></li>
                         <% } else { %>
-                            <li><a href="/admin/learners/<%= i %>?output=<%= output %>+&input=<%= input %>"><%= i %></a></li>
+                            <li><a href="/admin/learners/<%= i %>?output=<%= output %>&input=<%= input %>"><%= i %></a></li>
                         <% } %>
                         <% if (i == Number(currentPage) + 4 && i < totalPages) { %>
                             <li class="disabled"><a>...</a></li>
@@ -68,7 +68,7 @@
                     <% if (currentPage == totalPages) { %>
                         <li class="disabled"><a>Last</a></li>
                     <% } else { %>
-                        <li><a href="/admin/learners/<%= totalPages %>?output=<%= output %>+&input=<%= input %>">Last</a></li>
+                        <li><a href="/admin/learners/<%= totalPages %>?output=<%= output %>&input=<%= input %>">Last</a></li>
                     <% } %>
                 </ul>
             <% } %>
@@ -82,11 +82,12 @@
 
  
 <footer class="foot">
-    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
+    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2024</h3>
   </footer>
               
 
 <%- include ("./include/footer.ejs") %> 
+
 
 
 <style>
@@ -110,13 +111,12 @@
     }
 
     .pagination_div {
-        width: 50%;
         margin: auto;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding-bottom: 100px;
+        padding: 40px;
        
     }
 </style>

@@ -19,6 +19,7 @@ const multer = require('multer')
 const qs = require('qs');
 var toFixed = require('tofixed');
 const Position = require("../models/positionFirstTerm");
+const Submission = require("../models/submit");
 
 
 
@@ -106,6 +107,7 @@ const getLearnerExamForstaff = async ( req , res ) => {
             classId : classId,
             schoolId: req.user.schoolId,
             status: true,
+            deletes: false,
           })
             .select("_id roll_no first_name last_name middle_name classes class_code arm img")
             .skip((perPage * page) - perPage)
@@ -119,7 +121,7 @@ const getLearnerExamForstaff = async ( req , res ) => {
           }).exec();
     
           const session = await Session.findById(sessionId).exec();
-          const count = await Learner.count({ schoolId: req.user.schoolId }).exec();
+          const count = await Learner.count({ schoolId: req.user.schoolId, status : true, deletes : false }).exec();
           const current = page;
           const user = req.user;
           const pages = Math.ceil(count / perPage);
@@ -362,7 +364,8 @@ const getExamSpace = async ( req , res ) => {
           const section = await Section.findById(sectionId).exec();
           const misc = await Miscellaneous.findOne({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
           const position = await Position.findOne({ learnerId: userId, term: name, classofs: classofss }).exec();
-          const exams = await Exam.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss });
+          const exams = await Exam.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
+          const submit = await Submission.find( { userId: userId, session: session.name, term: section.name } ).exec();
     
           res.render('exam_fill', {
             exam: exams,
@@ -374,6 +377,7 @@ const getExamSpace = async ( req , res ) => {
             subject: subjects,
             misc: misc,
             position: position,
+            submit: submit,
            
           });
         } else {
@@ -867,6 +871,8 @@ const getThirdTermExam = async ( req , res ) => {
       const misc = await Miscellaneous.findOne({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
       const position = await Position.findOne({ learnerId: userId, term: name, classofs: classofss }).exec();
       const exams = await Examing.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss });
+      const submit = await Submission.find( { userId: userId, session: sessions.name, term: sections.name } ).exec();
+    
 
       res.render('third_exam_fill', {
         exams: exams,
@@ -878,6 +884,7 @@ const getThirdTermExam = async ( req , res ) => {
         subjects: subjects,
         misc: misc,
         position: position,
+        submit: submit,
       });
     } else {
       res.render("success", { title: "Oops! Request Id not found" });

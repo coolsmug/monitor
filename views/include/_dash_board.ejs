@@ -34,15 +34,11 @@
 
 
 
-<input type="checkbox" id="check">
-<label for="check" id="label">
-    <span class="material" id="menu">
-        <i class="fas fa-bars"></i>
-    </span>
-    <span class="material" id="cancel">
-       <i class="fas fa-times"></i>
-    </span>
-</label>
+<div class="menu-toggle" onclick="toggleMenu()">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
 
 <div class="modality">
     <section class="modal hidden">
@@ -130,7 +126,7 @@
     <div class="overlays hiddens"></div>
 </div>
 
-<div class="side_bar">
+<div class="side_bar  reveals">
     <p><i class="fas fa-user-shield"></i> Admin Bar</p>
     <div class="one">
         <li class="list_two"><a href="/admin/admin_dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
@@ -155,6 +151,13 @@
             <li>-<a href="/admin/manage_all"> Manage Proprietor & Staffs' Statements</a></li>
             <li>-<a href="/admin/create-currentclass"> Create Current Class</a></li>
             <li>-<a href="/admin/all-currentclass/1"> Manage Current Class</a></li>
+        </div>
+    </div>
+    <div class="one">
+        <li class="list_one"><i class="bi bi-folder-plus"></i> CBT </li>
+         <div class="hidee">
+            <li>-<a href="/admin/create-cbt/1">Create Test</a></li>
+            
         </div>
     </div>
     <div class="one">
@@ -218,6 +221,14 @@
       };
     }
     openIt();
+
+    function toggleMenu() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const header = document.querySelector('.side_bar');
+  menuToggle.classList.toggle('open');
+  header.classList.toggle('reveals');
+}
+
     
   </script>
   

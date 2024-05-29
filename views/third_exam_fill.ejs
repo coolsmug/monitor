@@ -26,8 +26,10 @@
         </div>
        <p style="font-size: 12px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= sections.name %> Result Arrangement - <%= sections.classof %> Session of <%= sessions.name %></p> 
         <form  method="POST" id="myblessing">
-          <h2 style="font-size: 12px; color: seagreen;">Use this form to add Exam for Learner</h2>
+       
+        
             <div class="input">
+                 <label for="total_over_all" style="font-size: 12px; color: seagreen;">Use this form to add Exam for Learner</label>
                 <% if(subjects) {%> 
                <select name="name" id="name">
                 <option value="select subject">Select subject</option>
@@ -54,7 +56,8 @@
                 <input type="hidden" name="term"  value="<%= sections.name %>" readonly/>
             </div>
             <div class="input">
-                <input type="total_over_all" name="total_over_all" placeholder="total overall" value="<%= typeof  total_over_all != "undefined" ?  total_over_all : "" %> "/>
+              <label for="total_over_all" style="font-size: 12px; color: seagreen;">Input School Session over all Mark</label>
+                <input type="total_over_all" name="total_over_all" value="<%= typeof  total_over_all != "undefined" ?  total_over_all : "" %> "/>
             </div>
             <div class="div">
               <input type="submit" value="Add Exam">
@@ -85,8 +88,78 @@
                   <input type="submit" value="Initiate">
               </div>
           </form>
+        
       </div>
-    
+      <h3 style="text-align: center;">CBT RESULTS</h3>
+      <div class="test-exam">
+        <div class="tes">
+          <div class="test" onclick="openAll()">
+            <p>Test:</p>
+            <% if (submit && submit.length > 0) { %>
+              <ul class="ul ol">
+                <% submit.forEach(sub => { %>
+                  <% if (sub.type === "Test") { %>
+                    <div class="closedItOne open">
+                      <li><span class="round">Term: </span><%= sub.term %></li>
+                      <li><span class="round">Session: </span><%= sub.session %></li>
+                      <li><span class="round">Type: </span><%= sub.type %></li>
+                      <li><span class="round">Score: </span><%= sub.score %></li>
+                       <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
+                       <li><span class="round">Subject: </span><%= sub.subject %></li>
+                    </div>
+                  <% } %>
+                <% }) %>
+              </ul>
+            <% } %>
+          </div>
+        </div>
+      
+        <div class="tes">
+          <div class="test" onclick="openAll()">
+            <p>Exam:</p>
+            <% if (submit && submit.length > 0) { %>
+              <ul class="ul ol">
+                <% submit.forEach(sub => { %>
+                  <% if (sub.type === "Exam") { %>
+                    <div class="closedItOne open">
+                      <li><span class="round">Term: </span><%= sub.term %></li>
+                      <li><span class="round">Session: </span><%= sub.session %></li>
+                      <li><span class="round">Type: </span><%= sub.type %></li>
+                      <li><span class="round">Score: </span><%= sub.score %></li>
+                       <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
+                         <li><span class="round">Subject: </span><%= sub.subject %></li>
+                    </div>
+                  <% } %>
+                <% }) %>
+              </ul>
+            <% } %>
+          </div>
+        </div>
+        <div class="tes">
+          <div class="test" onclick="openAll()">
+            <p>Snap Test:</p>
+            <% if (submit && submit.length > 0) { %>
+              <ul class="ul ol">
+                <% submit.forEach(sub => { %>
+                  <% if (sub.type === "Snap Test") { %>
+                    <div class="closedItOne open">
+                      <li><span class="round">Term: </span><%= sub.term %></li>
+                      <li><span class="round">Session: </span><%= sub.session %></li>
+                      <li><span class="round">Type: </span><%= sub.type %></li>
+                      <li><span class="round">Score: </span><%= sub.score %></li>
+                       <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
+                         <li><span class="round">Subject: </span><%= sub.subject %></li>
+                    </div>
+                  <% } %>
+                <% }) %>
+              </ul>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      
+   
+
         <table>
             <thead>
                 <tr>
@@ -443,11 +516,25 @@ $("#setPosition").submit(function(eventss) {
   });
 
 
+ 
+  function openAll() {
+    const tests = document.querySelectorAll('.test ul');
+    tests.forEach(test => {
+      if (test.style.visibility === 'visible') {
+        test.style.visibility = 'hidden';
+      } else {
+        test.style.visibility = 'visible';
+      }
+    });
+  }
+
+
+
   
 </script>
 
 <footer class="foot">
-  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
-</footer>
+  <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer> 
 <%- include ("./include/footer.ejs") %> 
 

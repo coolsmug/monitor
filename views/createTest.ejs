@@ -1,0 +1,166 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="cbt-route">
+    <h1>Create a New Test</h1>
+<%- include ('./partials/messages') %>
+  <form action="/admin/register-test" method="POST">
+    <label for="title">Test Title:</label>
+    <input type="text" id="title" name="title" required><br><br>
+    <label for="session">Session:</label>
+    <% session.forEach( (sess) => {%>
+    <select id="session" name="session" required>
+      <option value="<%= sess.name %>"><%= sess.name %></option>
+      
+    </select>
+    <br><br>
+    <% }) %>
+    <label for="term">Term:</label>
+    <select id="term" name="term" required>
+          <option value="" disabled selected>select...</option>
+        <option value="First-Term">First-Term</option>
+        <option value="Second-Term">Second-Term</option>
+        <option value="Third-Term">Third-Term</option>
+      </select><br><br>
+      <label for="type">Type:</label>
+      <select id="type" name="type" required>
+          <option value="" disabled selected>select...</option>
+          <option value="Exam">Exam</option>
+          <option value="Test">Test</option>
+          <option value="Snap Test">Snap Test</option>
+        </select><br><br>
+        <label for="ca_pos">Position: <h5>If Type is Test select position</h5></label>
+        <select id="ca_pos" name="ca_pos">
+            <option value="" disabled selected>select...</option>
+            <option value="1st-CA">1st-CA</option>
+            <option value="2nd-CA">2nd-CA</option>
+            <option value="3rd-CA">3rd-CA</option>
+          </select><br><br>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required></textarea><br><br>
+    <label for="duration">Duration (in minutes):</label>
+    <input type="number" id="duration" name="duration" required><br><br>
+    <label for="startTime">Start Time:</label>
+    <input type="datetime-local" id="startTime" name="startTime" required><br><br>
+    <button type="submit">Create Test</button>
+  </form>
+
+</div>
+
+<div class="routeTest">
+  <h1>All CBTs</h1>
+  <% cbt.forEach( cbtest => { %>
+  <div class="cbt-routes">
+ 
+    
+      <form id="test" method="PUT" class="test-form">
+        <input type="hidden" name="id" value="<%= cbtest._id %>">
+       <div class="divall-on">
+        <label for="title">Test Title:</label>
+        <input type="text" id="title" name="title" value="<%= cbtest.title%>" required>
+        <label for="session">Session:</label>
+        <% session.forEach( (sess) => {%>
+        <select id="session" name="session" required>
+          <option value="<%= cbtest.session %>"><%= cbtest.session %></option>
+          <option value="<%= sess.name %>"><%= sess.name %></option>
+        </select>
+      
+        <% }) %>
+
+        <label for="type">Type:</label>
+        <select id="type" name="type" required>
+            <option value="<%= cbtest.type %>"><%= cbtest.type %></option>
+            <option value="Exam">Exam</option>
+            <option value="Test">Test</option>
+            <option value="Snap Test">Snap Test</option>
+          </select>
+
+          <label for="ca_pos">Position:</label>
+          <select id="ca_pos" name="ca_pos" required>
+              <option value="<%= cbtest.ca_pos %>"><%= cbtest.ca_pos %></option>
+              <option value="1st-CA">1st-CA</option>
+              <option value="2nd-CA">2nd-CA</option>
+              <option value="3rd-CA">3rd-CA</option>
+            </select>
+    
+
+        <label for="term">Term:</label>
+        <select id="term" name="term" required>
+            <option value="<%= cbtest.term %>"><%= cbtest.term %></option>
+            <option value="First-Term">First-Term</option>
+            <option value="Second-Term">Second-Term</option>
+            <option value="Third-Term">Third-Term</option>
+          </select>
+       </div>
+       <div class="divall-ons">
+        <label for="description">Description:</label>
+        <input id="description" name="description" value="<%= cbtest.description %>" required><br><br>
+        <label for="duration">Duration (in minutes):</label>
+        <input type="number" id="duration" name="duration" value="<%= cbtest.duration %>" required><br><br>
+        <label for="startTime">Start Time:</label>
+        <% if (cbtest.startTime) { %>
+          <% let date = cbtest.startTime.toString() %>
+        <input type="startTime" id="startTime" name="startTime" value="<%= date %>" required><br><br>
+        <% }%>
+       </div>
+       
+       
+        <button type="submit"><i class="bi bi-save2-fill"></i></button>
+      </form>
+       <a href="/admin/get-questions-page/<%= cbtest._id %>"><i class="bi bi-link" style="font-size: 2em; color: #007bff;"></i></a>
+       <a href="/admin/delete-test/<%= cbtest.id %>" class="test"><i class="bi bi-trash"></i></a> 
+       <div class="copy">
+        <p class="moniLink">monitor/cbtcenter/<%= cbtest._id %></p>
+       </div>
+  </div>
+  <% }) %>
+    <% if (pages > 0) { %>
+        <ul class="pagination text-center">
+            <% if (current == 1) { %>
+                <li class="disabled"><a>First</a></li>
+            <% } else { %>
+                <li><a href="/admin/create-cbt/1">First</a></li>
+            <% } %>
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="disabled"><a>...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <li class="active"><a><%= i %></a></li>
+                <% } else { %>
+                    <li><a href="/admin/create-cbt/<%= i %>"><%= i %></a></li>
+                <% } %>
+                <% if (i == Number(current) + 4 && i < pages) { %>
+                    <li class="disabled"><a>...</a></li>
+                <% } %>
+            <% } %>
+            <% if (current == pages) { %>
+                <li class="disabled"><a>Last</a></li>
+            <% } else { %>
+                <li><a href="/admin/create-cbt/<%= pages %>">Last</a></li>
+            <% } %>
+        </ul>
+    <% } %>
+</div>
+
+
+<footer class="foot">
+  <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer>   
+
+<%- include ("./include/footer.ejs") %> 
+
+
+<script>
+    function showOptions() {
+      const questionType = document.getElementById('questionType').value;
+      const optionsContainer = document.getElementById('optionsContainer');
+      if (questionType === 'multiple_choice') {
+        optionsContainer.style.display = 'block';
+      } else {
+        optionsContainer.style.display = 'none';
+      }
+    }
+  </script>

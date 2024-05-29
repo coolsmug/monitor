@@ -16,6 +16,9 @@ const Recovery = require('../models/emailRecovery');
 const nodemailer = require('nodemailer');
 const smtpPool = require('nodemailer-smtp-pool');
 const Verification = require('../models/verificationCode');
+const CBT = require('../models/test');
+const Question = require('../models/question');
+const Submission = require('../models/submit')
 
 const GMAIL_PASSWORD = process.env.GMAIL_PASSWORD;
 
@@ -331,6 +334,7 @@ State.getStatesOfCountryByName = function(countryName) {
               <body>
                 <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="Company Logo">
                 <h2>Monitor School Management App Recovery Code</h2>
+                <p>Copy the code to recover your Password within 24hrs before it expire.</p>
                 <p>${code.recovery}</p>
               </body>
             </html>
@@ -521,8 +525,19 @@ State.getStatesOfCountryByName = function(countryName) {
           let voucherCode = '';
           for (let i = 0; i < 6; i++) {
             voucherCode += characters.charAt(Math.floor(Math.random() * characters.length));
-          }
-          const code = await new Recovery({ recovery: "M-" + voucherCode }).save();
+          };
+
+          var day = new Date();
+          var year = day.getFullYear();
+          const currentDate = new Date();
+          var fourteen = new Date(currentDate.getTime() + (1 * 24 * 60 * 60 * 1000));
+
+
+          const code = await new Recovery({ 
+            recovery: "M-" + voucherCode,
+            expiry: fourteen,
+            user_email: email,
+          }).save();
           const html = `
             <html>
               <head>
@@ -543,7 +558,8 @@ State.getStatesOfCountryByName = function(countryName) {
               </head>
               <body>
                 <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="Company Logo">
-                <h2>Monitor School Management App Recovery Code</h2>
+                <h2>Monitor School Management App Email Passsword Recovery Code</h2>
+                <p>Copy the code to recover your Password within 24hrs before it expire.</p>
                 <p>${code.recovery}</p>
               </body>
             </html>
@@ -569,7 +585,7 @@ State.getStatesOfCountryByName = function(countryName) {
           };
           const transporter = nodemailer.createTransport(smtpPool(smtpConfig));
           await transporter.sendMail(mailOptions);
-          req.flash('success_msg', '<h3>Recovery Code has been sent to the Email you provided.<br> If not found in your inbox check your Spam mail</h3>');
+          req.flash('success_msg', 'Recovery Code has been sent to the Email you provided. If not found in your inbox check your Spam mail');
           res.redirect('/recover-password');
         }
     } catch (err) {
@@ -623,7 +639,27 @@ State.getStatesOfCountryByName = function(countryName) {
             newPassword: newPassword,
             userType: userType,
           });
-        } else {
+        } else if (recovery.user_email !== email) {
+
+          errors.push({ msg: "code is invalid." });
+          res.render('recover_password', {
+            errors: errors,
+            email: email,
+            recoveryCode: recoveryCode,
+            newPassword: newPassword,
+            userType: userType,
+          });
+        }else if (recovery.expiry < Date.now()) {
+
+          errors.push({ msg: "code has expired." });
+          res.render('recover_password', {
+            errors: errors,
+            email: email,
+            recoveryCode: recoveryCode,
+            newPassword: newPassword,
+            userType: userType,
+          });
+        }  else {
           // If the recovery code exists and hasn't been used, update the user's password in the database
           let user;
           switch (userType) {
@@ -688,11 +724,262 @@ State.getStatesOfCountryByName = function(countryName) {
         });
       }
     }
-  }
+  };
+
+  //  ------------------------------CBT-----------------------------------//
+
+  const getQusetions = async ( req , res ) => {
+    try {
+     
+      const id = req.params.id;
+
+      const cbTest = await CBT.findById(id).exec();
+      if(!cbTest) {
+        return res.render('error404', { title: "Error 505. Page not found." });
+      }
+
+      res.render('cbtTestRoute', {
+        cbTest,
+        user: req.user,
+      })
+
+    } catch (err) {
+      console.error(err);
+      return res.render('error5', { title: "Internal Server Error." +" "+ err });
+    }
+  };
+
+
+  const getGetCbtQuestion = async (req, res) => {
+    try {
+      
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+      
+      const id = req.params.id;
+      const test = await CBT.findById(id).populate('questions').exec();
+  
+      if (!test) {
+        return res.render('error404', { title: "Error 404. Test not found." });
+      }
+
+      const question = await Question.find( { testId : id }).exec();
+      if (!question ) {
+        return res.render('error404', { title: "Error 404. Test not found." });
+      }
+  
+      return res.render('cbt-center', { user: req.user, test, question });
+  
+    } catch (err) {
+      console.error(err);
+      return res.render('error5', { title: "Internal Server Error. " + err });
+    }
+  };
+
+
+  const transformAnswers = (body) => {
+    const transformed = {};
+    
+    for (const key in body) {
+      if (key.startsWith('answers[') && key.endsWith('][]')) {
+        const questionId = key.slice(8, -3);
+        if (!transformed.answers) {
+          transformed.answers = {};
+        }
+        if (!transformed.answers[questionId]) {
+          transformed.answers[questionId] = [];
+        }
+        transformed.answers[questionId].push(body[key]);
+      } else if (key.startsWith('answers[')) {
+        const questionId = key.slice(8, -1);
+        if (!transformed.answers) {
+          transformed.answers = {};
+        }
+        transformed.answers[questionId] = body[key];
+      } else {
+        transformed[key] = body[key];
+      }
+    }
+    
+    return transformed;
+  };
+  
+  const submitExam = async (req, res) => {
+    try {
+      // Log the entire request body for debugging
+      console.log('Request Body:', req.body);
+  
+      // Transform the request body to the correct format
+      const transformedBody = transformAnswers(req.body);
+      console.log('Transformed Body:', transformedBody);
+  
+      const { answers } = transformedBody;
+      if (!answers) {
+        return res.status(400).send('Answers are required');
+      }
+  
+      const test = await CBT.findById(req.params.testId).populate('questions');
+      if (!test) {
+        return res.status(404).send('Test not found');
+      }
+  
+      if (!req.user) {
+        return res.status(403).send('User not authenticated');
+      }
+  
+      console.log('Submitted answers:', answers);
+  
+      let score = 0;
+      const answeredQuestions = [];
+  
+      for (let question of test.questions) {
+        const questionId = question._id.toString();
+  
+        if (answers[questionId] !== undefined) {
+          const userAnswer = answers[questionId];
+          const correctAnswer = question.correctAnswer;
+  
+          if (Array.isArray(userAnswer)) {
+            if (userAnswer.includes(correctAnswer)) {
+              score += 1;
+            }
+          } else if (userAnswer === correctAnswer) {
+            score += 1;
+          }
+  
+          answeredQuestions.push(question._id);
+        }
+      }
+  
+      const submission = new Submission({
+        userId: req.user._id,
+        testId: test._id,
+        answers: answers,
+        score: score,
+        session: test.session,
+        term: test.term,
+        subject: test.title,
+        type: test.type,
+        ca_pos: test.ca_pos,
+        submittedAt: new Date(),
+      });
+  
+      // Save the submission
+      await submission.save();
+  
+      // Update the test with the userId
+      test.userId = req.user._id;
+      await test.save();
+  
+      // Update each answered question with the userId
+      await Question.updateMany(
+        { _id: { $in: answeredQuestions } },
+        { $set: { userId: req.user._id } }
+      );
+      
+      const testId = req.params.id; 
+      req.logOut(function (err) {
+        if (err) {
+            return next(err);
+        }
+        req.flash('success_msg', 'Session Terminated');
+        res.render('success', { title: `Your score is ${score} out of ${test.questions.length}` });
+    })
+     
+   
+    } catch (err) {
+      console.error(err);
+      res.render('error5', { title: "Internal Server Error. " + err.message });
+    }
+  };
+  
+
+  const studentLogin = async (req, res, next) => {
+    const testId = req.params.id; // Capture testId here
+  
+    passport.authenticate("learner-login", async (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+  
+      if (!user) {
+        req.logout(function (err) {
+          if (err) {
+            return next(err);
+          }
+          req.flash('error_msg', 'Wrong login details');
+          return res.redirect(`/monitor/cbtcenter/${testId}`);
+        });
+      } else {
+        const userSchool = await School.findOne({ _id: user.schoolId }).exec();
+        if (!userSchool) {
+          req.logout(function (err) {
+            if (err) {
+              return next(err);
+            }
+            req.flash('error_msg', 'You are not Authorised for this session');
+            return res.redirect(`/monitor/cbtcenter/${testId}`);
+          });
+        } else {
+          const handleLogin = (redirectUrl) => {
+            req.logIn(user, function (err) {
+              if (err) {
+                return next(err);
+              }
+              req.flash('success_msg', 'You are welcome');
+              return res.redirect(redirectUrl);
+            });
+          };
+  
+          if (userSchool.fees === "pending" && userSchool.expiry > Date.now()) {
+            handleLogin(`/cbt-portal/${testId}`);
+          } else if (userSchool.fees === "pending" && userSchool.expiry < Date.now()) {
+            req.logout((err) => {
+              if (err) {
+                return next(err);
+              }
+              req.flash('error_msg', 'You are not Authorised for this session');
+              return res.redirect(`/monitor/cbtcenter/${testId}`);
+            });
+          } else if (userSchool.status === false) {
+            req.logout(function (err) {
+              if (err) {
+                return next(err);
+              }
+              req.flash('error_msg', 'You are not Authorised for this session');
+              return res.redirect(`/monitor/cbtcenter/${testId}`);
+            });
+          } else if (userSchool.fees === "paid") {
+            handleLogin(`/cbt-portal/${testId}`);
+          } else {
+            req.flash('error_msg', "You are not Authorised for this session");
+            return res.redirect(`/monitor/cbtcenter/${testId}`);
+          }
+        }
+      }
+    })(req, res, next);
+  };
+
+  const adminlogOut = async ( req , res ) => {
+    const testId = req.params.id; 
+    req.logOut(function (err) {
+      if (err) {
+          return next(err);
+      }
+      req.flash('success_msg', 'Session Terminated');
+      res.redirect(`/monitor/cbtcenter/${testId}`);
+  })
+  };
+  
+
+  
+  
   
 
 
 module.exports = {
+   
     getMonitorHomePage,
     getStateCoutryName,
     getCitiesCountryStateName,
@@ -709,4 +996,9 @@ module.exports = {
     recoverGmailPassword,
     emailVerification,
     verifyEmailWithCode,
+    getQusetions,
+    getGetCbtQuestion,
+    studentLogin,
+    adminlogOut,
+    submitExam,
 }

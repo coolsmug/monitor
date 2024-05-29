@@ -1,0 +1,121 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="cbt-route">
+    <div class="back">
+        <i class="bi bi-arrow-bar-left" style="font-size: 2em; color: #007bff;"></i><a href="/admin/create-cbt/1">Back to Test</a>
+    </div>
+    <h1>Add Question to Test</h1>
+
+    <form action="/admin/create-question/<%= id %>" method="POST">
+        <label for="questionText">Question Text:</label>
+        <textarea id="questionText" name="questionText" required></textarea><br><br>
+        <label for="instruction">Instruction:</label>
+        <textarea id="instruction" name="instruction" required></textarea><br><br>
+        <label for="questionType">Question Type:</label>
+        <select id="questionType" name="questionType" onchange="showOptions()" required>
+            <option>select type</option>
+        <option value="multiple_choice">Multiple Choice</option>
+        <option value="fill_in_the_gap">Fill in the Gap</option>
+        </select><br><br>
+        <div id="optionsContainer" style="display: none;">
+        <label for="options">Options (comma separated):</label>
+        <input type="text" id="options" name="options"><br><br>
+        </div>
+        <label for="correctAnswer">Correct Answer:</label>
+        <input type="text" id="correctAnswer" name="correctAnswer" required><br><br>
+        <button type="submit">Add Question</button>
+    </form>
+
+</div>
+<div class="routeTest">
+<h1>All <%= cbt.title %> Questions</h1>
+<%- include ('./partials/messages') %>
+  <% question.forEach( cbtest => { %>
+  
+    <div class="cbt-routes">
+    
+      <form method="put" class="question">
+        <input type="hidden" name="id" value="<%= cbtest._id %>">
+        <label for="questionText">Question Text:</label>
+        <input id="questionText" name="questionText" value="<%= cbtest.questionText %>" required><br><br>
+        <label for="instruction">Instruction:</label>
+        <input id="instruction" name="instruction" value="<%= cbtest.instruction %>" required><br><br>
+      
+        <label for="questionType">Question Type:</label>
+        <select class="questionTypes" name="questionType" onchange="showOption(this)" required>
+          <option value="<%= cbtest.questionType %>"><%= cbtest.questionType %></option>
+          <option value="multiple_choice">Multiple Choice</option>
+          <option value="fill_in_the_gap">Fill in the Gap</option>
+        </select><br><br>
+      
+        <div class="optionsContainers" style="display: none;">
+          <label for="options">Options (comma separated):</label>
+          <% if (cbtest.options && cbtest.options.length > 0) { %>
+            <% cbtest.options.forEach(option => { %>
+              <input type="text" class="ouya" id="options" name="options" value="<%= option %>"><br><br>
+            <% }) %>
+          <% } %>
+        </div>
+
+        <style>
+        
+        </style>
+      
+        <label for="correctAnswer">Correct Answer:</label>
+        <input type="text" id="correctAnswer" name="correctAnswer" value="<%= cbtest.correctAnswer %>" required><br><br>
+        <button><i class="bi bi-save2-fill"></i></button>
+      </form>
+      
+      
+         <a href="/admin/delete-question/<%= cbtest.id %>" class="question"><i class="bi bi-trash"></i></a> 
+       
+  
+    </div>
+  <% }) %>
+</div>
+
+
+       
+
+<footer class="foot">
+  <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer>   
+
+
+
+<%- include ("./include/footer.ejs") %> 
+
+
+<script>
+    function showOptions() {
+      const questionType = document.getElementById('questionType').value;
+      const optionsContainer = document.getElementById('optionsContainer');
+      if (questionType === 'multiple_choice') {
+        optionsContainer.style.display = 'block';
+      } else {
+        optionsContainer.style.display = 'none';
+      }
+    }
+
+    
+
+    function showOption(selectElement) {
+  const form = selectElement.closest('form');
+  const questionType = selectElement.value;
+  const optionsContainer = form.querySelector('.optionsContainers');
+
+  if (questionType === 'multiple_choice') {
+    optionsContainer.style.display = 'block';
+  } else {
+    optionsContainer.style.display = 'none';
+  }
+}
+
+// Initial check to show or hide options based on preselected value
+document.querySelectorAll('.questionTypes').forEach(select => {
+  showOption(select);
+});
+
+  </script>

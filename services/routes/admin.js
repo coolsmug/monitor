@@ -91,17 +91,27 @@ const {
  getThirdResult,
  chseckThirdTermResult,
  onPrintAtti,
-
+ getCreateTestForCbt,  
+ createCbTest,    
+ getGetCbtQuestion,    
+ createCbtQuestion, 
+ updateQuestion,
+ deleteQuestions,
+ updateCBT,
+ deleteCBTs,  
+ getAllLearnerCbt,                                                                                        
 } = require("../controller/admin");
 
 adminRoute.route('/registerLearner').post( adminEnsureLoggedIn, registerLearner);
 adminRoute.route('/update-learner').get(adminEnsureLoggedIn, getUpdateLearnerPage);
-adminRoute.route('/update-learner/:id').post(adminEnsureLoggedIn, updateLearner);
+adminRoute.route('/update-learner/:id').post(adminEnsureLoggedIn, updateLearner);       
 adminRoute.route('/delete-learner/:id').patch( adminEnsureLoggedIn, deleteLearner);
 adminRoute.route('/user-status/:id').patch(adminEnsureLoggedIn, learnersStatus);
 adminRoute.route('/learner-detail').get(adminEnsureLoggedIn, learnersDetails);
 adminRoute.route('/upload-image/:id').post(adminEnsureLoggedIn, uploadLearnerImage);
 adminRoute.route('/admin_dashboard').get(adminEnsureLoggedIn, adminDashboardQuery);
+adminRoute.route('/learners-cbt').get(adminEnsureLoggedIn, getAllLearnerCbt);
+
 adminRoute.route('/admin_login').post(adminLogin);
 adminRoute.route('/logout').post(adminlogOut);
 adminRoute.route('/create-voucher').post(adminEnsureLoggedIn, voucherPrinting);
@@ -112,11 +122,11 @@ adminRoute.route('/callback').get(adminEnsureLoggedIn, payStackCallBack);
 adminRoute.route('/create-learner').get(adminEnsureLoggedIn, getHomePageLearenrReg);
 adminRoute.route('/add_proprietor').post(adminEnsureLoggedIn, registerProprietorStatement);
 adminRoute.route('/update-proprietor').get(adminEnsureLoggedIn, getProprietorUpdatePage);
-adminRoute.route('/update-proprietor/:id').post(adminEnsureLoggedIn, updateProprietor);
+adminRoute.route('/update-proprietor/:id').put(adminEnsureLoggedIn, updateProprietor);
 adminRoute.route('/delete_proprietor/:id').delete(adminEnsureLoggedIn, deleteProprietor);
 adminRoute.route('/add_staffs').post(adminEnsureLoggedIn, createStaff);
 adminRoute.route('/update-staff').get(adminEnsureLoggedIn, getUpdateStaffUpdatePage);
-adminRoute.route('/update-staff/:id').post(adminEnsureLoggedIn, updateStaff);
+adminRoute.route('/update-staff/:id').put(adminEnsureLoggedIn, updateStaff);
 adminRoute.route('/delete_staff/:id').delete(adminEnsureLoggedIn, deleteStaff);
 adminRoute.route('/staff-status/:id').patch(adminEnsureLoggedIn, staffStatus);
 adminRoute.route('/staffdetail').get(adminEnsureLoggedIn, staffDetails);
@@ -124,31 +134,31 @@ adminRoute.route('/allocate_class').post(adminEnsureLoggedIn, allocateStaffClass
 adminRoute.route('/disallocate/:id').get(adminEnsureLoggedIn, disallocateStaffClass);
 adminRoute.route('/add_staffs_statement').post(adminEnsureLoggedIn, createStaffStatement);
 adminRoute.route('/update-staff-statement').get(adminEnsureLoggedIn, getUpdateStatementPage);
-adminRoute.route('/update-staff-statement/:id').post(adminEnsureLoggedIn, updateStaffState);
+adminRoute.route('/update-staff-statement/:id').put(adminEnsureLoggedIn, updateStaffState);
 adminRoute.route('/delete_staff-statement/:id').delete(adminEnsureLoggedIn, deleteStaffState);
 adminRoute.route('/update-school').get(adminEnsureLoggedIn, getSchoolUpdatePage);
-adminRoute.route('/update-school/:id').post(adminEnsureLoggedIn, updateSchool);
+adminRoute.route('/update-school/:id').put(adminEnsureLoggedIn, updateSchool);
 adminRoute.route('/school-detail').get(adminEnsureLoggedIn, getSchoolDetail);
 adminRoute.route('/upload-school-image/:id').post(adminEnsureLoggedIn, uploadSchoolLogo);
 adminRoute.route('/add_session').post(adminEnsureLoggedIn, addSession);
 adminRoute.route('/update-session').get(adminEnsureLoggedIn, getUpdateSesstionpPage);
-adminRoute.route('/update-session/:id').post(adminEnsureLoggedIn, updateSession);
+adminRoute.route('/update-session/:id').put(adminEnsureLoggedIn, updateSession);
 adminRoute.route('/deletes/:id').delete(adminEnsureLoggedIn, deleteSession);
 adminRoute.route('/add_section').put(adminEnsureLoggedIn, addSection);
 adminRoute.route('/update-section').get(adminEnsureLoggedIn, getUpdateSectionPage);
-adminRoute.route('/update-section/:id').post(adminEnsureLoggedIn, updateSection);
+adminRoute.route('/update-section/:id').put(adminEnsureLoggedIn, updateSection);
 adminRoute.route('/deleted/:id').delete(adminEnsureLoggedIn, deleteSection);
 adminRoute.route('/add_third_section').post(adminEnsureLoggedIn, addThirdTermSection);
 adminRoute.route('/update-third').get(adminEnsureLoggedIn, getUpdateThirdSectionPage);
-adminRoute.route('/update-third/:id').post(adminEnsureLoggedIn, updateThirdSection);
+adminRoute.route('/update-third/:id').put(adminEnsureLoggedIn, updateThirdSection);
 adminRoute.route('/deletedthird/:id').delete(adminEnsureLoggedIn, deleteThirdSection);
 adminRoute.route('/add_subject').post(adminEnsureLoggedIn, addSubject);
 adminRoute.route('/update-subject').get(adminEnsureLoggedIn, getUpdateSubjectPage);
-adminRoute.route('/update-subject/:id').post(adminEnsureLoggedIn, updateSubject);
+adminRoute.route('/update-subject/:id').put(adminEnsureLoggedIn, updateSubject);
 adminRoute.route('/delete-subject/:id').delete(adminEnsureLoggedIn, deleteSubject);
 adminRoute.route('/add_current_class').post(adminEnsureLoggedIn, addClass);
 adminRoute.route('/update-currentclass').get(adminEnsureLoggedIn, getUpdateClassPage);
-adminRoute.route('/update-currentclass/:id').post(adminEnsureLoggedIn, updateClass);
+adminRoute.route('/update-currentclass/:id').put(adminEnsureLoggedIn, updateClass);
 adminRoute.route('/delete_currentclass/:id').delete(adminEnsureLoggedIn, deleteClass);
 adminRoute.route('/school-status/:id').patch(adminEnsureLoggedIn, schoolStatus);
 adminRoute.route('/manage_all').get(adminEnsureLoggedIn, manageAll);
@@ -178,6 +188,16 @@ adminRoute.route('/result').get(adminEnsureLoggedIn, getFirstAndSecondResult);
 adminRoute.route('/result_third_term').get(adminEnsureLoggedIn, getThirdResult);
 adminRoute.route('/check_third_result').get(adminEnsureLoggedIn, chseckThirdTermResult);
 adminRoute.route('/update-print-status').post(adminEnsureLoggedIn, onPrintAtti);
+adminRoute.route('/create-cbt/:page').get(adminEnsureLoggedIn, getCreateTestForCbt);
+adminRoute.route('/register-test').post(adminEnsureLoggedIn, createCbTest);
+adminRoute.route('/get-questions-page/:id').get(adminEnsureLoggedIn, getGetCbtQuestion);
+adminRoute.route('/create-question/:testId').post(adminEnsureLoggedIn, createCbtQuestion);
+adminRoute.route('/update-questions-page/:id').put(adminEnsureLoggedIn, updateQuestion);
+adminRoute.route('/delete-question/:id').delete(adminEnsureLoggedIn, deleteQuestions);
+adminRoute.route('/update-tests-page/:id').put(adminEnsureLoggedIn, updateCBT);
+adminRoute.route('/delete-test/:id').delete(adminEnsureLoggedIn, deleteCBTs);
+
+
 
 
 

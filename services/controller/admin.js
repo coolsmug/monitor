@@ -28,6 +28,9 @@ const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const Position = require("../models/positionFirstTerm");
+const CBT = require('../models/test');
+const Question = require('../models/question');
+const Submission = require('../models/submit')
 
 // Multer configuration for file uploads
 const upload = multer({
@@ -244,14 +247,13 @@ const updateLearner = async ( req, res ) => {
 
 
 const deleteLearner =  async ( req , res ) => {
- 
-    const id = req.params.id;
-    const { deletes } = req.body; 
 
     try {
-      const switchManaging = await Learner.findByIdAndUpdate(id, { deletes }, { new: true });
-      if (!switchManaging) return res.status(404).send('switch not found');
-      res.send(switchManaging);
+      const id = req.params.id;
+       const { deletes } = req.body; 
+      const switchDelete = await Learner.findByIdAndUpdate(id, { deletes }, { new: true });
+      if (!switchDelete) return res.status(404).send('switch not found');
+      res.send(switchDelete);
     } catch (err) {
       res.status(500).send(err.message);
     }
@@ -341,7 +343,7 @@ const adminDashboardQuery = async ( req , res ) => {
       res.setHeader('Pragma', 'no-cache');
 
       
-Learner.countDocuments({ schoolId: req.user._id, status: true }, (errOne, learnerCount) => {
+Learner.countDocuments({ schoolId: req.user._id, status: true, deletes: false, }, (errOne, learnerCount) => {
   if (errOne) {
     throw new Error(errOne);
   }
@@ -1189,7 +1191,7 @@ const staffDetails = async ( req , res ) => {
         const sclass = await Classes.findById(classId).select("name _id arm");
         return sclass;
       }));
-      console.log (allocatedClasses,)
+     
 
       res.render("staffs-details", {
         staff,
@@ -1873,7 +1875,7 @@ const addSession = async ( req, res ) => {
             if (!section) {
                res.status(404).send({ message: "Section not found" });
             } else {
-              res.render("edit_section", { section : section, user: req.user});
+              res.render("edit-third-section", { section : section, user: req.user});
             }
           })
           .catch((err) => {
@@ -2467,7 +2469,7 @@ const getAllLearner = async ( req , res ) => {
     var page = req.params.page || 1
 
     await Learner
-        .find({ status : true,   schoolId: req.user._id })
+        .find({ status : true, deletes: false, schoolId: req.user._id })
         .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
         .skip((perPage * page) - perPage)
         .sort({roll_no : 1})
@@ -2568,6 +2570,7 @@ const LearnersReport = async ( req , res ) => {
     const page = parseInt(req.params.page) || 1;
     const output = req.query.output;
     const  input = req.query.input;
+ 
 
     const query = {
         "$or": [
@@ -2582,8 +2585,10 @@ const LearnersReport = async ( req , res ) => {
         ],
         "$and": [
             { "status": true },
+            { "deletes": false },
             { "schoolId": req.user._id },
-            { "classId": output }
+            { "classId": output },
+      
         ]
     };
 
@@ -2596,7 +2601,7 @@ const LearnersReport = async ( req , res ) => {
         .limit(ITEMS_PER_PAGE)
         .exec();
 
-    const users = await Currentclass.find().sort({ roll_no: 1 }).exec();
+    const users = await Currentclass.find({ schoolId: req.user._id}).sort({ roll_no: 1 }).exec();
 
     res.render('report', {
         learner: learners,
@@ -2605,7 +2610,8 @@ const LearnersReport = async ( req , res ) => {
         totalPages: totalPages,
         user: req.user,
         output,
-        input
+        input,
+        
     });
 } catch (error) {
     console.error(error);
@@ -2618,7 +2624,7 @@ const getAlumniPage = async ( req , res ) => {
   try {
     var perPage = 9;
     var page = req.params.page || 1 
-    await Learner.find( { status : false, schoolId: req.user._id } )
+    await Learner.find( { status : false, deletes : false, schoolId: req.user._id } )
                     .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
                     .sort({ roll_no : 1 })
                     .skip((perPage * page) - perPage)
@@ -2891,6 +2897,210 @@ const chseckThirdTermResult = async ( req , res ) => {
 
 
 
+// ---------------------------------CBT-------------------------------------------------//
+
+const getCreateTestForCbt = async ( req , res) => {
+  try {
+
+    var perPage = 9;
+    var page = req.params.page || 1;
+    
+    const cbt = await CBT
+                          .find( { schoolId : req.user._id} )
+                          .skip((perPage * page) - perPage)
+                          .limit(perPage)
+                          .sort( { title : -1 } )
+    const count = await CBT.count( { schoolId : req.user._id} ).exec()
+    const session = await Session.find({ schoolId : req.user._id});
+    await res.render('createTest', {
+      user: req.user, 
+      session, 
+      cbt,
+      current: page,
+      count,
+      pages: Math.ceil(count / perPage) })
+  } catch (err) {
+    console.error(err);
+    return res.render('error5', { title: "Internal Server Error." +" "+ err });
+  }
+}
+
+
+const updateCBT = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedCBT = await CBT.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!updatedCBT) {
+      return res.status(404).send({ message: `Cannot update CBT with ID: ${id}. Maybe CBT not found.` });
+    }
+
+    res.send(updatedCBT);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: `Error updating CBT information: ${err.message}` });
+  }
+};
+
+
+const deleteCBTs = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await CBT.findByIdAndDelete(id);
+
+    if (!data) {
+      return res.status(404).send({ message: `Cannot delete CBT with ID ${id}. Maybe the ID is wrong.` });
+    }
+
+    res.send({ message: "Question was deleted successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: `Could not delete CBT with ID ${id}. Error: ${err.message}` });
+  }
+};
+
+const getGetCbtQuestion = async ( req , res) => {
+  try {
+    const id = req.params.id;
+    const cbt = await CBT.findById(id).exec();
+
+    if(!id) {
+      return res.render('error404', { title: "Error 505. Page not found." });
+    }
+
+    const question = await Question.find( { testId : id }).exec()
+
+    await res.render('cbt-question', {user: req.user, id, question, cbt})
+  
+  } catch (err) {
+    console.error(err);
+    return res.render('error5', { title: "Internal Server Error." +" "+ err });
+  }
+}
+
+
+const createCbTest = async ( req , res ) => {
+  try {
+   
+  const { title, description, duration, startTime, session, term, type, ca_pos } = req.body;
+  const test = new CBT({ title, description, duration, startTime, session, term, type, ca_pos, schoolId : req.user._id });
+
+  req.flash(
+    "success_msg",
+    "Test Registered Successfully!"
+  );
+  await test.save();
+  res.redirect('/admin/create-cbt/1')
+
+  } catch (err) {
+    return res.render('error5', { title: "Internal Server Error."+" "+ err  });
+  }
+};
+
+const createCbtQuestion = async (req, res) => {
+  try {
+    let { questionText, questionType, options, correctAnswer, instruction} = req.body;
+    
+
+    if (typeof options === 'string') {
+      options = options.split(',').map(option => option.trim());
+    }
+
+    const question = new Question({ 
+      questionText, 
+      questionType, 
+      options, 
+      correctAnswer, 
+      instruction,
+      testId: req.params.testId 
+    });
+    
+    await question.save();
+  
+    const test = await CBT.findById(req.params.testId);
+    test.questions.push(question._id);
+    req.flash("success_msg", "Question Registered Successfully!");
+    await test.save();
+    
+    res.redirect(`/admin/get-questions-page/${req.params.testId}`);
+  } catch (err) {
+    console.error(err);
+    return res.render('error5', { title: "Internal Server Error." + " " + err });
+  }
+};
+
+const updateQuestion = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let updateData = req.body;
+
+    if (typeof updateData.options === 'string') {
+      updateData.options = updateData.options.split(',').map(option => option.trim());
+    }
+
+    const updatedQuestion = await Question.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!updatedQuestion) {
+      return res.status(404).send({ message: `Cannot update question with ID: ${id}. Maybe question not found.` });
+    }
+
+    res.send(updatedQuestion);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: `Error updating question information: ${err.message}` });
+  }
+};
+
+const getAllLearnerCbt = async (req, res) => {
+  try {
+    const id = req.query.id;
+
+    if (!id) {
+      return res.status(400).render('error5', { title: "Bad Request: Missing learner ID." });
+    }
+
+    // Fetch submissions for the learner
+    const submit = await Submission.find({ userId: id }).exec();
+
+    // Fetch learner details
+    const learner = await Learner.findById(id).exec();
+
+    // Check if learner exists
+    if (!learner) {
+      return res.status(404).render('error5', { title: "Learner not found." });
+    }
+
+    // Render the template with the data
+    await res.render('all-cbt-question', {
+      user: req.user,
+      learner,
+      submit,
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).render('error5', { title: "Internal Server Error: " + err.message });
+  }
+};
+
+const deleteQuestions = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await Question.findByIdAndDelete(id);
+
+    if (!data) {
+      return res.status(404).send({ message: `Cannot delete question with ID ${id}. Maybe the ID is wrong.` });
+    }
+
+    res.send({ message: "Question was deleted successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: `Could not delete question with ID ${id}. Error: ${err.message}` });
+  }
+};
+
+
+
 module.exports = {
     registerLearner,
     getUpdateLearnerPage,
@@ -2976,6 +3186,16 @@ module.exports = {
     getThirdResult,
     chseckThirdTermResult,
     onPrintAtti,
+    getCreateTestForCbt,
+    createCbTest,
+    getGetCbtQuestion,
+    createCbtQuestion,
+    updateQuestion,
+    deleteQuestions,
+    updateCBT,
+    deleteCBTs,
+    getAllLearnerCbt,
+    
 }
 
 

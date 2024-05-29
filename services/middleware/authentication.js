@@ -23,10 +23,21 @@ const adminEnsureLoggedIn = (req, res, next) => {
       }
   };
 
+  const learnerCBTEnsureLoggedIn = (req, res, next) => {
+    const testId = req.params.id; // Capture the test ID from the route parameters
+  
+    if (req.isAuthenticated()) {
+      return next(); // Proceed to the next middleware
+    } else {
+      return res.redirect(`/monitor/cbtcenter/${testId}`); // Redirect to the specified URL with the test ID
+    }
+  };
+  
+
 
   module.exports = {
     adminEnsureLoggedIn,
     staffEnsureLoggedIn,
     learnerEnsureLoggedIn,
-
+    learnerCBTEnsureLoggedIn,
   }

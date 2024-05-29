@@ -1,0 +1,172 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+
+
+<h3 style="text-align: center;">CBT RESULTS for <%= learner.first_name %> <%= learner.last_name %></h3>
+<div class="test-exam">
+  <div class="tes">
+    <div class="test" onclick="openAll()">
+      <p>Test:</p>
+      <% if (submit && submit.length > 0) { %>
+        <ul class="ul ol">
+          <% submit.forEach(sub => { %>
+            <% if (sub.type === "Test") { %>
+              <div class="closedItOne open">
+                <li><span class="round">Term </span><%= sub.term %></li>
+                <li><span class="round">Session: </span><%= sub.session %></li>
+                <li><span class="round">Type: </span><%= sub.type %></li>
+                <li><span class="round">Score: </span><%= sub.score %></li>
+                 <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
+                 <li><span class="round">Subject: </span><%= sub.subject %></li>
+              </div>
+            <% } %>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="tes">
+    <div class="test" onclick="openAll()">
+      <p>Exam:</p>
+      <% if (submit && submit.length > 0) { %>
+        <ul class="ul ol">
+          <% submit.forEach(sub => { %>
+            <% if (sub.type === "Exam") { %>
+              <div class="closedItOne open">
+                <li><span class="round">Term </span><%= sub.term %></li>
+                <li><span class="round">Session: </span><%= sub.session %></li>
+                <li><span class="round">Type: </span><%= sub.type %></li>
+                <li><span class="round">Score: </span><%= sub.score %></li>
+                 <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
+                   <li><span class="round">Subject: </span><%= sub.subject %></li>
+              </div>
+            <% } %>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+  <div class="tes">
+    <div class="test" onclick="openAll()">
+      <p>Snap Test</p>
+      <% if (submit && submit.length > 0) { %>
+        <ul class="ul ol">
+          <% submit.forEach(sub => { %>
+            <% if (sub.type === "Snap Test") { %>
+              <div class="closedItOne open">
+                <li><span class="round">Term: </span><%= sub.term %></li>
+                <li><span class="round">Session: </span><%= sub.session %></li>
+                <li><span class="round">Type: </span><%= sub.type %></li>
+                <li><span class="round">Score: </span><%= sub.score %></li>
+                 <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
+                   <li><span class="round">Subject: </span><%= sub.subject %></li>
+              </div>
+            <% } %>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+ </footer>   
+ <%- include ("./include/footer.ejs") %> 
+
+
+ <script>
+//       function openAll() {
+//     const tests = document.querySelectorAll('.test ul');
+//     tests.forEach(test => {
+//       if (test.style.visibility === 'visible') {
+//         test.style.visibility = 'hidden';
+//       } else {
+//         test.style.visibility = 'visible';
+//       }
+//     });
+//   }
+ </script>
+
+ 
+<style>
+    .test-exam {
+     width: 100%;
+        margin-top: 30px;
+     padding: 10px;
+     display: flex;
+     justify-content: space-around;
+     align-items: center;
+ }
+
+ h3 {
+    margin-top: 100px !important;
+ }
+ 
+ 
+ 
+ .tes p {
+     font-family: var(--ubuntu-regular);
+     font-weight: bolder;
+     font-size: 14px;
+     letter-spacing: 3px;
+ }
+ .tes {
+     position: relative;
+ }
+ 
+ .ul {
+     position: absolute;
+     z-index: 9999;
+     list-style-type: none;
+     font-size: 14px;
+     top: 20px;
+     left: -70px;
+     visibility: hidden;
+     transition: visibility 0.2s;
+    
+ }
+ 
+ .test {
+ 
+     cursor: pointer;
+     position: relative; 
+     background: #295daf;/* Ensure the ul is positioned relative to the .test */
+ }
+ 
+ .test p {
+     color: #fff;
+     padding: 5px;
+ }
+ 
+ 
+ .test:hover .ul {
+     visibility: visible;
+ }
+ 
+ 
+ 
+ .closedItOne span {
+     padding-right: 10px;
+     font-weight: bolder;
+ }
+ 
+ .closedItOne {
+   
+     top: 70%;
+     left: 10px;
+     box-shadow: 2px 2px 5px #ccc;
+     border-bottom: 1px solid #aaa;
+    width: 150px;
+    padding: 5px;
+     background-color: #1cdce7;
+     margin-bottom: 5px;
+       
+ }
+ </style>

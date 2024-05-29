@@ -66,9 +66,7 @@
     text-align: center;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 14px 14px 20px #c6c6c6,
-    -14px -14px 20px rgb(203, 202, 202);
-    z-index: 1;
+    z-index: 999;
 
 }
 
@@ -100,9 +98,7 @@
     text-align: center;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 14px 14px 20px #abd4fd,
-    -14px -14px 20px rgb(247, 245, 245);
-    z-index: 1;
+    z-index: 999;
 
 }
 
@@ -144,9 +140,7 @@
     text-align: center;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 14px 14px 20px #abd4fd,
-    -14px -14px 20px rgb(247, 245, 245);
-
+    z-index: 999;
 }
 
 .pressIt {
@@ -178,9 +172,7 @@
     text-align: center;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 14px 14px 20px #abd4fd,
-    -14px -14px 20px rgb(247, 245, 245);
-    z-index: 1;
+    z-index: 999;
 
 }
 

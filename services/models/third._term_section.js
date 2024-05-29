@@ -12,6 +12,11 @@ const thirdSectionSchema = new Schema(
       type: String,
       required: true,
     },
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'School'
+    },
 
     classof: {
       type: String,

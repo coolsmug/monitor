@@ -249,18 +249,31 @@ button:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 2px;
-    padding: 10px 15px;
-    box-shadow: 14px 14px 20px #cbced1,
-    -14px -14px 20px rgb(245, 242, 242); 
-    margin-bottom: 50px ;
+    padding: 20px;
+    width: 400px;
+    box-shadow: 2px 2px 10px #ccc;
+    margin-bottom: 30px;
 }
+
+#blessing  .input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#blessing  .input label {
+    margin-bottom: 10px;
+}
+
 #blessing input, select {
     width: 150px;
     border: none;
     outline: none;
     padding: 5px 9px;
     background-color: var(--lighter-blue);
+  
 }
 
 select {
@@ -293,12 +306,11 @@ select {
 .pos form {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    
     justify-content: center;
-    /* background: royalblue; */
-    padding:10px 20px;
-    box-shadow: 14px 14px 20px #cbced1,
-    -14px -14px 20px rgb(245, 242, 242);
+    align-items: center;
+    padding:20px;
+    box-shadow: 2px 2px 10px #ccc;
     
 }
 
@@ -346,27 +358,38 @@ select {
 
 #myblessing {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 400px;
-    gap: 10px;
+    flex-direction: column;
     justify-content: center;
-    /* background: royalblue; */
-    padding: 16px 5px;
-    box-shadow: 14px 14px 20px #cbced1,
-    -14px -14px 20px rgb(245, 242, 242);
+    align-items: center;
+    padding: 20px;
+    width: 400px;
+    box-shadow: 2px 2px 10px #ccc;
+    margin-bottom: 30px;
     
 }
+
+#myblessing  .input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#myblessing  .input label {
+    margin-bottom: 10px;
+}
+
 #myblessing input, select {
     width: 150px;
     border: none;
     outline: none;
     padding: 5px 9px;
-    background-color: var(--lighter-blue);
+    background-color: #ccc;
 }
 
 select {
-    background-color: rgb(45, 189, 233);
+    background-color: #ccc;
     color: var(--white);
 }
 
@@ -620,4 +643,72 @@ label {
         transform: translateY(-13px);
         border-radius: 10px;
     }
+}
+
+
+.test-exam {
+    width: 100%;
+   
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+
+.tes p {
+    font-family: var(--ubuntu-regular);
+    font-weight: bolder;
+    font-size: 14px;
+    letter-spacing: 3px;
+}
+.tes {
+    position: relative;
+}
+
+ul {
+    position: absolute;
+    z-index: 9999;
+    list-style-type: none;
+    font-size: 14px;
+    top: 10px;
+    left: -40px;
+    visibility: hidden;
+    transition: visibility 0.2s;
+}
+
+.test {
+    cursor: pointer;
+    position: relative; 
+    background: #295daf;/* Ensure the ul is positioned relative to the .test */
+}
+
+.test p {
+    color: #fff;
+    padding: 5px;
+}
+
+
+.test:hover ul {
+    visibility: visible;
+}
+
+
+
+.closedItOne span {
+    padding-right: 10px;
+    font-weight: bolder;
+}
+
+.closedItOne {
+    width: 200px;
+    top: 70%;
+    left: 10px;
+    box-shadow: 2px 2px 5px #ccc;
+    border-bottom: 1px solid #aaa;
+    padding: 10px;
+    background-color: #1cdce7;
+    margin-bottom: 5px;
+      
 }

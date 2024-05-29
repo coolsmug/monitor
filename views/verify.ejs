@@ -1,12 +1,29 @@
 <%- include ("./include/reg.ejs") %> 
 
 <%- include ('./partials/messages') %>
+<div class="menu-toggle" onclick="toggleMenu()">
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+</div>
+<img class="logo-mon" src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="" width="200">
+<div class="header  remove">
+  <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/monitor_gkgov5.png" alt="" width="200">
+  <ul>
+    <li><a href="/monitor">Home</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#">About Us</a></li>
+  </ul>
+  <button>
+    <p>Sign in</p>
+  </button>
+</div>
 
 <div class="togeda">
-    <div class="imag_pj">
-      <img src="/img/img_1.jpg" alt="" width="200">
-       
-    </div>
+      <div class="imag_pj">
+          <h1>Learn From The Expert</h1>
+             <p class="togeda-p">join us today, register on monitor to enjoy the best E-school management experience. Let hang your school in the cloud.</p>
+      </div>
 
 
     
@@ -19,13 +36,9 @@
                       <input type="hidden" name="userId" value="<%= userId %>">
                           
                           <input type="recovery" name="recovery" value="<%= typeof  recovery != 'undefined' ?  recovery : '' %>" />
-                          <label for="recovery">Email:</label>
+                          <label for="recovery">Email</label>
                       </div>
                 <button>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
                     Submit
               </button>
           
@@ -33,12 +46,26 @@
       
         </div>
       
-</div>
-
-<footer class="foot">
-  <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
-<footer/>
-
+      </div>
+      <footer class="foot">
+        <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+      </footer> 
+      
+      
+      <script>
+      
+      function toggleMenu() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const header = document.querySelector('.header');
+        menuToggle.classList.toggle('open');
+        header.classList.toggle('remove');
+      }
+      
+      
+      </script>
+      
+      
+      <%- include ("./include/footer.ejs") %> 
 
 
 

@@ -1,3 +1,5 @@
+
+
 @import url('https://fonts.googleapis.com/css2?family=Barlow&family=PT+Sans&display=swap');
 :root {
   --deepest-blue: #033767; 
@@ -31,26 +33,237 @@
     --montserrat-medium: 'Montserrat Medium', sans-serif;
 }
 
-html {
-    height: 100%;
-  }
+html{
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--ubuntu-medium);
+}
   body {
-    box-sizing: border-box;
-    margin: 0;
-    padding:50px;
-    font-family: sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content:space-evenly;
+    align-items: center; 
+    width: 100%;
+    animation: fadeIn 5s ease forwards;
+    background: linear-gradient(#031941e3, #002945e3), url(https://res.cloudinary.com/dj6xdawqc/image/upload/v1713523200/img_9_btolwi.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    gap: 120px;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
-    height: 100%;
-    background: 
-    radial-gradient(circle,
-    var(--deep-blue)0% 20%,  var(--deepest-blue)20% 40%,
-    var(--deep-blue)40% 60%, var(--deepest-blue)60% 80%,  var(--deep-blue)80% 90%, var(--deepest-blue)90% 100% );
-    animation: fadeIn 3s ease forwards;
+    padding: 10px;
   }
+
+  .header ul li{
+    display: inline;
+    font-style: none;
+    padding: 14px 16px ;
+    transition: .5s;
+  }
+
+  .header ul li:hover a{
+    color: var(--deep-blue);
+    transform: translateX(9px);
+  }
+
+  .header ul li a {
+    text-decoration: none;
+    color: var(--white_two);
+    font-family: var(--ubuntu-medium);
+    transition: .5s;
+  }
+
+  .header img {
+    width: 150px;
+  }
+
+  .header button {
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    background-color: var(--deep-blue);
+    color: var(--white);
+    border-radius: 15px;
+    font-size: 13px;
+    transition: .3s;
+  }
+
+  .header button:hover {
+    outline: 3px solid var(--deep-blue);
+    background-color: var(--white);
+    color: var(--deep-blue);
+    border-radius: 15px;
+  }
+
+  .togeda {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    gap: 50px;
+    line-height: 1.3;
+  }
+
+  .togeda .imag_pj {
+    width: 550px;
+    
+  }
+  
+  .togeda .imag_pj button {
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    background-color: var(--deep-blue);
+    color: var(--white);
+    border-radius: 15px;
+    font-size: 13px;
+    transition: .3s;
+    margin-top: 20px;
+  }
+
+  .togeda .imag_pj button:hover {
+    outline: 3px solid var(--deep-blue);
+    background-color: var(--white);
+    color: var(--deep-blue);
+    border-radius: 15px;
+  }
+
+  .togeda h1{
+    font-size: 40px;
+    color: var(--white);
+    font-weight: bolder;
+    padding: 0 0 20px 0;
+  }
+
+  .togeda-p{
+    color: var(--white_two);
+    font-family: var(--ubuntu-light);
+    line-height: 1.6;
+  }
+
+  .togeda .login-box {
+    padding: 40px;
+    background: var(--white);
+    color: #404040;
+ 
+  }
+
+  .login-box h2 {
+    font-size: 22px;
+    font-family: var(--montserrat-bold) !important;
+    padding: 10px 0 10px 0;
+  }
+
+  .togeda .login-box form .user-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    font-family: var(--montserrat-light);
+    color: #404040;
+  
+  }
+
+  .togeda .login-box form .user-box input {
+    padding: 14px 30px;
+    border: none;
+    outline: none;
+    outline: 1px solid var(--white_two);
+    /* width: 300px; */
+  }
+
+  .togeda .login-box form select {
+    padding: 14px 30px;
+    border: none;
+    outline: none;
+    outline: 1px solid var(--white_two);
+    /* width: 300px; */
+    margin-bottom: 25px;
+  }
+
+  .logo-mon {
+    display: none;
+  }
+
+ .togeda .login-box form button {
+    border: none;
+    outline: none;
+    padding: 13px 25px;
+    background-color: var(--deep-blue);
+    color: var(--white);
+    border-radius: 15px;
+    font-size: 13px;
+    transition: .3s;
+  }
+  .togeda .login-box form label {
+    margin-bottom: 15px;
+    font-family: var(--montserrat-medium);
+    font-size: 13px;
+  }
+
+ .togeda .login-box form button:hover {
+    outline: 3px solid var(--deep-blue);
+    background-color: var(--white);
+    color: var(--deep-blue);
+    border-radius: 15px;
+  }
+
+  .foot {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .foot h3 {
+    font-size: 12px;
+    color: var(--white_three);
+    font-family: var(--ubuntu-light);
+
+  }
+  .menu-toggle {
+    width: 30px;
+    height: 20px;
+    position: absolute;
+    cursor: pointer;
+    right: 20px;
+    top: 20px;
+    display: none;
+  }
+  
+  .bar {
+    width: 100%;
+    height: 3px;
+    background-color:var(--white_three); 
+    margin: 5px 0;
+    transition: all 0.3s ease;
+  }
+  
+  .menu-toggle.open .bar:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+    background-color: rgb(0, 0, 0);
+  }
+  
+  .menu-toggle.open .bar:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .menu-toggle.open .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+    background-color: rgb(0, 0, 0);
+  }
+  
 
 
 
@@ -63,217 +276,148 @@ html {
     }
   }
 
-  .togeda {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 90%;
-    background: linear-gradient(#141e30, #243b55);
-    width: 90%;
-    box-shadow: 0 15px 25px rgba(0,0,0,.6);
-    animation: slidein 2s ease-out;
-    margin-bottom: 50px;
-  }
-  
-  @keyframes slidein {
-    from {
-     
-      transform: translateY(-150%);
-    }
-    to {
-      transform: translateY(0);
-    }  
+  @media only screen and (max-width: 1000px){
 
-  }
-
-  @keyframes outlook {
-    from {
-     
-      transform: translateX(-150%);
-    }
-    to {
-      transform: translateX(0);
+    .togeda .imag_pj {
+      width: 400px;
     }
 
+    .togeda .login-box {
+      padding: 20px;
+    }
    
   }
 
-  .imag_pj {
-    width: 50%;
-    height: 100%;
-  }
 
-  .imag_pj img {
-    width: 100%;
-    height: 100%;
+  @media only screen and (max-width: 800px){
+
+    .togeda .imag_pj {
+      width: 300px;
+    }
+
+    .togeda .login-box {
+      padding: 20px;
+    }
    
-  } 
-
-  footer {
-
-    width: 100%;
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0,0,0,.6);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: var(--deepest-blue);
-    background-color: var(--lighter-blue);
-    padding: 0 20px 0 20px ;
-    margin: 0;
-    animation: outlook 3s ease-out;
-    text-align: center;
   }
 
+  @media only screen and (max-width: 700px){
 
-  .login-box {
-    width: 50%;
-    height: 100%;
-    background: rgba(0,0,0,.5);
-    /* box-sizing: border-box; */
-    box-shadow: 0 15px 25px rgba(0,0,0,.6);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    .togeda  {
+      flex-direction: column;
+      margin-top: 200px;
+      justify-content: center;
+      align-items: center;
+      gap: 100px;
+     
+    }
 
-  form {
-    width: 70%;
-  }
-  
-  .login-box h2 {
-    margin-bottom: 40px;
-    padding: 0;
-    color: var(--light-blue);
-    text-align: center;
-  }
-  
-  .login-box .user-box {
-    position: relative;
-  }
-  
-  .login-box .user-box input {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 16px;
-    color: var(--lighter-blue);
-    margin-bottom: 30px;
-    border: none;
-    border-bottom: 1px solid var(--lighter-blue);
-    outline: none;
-    background: transparent;
-  }
+    .foot {
+      position: relative;
+      width: 100%;
+      text-align: center;
+    }
+    .imag_pj {
+      text-align: center;
+    }
 
+    .imag_pj, .login-box {
+      width: 70%;
+    }
 
-  .logo-mon {
-    position: absolute;
-    left: 10px;
-    width: 100px;
-    background: linear-gradient(var(--white_one) 0% 50%, var(--white_three) 40% 100%);
-    top: 10px;
-    padding: 6px 12px;
-  }
+    .togeda .login-box {
+      padding: 20px;
+    }
 
-  .login-box .user-box select {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 16px;
-    color: var(--lighter-blue);
-    margin-bottom: 30px;
-    border: none;
-    border-bottom: 1px solid var(--lighter-blue);
-    outline: none;
-    background-color: transparent;
-    color: #333;
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: normal;
-  }
+    .menu-toggle {
+      display: block;
+      z-index: 999;
+    }
 
-  .login-box .user-box label {
-    position: absolute;
-    top:0;
-    left: 0;
-    padding: 10px 0;
-    font-size: 16px;
-     color: var(--lighter-blue);
-    pointer-events: none;
-    transition: .5s;
-  }
-  
-  .login-box .user-box select label {
-    position: absolute;
-    top:0;
-    left: 0;
-    padding: 10px 0;
-    font-size: 16px;
-     color: var(--lighter-blue);
-    pointer-events: none;
-    transition: .5s;
+   .logo-mon {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+     width: 100px;
+    }
+
+    .header img {
+      display: none;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      gap: 50px;
+      opacity: 1;
+      transition: 1s;
+   
+    }
+
+    .header ul  {
+     margin-top: -300px;
+   
+    }
+
+    .header ul li {
+      display: block;
+   
+    }
+
+    .header ul li a{
+      color: #3c3c3c;
+    }
+
+    .remove {
+      left: -1000px;
+      opacity: 0;
+      transition: 1s;
+    }
+   
   }
 
-
-  
-  .login-box .user-box input:focus ~ label,
-  .login-box .user-box input:valid ~ label {
-    top: -20px;
-    left: 0;
-    color: #03e9f4;
-    font-size: 12px;
+  @media only screen and (max-width: 450px) {
+    .login-box, .imag_pj {
+      width: 92%;
+    }
   }
 
-  .login-box .user-box select:focus ~ label,
-  .login-box .user-box select:valid ~ label {
-    top: -20px;
-    left: 0;
-    color: #03e9f4;
-    font-size: 12px;
-  }
-  
-  .login-box form button {
-    position: relative;
-    display: inline-block;
-    padding: 10px 20px;
-    color: #03e9f4;
-    font-size: 16px;
-    text-transform: uppercase;
-    overflow: hidden;
-    transition: .5s;
-    margin-top: 40px;
-    letter-spacing: 4px;
-    background: #0a0727;
-    border: none;
-    outline: none;
-  }
+  /* ==================================MOdal---------------------- */
+
   .every {
     position: absolute;
+    font-size: 12px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--ubuntu-medium);
-    color: royalblue;
-    min-width: 350px;
-    min-height: 150px;
+    box-shadow: 2px 2px 2px grey;
+    font-family: var(--ubuntu-light);
+    line-height: 1.6;
+    color: #021220;
     background-color: #fff;
-    border: 5px solid var(--deep-blue);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 40px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 14px 14px 20px #c6c6c6,
-    -14px -14px 20px rgb(203, 202, 202);
     z-index: 1;
-
-}
-
-.okbutton {
+  
+  }
+  
+  .okbutton {
     padding: 10px;
     background-color: var(--deep-blue) ;
     border: 1px solid var(--lighter-blue);
@@ -281,33 +425,31 @@ html {
     width: 100px;
     color: var(--white);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
-}
-
-.closeds {
+  }
+  
+  .closeds {
     z-index: 999;
     position: absolute;
+    font-size: 12px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--ubuntu-medium);
-    color: royalblue;
-    min-width: 350px;
-    min-height: 150px;
+    box-shadow: 2px 2px 2px grey;
+    font-family: var(--ubuntu-light);
+    line-height: 1.6;
+    color: #021220;
     background-color: #fff;
-    border: 5px solid var(--deep-blue);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 40px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 14px 14px 20px #abd4fd,
-    -14px -14px 20px rgb(247, 245, 245);
-
-}
-
-.mainButton {
+  
+  }
+  
+  .mainButton {
     padding: 10px;
     background-color: var(--deep-blue) ;
     border: 1px solid var(--lighter-blue);
@@ -315,9 +457,9 @@ html {
     width: 100px;
     color: var(--white);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
-}
-
-.buttini {
+  }
+  
+  .buttini {
     padding: 10px;
     background-color: var(--deep-blue) ;
     border: 1px solid var(--lighter-blue);
@@ -325,34 +467,32 @@ html {
     width: 100px;
     color: var(--white);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
-}
-
-.pade {
+  }
+  
+  .pade {
     position: absolute;
+    font-size: 12px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--ubuntu-medium);
-    color: royalblue;
-    min-width: 350px;
-    min-height: 150px;
+    box-shadow: 2px 2px 2px grey;
+    font-family: var(--ubuntu-light);
+    line-height: 1.6;
+    color: #021220;
     background-color: #fff;
-    border: 5px solid var(--deep-blue);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 40px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 14px 14px 20px #abd4fd,
-    -14px -14px 20px rgb(247, 245, 245);
     z-index: 1;
-
-
-}
-
-.pressIt {
+  
+  
+  }
+  
+  .pressIt {
     padding: 10px;
     background-color: var(--deep-blue) ;
     border: 1px solid var(--lighter-blue);
@@ -361,248 +501,53 @@ html {
     width: 100px;
     color: var(--white);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.294), -2px -2px 5px rgba(0, 0, 0, 0.096);
-}
-
-.coverup {
+  }
+  
+  .coverup {
     position: absolute;
+    font-size: 12px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--ubuntu-medium);
-    color: royalblue;
-    min-width: 350px;
-    min-height: 150px;
+    box-shadow: 2px 2px 2px grey;
+    font-family: var(--ubuntu-light);
+    line-height: 1.6;
+    color: #021220;
     background-color: #fff;
-    border: 5px solid var(--deep-blue);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 40px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 14px 14px 20px #abd4fd,
-    -14px -14px 20px rgb(247, 245, 245);
     z-index: 1;
+  
+  }
 
+  .d-fas {
+    font-size: 35px;
+    color: royalblue;
+    border: yellow;
+    text-shadow: 2px 2px 5px grey;
+    animation-name: animation;
+    animation-duration: 1s;
 }
 
-  
-  .login-box button:hover {
-    background: #03e9f4;
-    color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
-                0 0 25px #03e9f4,
-                0 0 50px #03e9f4,
-                0 0 100px #03e9f4;
-  }
-  
-  .login-box button span {
-    position: absolute;
-    display: block;
-  }
-  
-  .login-box button span:nth-child(1) {
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #03e9f4);
-    animation: btn-anim1 1s linear infinite;
-  }
-  
-  @keyframes btn-anim1 {
-    0% {
-      left: -100%;
-    }
-    50%,100% {
-      left: 100%;
-    }
-  }
-  
-  .login-box button span:nth-child(2) {
-    top: -100%;
-    right: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, #03e9f4);
-    animation: btn-anim2 1s linear infinite;
-    animation-delay: .25s
-  }
-  
-  @keyframes btn-anim2 {
-    0% {
-      top: -100%;
-    }
-    50%,100% {
-      top: 100%;
-    }
-  }
-  
-  .login-box button span:nth-child(3) {
-    bottom: 0;
-    right: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(270deg, transparent, #03e9f4);
-    animation: btn-anim3 1s linear infinite;
-    animation-delay: .5s
-  }
-  
-  @keyframes btn-anim3 {
-    0% {
-      right: -100%;
-    }
-    50%,100% {
-      right: 100%;
-    }
-  }
-  
-  .login-box button span:nth-child(4) {
-    bottom: -100%;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(360deg, transparent, #03e9f4);
-    animation: btn-anim4 1s linear infinite;
-    animation-delay: .75s
-  }
-  
-  @keyframes btn-anim4 {
-    0% {
-      bottom: -100%;
-    }
-    50%,100% {
-      bottom: 100%;
-    }
-  }
-
-
-  @media only screen and (max-width: 1080px) {
-    .togeda {
-      width: 100%;
-     }
-  }
-
-
-  @media only screen and (max-width: 700px) {
-    .togeda {
-      margin-top: 100px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(transparent, #243b55);
-     
+@keyframes animation {
+    0%{
+        font-size: 5px;
     }
 
-    .imag_pj {
-      width: 100%;
-      height: 50%;
-    }
-  
-    .imag_pj img {
-      width: 100%;
-      height: 100%;
-      
-    } 
-
-    .login-box {
-      /* box-sizing: border-box; */
-      width: 100%;
-      height: 50%;
-      background: rgba(0,0,0,.5);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding-bottom: 100px;
-     
+    30%{
+        font-size: 75px;
     }
 
-    form {
-      width: 80%;
-      height: 50%;
-     
+    70%{
+        font-size: 100x;
     }
-    .login-box .user-box input {
- 
-    padding: 10px 0;
-    font-size: 14px;
-    color: var(--lighter-blue);
-    margin-bottom: 10px;
-    
-  }
 
-  .login-box .user-box select {
-   
-    padding: 6px 0;
-    font-size: 14px;
-    color: var(--lighter-blue);
-    
-  }
-
-   
-  .login-box .user-box select label {
-    position: absolute;
-    top:0;
-    left: 0;
-    padding: 6px 0;
-    font-size: 14px;
-    
-  }
-
-  .login-box form button {
-    
-    padding: 6px 16px;
-   
-    font-size: 14px;
-   
-    margin-top: -10px;
-   
-  }
-
-  .login-box h2 {
-    /* position: absolute;
-    top: 360px; */
-    
-  }
-
-  
-
-
-  }
-
-  @media only screen and (max-width: 451px) {
-    h2 {
-      font-size: 20px;
+    100%{
+        font-size: 20px;
     }
-   
-    h3 {
-      font-size: 15px;
-    }
-  }
-
-
-  @media only screen and (max-width: 390px) {
-    h2 {
-      font-size: 17px;
-    }
-   
-    h3 {
-      font-size: 10px;
-    }
-  }
-
-  @media only screen and (max-width: 340px) {
-    h2 {
-      font-size: 14px;
-    }
-   
-    h3 {
-      font-size: 10px;
-    }
-  }
-    
+}

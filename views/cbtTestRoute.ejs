@@ -1,0 +1,28 @@
+<%- include ("./include/test-header.ejs") %> 
+<%- include ('./partials/messages') %>
+<div class="render">
+
+  <p class="p-first">Welcome </p>
+  <p> to </p> 
+  <p><span>monitor    </span>CBT Portal</p>
+  <p style="text-align: center; margin: 30px;">Advice : <br> Sit tight, pray and have a deep breath before you start. <br>Best of luck!</p>
+   
+  <h2>Today Subject:</h2>
+   <h1><%= cbTest.title %></h1>
+   <p class="desc"><%= cbTest.description %></p>
+
+   <h3>Login here to start Your Exam</h3>
+
+   <form action="/cbtpage/<%= cbTest._id %>" method="POST">
+     <input type="hidden" name="id" value="<%= cbTest._id %>">
+     <input type="text" name="email" required placeholder="email"><br><br>
+     <input type="password" name="password" placeholder="password"><br><br>
+     <button type="submit">Sign in</button>
+   </form>
+   
+</div>
+
+<p>CBT powered by Dark theme code @2024</p>
+
+<%- include ("./include/footer") %> 
+

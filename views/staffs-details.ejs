@@ -1,10 +1,10 @@
 <%- include ("./include/header.ejs") %> 
 <%- include ("./include/_dash_board.ejs") %> 
-
+<div class="hrefa"><a href="/admin/all-staffs">All Staffs</a></div>
 <div class="staff-detail">
     <%- include ('./partials/messages') %> 
 
-    <a href="/school/all-staffs">All Staffs</a>
+  
                                    
                             <div class="dreout">
                               
@@ -28,14 +28,14 @@
                                           
                                         <tbody>
                                             <h3>Staff's Details</h3> 
-                                            <tr><th><h4>Name</h4></th> <td> <h4><%= staff.name %></h4></td></tr>
-                                            <tr><th><h4>Address</h4></th><td><h4><%= staff.address %></h4> </td></tr>
-                                            <tr><th><h4>Mobile Number</h4></th> <td><h4> <%= staff.mobile_h4hone %></h4></td></tr>
-                                            <tr><th><h4>Status</h4></th><td><h4><%= staff.status %></h4></td></tr>
-                                            <tr><th><h4>Email</h4></th><td><h4><%= staff.email %></h4></td></tr>
+                                            <tr><th><p>Name:</p></th> <td> <p><%= staff.name %></p></td></tr>
+                                            <tr><th><p>Address:</p></th><td><p><%= staff.address %></p> </td></tr>
+                                            <tr><th><p>Mobile Number:</p></th> <td><p> <%= staff.mobile_phone %></p></td></tr>
+                                            <tr><th><p>Status:</p></th><td><p><%= staff.status %></p></td></tr>
+                                            <tr><th><p>Email:</p></th><td><p><%= staff.email %></p></td></tr>
                                             <tr>
                                                 <th>
-                                                    <h4>Assigned Class</h4>
+                                                    <h4>Assigned Class:</h4>
                                             </th>
                                                 <td>
                                                     
@@ -61,9 +61,8 @@
    
 </div>
 <footer class="foot">
-    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
-</footer>
-
+    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer> 
 
 <%- include ("./include/footer.ejs") %>
 
@@ -71,31 +70,65 @@
 
   
 .staff-detail {
+   
+    position: relative;
+    width: 70%;
     margin: auto;
-    width: 40rem;
     box-sizing: border-box;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
     background-color: #fff;
-    margin: auto;
-    gap: 20px;
-    padding: 10px;
-    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    padding: 20px;
+    box-shadow: 2px 2px 10px rgb(187, 187, 187);
     gap: 50px;
-    margin-top: 100px;
+    margin-top: 50px;
 
 }
-.staff-detail  a{
-  
+
+.staff-detail table tbody tr::-webkit-scrollbar {
+  width: .3em;
+  height: .3em;
+}
+ 
+.staff-detail table tbody tr::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.101);
+}
+ 
+.staff-detail table tbody tr::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--white_two)0% 50%, var(--white_three)50% 100%);
+  /* outline: 1px solid slategrey; */
+  border-radius: 35px;
+}
+
+table tbody {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items:flex-start;
+    border: 1px solid  var(--white_one);
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.hrefa{
+    margin-top: 60px;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+ .hrefa a{
+    margin-top: 100px;
+    padding: 20px;
+    width: 100%;
     color: var(--light-blue);
-   
+    text-align: center;
     font-weight: bolder;
     font-family:Arial, Helvetica, sans-serif;
 }
-
 table td li {
     font-style: none;
     font-weight: bolder;
@@ -105,15 +138,28 @@ table td li {
     font-size: 13px;
 }
 
-th, td {
-    text-align: left;
+table tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    gap: 50px;
+    border: 1px solid  var(--white_one);
+    overflow: auto;
+    padding: 10px;
     
-   
 }
 
-tr td  h4 {
-    color: seagreen;
+th, td {
+    text-align: left;
+    width: 150px;
+    border: 1px solid  var(--white_one);
+}
 
+tr td  p {
+    color: seagreen;
 }
 
 td li {
@@ -134,10 +180,37 @@ input {
     border: none;
     padding: 6px 12px;
     background-color: var(--deep-blue);
-    color: var(--lighter-blue);
+    color: var(--white_one);
     font-family:var(--ubuntu);
     cursor: pointer;
-    outline: var(--light-blue);
+    outline: 2px solid var(--light-blue);
+    transition: .3s;
+}
+
+select {
+
+    padding: 12px 25px;
+    background-color: var(--deep-blue);
+    color: var(--white_one);
+    font-family:var(--ubuntu);
+    cursor: pointer;
+    outline: 2px solid var(--light-blue);
+    transition: .3s;
+}
+
+input:hover {
+    outline: 1px solid var(--deep-blue);
+    background-color: var(--white_one);
+    color: var(--deep-blue);
+    border-radius: 5px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 </style>

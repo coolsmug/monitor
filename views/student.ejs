@@ -1,7 +1,7 @@
 <%- include ("./include/header.ejs") %> 
 
 <%- include ("./include/_dash_board.ejs") %> 
-<div class="divide_route"><a href="http://">All Staffs </a> <a href="http://"> Add Staff</a>  
+
   
 
 </div>
@@ -32,7 +32,11 @@
                 </div>
                 <div class="hop">
                     <label for="email">Email:</label>
-                    <input type="email" autocomplete="off" name="email" onkeyup="this.value=value.toLowerCase()" value="<%= typeof email != 'undefined' ? email : '' %>" />
+                    <input type="email" autocomplete="off" name="email"  value="<%= typeof email != 'undefined' ? email : '' %>" />
+                </div>
+                <div class="hop">
+                    <label for="mobile_phone">Mobile phone:</label>
+                    <input type="mobile_phone" autocomplete="off" name="mobile_phone" value="<%= typeof mobile_phone != 'undefined' ? mobile_phone : '' %>" />
                 </div>
 
                 <div class="hop">
@@ -58,7 +62,7 @@
 </div>
 
 <footer class="foot">
-    <h3>All rights reserved and Powered by: YiOL Tech <i class="fas fa-copyright"></i> 2022</h3>
-  </footer>
+    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+  </footer> 
 <%- include ("./include/footer.ejs") %> 
 

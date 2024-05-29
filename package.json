@@ -29,6 +29,7 @@
     "cloudinary": "^1.41.1",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "country-state-city": "^3.1.2",
     "crypto": "^1.0.1",
