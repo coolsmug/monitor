@@ -21,6 +21,7 @@ const Schoolname = require("./services/models/school.name");
 const SharpMulter  =  require("sharp-multer");
 const cloudinary = require('cloudinary').v2;
 const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+const MongoStore = require('connect-mongo');
 
 
 
@@ -47,6 +48,10 @@ app.use(
     secret: SECRET,
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ 
+      mongoUrl: 'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor', // Replace with your MongoDB connection string
+      collectionName: 'sessions' // Optional: specify the collection name where sessions will be stored
+    }),
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
   })
 );
