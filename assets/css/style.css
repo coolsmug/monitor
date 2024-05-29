@@ -2366,7 +2366,7 @@ box-shadow: 2px 5px grey;
  }
 
 .every {
-    z-index: 999;
+    z-index: 9999;
     position: absolute;
     font-size: 15px;
     top: 50%;
@@ -2400,7 +2400,7 @@ box-shadow: 2px 5px grey;
   }
   
   .closeds {
-    z-index: 999;
+    z-index: 9999;
     position: absolute;
     font-size: 15px;
     top: 50%;
@@ -2461,7 +2461,7 @@ box-shadow: 2px 5px grey;
     text-align: center;
     gap: 20px;
     padding: 20px;
-    z-index: 1;
+    z-index: 9999;
   
   
   }

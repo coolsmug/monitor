@@ -132,6 +132,20 @@ header img {
     -14px -14px 20px white;
 }
 
+.foot {
+    margin-top: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    margin: auto;
+    text-align: center;
+}
+.foot h3 {
+    font-size: 15px;
+    
+}
+
 .cover_table {
     display: flex;
     flex-direction: column;
@@ -613,7 +627,6 @@ label {
     transition: .7s;
    
 }
-
 
 
 @keyframes animations {
