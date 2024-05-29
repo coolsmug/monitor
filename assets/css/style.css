@@ -562,7 +562,7 @@ body::-webkit-scrollbar-thumb {
     right: 20px;
     top: 20px;
     display: block;
-    z-index: 7777;
+    z-index: 2;
   
   }
   
@@ -1757,6 +1757,13 @@ label #menu {
         left: 15%;   
         transform: translate(-50%,50%);
     }
+
+    .logOUT {
+        position: absolute;
+        left: 70%;
+        top: 50px;
+    }
+    
     
 }
 
