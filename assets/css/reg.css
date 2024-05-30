@@ -165,6 +165,7 @@ html{
     font-size: 22px;
     font-family: var(--montserrat-bold) !important;
     padding: 10px 0 10px 0;
+    color: #033767;
   }
 
   .togeda .login-box form .user-box {
@@ -172,7 +173,7 @@ html{
     flex-direction: column;
     justify-content: left;
     font-family: var(--montserrat-light);
-    color: #404040;
+    color: var(--deep-blue);
   
   }
 
@@ -180,7 +181,7 @@ html{
     padding: 14px 30px;
     border: none;
     outline: none;
-    outline: 1px solid var(--white_two);
+    outline: 1px solid #ccc;
     /* width: 300px; */
   }
 
@@ -188,7 +189,7 @@ html{
     padding: 14px 30px;
     border: none;
     outline: none;
-    outline: 1px solid var(--white_two);
+    outline: 1px solid #ccc;
     /* width: 300px; */
     margin-bottom: 25px;
   }
