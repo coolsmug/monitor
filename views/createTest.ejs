@@ -110,9 +110,11 @@
       </form>
        <a href="/admin/get-questions-page/<%= cbtest._id %>"><i class="bi bi-link" style="font-size: 2em; color: #007bff;"></i></a>
        <a href="/admin/delete-test/<%= cbtest.id %>" class="test"><i class="bi bi-trash"></i></a> 
-       <div class="copy">
-        <p class="moniLink">monitor/cbtcenter/<%= cbtest._id %></p>
-       </div>
+       <div class="copy avis">
+        <p class="moniLink">cbtcenter/<%= cbtest._id %></p>
+        <button class="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+        <span class="copy-feedback">Copied!</span>
+    </div>
   </div>
   <% }) %>
     <% if (pages > 0) { %>
@@ -163,4 +165,99 @@
         optionsContainer.style.display = 'none';
       }
     }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Select all instances of the copy avis div
+    const copyContainers = document.querySelectorAll('.copy.avis');
+
+    copyContainers.forEach(container => {
+        // Select the button and the text within each container
+        const copyButton = container.querySelector('.copy-btn');
+        const textToCopy = container.querySelector('.moniLink').textContent;
+        const feedback = container.querySelector('.copy-feedback');
+
+        copyButton.addEventListener('click', function () {
+            // Create a temporary textarea element to hold the text to copy
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                // Copy the text to the clipboard
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    // Show feedback for 2 seconds
+                    feedback.style.display = 'inline';
+                    setTimeout(() => {
+                        feedback.style.display = 'none';
+                    }, 2000);
+                } else {
+                    console.log('Copy text command was unsuccessful');
+                }
+            } catch (err) {
+                console.error('Oops, unable to copy', err);
+            }
+
+            // Remove the temporary textarea
+            document.body.removeChild(tempTextArea);
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const copyContainers = document.querySelectorAll('.copy.avis');
+
+    copyContainers.forEach(container => {
+        const copyButton = container.querySelector('.copy-btn');
+        const textToCopy = container.querySelector('.moniLink').textContent;
+        const feedback = container.querySelector('.copy-feedback');
+
+        copyButton.addEventListener('click', function () {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                feedback.style.display = 'inline';
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        });
+    });
+});
+
   </script>
+
+  <style>
+    .copy {
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      width: 50px;
+      left: 50px;
+      bottom: 10px;
+    }
+
+    .copy p {
+      left: 5px;
+      bottom: -20px;
+      background-color: none;
+      background:none ;
+    }
+
+    .copy button i {
+      color: #4ca50f;
+      font-size: 17px;
+    }
+
+    .copy-feedback {
+            display: none;
+            color: green;
+            margin-left: 10px;
+        }
+
+        
+  </style>

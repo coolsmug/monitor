@@ -44,7 +44,7 @@ homepageRoute.route('/get-code').post(resetPassword);
 homepageRoute.route('/recover-gmail-password').post(recoverGmailPassword);
 homepageRoute.route('/go-verify').get(emailVerification);
 homepageRoute.route('/verify-email').post(verifyEmailWithCode);
-homepageRoute.route('/monitor/cbtcenter/:id').get( getQusetions);
+homepageRoute.route('/cbtcenter/:id').get(getQusetions);
 homepageRoute.route('/cbt-portal/:id').get( learnerCBTEnsureLoggedIn, getGetCbtQuestion);
 homepageRoute.route('/cbtpage/:id').post(studentLogin);
 homepageRoute.route('/logout/:id').post(adminlogOut);

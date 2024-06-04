@@ -145,12 +145,13 @@ body::-webkit-scrollbar-thumb {
     position: relative;
     width: 100%;
     margin: auto;
-    padding: 20px;
+    padding: 10px;
     background-color: #fff;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: left;
+    flex-direction:row;
+    justify-content: left;
+    align-items: center;
+    overflow: auto;
     box-shadow: 2px 2px 10px #b6b6b6;
     font-family: var(--montserrat-regular);
 }
