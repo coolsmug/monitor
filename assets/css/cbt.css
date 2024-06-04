@@ -97,7 +97,7 @@ body::-webkit-scrollbar-thumb {
  
     width: 100%;
     text-align: center;
-    font-size: 80px;
+    font-size: 50px;
     margin: 0;
     padding: 0;
     color: var(--white_three);
