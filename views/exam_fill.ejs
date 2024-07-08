@@ -102,6 +102,11 @@
                       <li><span class="round">Score: </span><%= sub.score %></li>
                       <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
                       <li><span class="round">Subject: </span><%= sub.subject %></li>
+                       <% if(sub.submittedAt){%>
+                    <% let x = sub.submittedAt %>
+                    <% let y = x.toDateString() %>
+                   <li><span class="round">Date: </span><%= y %></li>
+                   <% } %>
                     </div>
                   <% } %>
                 <% }) %>
@@ -124,6 +129,11 @@
                       <li><span class="round">Score: </span><%= sub.score %></li>
                        <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
                        <li><span class="round">Subject: </span><%= sub.subject %></li>
+                        <% if(sub.submittedAt){%>
+                    <% let x = sub.submittedAt %>
+                    <% let y = x.toDateString() %>
+                   <li><span class="round">Date: </span><%= y %></li>
+                   <% } %>
                     </div>
                   <% } %>
                 <% }) %>
@@ -145,6 +155,11 @@
                       <li><span class="round">Score: </span><%= sub.score %></li>
                        <li><span class="round">CA Pos: </span><%= sub.ca_pos %></li>
                        <li><span class="round">Subject: </span><%= sub.subject %></li>
+                        <% if(sub.submittedAt){%>
+                    <% let x = sub.submittedAt %>
+                    <% let y = x.toDateString() %>
+                   <li><span class="round">Date: </span><%= y %></li>
+                   <% } %>
                     </div>
                   <% } %>
                 <% }) %>
