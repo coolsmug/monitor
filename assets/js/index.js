@@ -798,7 +798,7 @@ $(document).ready(function() {
           // Update the switch status immediately without a page reload
           $(this).find('input').prop('checked', updatedStatus);
           alert('Learners Deleted Succesfully');
-          // row.remove();
+          row.remove();
         },
         error: function(error) {
           console.error(error);

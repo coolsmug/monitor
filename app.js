@@ -49,8 +49,8 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ 
-      mongoUrl: 'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor', // Replace with your MongoDB connection string
-      collectionName: 'sessions' // Optional: specify the collection name where sessions will be stored
+      mongoUrl: 'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
+      collectionName: 'sessions'
     }),
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
   })
