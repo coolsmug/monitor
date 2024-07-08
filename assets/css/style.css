@@ -156,6 +156,22 @@ body::-webkit-scrollbar-thumb {
     font-family: var(--montserrat-regular);
 }
 
+
+.cbt-routes::-webkit-scrollbar {
+    width: .5em;
+    height: .5em;
+  }
+   
+  .cbt-routes::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+   
+  .cbt-routes::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--deep-blue)0% 50%, var(--deepest-blue)50% 100%);
+    outline: 1px solid slategrey;
+    border-radius: 35px;
+  }
+
 .cbt-routes form input , .cbt-routes form select{
     color: #4ca50f;
     border: none;
@@ -236,11 +252,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .moniLink {
-    position: absolute;
-    left: 300px;
-    bottom: 0px;
-    color: #007bff;
-    font-size: 12px;
+    display: none;
   
 }
 .cbt-routes form textarea {
