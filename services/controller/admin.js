@@ -783,7 +783,7 @@ const payStackPayment = async ( req, res ) => {
             }
           ]
         },
-        callback_url: "https://9dbe-102-89-46-217.ngrok-free.app/admin/callback",
+        callback_url: "https://monitorschoolmanagent.com.ng/admin/callback",
       });
       res.redirect(payment.data.authorization_url);
     }
@@ -866,6 +866,7 @@ const getHomePageLearenrReg = async ( req , res ) => {
     const schoolAbbToUpper = schoolAbb.toUpperCase()
   
     const learnerRollNo = `${OneTwo}/${alphaCode}${schoolAbbToUpper}${numerCode}`;
+    const learnerEmail = `${OneTwo}.${alphaCode}${schoolAbbToUpper}${numerCode}`;
       await Currentclass
               .find({schoolId: req.user._id} )
               .select("_id name arm")
@@ -875,6 +876,7 @@ const getHomePageLearenrReg = async ( req , res ) => {
                   current: current,
                   user: req.user,
                   learnerRollNo,
+                  learnerEmail,
                 })
               
               })

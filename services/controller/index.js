@@ -865,11 +865,19 @@ State.getStatesOfCountryByName = function(countryName) {
         submittedAt: new Date(),
       });
   
-      // Save the submission
+
       await submission.save();
   
-      // Update the test with the userId
-      test.userId = req.user._id;
+    
+      const userExamId =  req.user._id;
+  
+    if (!Array.isArray(test.userId)) {
+        test.userId = [];
+    }
+
+    if (!test.userId.includes(userExamId)) {
+      test.userId.push(userExamId);
+    }
       await test.save();
   
       // Update each answered question with the userId
@@ -909,7 +917,7 @@ State.getStatesOfCountryByName = function(countryName) {
             return next(err);
           }
           req.flash('error_msg', 'Wrong login details');
-          return res.redirect(`/monitor/cbtcenter/${testId}`);
+          return res.redirect(`/cbtcenter/${testId}`);
         });
       } else {
         const userSchool = await School.findOne({ _id: user.schoolId }).exec();
@@ -919,44 +927,56 @@ State.getStatesOfCountryByName = function(countryName) {
               return next(err);
             }
             req.flash('error_msg', 'You are not Authorised for this session');
-            return res.redirect(`/monitor/cbtcenter/${testId}`);
+            return res.redirect(`/cbtcenter/${testId}`);
           });
-        } else {
-          const handleLogin = (redirectUrl) => {
-            req.logIn(user, function (err) {
-              if (err) {
-                return next(err);
-              }
-              req.flash('success_msg', 'You are welcome');
-              return res.redirect(redirectUrl);
-            });
-          };
-  
-          if (userSchool.fees === "pending" && userSchool.expiry > Date.now()) {
-            handleLogin(`/cbt-portal/${testId}`);
-          } else if (userSchool.fees === "pending" && userSchool.expiry < Date.now()) {
-            req.logout((err) => {
-              if (err) {
-                return next(err);
-              }
-              req.flash('error_msg', 'You are not Authorised for this session');
-              return res.redirect(`/monitor/cbtcenter/${testId}`);
-            });
-          } else if (userSchool.status === false) {
+        }else {
+          const expireData = await CBT.find({ userId: { $in: [user._id] } }).exec();
+
+          if (expireData && expireData.length > 0) {
             req.logout(function (err) {
               if (err) {
                 return next(err);
               }
-              req.flash('error_msg', 'You are not Authorised for this session');
-              return res.redirect(`/monitor/cbtcenter/${testId}`);
+              req.flash('error_msg', 'You are only eligible to one sitting');
+              return res.redirect(`/cbtcenter/${testId}`);
             });
-          } else if (userSchool.fees === "paid") {
-            handleLogin(`/cbt-portal/${testId}`);
           } else {
-            req.flash('error_msg', "You are not Authorised for this session");
-            return res.redirect(`/monitor/cbtcenter/${testId}`);
+            const handleLogin = (redirectUrl) => {
+              req.logIn(user, function (err) {
+                if (err) {
+                  return next(err);
+                }
+                req.flash('success_msg', 'You are welcome');
+                return res.redirect(redirectUrl);
+              });
+            };
+    
+            if (userSchool.fees === "pending" && userSchool.expiry > Date.now()) {
+              handleLogin(`/cbt-portal/${testId}`);
+            } else if (userSchool.fees === "pending" && userSchool.expiry < Date.now()) {
+              req.logout((err) => {
+                if (err) {
+                  return next(err);
+                }
+                req.flash('error_msg', 'You are not Authorised for this session');
+                return res.redirect(`/cbtcenter/${testId}`);
+              });
+            } else if (userSchool.status === false) {
+              req.logout(function (err) {
+                if (err) {
+                  return next(err);
+                }
+                req.flash('error_msg', 'You are not Authorised for this session');
+                return res.redirect(`/cbtcenter/${testId}`);
+              });
+            } else if (userSchool.fees === "paid") {
+              handleLogin(`/cbt-portal/${testId}`);
+            } else {
+              req.flash('error_msg', "You are not Authorised for this session");
+              return res.redirect(`/cbtcenter/${testId}`);
+            }
           }
-        }
+        } 
       }
     })(req, res, next);
   };
@@ -968,7 +988,7 @@ State.getStatesOfCountryByName = function(countryName) {
           return next(err);
       }
       req.flash('success_msg', 'Session Terminated');
-      res.redirect(`/monitor/cbtcenter/${testId}`);
+      res.redirect(`/cbtcenter/${testId}`);
   })
   };
   

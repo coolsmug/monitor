@@ -6,6 +6,12 @@ const adminEnsureLoggedIn = (req, res, next) => {
   }
 };
 
+const adminForwardAuthenticated = async (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    return next();
+  }
+ res.redirect('/admin/admin_dashboard');     
+}
 
   const staffEnsureLoggedIn = ( req, res , next ) => {
     if (req.isAuthenticated()) {
@@ -15,6 +21,14 @@ const adminEnsureLoggedIn = (req, res, next) => {
       }
   };
 
+
+  const staffForwardAuthenticated = async (req, res, next) => {
+    if (!req.isAuthenticated()) {
+      return next();
+    }
+   res.redirect('/learner/student-profile');     
+  }
+
   const learnerEnsureLoggedIn = ( req, res , next ) => {
     if (req.isAuthenticated()) {
         return next(); // Proceed to the next middleware
@@ -23,15 +37,32 @@ const adminEnsureLoggedIn = (req, res, next) => {
       }
   };
 
+
+  const learnerForwardAuthenticated = async (req, res, next) => {
+    if (!req.isAuthenticated()) {
+      return next();
+    }
+   res.redirect('');     
+  }
+
   const learnerCBTEnsureLoggedIn = (req, res, next) => {
     const testId = req.params.id; // Capture the test ID from the route parameters
   
     if (req.isAuthenticated()) {
       return next(); // Proceed to the next middleware
     } else {
-      return res.redirect(`/monitor/cbtcenter/${testId}`); // Redirect to the specified URL with the test ID
+      return res.redirect(`/cbtcenter/${testId}`); // Redirect to the specified URL with the test ID
     }
   };
+
+
+  const learnerCBTForwardAuthenticated = async (req, res, next) => {
+    const testId = req.params.id;
+    if (!req.isAuthenticated()) {
+      return next();
+    }
+   res.redirect('/cbt-portal/${testId}');     
+  }
   
 
 
@@ -40,4 +71,8 @@ const adminEnsureLoggedIn = (req, res, next) => {
     staffEnsureLoggedIn,
     learnerEnsureLoggedIn,
     learnerCBTEnsureLoggedIn,
+    learnerCBTForwardAuthenticated,
+    learnerForwardAuthenticated,
+    staffForwardAuthenticated,
+    adminForwardAuthenticated
   }

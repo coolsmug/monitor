@@ -2,7 +2,7 @@ const express = require('express');
 const homepageRoute = express.Router();
 
 
-const {  learnerCBTEnsureLoggedIn } = require('../middleware/authentication');
+const {  learnerCBTEnsureLoggedIn, learnerCBTForwardAuthenticated } = require('../middleware/authentication');
 
 
 const {

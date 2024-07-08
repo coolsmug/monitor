@@ -8,7 +8,7 @@ const testSchema = new mongoose.Schema({
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
   startTime: Date,
   ca_pos: {type: String, trim: true},
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  userId: [ String ],
   schoolId: { type: mongoose.Schema.Types.ObjectId, ref: 'School' },
   session:  {type: String, trim: true},
   term:  {type: String, trim: true},

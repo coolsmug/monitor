@@ -111,7 +111,6 @@ adminRoute.route('/learner-detail').get(adminEnsureLoggedIn, learnersDetails);
 adminRoute.route('/upload-image/:id').post(adminEnsureLoggedIn, uploadLearnerImage);
 adminRoute.route('/admin_dashboard').get(adminEnsureLoggedIn, adminDashboardQuery);
 adminRoute.route('/learners-cbt').get(adminEnsureLoggedIn, getAllLearnerCbt);
-
 adminRoute.route('/admin_login').post(adminLogin);
 adminRoute.route('/logout').post(adminlogOut);
 adminRoute.route('/create-voucher').post(adminEnsureLoggedIn, voucherPrinting);
