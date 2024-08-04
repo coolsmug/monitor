@@ -59,6 +59,11 @@ const getSessionForstaff = async ( req , res ) => {
 
 const getClassForstaff = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
         if (req.query.sessionId) {
           const sessionId = req.query.sessionId;
     
@@ -97,6 +102,11 @@ const getClassForstaff = async ( req , res ) => {
 
 const getLearnerExamForstaff = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
         if (req.query.sessionId && req.query.classId) {
           const sessionId = req.query.sessionId;
           const classId = req.query.classId;
@@ -151,6 +161,11 @@ const getLearnerExamForstaff = async ( req , res ) => {
 
 const getSectionTextExam = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
         if (req.query.userId && req.query.sessionId && req.query.classId) {
           const userId = req.query.userId;
           const sessionId = req.query.sessionId;
@@ -348,6 +363,12 @@ const deleteExam = async ( req , res ) => {
 
 const getExamSpace = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
         const userId = req.query.userId;
         const sessionId = req.query.sessionId;
         const sectionId = req.query.sectionId;
@@ -393,6 +414,9 @@ const getExamSpace = async ( req , res ) => {
 const getMiscellaneous = async ( req , res ) => {
     try {
         
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
         
     if (req.query.id) {
         const id = req.query.id;
@@ -534,9 +558,20 @@ const updateMiscellaneous = async ( req , res ) => {
 //-----------------staff routes  ---------------------------------------
 
 const getLearnerResultEdit = async ( req , res ) => {
+  try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
     if (req.query.id) {
-        await res.render('learner_result_edit', {user: req.user})
-    }
+      await res.render('learner_result_edit', {user: req.user})
+  }
+    
+  } catch (err) {
+    res.status(500).send('error_msg', 'Internal Server Error' + ' ' + err.message);
+  }
+   
 };
 
 
@@ -608,11 +643,19 @@ const staffLogin = async ( req , res, next) => {
 };
 
 const getStaffdashboard = async ( req , res) => {
+
+  try {
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.setHeader('Expires', '-1');
-    res.setHeader('Pragma', 'no-cache'); 
+  res.setHeader('Expires', '-1');
+  res.setHeader('Pragma', 'no-cache');
+
+  res.render('home', { user: req.user})
     
-    res.render('home', { user: req.user})
+  } catch (error) {
+  
+      res.status(500).send('Internal Server Error' + ' ' + error);
+  }
+    
 };
 
 
@@ -854,6 +897,12 @@ const updateThirdTermExam = async ( req , res ) => {
 
 const getThirdTermExam = async ( req , res ) => {
   try {
+
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
     const userId = req.query.userId;
     const sessionId = req.query.sessionId;
     const sectionId = req.query.sectionId;
@@ -923,6 +972,11 @@ const deleteThirdTermExam = async ( req , res ) => {
 
 const getThirdTermMisc = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
     if (req.query.id) {
       const id = req.query.id;
   

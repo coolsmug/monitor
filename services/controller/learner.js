@@ -378,6 +378,11 @@ const changePassword = async ( req , res ) => {
 
 const getEditLearnerPassword = async ( req, res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+      
         if( req.query.id ) {
             const id = req.query.id;
             await Learner.findById(id)

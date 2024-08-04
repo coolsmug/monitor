@@ -46,8 +46,8 @@ staffRoute.route('/register_miscellaneous').post( staffEnsureLoggedIn, registerM
 staffRoute.route('/update_miscellaneous/:id').post( staffEnsureLoggedIn, updateMiscellaneous );
 staffRoute.route('/classes').get( staffEnsureLoggedIn, getLearnerResultEdit );
 staffRoute.route('/staff_login').post( staffLogin );
-staffRoute.route('/staff-route').get( staffEnsureLoggedIn, getStaffdashboard );
-staffRoute.route('/register_exams').post( staffEnsureLoggedIn, registerThirdTermExam );
+staffRoute.route('/staff-route').get(staffEnsureLoggedIn, getStaffdashboard);
+staffRoute.route('/register_exams').post(staffEnsureLoggedIn, registerThirdTermExam );
 staffRoute.route('/update-exams/:id').post( staffEnsureLoggedIn, updateThirdTermExam );
 staffRoute.route('/exam-pace-third').get( staffEnsureLoggedIn, getThirdTermExam );
 staffRoute.route('/deletedss/:id').delete( staffEnsureLoggedIn, deleteThirdTermExam, );

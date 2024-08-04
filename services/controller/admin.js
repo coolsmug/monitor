@@ -697,6 +697,12 @@ const voucherPrinting = async ( req , res ) => {
 
 const getVoucherPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     var perPage = 10
     var page = req.params.page || 1
       await Voucher.find( { used: false, print: false, schoolId: req.user._id } )
@@ -723,6 +729,11 @@ const getVoucherPage = async ( req , res ) => {
 
 const getVoucherPaymentPage = async ( req, res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
     await res.render('payment', {user: req.user})
   } catch (err) {
     console.log(err.message)
@@ -783,7 +794,7 @@ const payStackPayment = async ( req, res ) => {
             }
           ]
         },
-        callback_url: "https://monitorschoolmanagent.com.ng/admin/callback",
+        callback_url: "https://786c-129-205-113-178.ngrok-free.app/admin/callback",
       });
       res.redirect(payment.data.authorization_url);
     }
@@ -830,6 +841,12 @@ const payStackCallBack = async ( req , res ) => {
 
 const getHomePageLearenrReg = async ( req , res ) => {
    try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     const alpha = '123456789123456789012345678901234567891234567890123456789012345678912345678901234567890';
     let alphaCode = '';
     for (let i = 0; i < 2; i++) {
@@ -945,6 +962,11 @@ const registerProprietorStatement = async ( req, res ) => {
 
 const getProprietorUpdatePage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
     
     if (req.query.id) {
       const id = req.query.id;
@@ -1085,6 +1107,12 @@ const createStaff = async ( req , res ) => {
 
 const getUpdateStaffUpdatePage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     if (req.query.id) {
       const id = req.query.id;
       Staff.findById(id)
@@ -1326,6 +1354,12 @@ if(errors.length > 0) {
 
 const getUpdateStatementPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     if (req.query.id) {
       const id = req.query.id;
      await Staffstatement.findById(id)
@@ -1389,6 +1423,12 @@ const deleteStaffState = async ( req , res ) => {
 
 // ---------------------------updating Schools-----------------------------------------------
 const getSchoolUpdatePage = async ( req , res ) => {
+
+  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
   if (req.query.id) {
     const id = req.query.id;
     School.findById(id)
@@ -1425,6 +1465,12 @@ const updateSchool = async ( req , res ) => {
 
 const getSchoolDetail = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     const Id = req.user._id
     const school = await School.findById({ _id: Id }).exec();
     res.render('school_detail', {school, user: req.user})
@@ -1606,6 +1652,12 @@ const addSession = async ( req, res ) => {
 
   const getUpdateSesstionpPage = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
       if (req.query.id) {
         const id = req.query.id;
         Session.findById(id)
@@ -1740,6 +1792,12 @@ const addSession = async ( req, res ) => {
 
   const getUpdateSectionPage = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
       if (req.query.id) {
         const id = req.query.id;
         Section.findById(id)
@@ -1870,6 +1928,12 @@ const addSession = async ( req, res ) => {
 
   const getUpdateThirdSectionPage = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
       if (req.query.id) {
         const id = req.query.id;
         ThirdSection.findById(id)
@@ -2011,6 +2075,12 @@ const addSession = async ( req, res ) => {
 
   const getUpdateClassPage = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
       if (req.query.id) {
         const id = req.query.id;
         Currentclass.findById(id)
@@ -2159,6 +2229,12 @@ const addSession = async ( req, res ) => {
 
   const getUpdateSubjectPage = async ( req , res ) => {
     try {
+
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
       if (req.query.id) {
         const id = req.query.id;
         Subject.findById(id)
@@ -2285,6 +2361,12 @@ const createProprietorPage = async ( req , res ) => {
 
 const getAllStaffs = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     await   
     Staff
       .find({ status: true, schoolId: req.user._id })
@@ -2308,6 +2390,12 @@ const getAllStaffs = async ( req , res ) => {
 
 const getCreateStaffStatePage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     await 
       res.
         render("staff_statement", {user: req.user})
@@ -2320,6 +2408,12 @@ const getCreateStaffStatePage = async ( req , res ) => {
 
 const getCreateClassPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     await 
       res.
         render("create_currentclass", {user: req.user})
@@ -2332,6 +2426,12 @@ const getCreateClassPage = async ( req , res ) => {
 
 const getCreateSubjectPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     await 
       res.
         render('create_subject', {user: req.user})
@@ -2344,6 +2444,12 @@ const getCreateSubjectPage = async ( req , res ) => {
 
 const getCreateSessionPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     await 
       res.
         render('create_session', {user: req.user})
@@ -2356,6 +2462,12 @@ const getCreateSessionPage = async ( req , res ) => {
 
 const getCreateSectionPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     await 
       res.
         render('create_section', {user: req.user})
@@ -2368,6 +2480,12 @@ const getCreateSectionPage = async ( req , res ) => {
 
 const getPaymentErrorPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     await 
       res.
       render("error404", {title: 'An error occurred while processing your payment'});
@@ -2381,6 +2499,12 @@ const getPaymentErrorPage = async ( req , res ) => {
 
 const getAllSession = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     var perPage = 9
     var page = req.params.page || 1
 
@@ -2410,6 +2534,12 @@ const getAllSession = async ( req , res ) => {
 
 const getAllSection = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     var perPage = 9
     var page = req.params.page || 1
 
@@ -2438,6 +2568,12 @@ const getAllSection = async ( req , res ) => {
 
 const getAllThirdSecton = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+
     var perPage = 9
      var page = req.params.page || 1
  
@@ -2466,6 +2602,10 @@ const getAllThirdSecton = async ( req , res ) => {
 
 const getAllLearner = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
 
     var perPage = 9
     var page = req.params.page || 1
@@ -2497,6 +2637,11 @@ const getAllLearner = async ( req , res ) => {
 
 const getAllSubject = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
     var perPage = 9
     var page = req.params.page || 1
 
@@ -2528,6 +2673,11 @@ const getAllSubject = async ( req , res ) => {
 
 const getAllClasses = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
     var perPage = 9
     var page = req.params.page || 1
 
@@ -2555,12 +2705,32 @@ const getAllClasses = async ( req , res ) => {
 };
 
 const getFirstAndSecondResult = async ( req , res ) => {
-  res.render('term_result', {user: req.user})
+  try {
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+      res.render('term_result', {user: req.user})
+  } catch (error) {
+    
+    res.status(500).send('Internal Server Error' + ' ' + error);
+  }
+ 
 };
 
 
 const getThirdResult = async ( req , res ) => {
-  res.render('third_term_result', {user: req.user})
+  try {
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+      res.render('third_term_result', {user: req.user})
+  } catch (error) {
+    
+    res.status(500).send('Internal Server Error' + ' ' + error);
+  }
+  
 };
 
 //-------------------------------all pages rendering end here-----------------------------
@@ -2624,6 +2794,12 @@ const LearnersReport = async ( req , res ) => {
 //------------------------alumni Page-------------------------------------------
 const getAlumniPage = async ( req , res ) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
+
     var perPage = 9;
     var page = req.params.page || 1 
     await Learner.find( { status : false, deletes : false, schoolId: req.user._id } )
@@ -2684,15 +2860,14 @@ const promoteSingleLearner = async ( req , res  ) => {
         req.flash('error_msg', 'User not found');
         return res.status(404).redirect('/admin/promote');
       }
-
       user.classId = classId;
       await user.save();
       
       req.flash('success_msg', 'Learner promoted successfully');
-      return res.redirect(`admin/promote?id=${classId}`);
+      return res.redirect(`/admin/promote?id=${classId}`);
     } else {
       req.flash('error_msg', 'Class ID not provided');
-      return res.status(400).redirect('admin/promote');
+      return res.status(400).redirect('/admin/promote');
     }
   } catch (error) {
     console.error(error);
@@ -2723,27 +2898,41 @@ const promoteAllLearner = async ( req , res  ) => {
 };
 
 const getPromotePage = async ( req , res  ) => {
-  if (req.query.id) {
-    const id = req.query.id;
-    const presentClass = await Currentclass.findById(id).exec()
-    await Currentclass.find( { schoolId : req.user._id } )
-                       .select("name arm _id") 
-                       .sort({ roll_no : 1})
-                       .exec((err, classed) => {
-                            if(err) throw new Error(err)
-                            Learner.find( { "classId" : id, "status": true } )
-                              .exec((errOne, users) => {
-                                if(errOne) throw new Error(errOne)
-                                res.render("promoter", {
-                                    classed: classed,
-                                    users: users,
-                                    user: req.user,
-                                    presentClass
-                                })
-                            })
-                           
-                       })
-   }
+
+  try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
+    if (req.query.id) {
+      const id = req.query.id;
+      const presentClass = await Currentclass.findById(id).exec()
+      await Currentclass.find( { schoolId : req.user._id } )
+                         .select("name arm _id") 
+                         .sort({ roll_no : 1})
+                         .exec((err, classed) => {
+                              if(err) throw new Error(err)
+                              Learner.find( { "classId" : id, "status": true } )
+                                .exec((errOne, users) => {
+                                  if(errOne) throw new Error(errOne)
+                                  res.render("promoter", {
+                                      classed: classed,
+                                      users: users,
+                                      user: req.user,
+                                      presentClass
+                                  })
+                              })
+                             
+                         })
+     }
+
+    
+  } catch (error) {
+
+    res.status(500).send('Internal Server Error' + ' ' + error);
+  }
+  
 
 };
 
@@ -2904,6 +3093,11 @@ const chseckThirdTermResult = async ( req , res ) => {
 const getCreateTestForCbt = async ( req , res) => {
   try {
 
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
+
     var perPage = 9;
     var page = req.params.page || 1;
     
@@ -2963,6 +3157,12 @@ const deleteCBTs = async (req, res) => {
 
 const getGetCbtQuestion = async ( req , res) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
+
     const id = req.params.id;
     const cbt = await CBT.findById(id).exec();
 
@@ -3055,6 +3255,12 @@ const updateQuestion = async (req, res) => {
 
 const getAllLearnerCbt = async (req, res) => {
   try {
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
+
+
     const id = req.query.id;
 
     if (!id) {

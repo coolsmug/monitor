@@ -298,44 +298,53 @@
                
                <table>
                
-                    
-                <%
-                var pos = position.position;
-                var posi = pos.split('');
-                var lastDigit = posi[posi.length - 1]; // Get the last digit of the position
-                var secondLastDigit = posi[posi.length - 2]; // Get the second-last digit of the position
-                console.log(secondLastDigit)
-                console.log(lastDigit)
-                var rate;
-                if (secondLastDigit === '1' || (lastDigit === '1' && (secondLastDigit !== '1' && secondLastDigit !== '2' && secondLastDigit !== '3'))) {
-                    // For numbers ending in '11', '12', or '13', or when the last digit is '1' but not '11', '12', or '13', always use 'th'
-                    rate = 'th';
-                  } else {
-                  // For all other cases, determine the suffix based on the last digit
-                  switch (lastDigit) {
-                    case '1':
-                      rate = 'st';
-                      break;
-                    case '2':
-                      rate = 'nd';
-                      break;
-                    case '3':
-                      rate = 'rd';
-                      break;
-                    default:
+                <% if(position.position) { %> 
+                    <%
+                    var pos = position.position;
+                  
+                    // Ensure pos is a string
+                    if (typeof pos !== 'string') {
+                      pos = pos.toString(); // Convert to string if necessary
+                    }
+                  
+                    var posi = pos.split('');
+                    var lastDigit = posi[posi.length - 1]; 
+                    var secondLastDigit = posi[posi.length - 2]; 
+                  
+                    console.log(secondLastDigit);
+                    console.log(lastDigit);
+                  
+                    var rate;
+                    if (secondLastDigit === '1' || (lastDigit === '1' && (secondLastDigit !== '1' && secondLastDigit !== '2' && secondLastDigit !== '3'))) {
+                      // For numbers ending in '11', '12', or '13', or when the last digit is '1' but not '11', '12', or '13', always use 'th'
                       rate = 'th';
-                  }
-                }
-                %>
-                
-                <tr>
-                  <td>Learner's Position</td>
-                  <td class="com">
-                    <h1><%= pos %><%= rate %></h1>
-                  </td>
-                </tr>
-                
-                
+                    } else {
+                      // For all other cases, determine the suffix based on the last digit
+                      switch (lastDigit) {
+                        case '1':
+                          rate = 'st';
+                          break;
+                        case '2':
+                          rate = 'nd';
+                          break;
+                        case '3':
+                          rate = 'rd';
+                          break;
+                        default:
+                          rate = 'th';
+                      }
+                    }
+                    %>
+                    
+                    <tr>
+                      <td>Learner's Position</td>
+                      <td class="com">
+                        <h1><%= pos %><%= rate %></h1>
+                      </td>
+                    </tr>
+                    
+                  <% } %>
+                  
                 
 
                 

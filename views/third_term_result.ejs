@@ -146,7 +146,7 @@
                                 <td><%= exam[i].grade %></td>
                                 <td><%= exam[i].remarks%></td>
                                 <% totalOverall += exam[i].overall_first_ca + exam[i].overall_second_ca + (exam.overall_third_ca ? exam[i].overall_third_ca : 0) + exam[i].exam_overall; %>
-                                <% totalScore = (exam[i].per_over_all.length * 100) - 100 %>
+                                
                                 <% totalQone += exam[i].qone; %>
                                 <% totalQtwo += exam[i].qtwo; %>
                                 <% totalFirstCA += exam[i].mark_obtained_first_ca; %>
@@ -159,7 +159,7 @@
                                 <% totalExamMark += exam[i].exam_mark_obtain; %>
                                 <% totalTermTotal += exam[i].term_total; %>
                                 <% var total = totalper_over_al += Number(exam[i].per_over_all) %>
-                                <% var cumulative = (total/totalScore) * 100 %>
+                                
                             </tr>
                             <% } %> 
                            
@@ -194,7 +194,10 @@
                                 <td colspan="5"></td>
                                 <td colspan="4"></td>
                                 
-                                <td colspan="2" class="red"><p><%= cumulative.toFixed(2)+"%"%></p></td>
+                                <%  var totality = exam.length %>
+                                <% var totalScore = totality * 100 %>
+                                <% var cumulative = (Number(total.toFixed(2))/Number(totalScore)) * 100  %>
+                                <td colspan="2" class="red"><p><%= cumulative.toFixed(2)+"%" %></p></td>
                                 <td colspan="2"></td>
                                 
                             </tr>
@@ -284,6 +287,7 @@
                         </thead>
                         <tbody>
                             <% if(misc) {%> 
+                                <tr><td>Resumption Date</td><td class="opting"><%= misc.resumpDay %></td></tr>
                             <tr><td>Next Time Fees</td><td class="opting"><%= misc.next_t_fee %></td></tr>
                             <tr><td>Payable on or Before</td><td class="opting"><%= misc.payable %></td></tr>
                             <tr><td>Debt on Ground</td><td class="opting"><%= misc.debt %></td></tr>
@@ -306,41 +310,53 @@
                         <table>
                
                     
+                            <% if(position) { %> 
                             <%
                             var pos = position.position;
+
+                            // Ensure pos is a string
+                            if (typeof pos !== 'string') {
+                                pos = pos.toString(); // Convert to string if necessary
+                            }
+
                             var posi = pos.split('');
                             var lastDigit = posi[posi.length - 1]; // Get the last digit of the position
                             var secondLastDigit = posi[posi.length - 2]; // Get the second-last digit of the position
-                            console.log(secondLastDigit)
-                            console.log(lastDigit)
+
+                            console.log(secondLastDigit);
+                            console.log(lastDigit);
+
                             var rate;
                             if (secondLastDigit === '1' || (lastDigit === '1' && (secondLastDigit !== '1' && secondLastDigit !== '2' && secondLastDigit !== '3'))) {
                                 // For numbers ending in '11', '12', or '13', or when the last digit is '1' but not '11', '12', or '13', always use 'th'
                                 rate = 'th';
-                              } else {
-                              // For all other cases, determine the suffix based on the last digit
-                              switch (lastDigit) {
+                            } else {
+                                // For all other cases, determine the suffix based on the last digit
+                                switch (lastDigit) {
                                 case '1':
-                                  rate = 'st';
-                                  break;
+                                    rate = 'st';
+                                    break;
                                 case '2':
-                                  rate = 'nd';
-                                  break;
+                                    rate = 'nd';
+                                    break;
                                 case '3':
-                                  rate = 'rd';
-                                  break;
+                                    rate = 'rd';
+                                    break;
                                 default:
-                                  rate = 'th';
-                              }
+                                    rate = 'th';
+                                }
                             }
                             %>
                             
                             <tr>
-                              <td>Learner's Position</td>
-                              <td class="com">
+                                <td>Learner's Position</td>
+                                <td class="com">
                                 <h1><%= pos %><%= rate %></h1>
-                              </td>
+                                </td>
                             </tr>
+                            
+                            <% } %>
+
                             
                             <% if(misc) {%> 
                             <tr><td>Teacher's Comment</td><td class="com"><%= misc.t_c %></td></tr>
