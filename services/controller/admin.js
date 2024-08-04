@@ -492,52 +492,18 @@ const voucherPrinting = async ( req , res ) => {
     }
 
     if(errors.length > 0 ){
-      var perPage = 6
-      var page = req.params.page || 1
-        Voucher.find( { used: false, schoolId: req.user._id } )
-                      .skip((perPage * page) - perPage)
-                      .limit(perPage)
-                      .exec((err, vouch) => {
-                        Voucher.count({used: false, schoolId: req.user._id}).exec((errOne, count) => {
-                            if(errOne) throw new Error(err)
-                            if(err) throw new Error(err)
-                            res.render('get_token', {
-                              errors: errors,
-                              pin: pin,
-                              vouch : vouch,
-                              current: page,
-                              user: req.user,
-                              pages: Math.ceil(count / perPage)
-                            })
-                        })
-                       
-                      })
+      req.flash('error_msg', "Error registration: " + errors[0].msg);
+      res.redirect('/admin/get-gen-voucher/1');
+    
     }else{
-      await VoucherPayment.findOne( { pin : pin } ).exec((err, pins) => {
+     VoucherPayment.findOne( { pin : pin } ).exec((err, pins) => {
         if (err) {console.log (err); return; }
         if(pins) {
               if ( pins.used == true ) {
-                errors.push( { msg : `This PIN: "${pins.pin}" has been used, kindly pay for a new PIN` })
-                var perPage = 10
-                var page = req.params.page || 1
-                   Voucher.find( { used: false, schoolId: req.user._id } )
-                                .skip((perPage * page) - perPage)
-                                .limit(perPage)
-                                .exec((err, vouch) => {
-                                  Voucher.count({used: false}).exec((errOne, count) => {
-                                      if(errOne) throw new Error(err)
-                                      if(err) throw new Error(err)
-                                      res.render('get_token', {
-                                        errors: errors,
-                                        pin: pin,
-                                        vouch : vouch,
-                                        current: page,
-                                        user: req.user,
-                                        pages: Math.ceil(count / perPage)
-                                      })
-                                  })
-                                 
-                                })
+                
+                req.flash('error_msg', `This PIN: "${pins.pin}" has been used, kindly pay for a new PIN` );
+                res.redirect('/admin/get-gen-voucher/1');
+               
               }else {
                 VoucherPayment.updateOne( { pin : pin }, { used : true }, (err, pins) => {
                   if(err) {
@@ -644,7 +610,7 @@ const voucherPrinting = async ( req , res ) => {
                                     }).catch((err)=> console.error(err.message))
                             
                               
-                            } else if(!code) {
+                            } else if(!coded) {
                               Voucher.create(vouch, (err, vouch) => {
                                 if (err) throw new Error(err)
                                 res.redirect('/admin/get-gen-voucher/1');
@@ -660,27 +626,9 @@ const voucherPrinting = async ( req , res ) => {
                 })
               }
         } else {
-          errors.push( { msg : `This PIN : ${pin} you provided is Invalid` })
-          var perPage = 10
-          var page = req.params.page || 1
-             Voucher.find( { used: false, schoolId: req.user._id } )
-                          .skip((perPage * page) - perPage)
-                          .limit(perPage)
-                          .exec((err, vouch) => {
-                            Voucher.count({used: false}).exec((errOne, count) => {
-                                if(errOne) throw new Error(err)
-                                if(err) throw new Error(err)
-                                res.render('get_token', {
-                                  errors: errors,
-                                  pin: pin,
-                                  vouch : vouch,
-                                  current: page,
-                                  user: req.user,
-                                  pages: Math.ceil(count / perPage)
-                                })
-                            })
-                           
-                          })
+         
+          req.flash('error_msg', `This PIN: ${pin} you provided is Invalid` );
+          res.redirect('/admin/get-gen-voucher/1');
         }
 
       })
@@ -709,7 +657,7 @@ const getVoucherPage = async ( req , res ) => {
                     .skip((perPage * page) - perPage)
                     .limit(perPage)
                     .exec((err, vouch) => {
-                      Voucher.count({used: false, schoolId: req.user._id}).exec((errOne, count) => {
+                      Voucher.count({used: false, print: false, schoolId: req.user._id}).exec((errOne, count) => {
                           if(errOne) throw new Error(err)
                           if(err) throw new Error(err)
                           res.render('get_token', {

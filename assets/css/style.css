@@ -290,6 +290,7 @@ body::-webkit-scrollbar-thumb {
 
 /* modal */
 .modality {
+    position: fixed;
     z-index: 999;
     display: flex;
     justify-content: center;
@@ -427,8 +428,7 @@ body::-webkit-scrollbar-thumb {
     height: 50px;
     background: var(--white);
     box-shadow: 2px 2px 5px grey;
-    position: -webkit-sticky;
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 1;  
 }
@@ -446,9 +446,11 @@ body::-webkit-scrollbar-thumb {
     }
 
 .ul-one {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 7%;
+    width: 100;
     z-index: 1;  
     /* background-color: rgb(153, 26, 26); */
 
@@ -542,6 +544,7 @@ body::-webkit-scrollbar-thumb {
     position: fixed;
     box-sizing: border-box;
     z-index: 8888;
+    left: 0;
     top: 52px;
     transition: all .5s ease-out;
     -webkit-transition: all .5s ease-out;
@@ -3047,31 +3050,26 @@ box-shadow: 2px 5px grey;
     
  }
 
-  @media only screen and (max-width: 800px) {
-     
- 
-  }
-
+  
   .div-timess, .div-bar {
         position: absolute;
         display: none;
   }
   
 
-  @media only screen and (max-width: 850px){
+  @media only screen and (max-width: 660px){
 
         .ul-one {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 50%;
             width: 100%;
             height: 100%;
             background: #07294d79;
             z-index: 5;
-            left: -1000px;
+            left:0px;
             opacity: 0;
-            
         }
+
         .ul-one  ul {
             margin-top: 200px;
             display: flex;
