@@ -18,6 +18,7 @@ const fs = require("fs");
 const path = require("path");
 const multer = require('multer');
 const bcrypt = require('bcrypt');
+const Position = require("../models/positionFirstTerm");
 
 
 const studentLogin = async (req, res, next) => {
@@ -184,10 +185,11 @@ const learnerCheckResultFirstSecondTerm = async ( req , res ) => {
           const users = await Learner.findById(learnerId).exec();
           const section = await Section.findOne({ roll_no, name, classof, schoolId: voucherId._id }).exec();
           const session = await Session.findOne({ classof, schoolId: voucherId._id }).exec();
+          const position = await Position.findOne({learnerId: learnerId, term: name, classofs: classof, classId: learner.classId }).exec()
     
           if (exam) {
             await Voucher.updateOne({ code }, { $set: { userid: learner._id, used: true }, $inc: { usage_count: 1 } });
-            return res.render("term_result", { exam, misc, users, section, session, user : voucherId , resultSerialNumber });
+            return res.render("term_result", { position, exam, misc, users, section, session, user : voucherId , resultSerialNumber });
           } else {
             return res.render('success', { title: "One or more required database queries failed" });
           }
@@ -252,10 +254,11 @@ const checkThirdTermResult = async ( req , res ) => {
           const users = await Learner.findById(learnerId).exec();
           const section = await ThirdSection.findOne({ roll_no, name, classof, schoolId: voucherId._id }).exec();
           const session = await Session.findOne({ classof, schoolId: voucherId._id }).exec();
+          const position = await Position.findOne({learnerId: learnerId, term: name, classofs: classof, classId: learner.classId }).exec();
     
           if (exam) {
             await Voucher.updateOne({ code }, { $set: { userid: learner._id, used: true }, $inc: { usage_count: 1 } });
-            return res.render("third_term_result", { exam, misc, users, section, session, user: voucherId, resultSerialNumber });
+            return res.render("third_term_result", { position, exam, misc, users, section, session, user: voucherId, resultSerialNumber });
           } else {
             return res.render('success', { title: "One or more required database queries failed" });
           }

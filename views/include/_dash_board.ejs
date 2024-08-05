@@ -15,7 +15,7 @@
          <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521762/school_logo-01_rf6ogn.png" alt="" width="100">
          <% } %> 
 </div>
-<div class="ul-one" id="big-door">
+<div class="ul-one x-it" id="big-door">
  
     <div class="div-timess"><i class="fas fa-times" id="tii"></i></div>
     <ul>
@@ -202,25 +202,7 @@
     $('#customPopup').hide();
   });
   
-    let closes = document.getElementById("tii");
-    let openn = document.getElementById("shii");
-    let thedoor = document.getElementById("big-door");
-  
-    function closIts() {
-      closes.onclick = () => {
-        thedoor.style.left = '-1000px';
-        thedoor.style.opacity = "0";
-      };
-    }
-    closIts();
-  
-    function openIt() {
-      openn.onclick = () => {
-        thedoor.style.left = '0px';
-        thedoor.style.opacity = "1";
-      };
-    }
-    openIt();
+ 
 
     function toggleMenu() {
   const menuToggle = document.querySelector('.menu-toggle');

@@ -465,19 +465,14 @@ let oneNOW = document.getElementById("big-door")
 
 function closIts() {
   closesing.onclick = ()=> {
-      oneNOW.style.left = '-1000px'
-      oneNOW.style.transition = 'all .7s ease-in-out'
-      oneNOW.style.opacity = "0"
-     
+    oneNOW.classList.toggle('x-it')
   }
 }
 closIts()
 
 function openIt() {
   opening.onclick = ()=> {
-      oneNOW.style.left = '0px'
-      oneNOW.style.transition = 'all .7s ease-in-out'
-      oneNOW.style.opacity = "1"
+    oneNOW.classList.toggle('x-it')
   }
 }
 openIt()

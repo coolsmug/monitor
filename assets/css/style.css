@@ -452,13 +452,14 @@ body::-webkit-scrollbar-thumb {
     top: 7%;
     width: 100;
     z-index: 1;  
-    /* background-color: rgb(153, 26, 26); */
+   
 
 }
 .logOUT {
     position: absolute;
-    left: 400px;
-    top: -20px;
+    top: -70px;
+    left: 180px;
+   
 }
 
 .logOUT button {
@@ -496,7 +497,6 @@ body::-webkit-scrollbar-thumb {
     width: 550px;
     margin: auto;
     display: flex;
-    background-color: none;
     margin-top: -50px;
     flex-direction: row;
 
@@ -1776,7 +1776,7 @@ label #menu {
 
     .logOUT {
         position: absolute;
-        left: 70%;
+        /* left: 70%; */
         top: 50px;
     }
     
@@ -3066,9 +3066,19 @@ box-shadow: 2px 5px grey;
             height: 100%;
             background: #07294d79;
             z-index: 5;
-            left:0px;
-            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: .2s ease-in-out;
+          
         }
+
+        .x-it {
+            opacity: 0;
+            left: -800px;
+            transition: .2s ease-in-out;
+        }
+
 
         .ul-one  ul {
             margin-top: 200px;
@@ -3487,9 +3497,8 @@ box-shadow: 2px 5px grey;
 .logoutss {
     z-index: 1;
     position: absolute;
-    background-color: none;
-    right: 10px;
-    top: 10px;
+    right: 100px;
+    top: 0px;
 }
 
 .logoutss button{
@@ -3532,7 +3541,7 @@ box-shadow: 2px 5px grey;
 
 /* @media for learners profile */
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 650px) {
     #aahref  {
         font-size: 12px;
         padding: 3px 10px;
@@ -3574,8 +3583,10 @@ box-shadow: 2px 5px grey;
     }
 
     .logoutss {
-     
-        top: 3px;
+        left: 50%;
+        top: 50px;
+        width: 50px;
+        border-radius: 50%;
     }
 
     .mon .logoutss button i {
@@ -3785,7 +3796,7 @@ box-shadow: 2px 5px grey;
     width: 220px;
     min-height: 150px;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
