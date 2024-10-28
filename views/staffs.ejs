@@ -80,6 +80,19 @@
     
           
         </form>
+
+        <form action="/admin/edit-staff-image/<%= staff._id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <div class="hop">
+                <label for="img">Image</label>
+                <input type="file" name="img" id="image">
+              </div>
+            </div>
+            <div class="mb-3">
+              <input type="submit" value="Upload Image">
+            </div>
+        </form>
+          
       
     </div>
 </div>

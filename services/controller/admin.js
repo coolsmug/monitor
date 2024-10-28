@@ -15,6 +15,8 @@ const VoucherPayment = require("../models/voucher_payment.js");
 const Voucher = require("../models/token");
 const Proprietor = require("../models/proprietor");
 const Staffstatement = require("../models/staff.statetment");
+const Event = require('../models/event');
+const Blog = require('../models/blog');
 const School = require("../models/school.name");
 const Classes = require('../models/current_class');
 const Miscellaneous = require('../models/miscellaneous')
@@ -30,33 +32,37 @@ const multer = require('multer');
 const Position = require("../models/positionFirstTerm");
 const CBT = require('../models/test');
 const Question = require('../models/question');
-const Submission = require('../models/submit')
+const Submission = require('../models/submit');
+const currentClass = require('../models/current_class');
+
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // Multer configuration for file uploads
 const upload = multer({
   dest: 'uploads/',
+  limits: {
+    fileSize: 3 * 1024 * 1024, // 5 MB file size limit
+  },
   fileFilter: (req, file, cb) => {
     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
-
-    // console.log('File Details:', file);
-    // console.log('MIME Type:', file.mimetype);
-
     if (!allowedMimeTypes.includes(file.mimetype)) {
       return cb(new Error('Invalid file type'), false);
     }
-
     cb(null, true);
   }
 });
 
+
+
 const uploadLearnerImages = upload.single('img');
 const uploadSchoolImages = upload.single('img');
+const uploadStaffImages = upload.single('img');
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
 
 // All codes on Learners------------------------------------//
 const registerLearner = async ( req, res ) => {
@@ -657,9 +663,10 @@ const getVoucherPage = async ( req , res ) => {
                     .skip((perPage * page) - perPage)
                     .limit(perPage)
                     .exec((err, vouch) => {
-                      Voucher.count({used: false, print: false, schoolId: req.user._id}).exec((errOne, count) => {
-                          if(errOne) throw new Error(err)
-                          if(err) throw new Error(err)
+                      Voucher.count({used: false, print: false, schoolId: req.user._id})
+                             .exec((errOne, count) => {
+                                if(errOne) throw new Error(err)
+                                if(err) throw new Error(err)
                           res.render('get_token', {
                             vouch : vouch,
                             current: page,
@@ -742,7 +749,7 @@ const payStackPayment = async ( req, res ) => {
             }
           ]
         },
-        callback_url: "https://786c-129-205-113-178.ngrok-free.app/admin/callback",
+        callback_url: "https://monitorschoolmanagent.com.ng/admin/callback",
       });
       res.redirect(payment.data.authorization_url);
     }
@@ -1081,6 +1088,52 @@ const getUpdateStaffUpdatePage = async ( req , res ) => {
     res.status(500).send('Internal Server Error' + ' ' + err.message);
   }
 };
+
+
+// staff image
+
+const editStaffImage = (req, res) => {
+  uploadStaffImages(req, res, async (err) => {
+    if (err) {
+      console.error('File upload error:', err.message);
+      return res.status(400).json({ error: 'File upload failed', details: err.message });
+    }
+
+    try {
+      const id = req.params.id;
+      const user = await Staff.findById(id);
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file provided' });
+      }
+
+      const result = await cloudinary.uploader.upload(req.file.path);
+
+      if (!result || !result.secure_url) {
+        return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
+      }
+
+      user.img = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
+
+      await user.save();
+
+      req.flash('success_msg', 'Image uploaded successfully');
+      return res.redirect('/admin/update-staff?id=' + id);
+    } catch (error) {
+      console.error('Error:', error);
+      return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+  });
+};
+
+
 
 const updateStaff = async ( req , res ) => {
   try {
@@ -2797,53 +2850,75 @@ const oldLearnersStautusUpdate = async ( req , res ) => {
 
 
 //---------------------------Learners Promotion ------------------------------------------------
-const promoteSingleLearner = async ( req , res  ) => {
+const promoteSingleLearner = async (req, res) => {
   try {
     const userId = req.params.id;
     const classId = req.body.id;
 
+    const userClass = await Currentclass.findById(classId);
+    if (!userClass) {
+      const message = 'Class not found';
+      if (req.xhr) return res.status(404).json({ message });
+      req.flash('error_msg', message);
+      return res.status(404).redirect('/admin/promote');
+    }
+
     if (classId) {
       const user = await Learner.findById(userId);
       if (!user) {
-        req.flash('error_msg', 'User not found');
+        const message = 'User not found';
+        if (req.xhr) return res.status(404).json({ message });
+        req.flash('error_msg', message);
         return res.status(404).redirect('/admin/promote');
       }
+
       user.classId = classId;
+      user.classes = userClass.name;
       await user.save();
-      
-      req.flash('success_msg', 'Learner promoted successfully');
+
+      const message = 'Learner promoted successfully';
+      if (req.xhr) return res.status(200).json({ message });
+      req.flash('success_msg', message);
       return res.redirect(`/admin/promote?id=${classId}`);
     } else {
-      req.flash('error_msg', 'Class ID not provided');
+      const message = 'Class ID not provided';
+      if (req.xhr) return res.status(400).json({ message });
+      req.flash('error_msg', message);
       return res.status(400).redirect('/admin/promote');
     }
   } catch (error) {
     console.error(error);
-    req.flash('error_msg', 'Internal server error');
+    const message = 'Internal server error';
+    if (req.xhr) return res.status(500).json({ message });
+    req.flash('error_msg', message);
     return res.status(500).redirect('/admin/promote');
   }
 };
 
-const promoteAllLearner = async ( req , res  ) => {
-  try {
-    const classId = req.body.classId; // Get the classId from the request body
 
-    if (!classId) {
-      req.flash('error_msg', 'Class ID not provided');
+
+const promoteAllLearner = async (req, res) => {
+  try {
+    const { classId, newClassId } = req.body; 
+    const userClass = await Currentclass.findById(newClassId);
+
+    if (!classId || !newClassId) {
+      req.flash('error_msg', 'Both Class ID and New Class ID are required');
       return res.status(400).redirect('/admin/promote');
     }
 
-    // Find all learners with the specified classId and update their classId
-    await Learner.updateMany({ classId }, { $set: { classId: req.body.newClassId } });
+    // Find all learners with the specified current classId and update to newClassId
+    await Learner.updateMany({ classId }, { $set: { classId: newClassId , classes: userClass.name} });
 
     req.flash('success_msg', 'Learners promoted successfully');
-    return res.redirect(`/admin/promote?id=${req.body.newClassId}`);
+    return res.redirect(`/admin/promote?id=${newClassId}`);
   } catch (error) {
     console.error(error);
     req.flash('error_msg', 'Internal server error');
     return res.status(500).redirect('/admin/promote');
   }
 };
+
 
 const getPromotePage = async ( req , res  ) => {
 
@@ -2861,7 +2936,7 @@ const getPromotePage = async ( req , res  ) => {
                          .sort({ roll_no : 1})
                          .exec((err, classed) => {
                               if(err) throw new Error(err)
-                              Learner.find( { "classId" : id, "status": true } )
+                              Learner.find( { "classId" : id, "status": true, "deletes": false } )
                                 .exec((errOne, users) => {
                                   if(errOne) throw new Error(errOne)
                                   res.render("promoter", {
@@ -3256,8 +3331,579 @@ const deleteQuestions = async (req, res) => {
 };
 
 
+//----------------------------school website----------------------------------------------\\
+const uploadMultiple = multer({
+  dest: 'uploads/',
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      return cb(new Error('Invalid file type'), false);
+    }
+    cb(null, true);
+  }
+}).fields([
+  { name: 'img', maxCount: 1 },
+  { name: 'image', maxCount: 1 }
+]);
+
+const uploadEventimages = async (req, res, next) => {
+  try {
+    console.log(req.files);  
+
+    if (!req.files || !req.files['img'] || !req.files['image']) {
+      return res.status(400).send('Both img and image fields are required.');
+    }
+
+const imgResult = await cloudinary.uploader.upload(req.files['img'][0].path);
+const img2Result = await cloudinary.uploader.upload(req.files['image'][0].path);
+
+
+    req.uploadResults = {
+      imgResult,
+      img2Result,
+    };
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error uploading files to Cloudinary.');
+  }
+};
+
+
+const createEvent = async (req, res) => {
+  try {
+      const { imgResult, img2Result } = req.uploadResults;
+      const { event_name, venue, dates, content } = req.body;
+      const errors = [];
+
+      if (!event_name || !venue || !dates || !content) {
+          errors.push({ msg: "Please fill in all fields" });
+      }
+
+      if (errors.length > 0) {
+          req.flash('error_msg', "Error registration: " + errors[0].msg);
+          return res.redirect('/admin/add_event');
+      }
+
+      const event = {
+          event_name,
+          venue, 
+          dates, 
+          content, 
+          schoolId: req.user._id,
+          img: { url: imgResult.secure_url, publicId: imgResult.public_id },
+          image: { url: img2Result.secure_url, publicId: img2Result.public_id }
+      };
+
+      const createdEvent = await Event.create(event);
+
+      // Check if request is fetch (AJAX) or form submission
+      if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
+          return res.status(201).json({ message: 'Event created successfully!', event: createdEvent });
+      } else {
+          req.flash("success_msg", "Event registered!");
+          return res.redirect('/admin/add_event');
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+  }
+};
+
+//Get all Events
+
+const getAllEvents = async ( req , res ) => {
+  try {
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+    
+      var perPage = 9;
+      var page = req.params.page || 1
+
+      await Event.find( { schoolId : req.user._id } )
+                 .select('venue event_name times dates content')
+                 .sort( { createdAt : 1 } )
+                 .skip( ( perPage * page ) - perPage )
+                 .limit( perPage )
+                 .exec( ( err , event ) => {
+                  Event.count( { schoolId : req.user._id})
+                       .exec( ( errOne , count ) => {
+                        if( errOne ) throw new Error( errOne )
+                        if ( err ) throw new Error(err) 
+                          res.render('all_events', {
+                            event: event,
+                            user: req.user,
+                            current: page,
+                            pages: Math.ceil( count / perPage )
+                        })
+                       })
+                 })
+
+    
+  } catch (err) {
+    if(err) 
+      console.log(err.message)
+      res.status(500).send('Internal Server Error' + ' ' + err.message);
+    }
+  };
+
+
+//edit image
+
+const editEventImage = async ( req , res ) => {
+  try {
+      const eventId = req.params.id;
+
+      if (!eventId) {
+        throw new TypeError("Invalid event ID");
+      }
+
+      const {
+        imgResult,
+        img2Result,
+      } = req.uploadResults;
+  
+      const event = {};
+  
+      if (req.files['img']) {
+        event.img = {
+          url: imgResult.secure_url,
+          publicId: imgResult.public_id,
+        }
+      }
+      if (req.files['image']) {
+        event.image = {
+          url: img2Result.secure_url,
+          publicId: img2Result.public_id,
+        }
+      }
+  
+      const filter = { _id: eventId };
+      const update = { $set: event };
+      const options = { returnOriginal: false };
+  
+      const results = await Event.findOneAndUpdate(filter, update, options);
+  
+      if (!results) {
+        return res.status(404).json({ error: "event not found" });
+      }
+      req.flash("success_msg", "Images Uploaded");
+      return res.redirect('/admin/update-event?id=' + eventId);
+
+  } catch (error) {
+      if (error.name === "CastError" || error.name === "TypeError") {
+          return res.status(400).json({ error: error.message });
+        }
+        console.log(error);
+        return res.status(500).send();
+  }
+};
+
+const getEditEventPage = async ( req , res ) => {
+  if (req.query.id) {
+      try {
+          const id = req.query.id;
+         await Event.findById(id)
+                  .then((event) => {
+                      if (!event) {
+                          res
+                          .status(404)
+                          .send({ message: "Oop! Property not found" } )
+                      }else {
+                          res
+                          .render(
+                              "edit_event", 
+                              {
+                                  event: event,
+                                  user: req.user,
+                              }
+                              )
+                      }
+                      
+                  }).catch((err) => {
+                      res
+                      .json(err)
+                  })
+      } catch (error) {
+          console.log(error)
+      }
+  }
+};
+
+
+const editEvent = async ( req , res ) => {
+  try {
+      const {event_name, dates, content, times, venue} = req.body;
+       const eventId = req.params.id;
+       if (!eventId) {
+        throw new TypeError("Invalid event ID");
+      }
+ 
+      const event = {
+        event_name: event_name,
+        venue: venue, 
+        dates: dates, 
+        content: content, 
+    };
+ 
+      const filter = { _id: eventId };
+      const update = { $set: event };
+      const options = { returnOriginal: false };
+ 
+   const result = await Event.findOneAndUpdate(filter, update, options);
+    
+      if (!result) {
+        return res.status(404).json({ error: "Event not found" });
+      }
+  
+      return res.json("Successfully updated Event");
+    
+   } catch (error) {
+    if (error.name === "CastError" || error.name === "TypeError") {
+        return res.status(400).json({ error: error.message });
+      }
+       console.log (error);
+       return res.status(500).send();
+   }
+};
+
+const deleteEvent = async ( req , res ) => {
+  const id = req.params.id;
+  await Event.findByIdAndDelete(id)
+  .then((data) => {
+    if (!data) {
+      res
+        .status(404)
+        .send({ message: `Cannot Delete with id ${id}. May be id is wrong or not found` });
+    } else {
+      res.send({
+        message: "Data was deleted successfully!",
+      });
+    }
+  })
+  .catch((err) => {
+    res.status(500).send({
+      message: "Could not delete Data with id=" + id + "with err:" + err,
+    });
+  });
+ 
+};
+
+ // create BLOG
+ const uploadMultipleBlogImage = async (req, res, next) => {
+  try {
+ 
+    const imgResult = await cloudinary.uploader.upload(req.files['img'][0].path);
+    const img2Result = await cloudinary.uploader.upload(req.files['image'][0].path);
+  
+  
+    req.uploadResults = {
+      imgResult,
+      img2Result,
+    };
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error uploading file to Cloudinary.');
+  }
+};
+// 
+
+const createBlog = async ( req , res ) => {
+  try {
+      const { author, category, content, headline} = req.body;
+      const errors = [];
+     
+      const {
+       imgResult,
+       img2Result,
+     } = req.uploadResults;
+   
+      if (!author || !category || !content || !headline) {
+          errors.push( { msg : "Please fill in all the fields."} )
+      }
+      if (errors.length > 0) {
+          res.render('create_blog', {
+             errors: errors,
+             author: author,
+             category: category, 
+             content: content, 
+             headline: headline, 
+             user: req.user,
+          })
+      } else{
+         
+         const blog = {
+             author: author,
+             category: category, 
+             content: content, 
+             headline: headline, 
+             schoolId: req.user._id,
+             img: {},
+             image: {},
+         }
+   
+         
+         if (req.files['img']) {
+           blog.img = {
+             url: imgResult.secure_url,
+             publicId: imgResult.public_id,
+           }
+         }
+         if (req.files['image']) {
+           blog.image = {
+             url: img2Result.secure_url,
+             publicId: img2Result.public_id,
+           }
+         }
+   
+         Blog.create(blog)
+         .then((data) => {
+            
+             req.flash("success_msg", "Data Registered !");
+             res.redirect('/admin/add_blog');
+         }).catch((err) => {
+             console.log(err)
+         }).catch((err) => console.log (err))
+     }
+  } catch (err) {
+    if(err) 
+      console.log(err.message)
+      res.status(500).send('Internal Server Error' + ' ' + err.message);
+    }
+  };
+
+// get all Blog
+
+const getAllBlogs = async ( req , res ) => {
+  try {
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+      var perPage = 9;
+      var page = req.params.page || 1
+      await Blog.find( { schoolId: req.user._id } )
+                .select('author content  category headline createdAt')
+                .sort( { createdAt : 1 } )
+                .skip( ( perPage * page ) - perPage )
+                .limit( perPage )
+                .exec( ( err, blog ) => {
+                  Blog.count( { schoolId: req.user._id } )
+                      .exec( ( errTwo , count ) => {
+                        if( errTwo ) throw new Error( errTwo )
+                          if( err ) throw new Error( err )
+                          res.render('all_event', {
+                              blog: blog,
+                              user: req.user,
+                              current: page,
+                              pages: Math.ceil( count / perPage )
+                        })
+                      } )
+                })
+     
+    
+  } catch (err) {
+    if(err) 
+      console.log(err.message)
+      res.status(500).send('Internal Server Error' + ' ' + err.message);
+    }
+  }
+
+
+//Edit Blog
+
+const editBlogImage = async ( req , res ) => {
+  try {
+      const blogId = req.params.id;
+
+      if (!blogId) {
+        throw new TypeError("Invalid blog ID");
+      }
+
+      const {
+        imgResult,
+        img2Result,
+      } = req.uploadResults;
+  
+      const blog = {};
+  
+      if (req.files['img']) {
+        blog.img = {
+          url: imgResult.secure_url,
+          publicId: imgResult.public_id,
+        }
+      }
+      if (req.files['image']) {
+        blog.image = {
+          url: img2Result.secure_url,
+          publicId: img2Result.public_id,
+        }
+      }
+  
+      const filter = { _id: blogId };
+      const update = { $set: blog };
+      const options = { returnOriginal: false };
+  
+      const results = await Blog.findOneAndUpdate(filter, update, options);
+  
+      if (!results) {
+        return res.status(404).json({ error: "blog not found" });
+      }
+      req.flash("success_msg", "Images Uploaded");
+      return res.redirect('/admin/update-blog?id=' + blogId);
+
+  } catch (error) {
+      if (error.name === "CastError" || error.name === "TypeError") {
+          return res.status(400).json({ error: error.message });
+        }
+        console.log(error);
+        return res.status(500).send();
+  }
+};
+
+
+const getEditBlogPage = async ( req , res ) => {
+  if (req.query.id) {
+      try {
+
+        res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+      
+          const id = req.query.id;
+         await Blog.findById(id)
+                  .then((blog) => {
+                      if (!blog) {
+                          res
+                          .status(404)
+                          .send({ message: "Oop! Property not found" } )
+                      }else {
+                          res
+                          .render(
+                              "edit_blog", 
+                              {
+                                  blog: blog,
+                                  user: req.user,
+                              }
+                              )
+                      }
+                      
+                  }).catch((err) => {
+                      res
+                      .json(err)
+                  })
+      } catch (error) {
+          console.log(error)
+      }
+  }
+};
+
+
+const editBlog = async ( req , res ) => {
+  try {
+      const {author, category, content, headline} = req.body;
+       const blogId = req.params.id;
+       if (!blogId) {
+        throw new TypeError("Invalid blog ID");
+      }
+ 
+      const blog = {
+        author: author,
+        category: category, 
+        content: content, 
+        headline: headline, 
+    };
+ 
+      const filter = { _id: blogId };
+      const update = { $set: blog };
+      const options = { returnOriginal: false };
+ 
+   const result = await Blog.findOneAndUpdate(filter, update, options);
+    
+      if (!result) {
+        return res.status(404).json({ error: "Blog not found" });
+      }
+  
+      return res.json("Successfully updated Blog");
+    
+   } catch (error) {
+    if (error.name === "CastError" || error.name === "TypeError") {
+        return res.status(400).json({ error: error.message });
+      }
+       console.log (error);
+       return res.status(500).send();
+   }
+};
+
+const deleteBlog = async ( req , res ) => {
+  const id = req.params.id;
+  await Blog.findByIdAndDelete(id)
+  .then((data) => {
+    if (!data) {
+      res
+        .status(404)
+        .send({ message: `Cannot Delete with id ${id}. May be id is wrong or not found` });
+    } else {
+      res.send({
+        message: "Data was deleted successfully!",
+      });
+    }
+  })
+  .catch((err) => {
+    res.status(500).send({
+      message: "Could not delete Data with id=" + id + "with err:" + err,
+    });
+  });
+ 
+}
+
+// get create Events and Blog
+const getAddEvent = async ( req , res) => {
+  try {
+    await res.render('add-event', { user : req.user } )
+  } catch (err) {
+      res.render('error404', {
+        title: `${err}`
+      })  
+ 
+  };
+  }
+
+const getAddBlog = async ( req , res) => {
+  try {
+    await res.render('add-blog', { user : req.user } )
+  } catch (err) {
+    res.render('error404', {
+      title: `${err}`
+    })  
+  }
+}
+
+
 
 module.exports = {
+  //event
+  uploadMultiple,
+    uploadEventimages,
+    createEvent,
+    editEventImage,
+    getEditEventPage,
+    editEvent,
+    deleteEvent,
+    getAllEvents,
+    getAddEvent,
+    //blog
+    uploadMultipleBlogImage,
+    getAllBlogs,
+    createBlog,
+    deleteBlog,
+    editBlog,
+    getEditBlogPage,
+    editBlogImage,
+    getAddBlog,
+    //monitor admin
     registerLearner,
     getUpdateLearnerPage,
     updateLearner,
@@ -3278,6 +3924,8 @@ module.exports = {
     getProprietorUpdatePage,
     updateProprietor,
     deleteProprietor,
+    //staff
+    editStaffImage,
     createStaff,
     getUpdateStaffUpdatePage,
     updateStaff,

@@ -64,6 +64,21 @@ SchoolSchema = new Schema({
         type: String, 
         default: 'pending' 
     },
+    weburl:{ 
+        type: String, 
+    },
+    about:{ 
+        type: String, 
+      
+    },
+    mission:{ 
+        type: String, 
+        
+    },
+    vision:{ 
+        type: String, 
+       
+    }, 
     status: { 
         type: Boolean, 
         default: true,

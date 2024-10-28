@@ -580,9 +580,9 @@ const staffLogin = async ( req , res, next) => {
       if (err) {
         return next(err);
     } else {
-        if (user) {
+        if (user && user.status == true) {
             const userSchool = await Schoolname.findOne({ _id: user.schoolId }).exec();
-
+            
             if (userSchool) {
                 if (userSchool.fees === "pending" && userSchool.expiry > Date.now()) {
                     req.logIn(user, function (err) {

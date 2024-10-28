@@ -112,8 +112,8 @@ const LearnerSchema = new Schema(
       trim: true,
     },
     img:{
-      url: String,       // Cloudinary URL
-      publicId: String,  // Cloudinary Public ID
+      url: String,     
+      publicId: String,  
     },
     religion: {
       type: String,
