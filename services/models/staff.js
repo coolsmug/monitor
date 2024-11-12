@@ -34,12 +34,7 @@ const staffSchema = new Schema({
   mobile_phone: {
     type: String,
     trim: true,  // Trims whitespace
-    validate: {
-      validator: function (v) {
-        return /\d{10,15}/.test(v);  // Example regex for validating phone numbers
-      },
-      message: (props) => `${props.value} is not a valid phone number!`,
-    },
+    
   },
   address: {
     type: String,

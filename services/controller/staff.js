@@ -110,8 +110,6 @@ const getLearnerExamForstaff = async ( req , res ) => {
         if (req.query.sessionId && req.query.classId) {
           const sessionId = req.query.sessionId;
           const classId = req.query.classId;
-          const perPage = 9;
-          const page = req.params.page || 1;
     
           const users = await Learner.find({
             classId : classId,
@@ -120,9 +118,7 @@ const getLearnerExamForstaff = async ( req , res ) => {
             deletes: false,
           })
             .select("_id roll_no first_name last_name middle_name classes class_code arm img")
-            .skip((perPage * page) - perPage)
             .sort({ roll_no: 1 })
-            .limit(perPage)
             .exec();
     
           const classed = await Currentclass.findOne({
@@ -131,19 +127,14 @@ const getLearnerExamForstaff = async ( req , res ) => {
           }).exec();
     
           const session = await Session.findById(sessionId).exec();
-          const count = await Learner.count({ schoolId: req.user.schoolId, status : true, deletes : false }).exec();
-          const current = page;
           const user = req.user;
-          const pages = Math.ceil(count / perPage);
     
-          if (users && classed && session && count) {
+          if (users && classed && session) {
             res.render('learner_result_edit', {
               users,
               classed,
               session,
-              current,
               user,
-              pages,
             });
           } else {
             res.render("error404.ejs", { title: "Oops! Data not complete to view this page" });
@@ -153,8 +144,8 @@ const getLearnerExamForstaff = async ( req , res ) => {
         }
       } catch (err) {
         console.error("Error in learner-test-exam route:", err);
-        res.status(500).send('Internal Server Error');
-        // Use 'next(err)' if you want to pass the error to the next error-handling middleware
+        res.render("error404.ejs", { title: "Error 500: 'Internal Server Error'" });
+        
       }
 };
 

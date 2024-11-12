@@ -103,7 +103,6 @@ const {
    //event
    uploadMultiple,
     getAllEvents,
-    uploadEventimages,
     createEvent,
     editEventImage,
     getEditEventPage,
@@ -218,8 +217,8 @@ adminRoute.route('/delete-question/:id').delete(adminEnsureLoggedIn, deleteQuest
 adminRoute.route('/update-tests-page/:id').put(adminEnsureLoggedIn, updateCBT);
 adminRoute.route('/delete-test/:id').delete(adminEnsureLoggedIn, deleteCBTs);
 
-adminRoute.route('/create-event').post( adminEnsureLoggedIn, uploadMultiple, uploadEventimages, createEvent);
-adminRoute.route('/edit-event-image/:id').post( adminEnsureLoggedIn,uploadMultiple, uploadEventimages, editEventImage);
+adminRoute.route('/create-event').post( adminEnsureLoggedIn, createEvent);
+adminRoute.route('/edit-event-image/:id').post( adminEnsureLoggedIn, editEventImage);
 adminRoute.route('/update-event').get( adminEnsureLoggedIn, getEditEventPage);
 adminRoute.route('/edit-event/:id').put( adminEnsureLoggedIn, editEvent);
 adminRoute.route('/delete-event/:id').delete( adminEnsureLoggedIn, deleteEvent);

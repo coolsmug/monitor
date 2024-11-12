@@ -1042,3 +1042,105 @@ $(function() {
 });
 
 
+//Event An Blog
+
+$(function() {
+  $('a.event').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('div'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+
+$(function() {
+  $('a.blog').click(function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag
+    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+    var row = $(this).closest('div'); // Assuming you are working with a table row, adjust this based on your HTML structure
+
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+
+$(".event-form").submit(function (event) {
+  event.preventDefault();
+
+  let unindexedArray = $(this).serializeArray();
+  let data = {};
+
+  $.map(unindexedArray, function (n, i) {
+    data[n["name"]] = n["value"];
+  });
+  console.log(data);
+
+  var request = {
+    "url": `/admin/edit-event/${data.id}`,
+    "method": "PUT",
+    "data": data,
+  };
+
+  $.ajax(request).done(function(response) {
+    alert("Section Updated Successfully!");
+    location.reload();
+    console.log("Event Updated Successfully!");
+  });
+});
+
+
+$(".blog-form").submit(function (event) {
+  event.preventDefault();
+
+  let unindexedArray = $(this).serializeArray();
+  let data = {};
+
+  $.map(unindexedArray, function (n, i) {
+    data[n["name"]] = n["value"];
+  });
+  console.log(data);
+
+  var request = {
+    "url": `/admin//edit-blog/${data.id}`,
+    "method": "PUT",
+    "data": data,
+  };
+
+  $.ajax(request).done(function(response) {
+    alert("Section Updated Successfully!");
+    location.reload();
+    console.log("blog Updated Successfully!");
+  });
+});
+
+
