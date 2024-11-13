@@ -995,11 +995,11 @@ const deleteProprietor = async ( req , res ) => {
 
 const createStaff = async ( req , res ) => {
   try {
-    const { roll, name, email, password, password_2 } = req.body;
+    const { roll, name, email, mobile_phone, address, password, password_2 } = req.body;
     let errors = [];
     console.log( `ROll: ${ roll } Name: ${ name }` )
    
-    if(!name ||!roll ||!email || !password || !password_2 ) {
+    if(!name ||!roll ||!email ||!mobile_phone ||!address || !password || !password_2 ) {
         errors.push( { msg : "Please fill in all fields"});
     }
     
@@ -1016,6 +1016,8 @@ const createStaff = async ( req , res ) => {
           roll: roll,
            name: name,
            email: email,
+           mobile_phone: mobile_phone,
+           address: address,
            password : password,
            password_2 : password_2,
            user: req.user,
@@ -1027,7 +1029,9 @@ const createStaff = async ( req , res ) => {
                   name: name,
                   status: true,
                   email: email,
+                  address: address,
                   password: password,
+                  mobile_phone: mobile_phone,
                   schoolId: req.user._id,
                     
                 })
