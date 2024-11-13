@@ -732,15 +732,18 @@ State.getStatesOfCountryByName = function(countryName) {
     try {
      
       const id = req.params.id;
-
+  
       const cbTest = await CBT.findById(id).exec();
+      const schoolId = cbTest.schoolId;
+      const school = await School.findById(schoolId);
       if(!cbTest) {
         return res.render('error404', { title: "Error 505. Page not found." });
       }
 
       res.render('cbtTestRoute', {
         cbTest,
-        user: req.user,
+        school,
+
       })
 
     } catch (err) {
