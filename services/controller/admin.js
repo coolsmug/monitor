@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-const { StatusCodes } = require("http-status-codes");
+
 const Learner = require("../models/leaners");
 const Session = require("../models/session");
 const Section = require("../models/section");
@@ -33,7 +33,7 @@ const Position = require("../models/positionFirstTerm");
 const CBT = require('../models/test');
 const Question = require('../models/question');
 const Submission = require('../models/submit');
-const currentClass = require('../models/current_class');
+
 
 
 cloudinary.config({
@@ -58,10 +58,14 @@ const uploads = multer({
 });
 
 
-
+const uploadEventImage = uploads.single('pageImage');
 const uploadLearnerImages = uploads.single('img');
 const uploadSchoolImages = uploads.single('img');
 const uploadStaffImages = uploads.single('img');
+const uploadEventImg   = uploads.single('img');
+const uploadBlogImg   = uploads.single('img');
+const uploadBlogImage   = uploads.single('img');
+
 
 
 // All codes on Learners------------------------------------//
@@ -802,11 +806,18 @@ const getHomePageLearenrReg = async ( req , res ) => {
       res.setHeader('Pragma', 'no-cache');
 
 
-    const alpha = '123456789123456789012345678901234567891234567890123456789012345678912345678901234567890';
-    let alphaCode = '';
-    for (let i = 0; i < 2; i++) {
-      alphaCode += alpha.charAt(Math.floor(Math.random() * alpha.length));
-    };
+      const alpha = '1234567890';
+      let alphaCode = '';
+      
+      while (alphaCode.length < 2) {
+        const randomChar = alpha.charAt(Math.floor(Math.random() * alpha.length));
+        if (!alphaCode.includes(randomChar)) {
+          alphaCode += randomChar;
+        }
+      }
+      
+      console.log(alphaCode);
+      
 
     const learnerId = req.user._id
     const learner = await Learner.count( { schoolId : req.user._id } ).exec();
@@ -1137,7 +1148,7 @@ const editStaffImage = (req, res) => {
       });
   } catch (error) {
       console.error(error);
-     
+    
       res.render("error404", {title: "Error 500:. oops! Internal Server Error" + ' ' + error})
   }
 };
@@ -2627,7 +2638,7 @@ const getAllLearner = async ( req , res ) => {
         .sort({roll_no : 1})
         .limit(perPage)
         .exec(function(err,learner) {
-            Learner.count({schoolId: req.user._id}).exec(function(err, count) {
+            Learner.count({schoolId: req.user._id, status : true, deletes: false}).exec(function(err, count) {
                 if (err) return next(err)
                
                 res.render('all_learners', {
@@ -3138,11 +3149,13 @@ const getCreateTestForCbt = async ( req , res) => {
                           .skip((perPage * page) - perPage)
                           .limit(perPage)
                           .sort( { title : -1 } )
-    const count = await CBT.count( { schoolId : req.user._id} ).exec()
+    const count = await CBT.count( { schoolId : req.user._id} ).exec();
     const session = await Session.find({ schoolId : req.user._id});
+    const studentclass = await Currentclass.find( { schoolId : req.user._id } );
     await res.render('createTest', {
       user: req.user, 
       session, 
+      studentclass,
       cbt,
       current: page,
       count,
@@ -3216,8 +3229,8 @@ const getGetCbtQuestion = async ( req , res) => {
 const createCbTest = async ( req , res ) => {
   try {
    
-  const { title, description, duration, startTime, session, term, type, ca_pos } = req.body;
-  const test = new CBT({ title, description, duration, startTime, session, term, type, ca_pos, schoolId : req.user._id });
+  const { title, description, duration, startTime, session, term, type, ca_pos, student_class } = req.body;
+  const test = new CBT({ title, description, duration, startTime, session, term, type, ca_pos, student_class, schoolId : req.user._id });
 
   req.flash(
     "success_msg",
@@ -3342,101 +3355,50 @@ const deleteQuestions = async (req, res) => {
 
 //----------------------------school website----------------------------------------------\\
 
-
-// Multer setup for file uploads
-const uploading = multer({
-  dest: 'uploads/',
-  limits: {
-    fileSize: 3 * 1024 * 1024, // 3 MB file size limit
-  },
-  fileFilter: (req, file, cb) => {
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!allowedMimeTypes.includes(file.mimetype)) {
-      return cb(new Error('Invalid file type'), false);
-    }
-    cb(null, true);
-  }
-});
-
-const uploadMultiple = uploading.fields([
-  { name: 'img', maxCount: 1 },
-  { name: 'image', maxCount: 1 }
-]);
-
-
 //creating Event
-const createEvent = async (req, res) => { 
-  // Use multer to handle the image uploads
-  uploadMultiple(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
+
+const createEvent = async (req, res) => {
+  try {
+    const { event_name, venue, dates, content } = req.body;
+    const errors = [];
+
+    // Validate form fields
+    if (!event_name || !venue || !dates || !content) {
+      errors.push({ msg: "Please fill in all fields" });
     }
 
-    try {
-      const { event_name, venue, dates, content } = req.body;
-      const errors = [];
-
-      // Validate form fields
-      if (!event_name || !venue || !dates || !content) {
-        errors.push({ msg: "Please fill in all fields" });
-      }
-
-      // Check if both images are provided
-      if (!req.files || !req.files.img || !req.files.image) {
-        errors.push({ msg: "Both images are required" });
-      }
-
-      // If validation fails, redirect with an error message
-      if (errors.length > 0) {
-        req.flash('error_msg', "Error registration: " + errors[0].msg);
-        return res.redirect('/admin/add_event');
-      }
-
-      // Upload both images to Cloudinary
-      const [result1, result2] = await Promise.all([
-        cloudinary.uploader.upload(req.files.img[0].path),
-        cloudinary.uploader.upload(req.files.image[0].path)
-      ]);
-
-      // Create new event with image data
-      const event = new Event({
-        event_name,
-        venue,
-        dates,
-        content,
-        schoolId: req.user._id,
-        img: { url: result1.secure_url, publicId: result1.public_id },
-        image: { url: result2.secure_url, publicId: result2.public_id }
-      });
-
-      await event.save();
-
-      // If the request is AJAX (fetch request), return a JSON response
-      if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
-        return res.status(201).json({
-          message: 'Event created successfully!',
-          event: event
-        });
-      } else {
-        // If it's a regular form submission (redirect)
-        req.flash("success_msg", "Event registered successfully!");
-        return res.redirect('/admin/add_event');
-      }
-
-    } catch (err) {
-      console.error(err);
-      res.status(500).render("error404", {
-        title: "Error 500: Oops! Internal Server Error",
-        error: err.message
-      });
+    if (errors.length > 0) {
+      const errorMessage = errors[0].msg;
+      return res.status(400).json({ message: errorMessage });
     }
-  });
+
+    const event = new Event({
+      event_name,
+      venue,
+      dates,
+      content,
+      schoolId: req.user._id,
+    });
+
+    const savedEvent = await event.save();
+
+    // Send redirect URL in JSON
+    return res.status(201).json({
+      message: 'Event created successfully!',
+      redirectUrl: `/admin/update-event?eventId=${savedEvent._id}`,
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: 'Internal Server Error',
+      error: err.message,
+    });
+  }
 };
 
 
-
 //Get all Events
-
 const getAllEvents = async ( req , res ) => {
   try {
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -3473,83 +3435,124 @@ const getAllEvents = async ( req , res ) => {
     }
   };
 
-
-//edit image
-const editEventImage = async (req, res) => {
-  // First, handle the image upload (with multer)
-  uploadMultiple(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
-
+  const editEventImage = async (req, res) => {
     try {
-      // Get the event ID from the URL parameters
-      const id = req.params.id;
-      const event = await Event.findById(id);
-
-      // Check if the event exists
-      if (!event) {
-        return res.status(404).json({ error: 'Event not found' });
-      }
-
-      // Check if both images are provided
-      if (!req.files || !req.files.img || !req.files.image) {
-        return res.status(400).json({ error: 'Both images are required' });
-      }
-
-      // Upload both images to Cloudinary
-      const [result1, result2] = await Promise.all([
-        cloudinary.uploader.upload(req.files.img[0].path),
-        cloudinary.uploader.upload(req.files.image[0].path)
-      ]);
-
-      // Update the event's image fields with the new Cloudinary URLs and public IDs
-      event.img = { url: result1.secure_url, publicId: result1.public_id };
-      event.image = { url: result2.secure_url, publicId: result2.public_id };
-
-      // Save the event with the updated images
-      await event.save();
-
-      // Flash success message and redirect to the event update page
-      req.flash("success_msg", "Images uploaded successfully!");
-      return res.redirect('/admin/update-event?id=' + event._id); // Use `event._id` instead of `eventId`
-
+      // Use Multer middleware to process the uploaded file
+      uploadEventImg(req, res, async () => {
+        const id = req.params.id;
+  
+        // Find the event by ID
+        const event = await Event.findById(id);
+        if (!event) {
+          req.flash('error_msg', 'Event not found');
+          return res.redirect('/admin/update-event?eventId=' + id);
+        }
+  
+        // Check if a file is provided
+        if (!req.file) {
+          req.flash('error_msg', 'No file provided');
+          return res.redirect('/admin/update-event?eventId=' + id);
+        }
+  
+        try {
+          // Upload image to Cloudinary
+          const result = await cloudinary.uploader.upload(req.file.path);
+  
+          // Ensure the Cloudinary upload was successful
+          if (!result || !result.secure_url) {
+            req.flash('error_msg', 'Error uploading image to Cloudinary');
+            return res.redirect('/admin/update-event?eventId=' + id);
+          }
+  
+          // Update the `img` field in the event document
+          event.img = {
+            url: result.secure_url,
+            publicId: result.public_id, // Save the public ID for future deletions
+          };
+  
+          await event.save();
+  
+          req.flash('success_msg', 'Image uploaded successfully');
+          return res.redirect('/admin/update-event?eventId=' + id);
+        } catch (cloudinaryError) {
+          console.error('Cloudinary Error:', cloudinaryError);
+          req.flash('error_msg', 'An error occurred while uploading the image to Cloudinary');
+          return res.redirect('/admin/update-event?eventId=' + id);
+        }
+      });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+      console.error('Server Error:', error);
+      req.flash('error_msg', 'Internal Server Error');
+      return res.redirect('/admin/update-event');
     }
-  });
+  };
+  
+const editEventSecondImage = async (req, res) => {
+  try {
+    uploadEventImage(req, res, async (events) => {
+      if (events) {
+        const id = req.params.id;
+        const user = await Event.findById(id);
+
+        if (!user) {
+          return res.status(404).json({ message: 'Event not found' });
+        }
+
+        if (!req.file) {
+          return res.status(400).json({ message: 'No file provided' });
+        }
+
+        const result = await cloudinary.uploader.upload(req.file.path);
+
+        if (!result || !result.secure_url) {
+          return res.status(500).json({ message: 'Error uploading image to Cloudinary' });
+        }
+
+        user.pageImage = {
+          url: result.secure_url,
+          publicId: result.public_id, // Save the public ID if needed for future deletions
+        };
+
+        await user.save();
+
+        return res.status(200).json({ message: 'Page image uploaded successfully' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal Server Error', details: error.message });
+  }
 };
 
 
-const getEditEventPage = async ( req , res ) => {
-  if (req.query.id) {
-      try {
-          const id = req.query.id;
-         await Event.findById(id)
-                  .then((event) => {
-                      if (!event) {
-                          res
-                          .status(404)
-                          .send({ message: "Oop! Property not found" } )
-                      }else {
-                          res
-                          .render(
-                              "edit_event", 
-                              {
-                                  event: event,
-                                  user: req.user,
-                              }
-                              )
-                      }
-                      
-                  }).catch((err) => {
-                      res
-                      .json(err)
-                  })
-      } catch (error) {
-          console.log(error)
+const getEditEventPage = async (req, res) => {
+  if (req.query.eventId) { // Ensure the parameter name matches what you're using in redirection
+    try {
+      const id = req.query.eventId; // Use the correct parameter
+      const event = await Event.findById(id); // Use async/await consistently
+
+      if (!event) {
+        return res
+          .status(404)
+          .send({ message: "Oops! Event not found" });
       }
+
+      // Render the edit page with the event and user data
+      res.render("edit_event", {
+        event: event,
+        user: req.user,
+      });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send({ message: "Internal server error", error });
+    }
+  } else {
+    // Handle cases where the eventId query parameter is missing
+    res
+      .status(400)
+      .send({ message: "Event ID not provided" });
   }
 };
 
@@ -3735,7 +3738,6 @@ const getAllBlogs = async ( req , res ) => {
 
 
 //Edit Blog
-
 const editBlogImage = async ( req , res ) => {
   try {
       const blogId = req.params.id;
@@ -3884,7 +3886,8 @@ const deleteBlog = async ( req , res ) => {
 // get create Events and Blog
 const getAddEvent = async ( req , res) => {
   try {
-    await res.render('add-event', { user : req.user } )
+   
+    await res.render('add-event', { user : req.user} )
   } catch (err) {
       res.render('error404', {
         title: `${err}`
@@ -3907,9 +3910,9 @@ const getAddBlog = async ( req , res) => {
 
 module.exports = {
   //event
-  uploadMultiple,  
     createEvent,
     editEventImage,
+    editEventSecondImage,
     getEditEventPage,
     editEvent,
     deleteEvent,

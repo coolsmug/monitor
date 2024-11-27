@@ -1,0 +1,161 @@
+<%- include ("./include/header.ejs") %> 
+
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="diverr">
+    <h4><i class="fas fa-house-user"></i>Add Event</h4>
+
+    <div class="form_for_create">
+        
+        <%- include ('./partials/messages') %>
+        
+        <form id="eventForm" action="/admin/create-event" method="POST">
+
+            <div class="all-single-form">
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="event_name">Event Name:</label>
+                        <input type="text" name="event_name" value="<%= typeof event.event_name != 'undefined' ? event.event_name : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="venue">Venue:</label>
+                        <input type="text" name="venue" value="<%= typeof event.venue != 'undefined' ? event.venue : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="dates">Set Date and Time:</label>
+                        <input type="datetime-local" name="dates" value="<%= typeof event.dates != 'undefined' ? event.dates : '' %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="content">Content:</label>
+                        <textarea name="content" id="content" placeholder="Enter your text here..."><%= event.content %></textarea>
+                    </div>
+                   
+                </div>
+            </div>                                                
+
+            <div class="mb-3">
+                <input type="submit" value="Ok? Save">
+            </div>
+        </form>
+    </div> 
+
+    <div class="form_for_create">
+
+        <form id="pageImageForm" action="/admin/upload-event-page-image/<%= event._id %>" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <div class="hop">
+              <label for="pageImage">Image</label>
+              <input type="file" name="pageImage" id="pageImage">
+            </div>
+          </div>
+          <div class="mb-3">
+            <input type="submit" value="Upload Page Image?">
+          </div>
+        </form>
+     
+  </div> 
+
+    <div class="form_for_create">
+
+        <form id="coverImageForm" action="/admin/upload-event-cover-image/<%= event._id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <div class="hop">
+                <label for="img">Image</label>
+                <input type="file" name="img" id="img" value="">
+              </div>
+            </div>
+            <div class="mb-3">
+              <input type="submit" value="Upload Cover Image?">
+            </div>
+          </form>
+    </div> 
+ 
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark theme code <i class="fas fa-copyright"></i> 2024</h3>
+</footer>   
+
+
+<script>
+  document.getElementById('eventForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); // Prevent the default form submission
+
+  const formData = new FormData(e.target); // Get the form data
+
+  try {
+    // Send the AJAX request to the server
+    const response = await fetch('/admin/create-event', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      alert(result.message); // Display success message
+      // Redirect to the update-event page
+      window.location.href = result.redirectUrl;
+    } else {
+      const error = await response.json();
+      alert('Error creating event: ' + error.message); // Show error message
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    alert('An error occurred while creating the event.'); // Fallback error
+  }
+});
+
+ // Page Image Form submission with AJAX
+ document.getElementById('pageImageForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(e.target); // Get the form data
+
+        try {
+            const response = await fetch(e.target.action, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert(result.message); // Display success message
+            } else {
+                const error = await response.json();
+                alert('Error uploading page image: ' + error.message);
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('An error occurred while uploading the page image.');
+        }
+    });
+
+    // Cover Image Form submission with AJAX
+    document.getElementById('coverImageForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); // Prevent the default form submission
+
+  const formData = new FormData(e.target); // Get the form data
+
+  try {
+    const response = await fetch(e.target.action, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      alert(result.message); // Display success message
+    } else {
+      const error = await response.json(); // Try to parse error response
+      alert('Error uploading page image: ' + (error.message || 'Unknown error')); // Show error message
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    alert('An error occurred while uploading the page image.');
+  }
+});
+
+
+
+</script>
+<%- include ("./include/footer.ejs") %>

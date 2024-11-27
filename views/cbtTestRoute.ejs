@@ -3,15 +3,16 @@
 <div class="render">
 
   <p class="p-first">Welcome </p>
-  <p> to </p> 
-  <p><span>monitor    </span>CBT Portal</p>
-  <p style="text-align: center; margin: 30px;">Advice : <br> Sit tight, pray and have a deep breath before you start. <br>Best of luck!</p>
+  <h2> to </h2> 
+  <p><span>monitor  CBT Portal  </span></p>
+  <h3 style="text-align: center; margin: 30px;">Advice : <br> Sit tight, pray and have a deep breath before you start. <br>Best of luck!</h3>
    
   <h1><%= school.school_name %>'s</h1>
-  <h2><%= cbTest.session %> <%= cbTest.term %> <%= cbTest.type %> <%= cbTest.ca_pos %></h2>
+  <h2><%= cbTest.session %>'s <%= cbTest.term %> <%= cbTest.type %> <%= cbTest.ca_pos %></h2>
 
   <h2 style="color: greenyellow;">Today Subject:</h2>
    <h1><%= cbTest.title %></h1>
+   <h2>for <%= cbTest.student_class %></h2>
    <p class="desc"><%= cbTest.description %></p>
 
    <h3>Login here to start Your Exam</h3>

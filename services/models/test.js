@@ -5,6 +5,7 @@ const testSchema = new mongoose.Schema({
   description:  {type: String, trim: true},
   position:  {type: String, trim: true},
   duration: Number, // Duration in minutes
+  student_class: {type: String, trim: true},
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
   startTime: Date,
   ca_pos: {type: String, trim: true},

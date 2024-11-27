@@ -101,10 +101,11 @@ const {
  deleteCBTs,  
  getAllLearnerCbt, 
    //event
-   uploadMultiple,
+   
     getAllEvents,
     createEvent,
     editEventImage,
+    editEventSecondImage,
     getEditEventPage,
     editEvent,
     deleteEvent,
@@ -218,23 +219,21 @@ adminRoute.route('/update-tests-page/:id').put(adminEnsureLoggedIn, updateCBT);
 adminRoute.route('/delete-test/:id').delete(adminEnsureLoggedIn, deleteCBTs);
 
 adminRoute.route('/create-event').post( adminEnsureLoggedIn, createEvent);
-adminRoute.route('/edit-event-image/:id').post( adminEnsureLoggedIn, editEventImage);
+adminRoute.route('/upload-event-cover-image/:id').post( adminEnsureLoggedIn, editEventImage);
+// adminRoute.route('/upload-event-page-image/:id').post( adminEnsureLoggedIn, editEventSecondImage);
 adminRoute.route('/update-event').get( adminEnsureLoggedIn, getEditEventPage);
 adminRoute.route('/edit-event/:id').put( adminEnsureLoggedIn, editEvent);
 adminRoute.route('/delete-event/:id').delete( adminEnsureLoggedIn, deleteEvent);
-adminRoute.route('/create-blog').post( adminEnsureLoggedIn,uploadMultiple, uploadMultipleBlogImage, createBlog);
+adminRoute.route('/create-blog').post( adminEnsureLoggedIn, uploadMultipleBlogImage, createBlog);
 adminRoute.route('/delete-blog/:id').delete( adminEnsureLoggedIn, deleteBlog);
 adminRoute.route('/edit-blog/:id').put( adminEnsureLoggedIn, editBlog);
-adminRoute.route('/edit-blog-image/:id').post( adminEnsureLoggedIn, uploadMultiple, uploadMultipleBlogImage, editBlogImage);
+adminRoute.route('/edit-blog-image/:id').post( adminEnsureLoggedIn,  uploadMultipleBlogImage, editBlogImage);
 adminRoute.route('/update-blog').get( adminEnsureLoggedIn, getEditBlogPage);
 adminRoute.route('/edit-staff-image/:id').post(adminEnsureLoggedIn, editStaffImage);
 adminRoute.route('/get-all-event').get( adminEnsureLoggedIn, getAllEvents );
 adminRoute.route('/get-all-blogs').get( adminEnsureLoggedIn, getAllBlogs );
 adminRoute.route('/add_event').get( adminEnsureLoggedIn, getAddEvent );
 adminRoute.route('/add_blog').get( adminEnsureLoggedIn,  getAddBlog );
-
-
-
 
 
 module.exports = adminRoute;

@@ -14,15 +14,14 @@ const eventSchema = new Schema ({
     content: {
         type: String
     },
+     pageImage: { 
+        url: String,      
+        publicId: String,
+    },
     img: { 
         url: String,      
         publicId: String,
     },
-
-    image: { 
-        url: String,      
-        publicId: String,
-        },
     schoolId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

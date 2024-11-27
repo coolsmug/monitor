@@ -9,13 +9,22 @@
     <label for="title">Test Title:</label>
     <input type="text" id="title" name="title" required><br><br>
     <label for="session">Session:</label>
-    <% session.forEach( (sess) => {%>
+   
     <select id="session" name="session" required>
+      <% session.forEach( (sess) => {%>
       <option value="<%= sess.name %>"><%= sess.name %></option>
-      
+      <% }) %>
     </select>
     <br><br>
-    <% }) %>
+    <label for="student_class">Class:</label>
+    <select id="student_class" name="student_class" required>
+      <% studentclass.forEach( (sclass) => {%>
+      <option value="<%= sclass.name %>"><%= sclass.name %></option>
+      <% }) %>
+    </select>
+    <br><br>
+    
+    
     <label for="term">Term:</label>
     <select id="term" name="term" required>
           <option value="" disabled selected>select...</option>
@@ -60,13 +69,23 @@
         <label for="title">Test Title:</label>
         <input type="text" id="title" name="title" value="<%= cbtest.title%>" required>
         <label for="session">Session:</label>
-        <% session.forEach( (sess) => {%>
+        
         <select id="session" name="session" required>
           <option value="<%= cbtest.session %>"><%= cbtest.session %></option>
-          <option value="<%= sess.name %>"><%= sess.name %></option>
+          <% session.forEach( (sess) => {%>
+          <option><%= sess.name %></option>
+          <% }) %>
+        </select>
+
+        <label for="class">Class:</label>
+        <select id="student_class" name="student_class" required>
+          <option value="<%= cbtest.student_class %>"><%= cbtest.student_class %></option>
+          <% studentclass.forEach( (sclass) => {%>
+          <option><%= sclass.name %></option>
+          <% }) %>
         </select>
       
-        <% }) %>
+       
 
         <label for="type">Type:</label>
         <select id="type" name="type" required>
