@@ -1,0 +1,247 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+<div class="body">
+  <div>
+    <input type="text" id="searchBox" placeholder="Search Learners...">
+  </div>
+  <div id="learnerTable">
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Roll No</th>
+          <th>Email</th>
+          <th>First Name</th>
+          <th>Middle Name</th>
+          <th>Last Name</th>
+          <th>Gender</th>
+          <th>Age</th>
+          <th>Class</th>
+          <th>Arm</th>
+          <th>Date Enrolled</th>
+        </tr>
+      </thead>
+      <tbody id="learnerData"></tbody>
+    </table>
+    <div id="pagination"></div>
+  </div>
+</div>
+  <style>
+
+    /* General Reset */
+.body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  margin-top: 200px;
+  
+}
+
+/* Container styling */
+#learnerTable {
+  width: 90%;
+  margin: 20px auto;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow-x: scroll;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+ 
+}
+
+thead {
+  background-color: var(--deepest-blue);
+  color: #fff;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  font-size: 16px;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+  background-color: #e9f5e9;
+}
+
+td {
+  font-size: 14px;
+}
+
+/* Search Input Styling */
+#searchBox {
+  width: 90%;
+  margin: 20px auto;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: block;
+}
+
+/* Pagination Buttons */
+#pagination {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#pagination button {
+  background-color: var(--deepest-blue);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+#pagination button:hover {
+  background-color: var(--light-blue);
+}
+
+#pagination button.active {
+  background-color: var(--deep-blue);
+  font-weight: bold;
+  cursor: default;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  #learnerTable {
+    width: 100%;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  #searchBox {
+    width: 95%;
+  }
+}
+
+  </style>
+
+  <script>
+    let currentPage = 1;
+    let limit = 10;
+
+    // Fetch learners with AJAX
+    function fetchLearners(search = '', page = 1) {
+      $.ajax({
+        url: '/admin/searching',
+        method: 'GET',
+        data: { search, page, limit },
+        success: function (response) {
+          const { learners, total, totalPages } = response;
+
+          // Populate table
+          const tableBody = $('#learnerData');
+          tableBody.empty();
+
+          if (learners.length === 0) {
+            tableBody.append('<tr><td colspan="9">No learners found</td></tr>');
+          } else {
+            learners.forEach((learner) => {
+              tableBody.append(`
+                <tr>
+                  <td>${learner.roll_no}</td>
+                  <td> <div class="avis"> ${learner.email} <button class="copy-btn"><i class="fas fa-copy"></i></button></div> </td>
+                  <td>${learner.first_name}</td>
+                  <td>${learner.img?.url ? `<img src="${learner.img.url}" alt="Learner Image" class="learner-img" width="40">` : '-'}</td>
+                  <td>${learner.last_name}</td>
+                  <td>${learner.gender || '-'}</td>
+                  <td>${learner.age || '-'}</td>
+                  <td>${learner.classes || '-'}</td>
+                  <td>${learner.arm || '-'}</td>
+                  <td>${new Date(learner.date_enrolled).toLocaleDateString()}</td>
+                </tr>
+              `);
+            });
+          }
+
+          // Pagination
+          const paginationDiv = $('#pagination');
+          paginationDiv.empty();
+          for (let i = 1; i <= totalPages; i++) {
+            paginationDiv.append(`
+              <button onclick="fetchLearners('${search}', ${i})" 
+                class="${i === page ? 'active' : ''}">
+                ${i}
+              </button>
+            `);
+          }
+        },
+        error: function (err) {
+          console.error(err);
+        },
+      });
+    }
+
+    // Initial fetch
+    fetchLearners();
+
+    // Search input event
+    $('#searchBox').on('keyup', function () {
+      const searchQuery = $(this).val();
+      fetchLearners(searchQuery, 1);
+    });
+
+
+    const copyBtnsOldLearners = document.querySelectorAll('.copy-btn');
+
+function copyText(event) {
+  const row = event.target.closest('tr');
+  const text = row.querySelector('.avis').textContent;
+
+  // Try to use navigator.clipboard API
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text);
+    alert(`${text} copied!`);
+  } else {
+    // Fallback method
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    alert(`${text} copied!`);
+  }
+}
+
+copyBtnsOldLearners.forEach(btn => {
+  btn.addEventListener('click', copyText);
+});
+  </script>
+
+
+
+
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer>   
+<%- include ("./include/footer.ejs") %> 

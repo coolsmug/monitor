@@ -7,6 +7,8 @@ const adminRoute = express.Router();
 const { adminEnsureLoggedIn } = require('../middleware/authentication');
 
 const {
+  searchLearners,
+  getSearchPage,
  registerLearner,
  getUpdateLearnerPage,
  updateLearner,
@@ -234,6 +236,8 @@ adminRoute.route('/get-all-event').get( adminEnsureLoggedIn, getAllEvents );
 adminRoute.route('/get-all-blogs').get( adminEnsureLoggedIn, getAllBlogs );
 adminRoute.route('/add_event').get( adminEnsureLoggedIn, getAddEvent );
 adminRoute.route('/add_blog').get( adminEnsureLoggedIn,  getAddBlog );
+adminRoute.route('/search').get( adminEnsureLoggedIn, getSearchPage);
+adminRoute.route('/searching').get( adminEnsureLoggedIn,  searchLearners );
 
 
 module.exports = adminRoute;

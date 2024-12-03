@@ -67,6 +67,64 @@ const uploadBlogImg   = uploads.single('img');
 const uploadBlogImage   = uploads.single('img');
 
 
+// search
+
+const getSearchPage = async ( req, res ) => {
+  try {
+    await res.render('search', { user: req.user})
+  } catch (error) {
+    console.log(error)
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+const searchLearners = async ( req , res ) => {
+  try {
+    const { page = 1, limit = 10, search = '' } = req.query;
+
+    // Create a case-insensitive regex for searching
+    const searchRegex = new RegExp(search, 'i');
+
+    // Build the query for searching across multiple fields
+    const query = {
+      $or: [
+        { roll_no: searchRegex },
+        { arm: searchRegex },
+        { classes: searchRegex },
+        { first_name: searchRegex },
+        { middle_name: searchRegex },
+        { last_name: searchRegex },
+        { gender: searchRegex },
+        { age: searchRegex },
+        { email: searchRegex },
+        { blood_group: searchRegex },
+        { genotype: searchRegex },
+        { religion: searchRegex },
+        { state: searchRegex },
+        { lg: searchRegex },
+        { tribe: searchRegex },
+      ],
+    };
+
+    const filter = Object.assign({ status: true, deletes: false }, query);
+    // Pagination options
+    const learners = await Learner.find( filter )
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit))
+      .sort({ createdAt: -1 });
+
+    const total = await Learner.countDocuments(query);
+
+    res.json({
+      learners,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
 
 // All codes on Learners------------------------------------//
 const registerLearner = async ( req, res ) => {
@@ -4023,6 +4081,8 @@ module.exports = {
     updateCBT,
     deleteCBTs,
     getAllLearnerCbt,
+    getSearchPage,
+    searchLearners,
     
 }
 
