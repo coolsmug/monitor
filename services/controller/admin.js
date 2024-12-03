@@ -106,14 +106,15 @@ const searchLearners = async ( req , res ) => {
       ],
     };
 
-    const filter = Object.assign({ status: true, deletes: false }, query);
+    const filter = Object.assign({ status: true, deletes: false, schoolId : req.user._id }, query);
     // Pagination options
     const learners = await Learner.find( filter )
       .skip((page - 1) * limit)
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });
 
-    const total = await Learner.countDocuments(query);
+      const filters = Object.assign({ status: true, deletes: false, schoolId : req.user._id }, query);
+    const total = await Learner.countDocuments(filters);
 
     res.json({
       learners,

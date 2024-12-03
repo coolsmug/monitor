@@ -183,31 +183,77 @@ td {
           }
 
           // Pagination
-          const paginationDiv = $('#pagination');
-          paginationDiv.empty();
-          for (let i = 1; i <= totalPages; i++) {
-            paginationDiv.append(`
-              <button onclick="fetchLearners('${search}', ${i})" 
-                class="${i === page ? 'active' : ''}">
-                ${i}
-              </button>
-            `);
-          }
+         
+          renderPagination(search, page, totalPages);
         },
         error: function (err) {
-          console.error(err);
-        },
+      console.error(err);
+    },
       });
     }
 
     // Initial fetch
-    fetchLearners();
+   
+function renderPagination(search, currentPage, totalPages) {
+  const paginationDiv = $('#pagination');
+  paginationDiv.empty();
 
-    // Search input event
-    $('#searchBox').on('keyup', function () {
-      const searchQuery = $(this).val();
-      fetchLearners(searchQuery, 1);
-    });
+  const maxButtons = 5; // Maximum number of buttons to display
+  const half = Math.floor(maxButtons / 2);
+  let start = Math.max(1, currentPage - half);
+  let end = Math.min(totalPages, currentPage + half);
+
+  if (currentPage <= half) {
+    end = Math.min(totalPages, maxButtons);
+  } else if (currentPage + half > totalPages) {
+    start = Math.max(1, totalPages - maxButtons + 1);
+  }
+
+  // First page button
+  if (currentPage > 1) {
+    paginationDiv.append(`
+      <button onclick="fetchLearners('${search}', 1)">First</button>
+      <button onclick="fetchLearners('${search}', ${currentPage - 1})">Prev</button>
+    `);
+  }
+
+  // Ellipsis before
+  if (start > 1) {
+    paginationDiv.append('<button disabled>...</button>');
+  }
+
+  // Page buttons
+  for (let i = start; i <= end; i++) {
+    paginationDiv.append(`
+      <button onclick="fetchLearners('${search}', ${i})" 
+        class="${i === currentPage ? 'active' : ''}">
+        ${i}
+      </button>
+    `);
+  }
+
+  // Ellipsis after
+  if (end < totalPages) {
+    paginationDiv.append('<button disabled>...</button>');
+  }
+
+  // Last page button
+  if (currentPage < totalPages) {
+    paginationDiv.append(`
+      <button onclick="fetchLearners('${search}', ${currentPage + 1})">Next</button>
+      <button onclick="fetchLearners('${search}', ${totalPages})">Last</button>
+    `);
+  }
+}
+
+// Initial fetch
+fetchLearners();
+
+// Search input event
+$('#searchBox').on('keyup', function () {
+  const searchQuery = $(this).val();
+  fetchLearners(searchQuery, 1);
+});
 
 
     const copyBtnsOldLearners = document.querySelectorAll('.copy-btn');
