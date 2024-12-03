@@ -145,6 +145,8 @@ td {
   </style>
 
   <script>
+
+
     let currentPage = 1;
     let limit = 10;
 
@@ -168,7 +170,7 @@ td {
               tableBody.append(`
                 <tr>
                   <td>${learner.roll_no}</td>
-                  <td> <div class="avis"> ${learner.email} <button class="copy-btn"><i class="fas fa-copy"></i></button></div> </td>
+                  <td> <div class="avis"> <p> ${learner.email} </P><button class="copy-btn"><i class="fas fa-copy"></i></button></div> </td>
                   <td>${learner.first_name}</td>
                   <td>${learner.img?.url ? `<img src="${learner.img.url}" alt="Learner Image" class="learner-img" width="40">` : '-'}</td>
                   <td>${learner.last_name}</td>
@@ -256,31 +258,41 @@ $('#searchBox').on('keyup', function () {
 });
 
 
-    const copyBtnsOldLearners = document.querySelectorAll('.copy-btn');
+// Attach event listener to the table body using event delegation
+const tableBody = document.querySelector('#learnerData');
 
 function copyText(event) {
-  const row = event.target.closest('tr');
-  const text = row.querySelector('.avis').textContent;
+  // Check if the clicked element is a copy button
+  if (event.target.closest('.copy-btn')) {
+    const row = event.target.closest('tr');
+    const text = row.querySelector('.avis p').textContent.trim();
 
-  // Try to use navigator.clipboard API
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-    alert(`${text} copied!`);
-  } else {
-    // Fallback method
-    const tempInput = document.createElement('input');
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-    alert(`${text} copied!`);
+    // Try to use navigator.clipboard API
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`${text} copied!`);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert('Failed to copy text.');
+      });
+    } else {
+      // Fallback method
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      alert(`${text} copied!`);
+    }
   }
 }
 
-copyBtnsOldLearners.forEach(btn => {
-  btn.addEventListener('click', copyText);
-});
+// Add event listener to the table body
+tableBody.addEventListener('click', copyText);
+
+
+
   </script>
 
 
