@@ -930,17 +930,14 @@ State.getStatesOfCountryByName = function(countryName) {
           });
         }else {
 
-          const expireData = await CBT.findOne({
-            _id: testId, // Check the specific test
-            userId: req.user._id, // Look for the current user's ID in the userId array
-          }).exec();
+          const test = await CBT.findById(testId).exec();
 
-          if (expireData && expireData.length > 0) {
-            req.logout(function (err) {
+          if (test.userId.includes(user._id.toString())) {
+            req.logout((err) => {
               if (err) {
                 return next(err);
               }
-              req.flash('error_msg', 'You are only eligible to one sitting');
+              req.flash('error_msg', 'You have already completed this test.');
               return res.redirect(`/cbtcenter/${testId}`);
             });
           } else {
