@@ -878,9 +878,10 @@ State.getStatesOfCountryByName = function(countryName) {
         test.userId = [];
     }
 
-    if (!test.userId.includes(userExamId)) {
+    if (!test.userId.includes(userExamId.toString())) {
       test.userId.push(userExamId);
     }
+
       await test.save();
   
       
@@ -928,7 +929,7 @@ State.getStatesOfCountryByName = function(countryName) {
             return res.redirect(`/cbtcenter/${testId}`);
           });
         }else {
-          
+
           const expireData = await CBT.findOne({
             _id: testId, // Check the specific test
             userId: req.user._id, // Look for the current user's ID in the userId array
