@@ -883,11 +883,6 @@ State.getStatesOfCountryByName = function(countryName) {
     }
       await test.save();
   
-      // Update each answered question with the userId
-      await Question.updateMany(
-        { _id: { $in: answeredQuestions } },
-        { $set: { userId: req.user._id } }
-      );
       
       const testId = req.params.id; 
       req.logOut(function (err) {
@@ -933,7 +928,11 @@ State.getStatesOfCountryByName = function(countryName) {
             return res.redirect(`/cbtcenter/${testId}`);
           });
         }else {
-          const expireData = await CBT.find({ userId: { $in: [user._id] } }).exec();
+          
+          const expireData = await CBT.findOne({
+            _id: testId, // Check the specific test
+            userId: req.user._id, // Look for the current user's ID in the userId array
+          }).exec();
 
           if (expireData && expireData.length > 0) {
             req.logout(function (err) {
