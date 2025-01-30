@@ -361,47 +361,52 @@ const learnersDetails = async ( req , res ) => {
 
 const uploadLearnerImage = async (req, res) => {
   try {
-      // Process file upload
-      uploadLearnerImages(req, res, async (learner) => {
-          if (learner) {
+    // Process file upload
+    uploadLearnerImages(req, res, async (learner) => {
+      if (learner) {
+        const id = req.params.id;
+        const user = await Learner.findById(id);
 
-          const id = req.params.id;
-          const user = await Learner.findById(id);
-
-          if (!user) {
-              return res.status(404).json({ error: 'User not found' });
-          }
-
-          // Check if a file is provided
-          if (!req.file) {
-              return res.status(400).json({ error: 'No file provided' });
-          }
-
-          // Upload image to Cloudinary
-          const result = await cloudinary.uploader.upload(req.file.path);
-
-          // Check if the Cloudinary upload was successful
-          if (!result || !result.secure_url) {
-              return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
-          }
-
-          // Update user's img field with the Cloudinary URL and public ID
-          user.img = {
-              url: result.secure_url,
-              publicId: result.public_id // Save the public ID if needed for future deletions
-          };
-
-          await user.save();
-
-          req.flash('success_msg', 'Image uploaded successfully');
-          return res.redirect('/admin/update-learner?id=' + id);
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
         }
-      });
+
+    
+        if (!req.file) {
+          return res.render("error404", {title: "Error 400:. oops! No file provided", user: req.user})
+        }
+
+      
+        const maxFileSize = 20480; // 20 KB in bytes
+        if (req.file.size > maxFileSize) {
+          return res.render("error404", {title: "File size must not exceed 20 KB", user: req.user})
+        }
+
+  
+        const result = await cloudinary.uploader.upload(req.file.path);
+
+        if (!result || !result.secure_url) {
+          return res.status(500).json({ error: 'Error uploading image to Cloudinary', user: req.user });
+        }
+
+ 
+        user.img = {
+          url: result.secure_url,
+          publicId: result.public_id 
+        };
+
+        await user.save();
+
+        req.flash('success_msg', 'Image uploaded successfully');
+        return res.redirect('/admin/update-learner?id=' + id);
+      }
+    });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 };
+
 
 //-----------------------------------admindashboard query --------------------------------
 
@@ -782,7 +787,7 @@ const payStackPayment = async ( req, res ) => {
     if (!email || !amount) {
       errors.push( { msg: "Please input Your Email" } );
     }
-    if(amount < 250000) {
+    if(amount < 270000) {
       errors.push( { msg: "You can not pay less than the encrypted amount" } );
     }
     if(errors.length > 0){
@@ -846,7 +851,7 @@ const payStackCallBack = async ( req , res ) => {
       status: 'paid',
     });
     await order.save();
-    res.render('success', { title: `Congratulations! your #2500 payment was successfull, 
+    res.render('success', { title: `Congratulations! your #2700 payment was successfull, 
     Copy this code: "${order.pin}" to purchase Vouchers`, user: req.user, });
   } else {
     res.redirect('/error');
@@ -1178,25 +1183,26 @@ const editStaffImage = (req, res) => {
               return res.status(404).json({ error: 'User not found' });
           }
 
-          // Check if a file is provided
+       
           if (!req.file) {
-             
-              return res.render("error404", {title: "Error 400:. oops! No file provided" + ' ' + error})
-              
+              return res.render("error404", {title: "Error 400:. oops! No file provided", user: req.user})
           }
 
-          // Upload image to Cloudinary
+          const maxFileSize = 20480; // 20 KB in bytes
+          if (req.file.size > maxFileSize) {
+            return res.render("error404", {title: "File size must not exceed 20 KB", user: req.user})
+          }
+            
           const result = await cloudinary.uploader.upload(req.file.path);
-
-          // Check if the Cloudinary upload was successful
+       
           if (!result || !result.secure_url) {
-              return res.render("error404", {title: "Error 500:. oops! Error uploading image to Cloudinary" + ' ' + error})
+              return res.render("error404", {title: "Error 500:. oops! Error uploading image to Cloudinary", user: req.user})
           }
 
-          // Update user's img field with the Cloudinary URL and public ID
+        
           user.img = {
               url: result.secure_url,
-              publicId: result.public_id // Save the public ID if needed for future deletions
+              publicId: result.public_id 
           };
 
           await user.save();
@@ -1570,13 +1576,18 @@ const uploadSchoolLogo = async ( req , res ) => {
           return res.status(404).json({ error: 'User not found' });
         }
     
-        // Check if a file is provided
         if (!req.file) {
-          return res.status(400).json({ error: 'No file provided' });
-        }
+          return res.render("error404", {title: "Error 400:. oops! No file provided", user: req.user})
+      }
+
+      const maxFileSize = 20480; // 20 KB in bytes
+      if (req.file.size > maxFileSize) {
+        return res.render("error404", {title: "File size must not exceed 20 KB", user: req.user})
+      }
+
     
         const result = await cloudinary.uploader.upload(req.file.path);
-        console.log(result);
+      
     
     
         // Check if the Cloudinary upload was successful
@@ -1584,19 +1595,18 @@ const uploadSchoolLogo = async ( req , res ) => {
           return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
         }
     
-        // Update the user's img field with the Cloudinary URL
+  
         user.img = {
           url: result.secure_url,
           publicId: result.public_id  // Save the public ID if you need it for future deletions
         };
     
         await user.save();
-        console.log(user.img);
-        
-    
+      
+  
         req.flash('success_msg', 'Image uploaded successfully');
         return res.redirect('/admin/update-school?id=' + id);
-        res.status(200).json( { message: "Image Uploaded" } )
+        
       }
     })
    
@@ -3077,7 +3087,7 @@ const checkResultFirstAndSecond = async ( req , res ) => {
     console.log(learnerToString);
       
     if (pin && pin.expiry > Date.now()) {
-      if (pin.usage_count >= 30 ) {
+      if (pin.usage_count >= 3 ) {
         return res.render('success', { title: "Oops! This pin has reached its usage limit" });
       }
 
