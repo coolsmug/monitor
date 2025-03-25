@@ -356,6 +356,16 @@ body::-webkit-scrollbar-thumb {
     color: var(--white);
   }
 
+  .inputss select{
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    outline: none;
+    background: rgba(152, 251, 152, 0.267);
+    color: var(--deepest-blue);
+  }
+
+
   button {
     width: 150px;
     cursor: pointer;
@@ -3671,7 +3681,7 @@ box-shadow: 2px 5px grey;
   }
 
   .divh4 {
-    margin-top: ;
+    /* margin-top: ; */
   }
 
 .divol {

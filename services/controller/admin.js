@@ -599,7 +599,7 @@ const voucherPrinting = async ( req , res ) => {
                       var day = new Date();
                       var year = day.getFullYear();
                       const currentDate = new Date();
-                      var fourteen = new Date(currentDate.getTime() + (15 * 24 * 60 * 60 * 1000));
+                      var fourteen = new Date(currentDate.getTime() + (30 * 24 * 60 * 60 * 1000));
                       var codes = txt
                       const serial = `mon${codes}${year}`;
                     
@@ -649,7 +649,7 @@ const voucherPrinting = async ( req , res ) => {
                               var day = new Date();
                               var year = day.getFullYear();
                               const currentDate = new Date();
-                              var fourteen = new Date(currentDate.getTime() + (15 * 24 * 60 * 60 * 1000));
+                              var fourteen = new Date(currentDate.getTime() + (30 * 24 * 60 * 60 * 1000));
                               var codes = txt
                               const serial = `mon${codes}${year}`;
                     //---------------------code for voucher---------//

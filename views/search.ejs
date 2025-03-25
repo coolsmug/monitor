@@ -11,7 +11,7 @@
           <th>Roll No</th>
           <th>Email</th>
           <th>First Name</th>
-          <th>Middle Name</th>
+          <th>Image</th>
           <th>Last Name</th>
           <th>Gender</th>
           <th>Age</th>
@@ -85,6 +85,12 @@ tbody tr:hover {
 
 td {
   font-size: 14px;
+}
+
+a { 
+  text-decoration: none;
+  color: #4ca54c;
+  font-weight: bold;
 }
 
 /* Search Input Styling */
@@ -168,10 +174,11 @@ td {
           } else {
             learners.forEach((learner) => {
               tableBody.append(`
+              
                 <tr>
-                  <td>${learner.roll_no}</td>
+                  <td><div class="avisis"> <p> ${learner.roll_no} </P><button class="copy-btns"><i class="fas fa-copy"></i></button></div></td>
                   <td> <div class="avis"> <p> ${learner.email} </P><button class="copy-btn"><i class="fas fa-copy"></i></button></div> </td>
-                  <td>${learner.first_name}</td>
+                  <td> <a href="/admin/learner-detail?id=${learner._id}">${learner.first_name}</a></td>
                   <td>${learner.img?.url ? `<img src="${learner.img.url}" alt="Learner Image" class="learner-img" width="40">` : '-'}</td>
                   <td>${learner.last_name}</td>
                   <td>${learner.gender || '-'}</td>
@@ -179,6 +186,7 @@ td {
                   <td>${learner.classes || '-'}</td>
                   <td>${learner.arm || '-'}</td>
                   <td>${new Date(learner.date_enrolled).toLocaleDateString()}</td>
+                  </a>
                 </tr>
               `);
             });
@@ -291,7 +299,37 @@ function copyText(event) {
 // Add event listener to the table body
 tableBody.addEventListener('click', copyText);
 
+const tableBodies = document.querySelector('#learnerData');
 
+function copyTexts(events) {
+  // Check if the clicked element is a copy button
+  if (events.target.closest('.copy-btns')) {
+    const row = event.target.closest('tr');
+    const text = row.querySelector('.avisis p').textContent.trim();
+
+    // Try to use navigator.clipboard API
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`${text} copied!`);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert('Failed to copy text.');
+      });
+    } else {
+      // Fallback method
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      alert(`${text} copied!`);
+    }
+  }
+}
+
+// Add event listener to the table body
+tableBodies.addEventListener('click', copyTexts);
 
   </script>
 

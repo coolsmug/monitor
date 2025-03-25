@@ -148,13 +148,13 @@ body::-webkit-scrollbar {
     position: relative;
     right: -400px;
     top: -130px;
-    
-    
+   
 }
 
 #school-logo img {
     width: 120px;
     height: 120px;
+    filter: drop-shadow(2px 2px 5px grey);
 }
 
 
@@ -168,17 +168,18 @@ body::-webkit-scrollbar {
 .the-school-name {
     font-family: var(--montserrat-bold);
     font-weight: bolder;
-    font-size: 25px;
-    color: var(--white_one);
+    font-size: 35px;
+    color: var(--deepest-blue);
     margin: 0;
     padding: 0;
     padding-bottom: 10px;
+    
 }
 .apart-from-side-bar .header {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--deepest-blue);
+    background: var(--white_two);
     width: 100%;
     line-height: 5px;
     height: 130px; 
@@ -190,7 +191,7 @@ body::-webkit-scrollbar {
 }
 
 .address p {
-    color: var(--white_one) !important;
+    color: var(--deep-blue) !important;
     text-align: center;
 }
 
