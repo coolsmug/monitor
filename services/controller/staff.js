@@ -203,49 +203,43 @@ const getSectionTextExam = async ( req , res ) => {
 
 //-----------------------Creating Exam --------------------------------------
 
-const createExam = async ( req , res ) => {
-    try {
-        const {roll_no, student_name, name,_learner, classofs, term} = req.body;
-        let errors = [];
-        console.log(`ROll_NO:${roll_no} Subject Name:${ student_name} Learner: ${_learner} Name: ${name} Session:${classofs} Term: ${term}`)
-       
-        if( !roll_no || !student_name || !name || !_learner || !classofs || !term) {
-            errors.push( { msg : "Please fill in all fields"});
-        }
-        
-        if(errors.length > 0) {
-            res.status(500).json( { message : errors } )
-        }  else { 
-                    const exam = new Exam({
-                        roll_no: roll_no,
-                        student_name: student_name,
-                        name : name,
-                        classofs: classofs,
-                        term: term,
-                        _learner: _learner,
-                       
-                          
-                    })
-                    exam.save()
-                    .then((value) => {
-                        console.log(value)
-                        req.flash(
-                          "success_msg",
-                          "An Exam Registered !"
-                        )
+const createExam = async (req, res) => {
+  try {
+      let { roll_no, student_name, subjects, _learner, classofs, term } = req.body;
 
-                        res.status(200).json( { message : "Exam Added Successfully"})
-                      
-                    })
-                    .catch(value => console.log(value))
-                             
-    }
-    } catch (err) {
-        if(err) 
-        console.log(err.message)
-        res.status(500).send('error_msg', 'Internal Server Error' + ' ' + err.message);
-    }
-}
+      if (!roll_no || !student_name || !subjects || !_learner || !classofs || !term) {
+          return res.status(400).json({ message: "Please fill in all fields" });
+      }
+
+      // Parse subjects JSON string
+      subjects = JSON.parse(subjects);
+
+      if (!Array.isArray(subjects)) {
+          return res.status(400).json({ message: "Subjects must be an array" });
+      }
+
+      // Create multiple exam records
+      const exams = subjects.map(subject => ({
+          roll_no,
+          student_name,
+          name: subject,
+          classofs,
+          term,
+          _learner
+      }));
+
+      // Save all exams at once
+      await Exam.insertMany(exams);
+
+      res.status(200).json({ message: "Exams Added Successfully", exams });
+
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ message: "Internal Server Error", error: err.message });
+  }
+};
+
+
 
 
 const updateExam = async ( req , res ) => {
@@ -415,7 +409,7 @@ const getMiscellaneous = async ( req , res ) => {
         const misc = await Miscellaneous.findById(id).exec();
         const prop = await Proprietor.findOne({schoolId: req.user.schoolId}).exec();
         const scomment = await Staffstatement.findOne( { schoolId: req.user.schoolId } ).exec()
-        
+       
         res.render('miscellaneous_fill', {
             misc: misc,
             user: req.user,

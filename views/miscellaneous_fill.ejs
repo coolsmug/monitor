@@ -351,7 +351,15 @@
         <div class="student-detail">
             <div class="div_input">
                 <label for="next_t_fee">Next Term Resumption Date</label>
-                <input type="next_t_fee" name="resumpDay"  value="<%= misc.resumpDay %>">
+                <%
+                let formattedResumpDay = "";
+                if (misc.resumpDay) {
+                  let parsedDate = new Date(misc.resumpDay);
+                  formattedResumpDay = !isNaN(parsedDate) ? parsedDate.toISOString().slice(0, 10) : "";
+                }
+              %>
+              <input type="date" name="resumpDay" value="<%= formattedResumpDay %>">
+              
             </div>
             <div class="div_input">
                 <label for="next_t_fee">Next Time Fees</label>
@@ -359,7 +367,14 @@
             </div>
             <div class="div_input">
                 <label for="payable">Payable on or Before</label>
-                <input type="payable" name="payable"  value="<%= misc.payable %>">
+                <%
+                let formattedResumpDays = "";
+                if (misc.payable) {
+                  let parsedDate = new Date(misc.payable);
+                  formattedResumpDays = !isNaN(parsedDate) ? parsedDate.toISOString().slice(0, 10) : "";
+                }
+              %>
+                <input type="date" name="payable"  value="<%= formattedResumpDays %>">
             </div>
             <div class="div_input">
                 <label for="debt">Debt on Ground</label>

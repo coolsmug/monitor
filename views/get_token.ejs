@@ -16,7 +16,9 @@
             <h2>Result Checking Vouchers </h2>
            
         </div>
-        <% if(vouch) {%> 
+       
+        <% if(vouch && vouch.length > 0) { %> 
+            <h3>SERIAL NO : <%= vouch[0].serial_no %></h3> <!-- Fixed tag and array handling -->
         <div class="cover-vourcher" >
            
             <% vouch.forEach(function(token) { %>

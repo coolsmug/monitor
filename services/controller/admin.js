@@ -547,175 +547,70 @@ const adminlogOut = async ( req , res ) => {
 
 //--------------------------Voucher Creation--------------------------------//
 
-const voucherPrinting = async ( req , res ) => {
+const voucherPrinting = async (req, res) => {
   try {
     const { pin } = req.body;
-
     let errors = [];
 
-    if(!pin) {
-      errors.push( { msg : "Please fill in your PIN" } )
+    if (!pin) {
+      errors.push({ msg: "Please fill in your PIN" });
     }
 
-    if( pin.length < 6  ||   pin.length > 6) {
-      errors.push( { msg : "Oops! Incomplete PIN atleast six" } )
+    if (pin.length !== 6) {
+      errors.push({ msg: "Oops! PIN must be exactly six digits" });
     }
 
-    if( pin.length > 6) {
-      errors.push( { msg : "Oops! PIN length is more than six" } )
+    if (errors.length > 0) {
+      req.flash("error_msg", "Error registration: " + errors[0].msg);
+      return res.redirect("/admin/get-gen-voucher/1");
     }
 
-    if(errors.length > 0 ){
-      req.flash('error_msg', "Error registration: " + errors[0].msg);
-      res.redirect('/admin/get-gen-voucher/1');
-    
-    }else{
-     VoucherPayment.findOne( { pin : pin } ).exec((err, pins) => {
-        if (err) {console.log (err); return; }
-        if(pins) {
-              if ( pins.used == true ) {
-                
-                req.flash('error_msg', `This PIN: "${pins.pin}" has been used, kindly pay for a new PIN` );
-                res.redirect('/admin/get-gen-voucher/1');
-               
-              }else {
-                VoucherPayment.updateOne( { pin : pin }, { used : true }, (err, pins) => {
-                  if(err) {
-                    console.log(err);
-                    return res.render('success', { title : err });
-                  } else{
-                    const myDocument = () => {
-                      var y = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                        1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,
-                        5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                        1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,
-                        7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0];
-                      var txt = '';
-                      var x = y.sort(function(){return 0.5 - Math.random()})
-                    
-                      for (var i = 110; i < x.length; i++){
-                            txt += x[i]
-                      }
-                      var day = new Date();
-                      var year = day.getFullYear();
-                      const currentDate = new Date();
-                      var fourteen = new Date(currentDate.getTime() + (30 * 24 * 60 * 60 * 1000));
-                      var codes = txt
-                      const serial = `mon${codes}${year}`;
-                    
-                    //---------------------code for voucher---------//
-                    
-                      var cd = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                        1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,
-                        5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                        1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,
-                        7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0];
-                      var txts = '';
-                      var cod = cd.sort(function(){return 0.5 - Math.random()})
-                    
-                      for (var a = 106; a < cod.length; a++){
-                            txts += cod[a]
-                      }
-                      const coded = txts
-                      console.log(coded)
-                    
-                      const vouchers = [
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-                        {code: coded, expiry: fourteen, serial_no: serial, usage_count: 0, used: false, schoolId: req.user._id,},
-      
-                      ];
-                        vouchers.forEach( async function(vouch){
-                          Voucher.findOne({code: coded, serial_no: serial, schoolId: req.user._id}).exec((err, vouchs) => {
-                            if(coded && serial){
-                              var y = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                                1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,
-                                5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                                1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,
-                                7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0];
-                              var txt = '';
-                              var x = y.sort(function(){return 0.5 - Math.random()})
-                    
-                              for (var i = 110; i < x.length; i++){
-                              txt += x[i]
-                              }
-                              var day = new Date();
-                              var year = day.getFullYear();
-                              const currentDate = new Date();
-                              var fourteen = new Date(currentDate.getTime() + (30 * 24 * 60 * 60 * 1000));
-                              var codes = txt
-                              const serial = `mon${codes}${year}`;
-                    //---------------------code for voucher---------//
-                              var cd = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                                1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,
-                                5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,
-                                1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,
-                                7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0];
-                              var txts = '';
-                              var cod = cd.sort(function(){return 0.5 - Math.random()})
-                      
-                              for (var a = 106; a < cod.length; a++){
-                                    txts += cod[a]
-                              }
-                              const coded = txts
-                              const newVoucher = new Voucher({
-                                code : coded,
-                                serial_no: serial,
-                                expiry : fourteen,
-                                usage_count : 0,
-                                used : false,
-                                schoolId: req.user._id,
-                                
-                              })
-                    
-                              newVoucher
-                                    .save()
-                                    .then((vou) => {
-                                      res.redirect('/admin/get-gen-voucher/1');
-                                      // if(vou) res.status(200).send('vou')
-                                      console.log(vou)
-                                    }).catch((err)=> console.error(err.message))
-                            
-                              
-                            } else if(!coded) {
-                              Voucher.create(vouch, (err, vouch) => {
-                                if (err) throw new Error(err)
-                                res.redirect('/admin/get-gen-voucher/1');
-                              })
-                            }
-                          })
-                        })
-                    
-                    }
-                    
-                    myDocument()
-                  }
-                })
-              }
-        } else {
-         
-          req.flash('error_msg', `This PIN: ${pin} you provided is Invalid` );
-          res.redirect('/admin/get-gen-voucher/1');
-        }
-
-      })
+    const pins = await VoucherPayment.findOne({ pin }).exec();
+    if (!pins) {
+      req.flash("error_msg", `This PIN: ${pin} you provided is Invalid`);
+      return res.redirect("/admin/get-gen-voucher/1");
     }
 
-  
-    
+    if (pins.used) {
+      req.flash("error_msg", `This PIN: "${pins.pin}" has been used, kindly pay for a new PIN`);
+      return res.redirect("/admin/get-gen-voucher/1");
+    }
+
+    await VoucherPayment.updateOne({ pin }, { used: true });
+
+    // Generate a unique voucher serial (same for all 10 vouchers)
+    const generateRandomNumber = (length) => {
+      let digits = "0123456789";
+      return Array.from({ length }, () => digits[Math.floor(Math.random() * digits.length)]).join("");
+    };
+
+    const currentDate = new Date();
+    const expirationDate = new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const serial = `${generateRandomNumber(8)}${currentDate.getFullYear()}MON`;
+
+    // Generate 10 vouchers with the same serial number
+    let vouchers = [];
+    for (let i = 0; i < 10; i++) {
+      vouchers.push({
+        code: generateRandomNumber(12),
+        serial_no: serial,
+        expiry: expirationDate,
+        usage_count: 0,
+        used: false,
+        schoolId: req.user._id,
+      });
+    }
+
+    // Insert all 10 vouchers into the database
+    await Voucher.insertMany(vouchers);
+
+    res.redirect("/admin/get-gen-voucher/1");
   } catch (err) {
-    if(err) 
-    console.log(err.message)
-    res.status(500).send('Internal Server Error' + ' ' + err.message);
+    console.error(err.message);
+    res.status(500).send("Internal Server Error: " + err.message);
   }
 };
+
 
 const getVoucherPage = async ( req , res ) => {
   try {
