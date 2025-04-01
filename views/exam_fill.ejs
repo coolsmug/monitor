@@ -505,38 +505,56 @@ input[type="checkbox"] {
    });
  });
 
- $("#blessing").submit(function (evente) {
-    evente.preventDefault();
+ $(document).ready(function () {
+    let subjectOrder = [];
 
-    var formData = new FormData(this); // Use FormData to handle multiple values
-    var subjects = [];
+    // Track order of clicked checkboxes
+    $(document).on("change", "input[name='subjects[]']", function () {
+        let value = $(this).val();
 
-    $("input[name='subjects[]']:checked").each(function () {
-        subjects.push($(this).val()); // Collect all selected subjects
-    });
-
-    formData.delete("subjects[]"); // Remove existing single-value field
-    formData.append("subjects", JSON.stringify(subjects)); // Add subjects as a JSON array
-
-    console.log("Data being sent:", Object.fromEntries(formData));
-
-    $.ajax({
-        url: "/staff/register_exam",
-        method: "POST",
-        data: formData,
-        processData: false, // Prevent jQuery from auto-processing the data
-        contentType: false, // Ensure correct Content-Type is used
-        success: function (response) {
-            alert("Exams registered successfully!");
-            console.log(response);
-            location.reload()
-        },
-        error: function (xhr, status, error) {
-            alert("Error registering exams: " + error);
-            console.log(xhr.responseText);
+        if ($(this).is(":checked")) {
+            // Add to the order list
+            subjectOrder.push(value);
+        } else {
+            // Remove if unchecked
+            subjectOrder = subjectOrder.filter(subject => subject !== value);
         }
     });
+
+    $("#blessing").submit(function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+        formData.delete("subjects[]"); // Remove default multi-value field
+        formData.append("subjects", JSON.stringify(subjectOrder)); // Add subjects as a JSON array
+
+        // Convert FormData to an object for logging
+        let formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value;
+        });
+
+        console.log("Data being sent:", formObject);
+
+        $.ajax({
+            url: "/staff/register_exam",
+            method: "POST",
+            data: formData,
+            processData: false, // Prevent jQuery from auto-processing the data
+            contentType: false, // Ensure correct Content-Type is used
+            success: function (response) {
+                alert("Exams registered successfully!");
+                console.log(response);
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                alert("Error registering exams: " + error);
+                console.log(xhr.responseText);
+            }
+        });
+    });
 });
+
 
 
 

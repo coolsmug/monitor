@@ -15,7 +15,6 @@
         <h2>Learners Record Section</h2>
     </div>
     
-    
     <div class="cover_table">
         <div class="student-image">
           <% if(users.img.url) {%> 
@@ -25,44 +24,135 @@
            <% } %> 
         </div>
        <p style="font-size: 12px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= sections.name %> Result Arrangement - <%= sections.classof %> Session of <%= sessions.name %></p> 
-        <form  method="POST" id="myblessing">
-       
-        
-            <div class="input">
-                 <label for="total_over_all" style="font-size: 12px; color: seagreen;">Use this form to add Exam for Learner</label>
-                <% if(subjects) {%> 
-               <select name="name" id="name">
-                <option value="select subject">Select subject</option>
-                <% for (var i = 0; i < subjects.length; i++) {%> 
-                <option value="<%= subjects[i].name %> "><%= subjects[i].name %></option>
+       <form method="POST" id="myblessing">
+        <div class="input">
+            <label for="total_over_all" style="font-size: 12px; color: seagreen;">
+                Use this form to add Exam for Learner
+            </label>
+            
+            <div class="checkbox-container">
+                <% if(subjects) { %> 
+                    <% for (var i = 0; i < subjects.length; i++) { %> 
+                        <label>
+                           
+                            <input type="checkbox" class="subject-checkbox" name="subjects[]" value="<%= subjects[i].name %>"> 
+                            <%= subjects[i].name %>
+                            
+                        </label>
+                       
+                    <% } %> 
                 <% } %> 
-               </select>
-               <% } %> 
             </div>
-    
-            <div class="input">
-                <input type="hidden" name="_learner"  value="<%= users._id %>" readonly/>
-            </div>
-            <div class="input">
-                <input type="hidden" name="roll_no"  value="<%= sections.roll_no %>" readonly/>
-            </div>
-            <div class="input">
-                <input type="hidden" name="student_name"  value="<%= users.first_name %> <%= users.last_name %>" readonly/>
-            </div>
-            <div class="input">
-                <input type="hidden" name="classofs"  value="<%= sessions.classof %>" readonly/>
-            </div>
-            <div class="input">
-                <input type="hidden" name="term"  value="<%= sections.name %>" readonly/>
-            </div>
-            <div class="input">
-              <label for="total_over_all" style="font-size: 12px; color: seagreen;">Input School Session over all Mark</label>
-                <input type="total_over_all" name="total_over_all" value="<%= typeof  total_over_all != "undefined" ?  total_over_all : "" %> "/>
-            </div>
-            <div class="div">
-              <input type="submit" value="Add Exam">
-            </div>
-        </form>
+            
+        </div>
+        
+        <div class="input">
+            <input type="hidden" name="_learner" value="<%= users._id %>"/>
+        </div>
+        <div class="input">
+            <input type="hidden" name="roll_no" value="<%= sections.roll_no %>"/>
+        </div>
+        <div class="input">
+            <input type="hidden" name="student_name" value="<%= users.first_name %> <%= users.last_name %>"/>
+        </div>
+        <div class="input">
+            <input type="hidden" name="classofs" value="<%= sessions.classof %>"/>
+        </div>
+        <div class="input">
+            <input type="hidden" name="term" value="<%= sections.name %>"/>
+        </div>
+        <div class="div">
+            <input type="submit" value="Add Exam">
+        </div>
+    </form>
+    <style>
+      /* General Form Styling */
+#myblessing {
+   
+   background: #ececec;
+   min-width: 1000px;
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   font-family: 'Poppins', sans-serif; 
+   
+}
+
+.input {
+   margin-bottom: 15px;
+   
+}
+
+label {
+   font-size: 14px;
+   font-weight: 600;
+   color: #333;
+}
+
+/* Checkbox Container - Display in Column */
+.checkbox-container {
+   display: flex;
+   justify-content: center;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 10px;
+   padding: 10px 0;
+   /* width: 300px;   */
+}
+
+.checkbox-container label {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: row;
+   text-align: right;
+   cursor: pointer;
+   background: #e6f7e6;
+   padding: 8px 12px;
+   border-radius: 5px;
+   transition: 0.3s;
+   width: 250px;
+}
+
+.checkbox-container label:hover {
+   background: #d0f0d0;
+}
+
+input[type="checkbox"] {
+   width: 18px;
+   height: 18px;
+   cursor: pointer;
+   accent-color: seagreen;
+}
+
+/* Submit Button */
+.div input[type="submit"] {
+   width: 100%;
+   background: seagreen;
+   color: white;
+   font-size: 16px;
+   font-weight: bold;
+   border: none;
+   padding: 10px;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: 0.3s;
+}
+
+.div input[type="submit"]:hover {
+   background: darkgreen;
+}
+
+/* Responsive Design */
+@media (max-width: 400px) {
+   #blessing {
+       width: 90%;
+       padding: 15px;
+   }
+}
+
+</style>
+    </style>
         
         <div class="pos">
            
@@ -426,28 +516,55 @@ $("#update_misc").submit(function (eventss) {
  });
 
 
- $("#myblessing").submit(function (event) {
-  event.preventDefault();
+ $(document).ready(function () {
+    let subjectOrder = [];
 
-  var unindexed_array = $(this).serializeArray();
-  var data = {};
+    // Track order of clicked checkboxes
+    $(".subject-checkbox").change(function () {
+        let value = $(this).val();
 
-  $.map(unindexed_array, function (n, i) {
-    data[n["name"]] = n["value"];
-  });
+        if ($(this).is(":checked")) {
+            // Add subject if checked
+            subjectOrder.push(value);
+        } else {
+            // Remove if unchecked
+            subjectOrder = subjectOrder.filter(subject => subject !== value);
+        }
+    });
 
-  console.log(data);
-  var request = {
-    url: "/staff/register_exams",
-    method: "POST",
-    data: data,
-  };
+    $("#myblessing").submit(function (event) {
+        event.preventDefault();
 
-  $.ajax(request).done(function (response) {
-    alert("Exam Created Successfully!");
-    location.reload()
-    console.log("Data Updated Successfully!");
-  });
+        var formData = $(this).serializeArray();
+        var data = {};
+
+        // Convert form data to object
+        formData.forEach((item) => {
+            if (item.name.endsWith("[]")) {
+                let key = item.name.slice(0, -2);
+                data[key] = subjectOrder; // Use tracked order
+            } else {
+                data[item.name] = item.value;
+            }
+        });
+
+        console.log(data);
+
+        $.ajax({
+            url: "/staff/register_exams",
+            method: "POST",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: function (response) {
+                alert("Exam Created Successfully!");
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                alert("Error: " + xhr.responseText);
+                console.error("Error:", xhr.responseText);
+            }
+        });
+    });
 });
 
 

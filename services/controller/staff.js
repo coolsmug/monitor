@@ -754,48 +754,35 @@ const updateLearnerPosition = async (req, res) => {
 };
 
 
-
-const registerThirdTermExam = async ( req , res ) => {
+const registerThirdTermExam = async (req, res) => {
   try {
-    
-    const {roll_no, student_name, name,_learner, classofs, term, total_over_all} = req.body;
+    const { roll_no, student_name, exam_name, _learner, classofs, term, total_over_all, subjects } = req.body;
     let errors = [];
-    console.log(`ROll_NO:${roll_no} Subject Name:${ student_name} Learner: ${_learner} Name: ${name} Session:${classofs} Term: ${term} total_over_all:${total_over_all}`)
-   
-    if( !roll_no || !student_name || !name || !_learner || !classofs || !term || !total_over_all) {
-        errors.push( { msg : "Please fill in all fields"});
+
+    if (!roll_no || !student_name || !exam_name || !_learner || !classofs || !term || !total_over_all || !subjects) {
+      errors.push({ msg: "Please fill in all fields" });
     }
-    
-    if(errors.length > 0) {
-        res.render("success", { title : "Error 405....(go back to the Exam page and try again)"})
-    }  else { 
-                const exams = new Examing ({
-                    roll_no: roll_no,
-                    student_name: student_name,
-                    name : name,
-                    classofs: classofs,
-                    term: term,
-                    _learner: _learner,
-                    total_over_all: total_over_all,
-                      
-                })
-                exams.save()
-                .then((value) => {
-                    console.log(value)
-                    req.flash(
-                      "success_msg",
-                      "An Exam Registered !"
-                    )
-                    res.render("success", { title : "Exam Added Successfully!"})
-                })
-                .catch(value => console.log(value))
-                   
-                   
-}
+
+    if (!Array.isArray(subjects) || subjects.length === 0) {
+      return res.status(400).json({ message: "Subjects must be an array and cannot be empty" });
+    }
+   
+    const exams = subjects.map(subject => ({
+      roll_no: roll_no,
+      student_name: student_name,
+      name: subject,  // Keeping "name" inside map for subject names
+      classofs: classofs,
+      term: term,
+      _learner: _learner,
+      total_over_all: total_over_all,
+    }));
+
+    await Examing.insertMany(exams);
+    res.status(200).json({ message: "Exams Added Successfully", exams });
 
   } catch (err) {
-    console.log(err.message)
-    res.status(500).send('Internal Server Error' + ' ' + err.message);
+    console.log(err.message);
+    res.status(500).send('Internal Server Error: ' + err.message);
   }
 };
 
@@ -904,7 +891,7 @@ const getThirdTermExam = async ( req , res ) => {
       const sections = await ThirdSection.findById(sectionId).exec();
       const misc = await Miscellaneous.findOne({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
       const position = await Position.findOne({ learnerId: userId, term: name, classofs: classofss }).exec();
-      const exams = await Examing.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss });
+      const exams = await Examing.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).sort({roll_no: 1});
       const submit = await Submission.find( { userId: userId, session: sessions.name, term: sections.name } ).exec();
     
 
