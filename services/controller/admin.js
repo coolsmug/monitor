@@ -33,6 +33,10 @@ const Position = require("../models/positionFirstTerm");
 const CBT = require('../models/test');
 const Question = require('../models/question');
 const Submission = require('../models/submit');
+const Sharp = require('sharp');
+const LearnerOfTheWeek = require('../models/learner_of_the_week');
+const sharp = require('sharp');
+const TeacherOfTheMonth = require('../models/teacher_of_the_month');
 
 
 
@@ -43,28 +47,55 @@ cloudinary.config({
 });
 
 // Multer configuration for file uploads
-const uploads = multer({
-  dest: 'uploads/',
-  limits: {
-    fileSize: 3 * 1024 * 1024, // 5 MB file size limit
+// const uploads = multer({
+//   dest: 'uploads/',
+//   limits: {
+//     fileSize: 3 * 1024 * 1024, // 3 MB limit
+//   },
+//   fileFilter: (req, file, cb) => {
+//     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
+//     if (!allowedMimeTypes.includes(file.mimetype)) {
+//       return cb(new Error('Invalid file type'), false);
+//     }
+//     cb(null, true);
+//   }
+// });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Your folder
   },
-  fileFilter: (req, file, cb) => {
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
-    if (!allowedMimeTypes.includes(file.mimetype)) {
-      return cb(new Error('Invalid file type'), false);
-    }
-    cb(null, true);
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
 
-const uploadEventImage = uploads.single('pageImage');
-const uploadLearnerImages = uploads.single('img');
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|gif/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Images Only!'));
+  }
+};
+
+const uploads = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+  fileFilter: fileFilter,
+});
+
 const uploadSchoolImages = uploads.single('img');
+const uploadSchoolImagings = uploads.single('image');
+const uploadLearnerImages = uploads.single('img');
 const uploadStaffImages = uploads.single('img');
-const uploadEventImg   = uploads.single('img');
-const uploadBlogImg   = uploads.single('img');
-const uploadBlogImage   = uploads.single('img');
+const uploadEventImg = uploads.single('img');
+const uploadBlogImg = uploads.single('img');
+
 
 
 // search
@@ -377,13 +408,19 @@ const uploadLearnerImage = async (req, res) => {
         }
 
       
-        const maxFileSize = 20480; // 20 KB in bytes
-        if (req.file.size > maxFileSize) {
-          return res.render("error404", {title: "File size must not exceed 20 KB", user: req.user})
-        }
+       const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+          await sharp(req.file.path)
+              .resize(130, 160) // Resize to 300x300 pixels
+              .toFormat('jpeg') // Convert to JPEG format
+              .jpeg({ quality: 100 }) // Set JPEG quality
+              .toFile(compressedPath); // Save to a new file
 
-  
-        const result = await cloudinary.uploader.upload(req.file.path);
+
+          if (user.img && user.img.publicId) {
+          await cloudinary.uploader.destroy(user.img.publicId);
+        }
+            
+          const result = await cloudinary.uploader.upload(compressedPath);
 
         if (!result || !result.secure_url) {
           return res.status(500).json({ error: 'Error uploading image to Cloudinary', user: req.user });
@@ -965,11 +1002,11 @@ const deleteProprietor = async ( req , res ) => {
 
 const createStaff = async ( req , res ) => {
   try {
-    const { roll, name, email, mobile_phone, address, password, password_2 } = req.body;
+    const { roll, name, email, mobile_phone, address, password, password_2, about, subject, award } = req.body;
     let errors = [];
     console.log( `ROll: ${ roll } Name: ${ name }` )
    
-    if(!name ||!roll ||!email ||!mobile_phone ||!address || !password || !password_2 ) {
+    if(!name ||!roll ||!email ||!mobile_phone ||!address || !password || !password_2 || !about || !subject || !award) {
         errors.push( { msg : "Please fill in all fields"});
     }
     
@@ -990,6 +1027,9 @@ const createStaff = async ( req , res ) => {
            address: address,
            password : password,
            password_2 : password_2,
+            about: about,
+            subject: subject,
+            award: award,
            user: req.user,
         })
     }  else {
@@ -1002,6 +1042,9 @@ const createStaff = async ( req , res ) => {
                   address: address,
                   password: password,
                   mobile_phone: mobile_phone,
+                  about: about,
+                  subject: subject,
+                  award: award.split(',').map(item => item.trim()),
                   schoolId: req.user._id,
                     
                 })
@@ -1049,7 +1092,7 @@ const getUpdateStaffUpdatePage = async ( req , res ) => {
           if (!staff) {
              res.status(404).send({ message: "Section not found" });
           } else {
-            res.render("staffs", { staff : staff, user: req.user });
+            res.render("staffs", { staff : staff, user: req.user, previousUrl: req.get("Referer") });
           }
         })
         .catch((err) => {
@@ -1083,12 +1126,19 @@ const editStaffImage = (req, res) => {
               return res.render("error404", {title: "Error 400:. oops! No file provided", user: req.user})
           }
 
-          const maxFileSize = 20480; // 20 KB in bytes
-          if (req.file.size > maxFileSize) {
-            return res.render("error404", {title: "File size must not exceed 20 KB", user: req.user})
-          }
+           const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+          await sharp(req.file.path)
+              .resize(150, 200) // Resize to 300x300 pixels
+              .toFormat('jpeg') // Convert to JPEG format
+              .jpeg({ quality: 100 }) // Set JPEG quality
+              .toFile(compressedPath); // Save to a new file
+
+
+          if (user.img && user.img.publicId) {
+          await cloudinary.uploader.destroy(user.img.publicId);
+        }
             
-          const result = await cloudinary.uploader.upload(req.file.path);
+          const result = await cloudinary.uploader.upload(compressedPath);
        
           if (!result || !result.secure_url) {
               return res.render("error404", {title: "Error 500:. oops! Error uploading image to Cloudinary", user: req.user})
@@ -1115,29 +1165,66 @@ const editStaffImage = (req, res) => {
 
 
 
-const updateStaff = async ( req , res ) => {
+const updateStaff = async (req, res) => {
   try {
-    const id = req.params.id;
-    Staff.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-      .then(comment => {
-        if(!comment)
-        {  
-          res.status(404).send({message: `Cannot Update Class with ID:${id} Maybe session not present`})
-         
-        } else {
-          res.send(comment)
-  
-        }
-      })
-      .catch(err => {
-           res.status(500).send({message:"Error Updating Staff information" + err})
-      })
+    const { id } = req.params;
+    const  {
+       roll, 
+      name,
+      position,
+      status,
+      isStaff,
+      schoolId,
+      classId,
+      password,
+      about,
+      subject,
+      mobile_phone,
+      award,
+      address,
+      x,
+      instagramm,
+      facebook,
+      linkedin,
+    } = req.body;
+
+    // Build staff object from req.body
+    const staff = {
+      roll, 
+      name,
+      position,
+      status,
+      isStaff,
+      schoolId,
+      classId,
+      password,
+      about,
+      subject,
+      mobile_phone,
+      award: award.split(',').map(item => item.trim()),
+      address,
+      x,
+      instagramm,
+      facebook,
+      linkedin,
+    };
+
+    const updatedStaff = await Staff.findByIdAndUpdate(id, staff, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedStaff) {
+      return res.status(404).json({ error: "Staff not found" });
+    }
+
+    res.json({ message: "Staff updated successfully", staff: updatedStaff });
   } catch (err) {
-    if(err) 
-    console.log(err.message)
-    res.status(500).send('Internal Server Error' + ' ' + err.message);
+    console.log(err.message);
+    res.status(500).send("Internal Server Error " + err.message);
   }
-}
+};
+
 
 const deleteStaff = async ( req , res ) => {
   try {
@@ -1183,6 +1270,26 @@ const staffStatus = async ( req , res ) => {
     res.status(500).send('Internal Server Error' + ' ' + err.message);
   }
 }
+
+const staffIsStaff = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { isStaff } = req.body;  // ✅ must match AJAX data
+
+    const switchDocs = await Staff.findByIdAndUpdate(
+      id,
+      { isStaff },
+      { new: true }
+    );
+
+    if (!switchDocs) return res.status(404).send("switch not found");
+
+    res.send(switchDocs);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Internal Server Error " + err.message);
+  }
+};
 
 
 const staffDetails = async ( req , res ) => {
@@ -1455,6 +1562,7 @@ const getSchoolDetail = async ( req , res ) => {
     const Id = req.user._id
     const school = await School.findById({ _id: Id }).exec();
     res.render('school_detail', {school, user: req.user})
+    
   } catch (error) {
     res.render("error404", {title: "Error 404" + ' ' + error})
   }
@@ -1462,9 +1570,99 @@ const getSchoolDetail = async ( req , res ) => {
 
 const uploadSchoolLogo = async ( req , res ) => {
   try {
-    uploadSchoolImages (req , res, async (school) => {
-      if (school) {
-        const id = req.params.id;
+    uploadSchoolImages (req , res, async (err) => {
+  
+      // if (err) {  
+      //   return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user})   
+      // }
+      // console.log(err)
+
+      // if (err instanceof multer.MulterError) {
+      //   return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user})
+
+      // }
+      
+       const id = req.params.id;
+        const user = await School.findById(id);
+        
+
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+    
+        if (!req.file) {
+          return res.render("error404", {title: "Error 400:. oops! No file provided", user: req.user})
+      }
+
+            const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+
+          // Get the original extension (jpg or png)
+          const ext = path.extname(req.file.originalname).toLowerCase();
+
+          let sharpPipeline = sharp(req.file.path).resize(600);
+
+          // If PNG, keep PNG format
+          if (ext === ".png") {
+            sharpPipeline = sharpPipeline.png({ quality: 80, compressionLevel: 9 });
+          } else {
+            // Default to JPEG
+            sharpPipeline = sharpPipeline.jpeg({ quality: 70 });
+          }
+
+          await sharpPipeline.toFile(compressedPath);
+
+          // Delete old image from Cloudinary if exists
+          if (user.img && user.img.publicId) {
+            await cloudinary.uploader.destroy(user.img.publicId);
+          }
+
+          // Upload new image to Cloudinary
+          const result = await cloudinary.uploader.upload(compressedPath, {
+            folder: "users",
+            use_filename: true,
+            unique_filename: false,
+          });
+      
+
+        if (!result || !result.secure_url) {
+          return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
+        }
+    
+  
+        user.img = {
+          url: result.secure_url,
+          publicId: result.public_id  
+        };
+    
+        await user.save();
+      
+  
+        req.flash('success_msg', 'Image uploaded successfully');
+        return res.redirect('/admin/update-school?id=' + id);
+        
+      }
+    )
+   
+  } catch (error) {
+    console.error(error);
+   
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+};
+
+
+const uploadSchoolImaging = async ( req , res ) => {
+  try {
+    uploadSchoolImagings (req , res, async (err) => {
+      if (err) {  
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user})   
+      }
+      console.log(err)
+
+      if (err instanceof multer.MulterError) {
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user}) 
+      }
+        const id = req.param.id;
         const user = await School.findById(id);
     
         if (!user) {
@@ -1475,25 +1673,45 @@ const uploadSchoolLogo = async ( req , res ) => {
           return res.render("error404", {title: "Error 400:. oops! No file provided", user: req.user})
       }
 
-      const maxFileSize = 20480; // 20 KB in bytes
-      if (req.file.size > maxFileSize) {
-        return res.render("error404", {title: "File size must not exceed 20 KB", user: req.user})
-      }
+            const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+            console.log(req.file.originalname)
 
-    
-        const result = await cloudinary.uploader.upload(req.file.path);
+          // Get the original extension (jpg or png)
+          const ext = path.extname(req.file.originalname).toLowerCase();
+
+          let sharpPipeline = sharp(req.file.path).resize(1200);
+
+          // If PNG, keep PNG format
+          if (ext === ".png") {
+            sharpPipeline = sharpPipeline.png({ quality: 80, compressionLevel: 9 });
+          } else {
+            // Default to JPEG
+            sharpPipeline = sharpPipeline.jpeg({ quality: 70 });
+          }
+
+          await sharpPipeline.toFile(compressedPath);
+
+          // Delete old image from Cloudinary if exists
+          if (user.image && user.image.publicId) {
+            await cloudinary.uploader.destroy(user.image.publicId);
+          }
+
+          // Upload new image to Cloudinary
+          const result = await cloudinary.uploader.upload(compressedPath, {
+            folder: "users",
+            use_filename: true,
+            unique_filename: false,
+          });
       
-    
-    
-        // Check if the Cloudinary upload was successful
+
         if (!result || !result.secure_url) {
           return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
         }
     
   
-        user.img = {
+        user.image = {
           url: result.secure_url,
-          publicId: result.public_id  // Save the public ID if you need it for future deletions
+          publicId: result.public_id  
         };
     
         await user.save();
@@ -1503,7 +1721,7 @@ const uploadSchoolLogo = async ( req , res ) => {
         return res.redirect('/admin/update-school?id=' + id);
         
       }
-    })
+    )
    
   } catch (error) {
     console.error(error);
@@ -1511,6 +1729,7 @@ const uploadSchoolLogo = async ( req , res ) => {
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 };
+
 
 const schoolStatus = async ( req , res ) => {
   const id = req.params.id;
@@ -2302,29 +2521,28 @@ const addSession = async ( req, res ) => {
 
 const manageAll = async ( req , res ) => {
   
-  await Proprietor
-  .find({ schoolId: req.user._id })
-  .select("full_name excellent very_good good pass vpoor poor")
-  .exec(function(err, comment) {
-    if (err) throw new Error(err)
+  Proprietor
+    .find({ schoolId: req.user._id })
+    .select("full_name excellent very_good good pass vpoor poor")
+    .exec(function (err, comment) {
+      if (err) throw new Error(err);
 
-    Staffstatement.find({schoolId: req.user._id}).exec((errtwo, sst) => {
-      if(errtwo) throw new Error(errtwo)
+      Staffstatement.find({ schoolId: req.user._id }).exec((errtwo, sst) => {
+        if (errtwo) throw new Error(errtwo);
         res.render('all_schools_setting', {
           comment: comment,
-          sst : sst,
+          sst: sst,
           user: req.user,
-
-        }) 
-    }) 
-  })
+        });
+      });
+    })
 };
 
 const createStaffPage = async ( req , res ) => {
   try {
     await 
     res.
-        render("student", {user: req.user})
+        render("student", {user: req.user, previousUrl: req.get("Referer") || '/'})
   } catch (err) {
     if(err) 
     console.log(err.message)
@@ -2352,7 +2570,7 @@ const getAllStaffs = async ( req , res ) => {
       res.setHeader('Pragma', 'no-cache');
 
 
-    await   
+    
     Staff
       .find({ status: true, schoolId: req.user._id })
       .exec((errone, staff) => {
@@ -2595,7 +2813,7 @@ const getAllLearner = async ( req , res ) => {
     var perPage = 9
     var page = req.params.page || 1
 
-    await Learner
+     Learner
         .find({ status : true, deletes: false, schoolId: req.user._id })
         .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
         .skip((perPage * page) - perPage)
@@ -2978,8 +3196,7 @@ const checkResultFirstAndSecond = async ( req , res ) => {
 
     const pinToString = pin.userid ? pin.userid.toString() : '';
     const learnerToString = learnerId ? learnerId.toString() : '';
-    console.log(pinToString);
-    console.log(learnerToString);
+
       
     if (pin && pin.expiry > Date.now()) {
       if (pin.usage_count >= 3 ) {
@@ -2988,7 +3205,7 @@ const checkResultFirstAndSecond = async ( req , res ) => {
 
       if (pinToString != learnerToString && pin.used == true) {
         return res.render('success', { title: "This pin has been assigned to a learner" });
-        console.log(true)
+        
     }
 
       const exam = await Exam.find({ _learner: learnerId, term: name, classofs: classof, roll_no }).exec();
@@ -3054,8 +3271,7 @@ const chseckThirdTermResult = async ( req , res ) => {
 
     const pinToString = pin.userid ? pin.userid.toString() : '';
     const learnerToString = learnerId ? learnerId.toString() : '';
-    console.log(pinToString);
-    console.log(learnerToString);
+    
 
     if (pin && pin.expiry > Date.now()) {
       if (pin.usage_count >= 3) {
@@ -3064,7 +3280,7 @@ const chseckThirdTermResult = async ( req , res ) => {
 
       if (pinToString != learnerToString && pin.used == true) {
         return res.render('success', { title: "This pin has been assigned to a learner" });
-        console.log(true)
+       
     }
 
       const exam = await Examing.find({ _learner: learnerId, term: name, classofs: classof, roll_no }).exec();
@@ -3320,14 +3536,15 @@ const deleteQuestions = async (req, res) => {
 //----------------------------school website----------------------------------------------\\
 
 //creating Event
+const slugify = require('slugify');
 
 const createEvent = async (req, res) => {
   try {
-    const { event_name, venue, dates, content } = req.body;
+    const { event_name, venue, dates, content, start, end, slug} = req.body;
     const errors = [];
 
     // Validate form fields
-    if (!event_name || !venue || !dates || !content) {
+    if (!event_name || !venue || !dates || !content || !start || !end) {
       errors.push({ msg: "Please fill in all fields" });
     }
 
@@ -3339,9 +3556,13 @@ const createEvent = async (req, res) => {
     const event = new Event({
       event_name,
       venue,
+      excerpt: content.length > 50 ? content.substring(0, 50) + '...' : content,
       dates,
       content,
       schoolId: req.user._id,
+      slug: slugify(event_name, { lower: true, strict: true }),
+      end,
+      start,
     });
 
     const savedEvent = await event.save();
@@ -3373,7 +3594,7 @@ const getAllEvents = async ( req , res ) => {
       var page = req.params.page || 1
 
       await Event.find( { schoolId : req.user._id } )
-                 .select('venue event_name times dates content')
+                 .select('venue event_name times excerpt dates content')
                  .sort( { createdAt : 1 } )
                  .skip( ( perPage * page ) - perPage )
                  .limit( perPage )
@@ -3399,99 +3620,83 @@ const getAllEvents = async ( req , res ) => {
     }
   };
 
-  const editEventImage = async (req, res) => {
-    try {
-      // Use Multer middleware to process the uploaded file
-      uploadEventImg(req, res, async () => {
-        const id = req.params.id;
-  
-        // Find the event by ID
-        const event = await Event.findById(id);
-        if (!event) {
-          req.flash('error_msg', 'Event not found');
-          return res.redirect('/admin/update-event?eventId=' + id);
-        }
-  
-        // Check if a file is provided
-        if (!req.file) {
-          req.flash('error_msg', 'No file provided');
-          return res.redirect('/admin/update-event?eventId=' + id);
-        }
-  
-        try {
-          // Upload image to Cloudinary
-          const result = await cloudinary.uploader.upload(req.file.path);
-  
-          // Ensure the Cloudinary upload was successful
-          if (!result || !result.secure_url) {
-            req.flash('error_msg', 'Error uploading image to Cloudinary');
-            return res.redirect('/admin/update-event?eventId=' + id);
-          }
-  
-          // Update the `img` field in the event document
-          event.img = {
-            url: result.secure_url,
-            publicId: result.public_id, // Save the public ID for future deletions
-          };
-  
-          await event.save();
-  
-          req.flash('success_msg', 'Image uploaded successfully');
-          return res.redirect('/admin/update-event?eventId=' + id);
-        } catch (cloudinaryError) {
-          console.error('Cloudinary Error:', cloudinaryError);
-          req.flash('error_msg', 'An error occurred while uploading the image to Cloudinary');
-          return res.redirect('/admin/update-event?eventId=' + id);
-        }
-      });
-    } catch (error) {
-      console.error('Server Error:', error);
-      req.flash('error_msg', 'Internal Server Error');
-      return res.redirect('/admin/update-event');
-    }
-  };
-  
-const editEventSecondImage = async (req, res) => {
+
+const editEventImage = async (req, res) => {
   try {
-    uploadEventImage(req, res, async (events) => {
-      if (events) {
+    uploadEventImg(req, res, async (event) => {
+      if (event) {
         const id = req.params.id;
         const user = await Event.findById(id);
 
         if (!user) {
-          return res.status(404).json({ message: 'Event not found' });
+          return res.status(404).json({ error: "User not found" });
         }
 
         if (!req.file) {
-          return res.status(400).json({ message: 'No file provided' });
+          return res.status(400).json({ error: "No file selected" });
         }
 
-        const result = await cloudinary.uploader.upload(req.file.path);
+        // 🔹 Compress image to max 50KB using Sharp
+        const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+
+        await Sharp(req.file.path)
+          .jpeg({ quality: 70 }) // start with 70% quality
+          .toBuffer()
+          .then(async (buffer) => {
+            let quality = 70;
+            let outputBuffer = buffer;
+
+            while (outputBuffer.length > 50480 && quality > 10) {
+              quality -= 10;
+              outputBuffer = await Sharp(req.file.path)
+                .jpeg({ quality })
+                .toBuffer();
+            }
+
+            await Sharp(outputBuffer).toFile(compressedPath);
+          });
+
+        if (user.img && user.img.publicId) {
+          await cloudinary.uploader.destroy(user.img.publicId);
+        }
+
+        const result = await cloudinary.uploader.upload(compressedPath);
 
         if (!result || !result.secure_url) {
-          return res.status(500).json({ message: 'Error uploading image to Cloudinary' });
+          return res
+            .status(500)
+            .json({ error: "Error uploading image to Cloudinary" });
         }
 
-        user.pageImage = {
+        user.img = {
           url: result.secure_url,
-          publicId: result.public_id, // Save the public ID if needed for future deletions
+          publicId: result.public_id,
         };
 
         await user.save();
 
-        return res.status(200).json({ message: 'Page image uploaded successfully' });
+        req.flash("success_msg", "Image uploaded successfully");
+        return res.redirect(`/admin/update-event?eventId=${id}`);
       }
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error', details: error.message });
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
 };
 
-
+  
 const getEditEventPage = async (req, res) => {
-  if (req.query.eventId) { // Ensure the parameter name matches what you're using in redirection
+  if (req.query.eventId) {
     try {
+
+      
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+      
       const id = req.query.eventId; // Use the correct parameter
       const event = await Event.findById(id); // Use async/await consistently
 
@@ -3520,41 +3725,56 @@ const getEditEventPage = async (req, res) => {
   }
 };
 
+const mongoose = require('mongoose');
 
 const editEvent = async ( req , res ) => {
   try {
-      const {event_name, dates, content, times, venue} = req.body;
+      const {event_name, dates, content, end, start, venue} = req.body;
        const eventId = req.params.id;
-       if (!eventId) {
-        throw new TypeError("Invalid event ID");
+
+       if (!mongoose.Types.ObjectId.isValid(eventId)) {
+      return res.status(400).json({ error: "Invalid blog ID" });
+    }
+
+
+      if (!event_name || !venue || !dates || !content || !start || !end) {
+        throw new Error("All fields are required");
       }
+
  
       const event = {
-        event_name: event_name,
-        venue: venue, 
-        dates: dates, 
-        content: content, 
-    };
+        event_name,
+        venue,
+        dates,
+        content, 
+        end,
+        start,
+        slug: slugify(event_name, { lower: true, strict: true }),
+        excerpt: content.length > 50 ? content.substring(0, 50) + '...' : content,
+    }; 
  
-      const filter = { _id: eventId };
-      const update = { $set: event };
-      const options = { returnOriginal: false };
- 
-   const result = await Event.findOneAndUpdate(filter, update, options);
+   const eventUpdate = await Event.findOneAndUpdate(
+    { _id : eventId},
+    { $set: event },
+    { new: true }
+   );
     
-      if (!result) {
+      if (!eventUpdate) {
         return res.status(404).json({ error: "Event not found" });
       }
   
-      return res.json("Successfully updated Event");
+    return res.json({
+      message: "Successfully updated Event",
+      redirectUrl: `/admin/update-event?eventId=${eventId}`
+    });
+
+
     
    } catch (error) {
-    if (error.name === "CastError" || error.name === "TypeError") {
-        return res.status(400).json({ error: error.message });
-      }
-       console.log (error);
-       return res.status(500).send();
-   }
+     console.error(error);
+    return res.status(500).json({ error: error.message || "Server error" });
+  }
+   
 };
 
 const deleteEvent = async ( req , res ) => {
@@ -3580,88 +3800,50 @@ const deleteEvent = async ( req , res ) => {
 };
 
  // create BLOG
- const uploadMultipleBlogImage = async (req, res, next) => {
+
+const createBlog = async (req, res) => {
   try {
- 
-    const imgResult = await cloudinary.uploader.upload(req.files['img'][0].path);
-    const img2Result = await cloudinary.uploader.upload(req.files['image'][0].path);
-  
-  
-    req.uploadResults = {
-      imgResult,
-      img2Result,
+    const { author, category, content, headline, tags, metaDescription } = req.body;
+    const errors = [];
+
+    if (!author || !category || !content || !headline) {
+      errors.push({ msg: "Please fill in all the fields." });
+    }
+
+    if (errors.length > 0) {
+      const errorMessage = errors[0].msg;
+      return res.status(400).json({ message: errorMessage }); // redirect back to form page
+    }
+
+    const blog = {
+      author,
+      category,
+      content,
+      headline,
+      slug: slugify(headline, { lower: true, strict: true }),
+      excerpt: content.length > 50 ? content.substring(0, 50) + '...' : content,
+      tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+      metaDescription: metaDescription || content.substring(0, 160),
+      schoolId: req.user._id,
     };
-    next();
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error uploading file to Cloudinary.');
+
+    const createdBlog = await Blog.create(blog);
+
+    return res.status(201).json({
+      message: 'Blog created successfully!',
+      redirectUrl: `/admin/update-blog?blogId=${createdBlog._id}`,
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: 'Internal Server Error',
+      error: err.message,
+    });
   }
 };
-// 
 
-const createBlog = async ( req , res ) => {
-  try {
-      const { author, category, content, headline} = req.body;
-      const errors = [];
-     
-      const {
-       imgResult,
-       img2Result,
-     } = req.uploadResults;
-   
-      if (!author || !category || !content || !headline) {
-          errors.push( { msg : "Please fill in all the fields."} )
-      }
-      if (errors.length > 0) {
-          res.render('create_blog', {
-             errors: errors,
-             author: author,
-             category: category, 
-             content: content, 
-             headline: headline, 
-             user: req.user,
-          })
-      } else{
-         
-         const blog = {
-             author: author,
-             category: category, 
-             content: content, 
-             headline: headline, 
-             schoolId: req.user._id,
-             img: {},
-             image: {},
-         }
-   
-         
-         if (req.files['img']) {
-           blog.img = {
-             url: imgResult.secure_url,
-             publicId: imgResult.public_id,
-           }
-         }
-         if (req.files['image']) {
-           blog.image = {
-             url: img2Result.secure_url,
-             publicId: img2Result.public_id,
-           }
-         }
-   
-         Blog.create(blog)
-         .then((data) => {
-            
-             req.flash("success_msg", "Data Registered !");
-             res.redirect('/admin/add_blog');
-         }).catch((err) => {
-             console.log(err)
-         }).catch((err) => console.log (err))
-     }
-  } catch (err) {
-    if(err) 
-      console.log(err.message)
-      res.status(500).send('Internal Server Error' + ' ' + err.message);
-    }
-  };
+
 
 // get all Blog
 
@@ -3673,8 +3855,7 @@ const getAllBlogs = async ( req , res ) => {
 
       var perPage = 9;
       var page = req.params.page || 1
-      await Blog.find( { schoolId: req.user._id } )
-                .select('author content  category headline createdAt')
+       Blog.find( { schoolId: req.user._id } )
                 .sort( { createdAt : 1 } )
                 .skip( ( perPage * page ) - perPage )
                 .limit( perPage )
@@ -3683,7 +3864,7 @@ const getAllBlogs = async ( req , res ) => {
                       .exec( ( errTwo , count ) => {
                         if( errTwo ) throw new Error( errTwo )
                           if( err ) throw new Error( err )
-                          res.render('all_event', {
+                          res.render('all_blogs', {
                               blog: blog,
                               user: req.user,
                               current: page,
@@ -3704,63 +3885,85 @@ const getAllBlogs = async ( req , res ) => {
 //Edit Blog
 const editBlogImage = async ( req , res ) => {
   try {
-      const blogId = req.params.id;
-
-      if (!blogId) {
-        throw new TypeError("Invalid blog ID");
-      }
-
-      const {
-        imgResult,
-        img2Result,
-      } = req.uploadResults;
-  
-      const blog = {};
-  
-      if (req.files['img']) {
-        blog.img = {
-          url: imgResult.secure_url,
-          publicId: imgResult.public_id,
+    uploadBlogImg (req , res, async (blog) => {
+      if (blog) {
+        const id = req.params.id;
+        const user = await Blog.findById(id);
+    
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
         }
+    
+        if (!req.file) {
+          return res.status(400).json({ error: 'No file selected' });
       }
-      if (req.files['image']) {
-        blog.image = {
-          url: img2Result.secure_url,
-          publicId: img2Result.public_id,
-        }
-      }
-  
-      const filter = { _id: blogId };
-      const update = { $set: blog };
-      const options = { returnOriginal: false };
-  
-      const results = await Blog.findOneAndUpdate(filter, update, options);
-  
-      if (!results) {
-        return res.status(404).json({ error: "blog not found" });
-      }
-      req.flash("success_msg", "Images Uploaded");
-      return res.redirect('/admin/update-blog?id=' + blogId);
 
+       // 🔹 Compress image to max 50KB using Sharp
+        const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+
+        await Sharp(req.file.path)
+          .jpeg({ quality: 70 }) // start with 70% quality
+          .toBuffer()
+          .then(async (buffer) => {
+            let quality = 70;
+            let outputBuffer = buffer;
+
+            // Keep reducing until <= 50KB
+            while (outputBuffer.length > 50480 && quality > 10) {
+              quality -= 10;
+              outputBuffer = await Sharp(req.file.path)
+                .jpeg({ quality })
+                .toBuffer();
+            }
+
+            // Save compressed file temporarily
+            await Sharp(outputBuffer).toFile(compressedPath);
+          });
+
+        if (user.img && user.img.publicId) {
+          await cloudinary.uploader.destroy(user.img.publicId);
+        }
+
+         const result = await cloudinary.uploader.upload(compressedPath);
+
+          if (!result || !result.secure_url) {
+          return res
+            .status(500)
+            .json({ error: "Error uploading image to Cloudinary" });
+        }
+
+      
+        user.img = {
+          url: result.secure_url,
+          publicId: result.public_id  
+        };
+    
+        await user.save();
+        req.flash('success_msg', 'Image uploaded successfully');
+        return res.redirect(`/admin/update-blog?blogId=${id}`);
+       
+        // return res.json({ message: 'Image uploaded successfully', imgUrl: result.secure_url });
+        
+      }
+    })
+   
   } catch (error) {
-      if (error.name === "CastError" || error.name === "TypeError") {
-          return res.status(400).json({ error: error.message });
-        }
-        console.log(error);
-        return res.status(500).send();
+    console.error(error);
+   
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 };
 
 
 const getEditBlogPage = async ( req , res ) => {
-  if (req.query.id) {
+  if (req.query.blogId) {
       try {
 
         res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
       res.setHeader('Expires', '-1');
       res.setHeader('Pragma', 'no-cache');
       
-          const id = req.query.id;
+          const id = req.query.blogId;
          await Blog.findById(id)
                   .then((blog) => {
                       if (!blog) {
@@ -3769,8 +3972,7 @@ const getEditBlogPage = async ( req , res ) => {
                           .send({ message: "Oop! Property not found" } )
                       }else {
                           res
-                          .render(
-                              "edit_blog", 
+                          .render( "edit-blog", 
                               {
                                   blog: blog,
                                   user: req.user,
@@ -3789,41 +3991,54 @@ const getEditBlogPage = async ( req , res ) => {
 };
 
 
-const editBlog = async ( req , res ) => {
+
+const editBlog = async (req, res) => {
   try {
-      const {author, category, content, headline} = req.body;
-       const blogId = req.params.id;
-       if (!blogId) {
-        throw new TypeError("Invalid blog ID");
-      }
- 
-      const blog = {
-        author: author,
-        category: category, 
-        content: content, 
-        headline: headline, 
+    const { author, category, content, headline, metaDescription, status, isFeatured, tags } = req.body;
+    const blogId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(blogId)) {
+      return res.status(400).json({ error: "Invalid blog ID" });
+    }
+
+    if (!content || !headline) {
+      return res.status(400).json({ error: "Content and headline are required" });
+    }
+
+    const blog = {
+      author,
+      category,
+      content,
+      headline,
+      slug: slugify(headline, { lower: true, strict: true }),
+      excerpt: content.length > 300 ? content.substring(0, 297) + '...' : content,
+      tags: typeof tags === 'string' && tags.trim() ? tags.split(',').map(tag => tag.trim()) : [],
+      metaDescription: metaDescription || content.substring(0, 160),
+      isFeatured: isFeatured === 'true',
+      status,
     };
- 
-      const filter = { _id: blogId };
-      const update = { $set: blog };
-      const options = { returnOriginal: false };
- 
-   const result = await Blog.findOneAndUpdate(filter, update, options);
-    
-      if (!result) {
-        return res.status(404).json({ error: "Blog not found" });
-      }
-  
-      return res.json("Successfully updated Blog");
-    
-   } catch (error) {
-    if (error.name === "CastError" || error.name === "TypeError") {
-        return res.status(400).json({ error: error.message });
-      }
-       console.log (error);
-       return res.status(500).send();
-   }
+
+    const updatedBlog = await Blog.findOneAndUpdate(
+      { _id: blogId },
+      { $set: blog },
+      { new: true }
+    );
+
+    if (!updatedBlog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    return res.json({
+      message: "Successfully updated blog",
+      redirectUrl: `/admin/update-blog?blogId=${blogId}`
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message || "Server error" });
+  }
 };
+
 
 const deleteBlog = async ( req , res ) => {
   const id = req.params.id;
@@ -3870,24 +4085,234 @@ const getAddBlog = async ( req , res) => {
   }
 }
 
+const createLearnerOfTheWeek = async (req, res) => {
+  try {
+    const { name, skoolId, description, hobbies, achievements, likes, dislikes, futureGoals, quote, rollno } = req.body;
+
+    const errors = [];
+    if (!name || !skoolId || !description || !hobbies || !achievements || !likes || !dislikes || !futureGoals || !quote || !rollno) {
+      errors.push({ msg: "Please fill in all fields." });
+    }
+
+    if (errors.length > 0) {
+      const errorMessage = errors[0].msg;
+       return res.status(400).json({ message: errorMessage });
+    } 
+
+      // 🔥 Delete existing Learner of the Week for this school (if any)
+      const skoolIds = req.user._id;
+      await LearnerOfTheWeek.deleteMany({ skoolId: skoolIds });
+
+      // Prepare new data
+      const learnerData = {
+        rollno,
+        name,
+        description,
+        skoolId,
+        hobbies: hobbies.split('.').map(h => h.trim()).filter(Boolean),
+        achievements: achievements.split('.').map(a => a.trim()).filter(Boolean),
+        likes: likes.split('.').map(l => l.trim()).filter(Boolean),
+        dislikes: dislikes.split('.').map(d => d.trim()).filter(Boolean),
+        futureGoals: futureGoals.split('.').map(f => f.trim()).filter(Boolean),
+        quote,
+      };
+
+      // Save new Learner of the Week
+      await LearnerOfTheWeek.create(learnerData);
+
+      req.flash("success_msg", "Learner of the Week Registered!");
+      res.redirect('/admin/learner-of-the-week');
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const createteacherOfTheMonth = async (req, res) => {
+  try {
+    const { name, teacherId, description, skoolId, hobbies, achievements, likes, dislikes, subject, quote } = req.body;
+
+    const errors = [];
+    if (!name || !description || !skoolId || !hobbies || !achievements || !likes || !dislikes || !subject || !quote || !teacherId) {
+      errors.push({ msg: "Please fill in all fields." });
+    }
+
+    if (errors.length > 0) {
+      const errorMessage = errors[0].msg;
+       return res.status(400).json({ message: errorMessage });
+    }
+
+    // 🔴 Remove the old Teacher of the Month before creating a new one
+    const skoolIds = req.user._id;
+    await TeacherOfTheMonth.deleteMany({ skoolId: skoolIds });
+
+
+    // Prepare new data
+    const teacherData = {
+      name,
+      teacherId,
+      description,
+      skoolId,
+      hobbies: hobbies.split('.').map(h => h.trim()),
+      achievements: achievements.split('.').map(a => a.trim()),
+      likes: likes.split('.').map(l => l.trim()),
+      dislikes: dislikes.split('.').map(d => d.trim()),
+      subject: subject.split(',').map(s => s.trim()),
+      quote,
+    };
+
+    await TeacherOfTheMonth.create(teacherData);
+
+    req.flash("success_msg", "Teacher of the Month Registered!");
+    res.redirect('/admin/create-learner-of-the-week-page');
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+  const updateLearnerOfTheWeek = async (req, res) => {
+  try {
+    const { learnerId, description, hobbies, achievements, likes, dislikes, futureGoals, quote } = req.body;
+
+    const errors = [];
+    if (!learnerId || !description || !hobbies || !achievements || !likes || !dislikes || !futureGoals || !quote) {
+      errors.push({ msg: "Please fill in all fields." });
+    }
+
+    if (errors.length > 0) {
+      res.render('', {
+        errors,
+        learnerId,
+        description,
+        hobbies,
+        achievements,
+        likes,
+        dislikes,
+        futureGoals,
+        quote
+      });
+    } else {
+      const learnerData = {
+        description,
+        img,
+        skoolId,
+        hobbies: hobbies.split('.').map(h => h.trim()),
+        achievements: achievements.split('.').map(a => a.trim()),
+        likes: likes.split('.').map(l => l.trim()),
+        dislikes: dislikes.split('.').map(d => d.trim()),
+        futureGoals,
+        quote
+      };
+
+      await LearnerOfTheWeek.findByIdAndUpdate(learnerId, learnerData, { new: true });
+
+      req.flash("success_msg", "Learner of the Week Updated Successfully!");
+      res.redirect('/admin/learner-of-the-week');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const updateTeacherOfTheMonth = async (req, res) => {
+  try {
+    const { teacherId, name, description,  skoolId, hobbies, achievements, likes, dislikes, subject, quote } = req.body;
+    const errors = [];
+
+    if (!teacherId || !name || !description || !skoolId || !hobbies || !achievements || !likes || !dislikes || !subject || !quote) {
+      errors.push({ msg: "Please fill in all fields." });
+    }
+
+    if (errors.length > 0) {
+      res.render('', {
+        errors: errors,
+        teacherId,
+        name,
+        description,
+        skoolId,
+        hobbies,
+        achievements,
+        likes,
+        dislikes,
+        subject,
+        quote,
+      });
+    } else {
+      const teacherData = {
+        name,
+        description,
+        skoolId,
+        hobbies: hobbies.split('.').map(h => h.trim()),
+        achievements: achievements.split('.').map(a => a.trim()),
+        likes: likes.split('.').map(l => l.trim()),
+        dislikes: dislikes.split('.').map(d => d.trim()),
+        subject,
+        quote,
+      };
+
+      TeacherOfTheMonth.findByIdAndUpdate(teacherId, teacherData, { new: true })
+        .then((data) => {
+          if (!data) {
+            req.flash("error_msg", "Teacher not found.");
+            return res.redirect('/admin/teacher-of-the-month');
+          }
+          req.flash("success_msg", "Teacher of the Month Updated!");
+          res.redirect('/admin/teacher-of-the-month');
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json({ error: "Update failed" });
+        });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const getCreatePageOfTheWeek = async (req, res) => {  
+  try {
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');  
+    const learners = await Learner.find({ schoolId: req.user._id, status : true, deletes : false}).select('first_name last_name middle_name roll_no').exec();
+    const existing = await LearnerOfTheWeek.findOne({ skoolId: req.user._id }).exec();
+     const staffs = await Staff.find({ schoolId: req.user._id, status : true}).select('name roll').exec();
+    res.render('week-and-month', { user: req.user, learners, existing, staffs });
+   
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
 
 
 module.exports = {
   //event
     createEvent,
     editEventImage,
-    editEventSecondImage,
     getEditEventPage,
     editEvent,
     deleteEvent,
     getAllEvents,
     getAddEvent,
     //blog
-    uploadMultipleBlogImage,
     getAllBlogs,
     createBlog,
     deleteBlog,
     editBlog,
+    uploadBlogImg,
     getEditBlogPage,
     editBlogImage,
     getAddBlog,
@@ -3919,6 +4344,7 @@ module.exports = {
     updateStaff,
     deleteStaff,
     staffStatus,
+    staffIsStaff,
     staffDetails,
     allocateStaffClass, 
     disallocateStaffClass,
@@ -3989,7 +4415,12 @@ module.exports = {
     getAllLearnerCbt,
     getSearchPage,
     searchLearners,
-    
+    createLearnerOfTheWeek,
+    updateLearnerOfTheWeek,
+    createteacherOfTheMonth,
+    updateTeacherOfTheMonth,
+    getCreatePageOfTheWeek,
+    uploadSchoolImaging,
 }
 
 

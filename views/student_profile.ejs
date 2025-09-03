@@ -7,11 +7,7 @@
             <button type="submit" class="nnnnn"><i class="fas fa-sign-out-alt"></i></button>
         </form>
         <div class="imgss">
-            <% if(user.img.url) {%> 
-                 <img src="<%= user.img.url %>" alt="Learner Image" >
-            <% } else {%> 
-                <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
-                <% } %> 
+            <img src="<%= user && user.img.url ? user.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="Learner Image">
         </div> 
     </div>
    

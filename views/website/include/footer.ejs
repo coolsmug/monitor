@@ -5,9 +5,9 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-about mt-40">
                         <div class="logo">
-                            <a href="#"><img src="images/logo-2.png" alt="Logo"></a>
+                            <a href="#"><img src="<%= img.url %>" alt="Logo" width="70"></a>
                         </div>
-                        <p>Gravida nibh vel velit auctor aliquetn quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate.</p>
+                        <p><%= about %></p>
                         <ul class="mt-20">
                             <li><a href="#"><i class="fa fa-facebook-f"></i></a></li>
                             <li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -22,18 +22,10 @@
                             <h6>Sitemap</h6>
                         </div>
                         <ul>
-                            <li><a href="index-2.html"><i class="fa fa-angle-right"></i>Home</a></li>
-                            <li><a href="about.html"><i class="fa fa-angle-right"></i>About us</a></li>
-                            <li><a href="courses.html"><i class="fa fa-angle-right"></i>Courses</a></li>
-                            <li><a href="blog.html"><i class="fa fa-angle-right"></i>News</a></li>
-                            <li><a href="events.html"><i class="fa fa-angle-right"></i>Event</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="#"><i class="fa fa-angle-right"></i>Gallery</a></li>
-                            <li><a href="shop.html"><i class="fa fa-angle-right"></i>Shop</a></li>
-                            <li><a href="teachers.html"><i class="fa fa-angle-right"></i>Teachers</a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i>Support</a></li>
-                            <li><a href="contact.html"><i class="fa fa-angle-right"></i>Contact</a></li>
+                            <li><a href="/"><i class="fa fa-angle-right"></i>Home</a></li>
+                            <li><a href="/about-us"><i class="fa fa-angle-right"></i>About us</a></li>
+                            <li><a href="/all-staffs"><i class="fa fa-angle-right"></i>Staffs</a></li>
+                            <li><a href="/blogs"><i class="fa fa-angle-right"></i>News</a></li>
                         </ul>
                     </div> <!-- footer link -->
                 </div>
@@ -42,12 +34,12 @@
                         <div class="footer-title pb-25">
                             <h6>Support</h6>
                         </div>
-                        <ul>
-                            <li><a href="#"><i class="fa fa-angle-right"></i>FAQS</a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i>Privacy</a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i>Policy</a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i>Support</a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i>Documentation</a></li>
+                       <ul>
+                             <li><a href="all-events"><i class="fa fa-angle-right"></i>Event</a></li>
+                             <li><a href="/contact-us"><i class="fa fa-angle-right"></i>Contact</a></li>
+                             <li><a href="#"><i class="fa fa-angle-right"></i>Support</a></li>
+
+
                         </ul>
                     </div> <!-- support -->
                 </div>
@@ -62,7 +54,8 @@
                                     <i class="fa fa-home"></i>
                                 </div>
                                 <div class="cont">
-                                    <p>143 castle road 517 district, kiyev port south Canada</p>
+                                    <p><%= address %></p>
+                                    <p><%= address2 %></p>
                                 </div>
                             </li>
                             <li>
@@ -70,7 +63,8 @@
                                     <i class="fa fa-phone"></i>
                                 </div>
                                 <div class="cont">
-                                    <p>+3 123 456 789</p>
+                                    <p><%= phone_no %></p>
+                                    <p><%= phone_no2 %></p>
                                 </div>
                             </li>
                             <li>
@@ -78,7 +72,7 @@
                                     <i class="fa fa-envelope-o"></i>
                                 </div>
                                 <div class="cont">
-                                    <p>info@yourmail.com</p>
+                                    <p><%= email %></p>
                                 </div>
                             </li>
                         </ul>
@@ -93,12 +87,12 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="copyright text-md-left text-center pt-15">
-                        <p><a target="_blank" href="https://www.templateshub.net">Templates Hub</a> </p>
+                        <p><a target="_blank" href="#"></a> </p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="copyright text-md-right text-center pt-15">
-                       
+                        <p class="mt-20">All rights reserved and Powered by iDrynod  <i class="fa fa-copyright"></i> 2025</p>
                     </div>
                 </div>
             </div> <!-- row -->

@@ -1,15 +1,19 @@
-<%- include ("./include/header.ejs") %> 
+<%- include ("./include/header.ejs") %>
 
-<%- include ("./include/_dash_board.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %>
 
 <div class="diverr">
-    <h4><i class="fas fa-house-user"></i>Add Event</h4>
+    <h4><i class="fas fa-house-user"></i>Update Event</h4>
+    <div class="direct">
+      <a href="/admin/add_event/1" class="btn border-shadow"><i class="fas fa-plus"></i> Back to Add Events</a>
+  </div>
 
     <div class="form_for_create">
         
         <%- include ('./partials/messages') %>
-        
-        <form id="eventForm" action="/admin/create-event" method="POST">
+
+        <!-- Event Details Form -->
+        <form id="eventForm" action="/admin/update-event/<%= event._id %>" method="PUT">
 
             <div class="all-single-form">
                 <div class="mb-3">
@@ -22,6 +26,14 @@
                         <input type="text" name="venue" value="<%= typeof event.venue != 'undefined' ? event.venue : '' %>" />
                     </div>
                     <div class="hop">
+                        <label for="start">Event Starts at:</label>
+                        <input type="datetime" name="start" value="<%= typeof event.start != 'undefined' ? event.start : '' %>" placeholder="example 10:00 AM OR 1:00 PM" />
+                    </div>
+                     <div class="hop">
+                        <label for="end">Event Ends at:</label>
+                        <input type="datetime" name="end" value="<%= typeof event.end != 'undefined' ? event.end : '' %>" placeholder="example 10:00 AM OR 1:00 PM"/>
+                    </div>
+                    <div class="hop">
                         <label for="dates">Set Date and Time:</label>
                         <input type="datetime-local" name="dates" value="<%= typeof event.dates != 'undefined' ? event.dates : '' %>" />
                     </div>
@@ -29,133 +41,114 @@
                         <label for="content">Content:</label>
                         <textarea name="content" id="content" placeholder="Enter your text here..."><%= event.content %></textarea>
                     </div>
-                   
                 </div>
             </div>                                                
 
             <div class="mb-3">
-                <input type="submit" value="Ok? Save">
+                <input type="submit" value="Update Event">
             </div>
         </form>
-    </div> 
+    </div>
 
+    <!-- Event Image Upload Form -->
     <div class="form_for_create">
 
-        <form id="pageImageForm" action="/admin/upload-event-page-image/<%= event._id %>" method="POST" enctype="multipart/form-data">
-          <div class="form-group">
-            <div class="hop">
-              <label for="pageImage">Image</label>
-              <input type="file" name="pageImage" id="pageImage">
-            </div>
-          </div>
-          <div class="mb-3">
-            <input type="submit" value="Upload Page Image?">
-          </div>
-        </form>
-     
-  </div> 
+      <form id="pageImageForm" action="/admin/upload-event-cover-image/<%= event._id %>" method="POST" enctype="multipart/form-data">
 
-    <div class="form_for_create">
-
-        <form id="coverImageForm" action="/admin/upload-event-cover-image/<%= event._id %>" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-              <div class="hop">
-                <label for="img">Image</label>
-                <input type="file" name="img" id="img" value="">
-              </div>
+                <div class="hop">
+                    <label for="img">Upload Event Image</label>
+                    <input type="file" name="img" id="img">
+                </div>
             </div>
             <div class="mb-3">
-              <input type="submit" value="Upload Cover Image?">
+                <input type="submit" value="Upload Page Image">
             </div>
-          </form>
-    </div> 
- 
+        </form>
+
+    </div>
+
 </div>
 
 <footer class="foot">
     <h3>All rights reserved and Powered by Dark theme code <i class="fas fa-copyright"></i> 2024</h3>
-</footer>   
-
+</footer>
 
 <script>
-  document.getElementById('eventForm').addEventListener('submit', async (e) => {
-  e.preventDefault(); // Prevent the default form submission
 
-  const formData = new FormData(e.target); // Get the form data
+  document.addEventListener('DOMContentLoaded', function () {
 
-  try {
-    // Send the AJAX request to the server
-    const response = await fetch('/admin/create-event', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      alert(result.message); // Display success message
-      // Redirect to the update-event page
-      window.location.href = result.redirectUrl;
-    } else {
-      const error = await response.json();
-      alert('Error creating event: ' + error.message); // Show error message
-    }
-  } catch (err) {
-    console.error('Error:', err);
-    alert('An error occurred while creating the event.'); // Fallback error
-  }
-});
-
- // Page Image Form submission with AJAX
- document.getElementById('pageImageForm').addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent the default form submission
-
-        const formData = new FormData(e.target); // Get the form data
+    // Event details form AJAX
+     const eventForm = document.getElementById('eventForm');
+    if (eventForm) {
+      eventForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
 
         try {
-            const response = await fetch(e.target.action, {
-                method: 'POST',
-                body: formData,
-            });
+          const response = await fetch(e.target.action, {
+            method: 'PUT',
+            body: formData,
+          });
 
-            if (response.ok) {
-                const result = await response.json();
-                alert(result.message); // Display success message
-            } else {
-                const error = await response.json();
-                alert('Error uploading page image: ' + error.message);
-            }
+          if (response.ok) {
+            const result = await response.json();
+            alert(result.message);
+            window.location.href = result.redirectUrl;
+          } else {
+            const error = await response.json();
+            alert('Error updating event: ' + error.message);
+          }
         } catch (err) {
-            console.error('Error:', err);
-            alert('An error occurred while uploading the page image.');
+          console.error('Error:', err);
+          alert('An error occurred while updating the event.');
         }
-    });
-
-    // Cover Image Form submission with AJAX
-    document.getElementById('coverImageForm').addEventListener('submit', async (e) => {
-  e.preventDefault(); // Prevent the default form submission
-
-  const formData = new FormData(e.target); // Get the form data
-
-  try {
-    const response = await fetch(e.target.action, {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      alert(result.message); // Display success message
-    } else {
-      const error = await response.json(); // Try to parse error response
-      alert('Error uploading page image: ' + (error.message || 'Unknown error')); // Show error message
+      });
     }
-  } catch (err) {
-    console.error('Error:', err);
-    alert('An error occurred while uploading the page image.');
-  }
-});
+
+//     // Page Image upload form AJAX
+//     // Page Image upload form AJAX
+//     const pageImageForm = document.getElementById('pageImageForm');
+// if (pageImageForm) {
+//   pageImageForm.addEventListener('submit', async (e) => {
+//     e.preventDefault();
+//     const formData = new FormData(e.target);
+
+//     try {
+//       const response = await fetch(e.target.action, {
+//         method: 'POST',
+//         body: formData,
+//       });
+
+//       const contentType = response.headers.get("content-type") || "";
+
+//       if (response.ok) {
+//         // Check if the response contains JSON data
+//         if (contentType.includes("application/json")) {
+//           const result = await response.json();
+//           alert(result.message); // Show success message from backend
+//         } else {
+//           alert("Page image uploaded, but received a non-JSON response.");
+//         }
+//       } else {
+//         if (contentType.includes("application/json")) {
+//           const error = await response.json();
+//           alert("Error uploading page image: " + error.message); // Show error message from backend
+//         } else {
+//           const text = await response.text();
+//           console.error("Server returned non-JSON error:", text);
+//           alert("An unexpected error occurred.");
+//         }
+//       }
+//     } catch (err) {
+//       console.error('Error:', err);
+//       alert('An error occurred while uploading the page image.');
+//     }
+//   });
+// }
 
 
-
+  });
 </script>
+
 <%- include ("./include/footer.ejs") %>

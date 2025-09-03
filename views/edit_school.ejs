@@ -53,17 +53,40 @@
                      </div>
                  </div>
          
+                    <div class="mb-3">
+                        <div class="hop">
+                            <label for="phone_no2">Phone No 2:</label>
+                            <input type="phone_no2" name="phone_no2" value="<%= school.phone_no2 %>" />
+                        </div>
+                        <div class="hop">
+                            <label for="email">School Email:</label>
+                            <input type=" email" name="email" value="<%= school.email %>" />
+                        </div>
+                            
+                    </div>
                  <div class="mb-3">
-                     <div class="hop">
-                         <label for="phone_no2">Phone No 2:</label>
-                         <input type="phone_no2" name="phone_no2" value="<%= school.phone_no2 %>" />
-                     </div>
-                     <div class="hop">
-                         <label for="email">School Email:</label>
-                         <input type=" email" name="email" value="<%= school.email %>" />
-                     </div>
-                     
-                 </div>
+                    <div class="hop">
+                        <label for="subdomain">Subdomain Name:</label>
+                        <input type="subdomain" name="subdomain" value="<%= school.subdomain %>" required/>
+                    </div>
+                    <div class="hop">
+                        <label for="opening_day">Opening Day:</label>
+                        <input type="opening_day" name="opening_day" value="<%= school.opening_day %>" required/>
+                    </div>
+                    <div class="hop">
+                        <label for="closing_day">Closing Day:</label>
+                        <input type="closing_day" name="closing_day" value="<%= school.closing_day %>" required/>
+                    </div>
+                    <div class="hop">
+                        <label for="opening_hour">Opening hour:</label>
+                        <input type="opening_hour" name="opening_hour" value="<%= school.opening_hour %>" required/>
+                    </div>
+                    <div class="hop">
+                        <label for="closing_hour">Closing hour:</label>
+                        <input type="closing_hour" name="closing_hour" value="<%= school.closing_hour %>" required/>
+                    </div>
+                   
+                </div>
              
                  <div class="mb-3">
                      <div class="hop">
@@ -79,20 +102,59 @@
                       
                     </div>
                  </div>
-                 <div class="mb-3">
+                <div class="mb-3">
                     <div class="hop">
                         <label for="website">School Mission:</label>
                         <textarea name="mission" id="mission"><%= school.mission %></textarea>
-                      
+                    
                     </div>
-                 </div>
-                 <div class="mb-3">
+                </div>
+                <div class="mb-3">
                     <div class="hop">
                         <label for="website">School Vision:</label>
                         <textarea name="vision" id="vision"><%= school.vision %></textarea>
-                      
+                        
                     </div>
-                 </div>
+                </div>
+                 <div class="mb-3">
+                    <div class="hop">
+                        <label for="x">X (Twitter):</label>
+                        <input 
+                        type="text" 
+                        name="x" 
+                        value="<%= school.x %>" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="instagram">Instagram:</label>
+                        <input 
+                        type="text" 
+                        name="instagram" 
+                        value="<%= school.instagram %>" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="facebook">Facebook:</label>
+                        <input 
+                        type="text" 
+                        name="facebook" 
+                        value="<%= school.facebook %>" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="linkedin">LinkedIn:</label>
+                        <input 
+                        type="text" 
+                        name="linkedin" 
+                        value="<%= school.linkedin %>" />
+                    </div>
+                </div>
             </div>
                 
             
@@ -108,22 +170,37 @@
 </div>
 
 <div class="diverr">
-    <div class="form_for_create upload_image">
-        <form action="/admin/upload-school-image/<%= school._id %>" method="POST" enctype="multipart/form-data">
-            <div class="all-single-form">
-                <div class="hop">
-                    <label for="image" id="image">Upload Image:</label>
-                    <input type="file" name="img" id="image" value="">
-                </div>
-                
-            </div>
-           <div class="mb-3">
-                <input type="submit" value="Ok? Upload">
-           </div>
-           
-        </form>
-    </div>
+  <div class="form_for_create upload_image">
+    <form action="/admin/upload-school-image/<%= school._id %>" method="POST" enctype="multipart/form-data">
+      <div class="all-single-form">
+        <div class="hop">
+          <label for="img">Upload Image:</label>
+          <input type="file" name="img" id="img"/>
+        </div>
+      </div>
+      <div class="mb-3">
+        <input type="submit" value="Ok? Upload">
+      </div>
+    </form>
+  </div>
 </div>
+
+<div class="diverr">
+  <div class="form_for_create upload_image">
+    <form action="/admin/upload-banner/<%= school._id %>" method="POST" enctype="multipart/form-data">
+      <div class="all-single-form">
+        <div class="hop">
+          <label for="image">Upload Image:</label>
+          <input type="file" name="image" id="image"/>
+        </div>
+      </div>
+      <div class="mb-3">
+        <input type="submit" value="Ok? Upload">
+      </div>
+    </form>
+  </div>
+</div>
+
 <footer class="foot">
     <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
 </footer>   

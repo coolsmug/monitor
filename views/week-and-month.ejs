@@ -1,0 +1,196 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+  <%- include ('./partials/messages') %>
+<div class="diverr">
+    <h4><i class="fas fa-user-graduate"></i> Learner of the Week</h4>
+    <div class="direct">
+        <a href="/admin/get-all-learners-week/1" class="btn border-shadow"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="form_for_create">
+      
+        
+        <!-- Learner of the Week Form -->
+        <form id="learnerForm" action="/admin/create-learner-of-the-week" method="POST">
+            <div class="all-single-form">
+                <div class="mb-3">
+
+                    <div class="hop">
+                        <label for="name">Learner's Name:</label>
+                        <select name="name" id="" required>
+                            <option value="">-- Select Learner --</option>
+                            <% learners.forEach(learner => { %>
+                                <option value="<%= learner.first_name + ' ' + learner.middle_name + ' ' + learner.last_name %>">
+                                    <%= learner.first_name + ' ' + learner.middle_name + ' ' + learner.last_name %> (Roll No: <%= learner.roll_no %>)
+                                </option>
+                            <% }) %>
+                            </select>
+                    </div>
+
+                    <div class="hop">
+                       <label for="rollno">Learner's Admin No:</label>
+                        <select name="rollno" id="" required>
+                            <option value="">-- Select Admin No --</option>
+                            <% learners.forEach(learner => { %>
+                                <option value="<%= learner.roll_no %>">
+                                    <%= learner.roll_no %> 
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="hop">
+                        
+                        <input type="hidden" name="skoolId" value="<%= user._id %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="description">Description:</label>
+                        <select name="description" id="">
+                            <option value="Learner of the Week">Learner of the Week</option>
+                            <option value="Learner of the Month">Learner of the Month</option>
+                        </select>
+                       
+                     <div class="hop">
+                        <label for="hobbies">Hobbies:</label>
+                        <textarea name="hobbies" placeholder="hobbies like reading, swimming etc" required></textarea>
+                    </div>
+                     <div class="hop">
+                        <label for="achievements">Reasons:</label>
+                        <textarea name="achievements" placeholder="Why learner of the week?" required></textarea>
+                    </div>
+                     <div class="hop">
+                        <label for="likes">Likes:</label>
+                        <textarea name="likes" placeholder="what learner likes" required></textarea>
+                    </div>
+                    <div class="hop">
+                        <label for="dislikes">Disikes:</label>
+                        <textarea name="dislikes" placeholder="what learner dislikes" required></textarea>
+                    </div>
+                    <div class="hop">
+                        <label for="futureGoals">Future Goals:</label>
+                        <textarea name="futureGoals" placeholder="what learner ambitions and future goals" required></textarea>
+                    </div>
+                     <div class="hop">
+                        <label for="quote">Quote:</label>
+                       <textarea name="quote" placeholder="Inspiring quote by the staff" rows="" cols=""></textarea>
+                </div>
+            </div>                                                
+            <div class="mb-3">
+                <input type="submit" value="Save Learner">
+            </div>
+        </form>
+    </div> 
+</div>
+
+
+<div class="diverr">
+    <h4><i class="fas fa-user-graduate"></i> Teacher of the Week</h4>
+    <div class="direct">
+        <a href="/admin/get-all-learners-week/1" class="btn border-shadow"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="form_for_create">
+      
+        
+        <!-- Learner of the Week Form -->
+        <form id="learnerForm" action="/admin/create-teacher-of-the-month" method="POST">
+            <div class="all-single-form">
+                <div class="mb-3">
+
+                    <div class="hop">
+                        <label for="name">Teacher's Name:</label>
+                        <select name="name" id="" required>
+                            <option value="">-- Select staff --</option>
+                            <% staffs.forEach(staff => { %>
+                                <option value="<%= staff.name %>">
+                                    <%= staff.name %>
+                                </option>
+                            <% }) %>
+                            </select>
+                    </div>
+
+                    <div class="hop">
+                       <label for="teacherId">staff's Admin No:</label>
+                        <select name="teacherId" id="" required>
+                            <option value="">-- Select Admin No --</option>
+                            <% staffs.forEach(staff => { %>
+                                <option value="<%= staff.roll %>">
+                                    <%= staff.roll %> 
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="hop">
+                        
+                        <input type="hidden" name="skoolId" value="<%= user._id %>" />
+                    </div>
+                    <div class="hop">
+                        <label for="description">Description:</label>
+                        <select name="description" id="">
+                            <option value="staff of the Week">Staff of the Week</option>
+                            <option value="staff of the Month">Staff of the Month</option>
+                        </select>
+                       
+                     <div class="hop">
+                        <label for="hobbies">Hobbies:</label>
+                        <textarea name="hobbies" placeholder="hobbies like reading, swimming etc" required></textarea>
+                    </div>
+                     <div class="hop">
+                        <label for="achievements">Reasons:</label>
+                        <textarea name="achievements" placeholder="Why staff of the week?" required></textarea>
+                    </div>
+                     <div class="hop">
+                        <label for="likes">Likes:</label>
+                        <textarea name="likes" placeholder="what staff likes" required></textarea>
+                    </div>
+                    <div class="hop">
+                        <label for="dislikes">Disikes:</label>
+                        <textarea name="dislikes" placeholder="what staff dislikes" required></textarea>
+                    </div>
+                    <div class="hop">
+                        <label for="subject">Subject:</label>
+                        <textarea name="subject" placeholder="what staff ambitions and Subject" required></textarea>
+                    </div>
+                     <div class="hop">
+                        <label for="quote">Quote:</label>
+                       <textarea name="quote" placeholder="Inspiring quote by the staff" rows="" cols=""></textarea>
+                </div>
+            </div>                                                
+            <div class="mb-3">
+                <input type="submit" value="Save staff">
+            </div>
+        </form>
+    </div> 
+</div>
+
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark theme code <i class="fas fa-copyright"></i> 2024</h3>
+</footer>   
+
+<script>
+  async function handleFormSubmit(formId, url) {
+    document.getElementById(formId).addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      try {
+        const response = await fetch(url, { method: 'POST', body: formData });
+        if (!response.ok) {
+          const error = await response.json();
+          return alert('Error: ' + error.message);
+        }
+        const result = await response.json();
+        window.location.href = result.redirectUrl;
+      } catch (error) {
+        console.error('Unexpected Error:', error);
+        alert('An unexpected error occurred.');
+      }
+    });
+  }
+
+  handleFormSubmit('learnerForm', '/admin/create-learner-of-the-week');
+  handleFormSubmit('teacherForm', '/admin/create-teacher-of-the-month');
+</script>
+
+<%- include ("./include/footer.ejs") %>

@@ -1,0 +1,111 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="dele">
+    <h2 class="all"><i class="fas fa-home"></i> Created Blogs </h2>
+   
+</div>
+<div class="table">
+    <div class="direct">
+        <a href="/admin/add_blog" class="btn border-shadow"><i class="fas fa-plus"></i> Back to Add Blogs</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Content</th>
+                <th>Category</th>
+                <th>Headline</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (var i = 0; i < blog.length; i++) { %> 
+            <tr>
+                <td><%= blog[i].author %></td>
+                <td><%= blog[i].excerpt %></td>
+                <td><%= blog[i].category %></td>
+                <td><%= blog[i].headline %></td>
+                <td><%= blog[i].isFeatured %></td>
+                <td><%= blog[i].status %></td>
+                <td>
+                     <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
+                    <div class="hideen">
+                        <a href="/admin/update-blog?blogId=<%= blog[i].id %>" class="btn border-shadow update" data-id="<%= blog[i].id %> ">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="/admin/delete-blog/<%= blog[i].id %>" class="btn border-shadow delete current_class" data-id="<%= blog[i].id %>">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        <% } %> 
+            
+        </tbody>
+    </table>
+
+    <% if (pages > 0) { %>
+                <ul class="pagination text-center">
+                    <% if (current == 1) { %>
+                        <li class="disabled"><a>First</a></li>
+                    <% } else { %>
+                        <li><a href="/admin/get-all-blog/1">First</a></li>
+                    <% } %>
+                    <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                    <% if (i !== 1) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                    <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                        <% if (i == current) { %>
+                            <li class="active"><a><%= i %></a></li>
+                        <% } else { %>
+                            <li><a href="/admin/get-all-blog/<%= i %>"><%= i %></a></li>
+                        <% } %>
+                        <% if (i == Number(current) + 4 && i < pages) { %>
+                            <li class="disabled"><a>...</a></li>
+                        <% } %>
+                    <% } %>
+                    <% if (current == pages) { %>
+                        <li class="disabled"><a>Last</a></li>
+                    <% } else { %>
+                        <li><a href="/admin/get-all-blog/<%= pages %>">Last</a></li>
+                    <% } %>
+                </ul>
+            <% } %>
+
+           
+</div>
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer>   
+
+<%- include ("./include/footer.ejs") %> 
+
+<script>
+ $(function() {
+  $('a.current_class').click(function(e) {
+    e.preventDefault(); 
+    var url = $(this).attr('href');
+    var id = $(this).data('id'); 
+    var row = $(this).closest('tr'); 
+    if (confirm('Are you sure you want to delete this data?')) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: { id: id },
+        success: function(result) {
+          alert('Data deleted successfully!');
+          row.remove(); // Remove the deleted row from the DOM
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting Data: ' + error);
+        }
+      });
+    }
+  });
+});
+
+</script>

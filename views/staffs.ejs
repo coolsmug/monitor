@@ -6,6 +6,7 @@
 
 
 <div class="diverr">
+    <h3 style="position: absolute; top:0px; left: 10px;"><a href="<%= previousUrl %>">Back</a></h3>
     <h4>Use these forms to Update <%= staff.name %> </h4>
     <div class="form_for_create">
         <%- include ('./partials/messages') %>
@@ -34,18 +35,46 @@
                     </div>
                   
                 </div>
+
                 <div class="mb-3">
                   
                     <div class="hop">
-                        <label for="email">Email:</label>
-                        <input 
-                        type="email" 
-                        name="email" 
-                        value="<%= staff.email %>" />
+                        <label for="award">Achievements/Awards:</label>
+                        <textarea  name="award"  id=""><%= staff.award %></textarea>
                     </div>
                   
                 </div>
-
+                 <div class="mb-3">
+                  
+                    <div class="hop">
+                        <label for="about">About:</label>
+                      <textarea name="about" ><%= staff.about || '' %></textarea>
+                    </div>
+                  
+                </div>
+                
+                <div class="mb-3">
+                  
+                    <div class="hop">
+                        <label for="subject">Subject:</label>
+                        <input 
+                        type="subject" 
+                        name="subject" 
+                        value="<%= staff.subject %>" />
+                    </div>
+                  
+                </div>
+                 <div class="mb-3">
+                  
+                    <div class="hop">
+                        <label for="position">Position:</label>
+                        <input 
+                        type="position" 
+                        name="position" 
+                        value="<%= staff.position %>" />
+                    </div>
+                  
+                </div>
                 <div class="mb-3">
                   
                     <div class="hop">
@@ -69,15 +98,63 @@
                     </div>
                   
                 </div>
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="gmail">Gmail:</label>
+                        <input 
+                        type="email" 
+                        name="gmail" 
+                        value="<%= staff.email %>" />
+                    </div>
+                </div>
 
-              
-                
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="x">X (Twitter):</label>
+                        <input 
+                        type="text" 
+                        name="x" 
+                        value="<%= staff.x %>" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="instagram">Instagram:</label>
+                        <input 
+                        type="text" 
+                        name="instagram" 
+                        value="<%= staff.instagram %>" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="facebook">Facebook:</label>
+                        <input 
+                        type="text" 
+                        name="facebook" 
+                        value="<%= staff.facebook %>" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="hop">
+                        <label for="linkedin">LinkedIn:</label>
+                        <input 
+                        type="text" 
+                        name="linkedin" 
+                        value="<%= staff.linkedin %>" />
+                    </div>
+                </div>
+
+                    
             </div>
-    
+        
            
             <div class="mb-3">
                 <input type="submit" value="Ok? Update">
-             </div>
+            </div>
     
           
         </form>

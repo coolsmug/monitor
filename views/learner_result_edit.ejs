@@ -36,11 +36,9 @@
                         <div class="div_divol">
                             <a href="/staff/section-test-exam?sessionId=<%= session._id %>&classof=<%= session.classof %>&userId=<%= users[i]._id %>&classId=<%= classed._id %>">
                                 <div class="avi">
-                                    <% if (!users[i].img.url) { %>
-                                        <img src="/img/monitor_user_image.jpg" alt="No Image" style="width: 50px; height: 50px;">
-                                        <% } else if (users[i].img.url) { %>
-                                        <img src="<%= users[i].img.url.replace('http://', 'https://') %>" alt="Learner Image" style="width: 50px; height: 50px;">
-                                        <% } %>
+                                    
+                                        <img src="<%= users && users[i].img && users[i].img.url ? users[i].img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="Learner Image" style="width: 50px; height: 50px;">
+                                      
                                 </div>
                     
                                 <div class="ddiv">

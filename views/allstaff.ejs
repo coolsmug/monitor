@@ -13,20 +13,37 @@
                     <th>Roll No</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Censor</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <% for (var i = 0; i < staff.length; i++){ %> 
                 <tr>
-                    <td><%= staff[i].roll %></td>
+                    <td><%= staff[i].roll %> <div class="image" style="background: whitesmoke; width: 115px; height: 115px; border-radius: 7px; display: flex; justify-content: center; align-items: center;">
+                                <img style="width: 100px; height: 100px; border-radius: 5px;" src="<%= staff && staff[i].img.url ? staff[i].img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg'%>" alt="Teachers">
+                            </div></td>
                     <td><%= staff[i].name %></td>
-                    <td><label class="switcher">
-                        <input type="checkbox" id="mySwitch" data-staff-id="<%= staff[i]._id %> " <%= staff[i].status == true ? 'checked' : '' %> >
-                        <span class="slider">
+                    <td>
+                        <label class="switcher">
+                            <input type="checkbox" id="mySwitch" data-staff-id="<%= staff[i]._id %> " <%= staff[i].status == true ? 'checked' : '' %> >
+                            <span class="slider">
 
-                        </span>
-                </label></td>
+                            </span>
+                        </label>
+                    </td>
+                   <td>
+                            <label class="switchers">
+                                <input 
+                                type="checkbox" 
+                                class="staffSwitch" 
+                                data-staffs-id="<%= staff[i]._id %>" 
+                                <%= staff[i].isStaff ? 'checked' : '' %>
+                                >
+                                <span class="sliders"></span>
+                            </label>
+                    </td>
+
                     <td>
                          <button class="butn"><i class="fas fa-ellipsis-h"></i></button>
                         <div class="hideen">
@@ -99,14 +116,39 @@
             width: 60px;
             height: 34px;
         }
+
+        .switchers {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
     
         .switcher input {
             opacity: 0;
             width: 0;
             height: 0;
         }
+
+        .switchers input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
     
         .slider {
+            position: absolute;
+            cursor: pointer;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+         .sliders {
             position: absolute;
             cursor: pointer;
             left: 0px;
@@ -134,8 +176,30 @@
             -webkit-transition: .4s;
             transition: .4s;
         }
+
+         .sliders:before {
+            position: absolute;
+            content: 'Active';
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(104, 148, 16);
+            font-size: 9px;
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
     
         input:checked + .slider {
+            background-color: var(--deep-blue);
+    
+        }
+
+         input:checked + .sliders {
             background-color: var(--deep-blue);
     
         }
@@ -144,7 +208,18 @@
             box-shadow: 0 0 1px #2196f3;
         }
     
+         input:focus + .sliders {
+            box-shadow: 0 0 1px #2196f3;
+        }
+
         input:checked +.slider:before {
+            -webkit-transform:  translateX(26px);
+            -ms-transform:  translateX(26px);
+            transform:  translateX(26px);
+    
+        }
+
+         input:checked +.sliders:before {
             -webkit-transform:  translateX(26px);
             -ms-transform:  translateX(26px);
             transform:  translateX(26px);
@@ -154,8 +229,16 @@
         .slider {
             border-radius: 34px;
         }
+
+         .sliders {
+            border-radius: 34px;
+        }
     
         .slider:before {
+            border-radius: 50%;
+        }
+
+          .sliders:before {
             border-radius: 50%;
         }
     </style>

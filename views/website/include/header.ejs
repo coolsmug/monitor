@@ -9,10 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <!--====== Title ======-->
-    <title>Edubin - LMS Education HTML Template</title>
+    <title><%= school_name %></title>
     
     <!--====== Favicon Icon ======-->
-    <link rel="shortcut icon" href="/images/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="<%= img.url %>" type="image/png">
 
     <!--====== Slick css ======-->
     <link rel="stylesheet" href="/csss/slick.css">
@@ -76,14 +76,16 @@
                     <div class="col-lg-6">
                         <div class="header-contact text-lg-left text-center">
                             <ul>
-                                <li><img src="/all-icon/map.png" alt="icon"><span>127/5 Mark street, New york</span></li>
-                                <li><img src="/all-icon/email.png" alt="icon"><span>info@yourmail.com</span></li>
+                                <li><img src="/all-icon/map.png" alt="icon"><a href="https://www.google.com/maps/search/<%= encodeURIComponent(address + ', ' + city) %>" target="_blank"><span><%= address %></span></a></li>
+                                <li><img src="/all-icon/map.png" alt="icon"><a href="https://www.google.com/maps/search/<%= encodeURIComponent(address2 + ', ' + city) %>" target="_blank"><span><%= address2 %></span></a></li>
+                               
+                                <li><img src="/all-icon/email.png" alt="icon"><a href="mailto:<%= email %>"><span><%= email %></span></a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="header-opening-time text-lg-right text-center">
-                            <p>Opening Hours : Monday to Saturay - 8 Am to 5 Pm</p>
+                            <p>Opening Hours : <%= opening_day %> to <%= closing_day %> - <%= opening_hour  %> Am to <%= closing_hour %></p>
                         </div>
                     </div>
                 </div> <!-- row -->
@@ -95,9 +97,10 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-4">
                         <div class="logo">
-                            <a href="index-2.html">
-                                <img src="/images/logo.png" alt="Logo">
+                            <a href="/">
+                                <img src="<%= img.url %>" alt="Logo" width="70">
                             </a>
+                            <a style="font-weight: bolder; font-size: 20px; color: #07294d;"><span><%= school_name %></span></a>
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-8">
@@ -108,7 +111,9 @@
                                 </div>
                                 <div class="cont">
                                     <p>Need Help? call us free</p>
-                                    <span>321 325 5678</span>
+                                    <a href="tel:<%= phone_no %>"><span><%= phone_no %></span></a><br>
+                                    <a href="tel:<%= phone_no %>"><span><%= phone_no2 %></span></a>
+                               
                                 </div>
                             </div>
                             <div class="button float-left">
@@ -134,89 +139,65 @@
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul class="navbar-nav mr-auto">
                                     <li class="nav-item">
-                                        <a class="active" href="index-2.html">Home</a>
+                                        <a class="active" href="/">Home</a>
                                         <ul class="sub-menu">
-                                            <li><a class="active" href="index-2.html">Home 01</a></li>
-                                            <li><a href="index-3.html">Home 02</a></li>
-                                            <li><a href="index-4.html">Home 03</a></li>
+                                            <!-- <li><a class="active" href="index-2.html">Home</a></li> -->
+                                            <!-- <li><a href="index-3.html">Home 02</a></li>
+                                            <li><a href="index-4.html">Home 03</a></li> -->
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="about.html">About us</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="courses.html">Courses</a>
+                                        <a href="/about-us">About Us</a>
                                         <ul class="sub-menu">
-                                            <li><a href="courses.html">Courses</a></li>
-                                            <li><a href="courses-singel.html">Course Singel</a></li>
+                                            <li><a href="">Our Vision</a></li>
+                                            <li><a href="">Our Mission</a></li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="events.html">Events</a>
-                                        <ul class="sub-menu">
+                                        <a href="/all-events">Events</a>
+                                        <!-- <ul class="sub-menu">
                                             <li><a href="events.html">Events</a></li>
                                             <li><a href="events-singel.html">Event Singel</a></li>
-                                        </ul>
+                                        </ul> -->
                                     </li>
                                     <li class="nav-item">
-                                        <a href="teachers.html">Our teachers</a>
-                                        <ul class="sub-menu">
+                                        <a href="/all-staffs/">Our Staffs</a>
+                                        <!-- <ul class="sub-menu">
                                             <li><a href="teachers.html">teachers</a></li>
                                             <li><a href="teachers-singel.html">teacher Singel</a></li>
-                                        </ul>
+                                        </ul> -->
                                     </li>
                                     <li class="nav-item">
-                                        <a href="blog.html">Blog</a>
-                                        <ul class="sub-menu">
+                                        <a href="/blogs">Blog</a>
+                                        <!-- <ul class="sub-menu">
                                             <li><a href="blog.html">Blog</a></li>
                                             <li><a href="blog-singel.html">Blog Singel</a></li>
-                                        </ul>
+                                        </ul> -->
                                     </li>
-                                    <li class="nav-item">
+                                    <!-- <li class="nav-item">
                                         <a href="shop.html">Shop</a>
                                         <ul class="sub-menu">
                                             <li><a href="shop.html">Shop</a></li>
                                             <li><a href="shop-singel.html">Shop Singel</a></li>
                                         </ul>
-                                    </li>
+                                    </li> -->
                                     <li class="nav-item">
-                                        <a href="contact.html">Contact</a>
-                                        <ul class="sub-menu">
+                                        <a href="/contact-us">Contact</a>
+                                        <!-- <ul class="sub-menu">
                                             <li><a href="contact.html">Contact Us</a></li>
                                             <li><a href="contact-2.html">Contact Us 2</a></li>
-                                        </ul>
+                                        </ul> -->
                                     </li>
                                 </ul>
                             </div>
                         </nav> <!-- nav -->
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-4">
-                        <div class="right-icon text-right">
-                            <ul>
-                                <li><a href="#" id="search"><i class="fa fa-search"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-bag"></i><span>0</span></a></li>
-                            </ul>
-                        </div> <!-- right icon -->
-                    </div>
+                   
                 </div> <!-- row -->
             </div> <!-- container -->
         </div>
         
     </header>
     
-    <!--====== HEADER PART ENDS ======-->
-   
-    <!--====== SEARCH BOX PART START ======-->
     
-    <div class="search-box">
-        <div class="serach-form">
-            <div class="closebtn">
-                <span></span>
-                <span></span>
-            </div>
-            <form action="#">
-                <input type="text" placeholder="Search by keyword">
-                <button><i class="fa fa-search"></i></button>
-            </form>
-        </div> <!-- serach form -->
-    </div>
+    </div> 

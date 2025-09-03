@@ -34,6 +34,7 @@ const {
  updateStaff,
  deleteStaff,
  staffStatus,
+ staffIsStaff,
  staffDetails,
  allocateStaffClass, 
  disallocateStaffClass,
@@ -107,22 +108,29 @@ const {
     getAllEvents,
     createEvent,
     editEventImage,
-    editEventSecondImage,
     getEditEventPage,
     editEvent,
     deleteEvent,
     getAddEvent, 
     //blog
-    uploadMultipleBlogImage,
     getAllBlogs,
     createBlog,
     deleteBlog,
     editBlog,
+    uploadBlogImg, 
     getEditBlogPage,
     editBlogImage,
     getAddBlog,
     //monitor admin  
     editStaffImage, 
+
+    //weekly and monthly
+    createLearnerOfTheWeek,
+    createteacherOfTheMonth,
+    updateLearnerOfTheWeek,
+    updateTeacherOfTheMonth,
+    getCreatePageOfTheWeek,
+    uploadSchoolImaging
                                                                                    
 } = require("../controller/admin");
 
@@ -152,6 +160,7 @@ adminRoute.route('/update-staff').get(adminEnsureLoggedIn, getUpdateStaffUpdateP
 adminRoute.route('/update-staff/:id').put(adminEnsureLoggedIn, updateStaff);
 adminRoute.route('/delete_staff/:id').delete(adminEnsureLoggedIn, deleteStaff);
 adminRoute.route('/staff-status/:id').patch(adminEnsureLoggedIn, staffStatus);
+adminRoute.route('/staff-is-staff/:id').patch(adminEnsureLoggedIn, staffIsStaff)
 adminRoute.route('/staffdetail').get(adminEnsureLoggedIn, staffDetails);
 adminRoute.route('/allocate_class').post(adminEnsureLoggedIn, allocateStaffClass);
 adminRoute.route('/disallocate/:id').get(adminEnsureLoggedIn, disallocateStaffClass);
@@ -162,7 +171,6 @@ adminRoute.route('/delete_staff-statement/:id').delete(adminEnsureLoggedIn, dele
 adminRoute.route('/update-school').get(adminEnsureLoggedIn, getSchoolUpdatePage);
 adminRoute.route('/update-school/:id').put(adminEnsureLoggedIn, updateSchool);
 adminRoute.route('/school-detail').get(adminEnsureLoggedIn, getSchoolDetail);
-adminRoute.route('/upload-school-image/:id').post(adminEnsureLoggedIn, uploadSchoolLogo);
 adminRoute.route('/add_session').post(adminEnsureLoggedIn, addSession);
 adminRoute.route('/update-session').get(adminEnsureLoggedIn, getUpdateSesstionpPage);
 adminRoute.route('/update-session/:id').put(adminEnsureLoggedIn, updateSession);
@@ -220,24 +228,29 @@ adminRoute.route('/delete-question/:id').delete(adminEnsureLoggedIn, deleteQuest
 adminRoute.route('/update-tests-page/:id').put(adminEnsureLoggedIn, updateCBT);
 adminRoute.route('/delete-test/:id').delete(adminEnsureLoggedIn, deleteCBTs);
 
-adminRoute.route('/create-event').post( adminEnsureLoggedIn, createEvent);
+adminRoute.route('/create-event').post(adminEnsureLoggedIn, createEvent);
 adminRoute.route('/upload-event-cover-image/:id').post( adminEnsureLoggedIn, editEventImage);
-// adminRoute.route('/upload-event-page-image/:id').post( adminEnsureLoggedIn, editEventSecondImage);
-adminRoute.route('/update-event').get( adminEnsureLoggedIn, getEditEventPage);
-adminRoute.route('/edit-event/:id').put( adminEnsureLoggedIn, editEvent);
+adminRoute.route('/update-event').get(adminEnsureLoggedIn, getEditEventPage);
+adminRoute.route('/update-event/:id').put(adminEnsureLoggedIn, editEvent);
 adminRoute.route('/delete-event/:id').delete( adminEnsureLoggedIn, deleteEvent);
-adminRoute.route('/create-blog').post( adminEnsureLoggedIn, uploadMultipleBlogImage, createBlog);
+adminRoute.route('/create-blog').post( adminEnsureLoggedIn, createBlog);
 adminRoute.route('/delete-blog/:id').delete( adminEnsureLoggedIn, deleteBlog);
 adminRoute.route('/edit-blog/:id').put( adminEnsureLoggedIn, editBlog);
-adminRoute.route('/edit-blog-image/:id').post( adminEnsureLoggedIn,  uploadMultipleBlogImage, editBlogImage);
+adminRoute.route('/edit-blog-image/:id').post( adminEnsureLoggedIn, editBlogImage);
 adminRoute.route('/update-blog').get( adminEnsureLoggedIn, getEditBlogPage);
 adminRoute.route('/edit-staff-image/:id').post(adminEnsureLoggedIn, editStaffImage);
-adminRoute.route('/get-all-event').get( adminEnsureLoggedIn, getAllEvents );
-adminRoute.route('/get-all-blogs').get( adminEnsureLoggedIn, getAllBlogs );
+adminRoute.route('/get-all-event/:page').get( adminEnsureLoggedIn, getAllEvents );
+adminRoute.route('/get-all-blogs/:page').get( adminEnsureLoggedIn, getAllBlogs );
 adminRoute.route('/add_event').get( adminEnsureLoggedIn, getAddEvent );
-adminRoute.route('/add_blog').get( adminEnsureLoggedIn,  getAddBlog );
+adminRoute.route('/add_blog').get( adminEnsureLoggedIn, getAddBlog );
 adminRoute.route('/search').get( adminEnsureLoggedIn, getSearchPage);
-adminRoute.route('/searching').get( adminEnsureLoggedIn,  searchLearners );
-
+adminRoute.route('/searching').get( adminEnsureLoggedIn, searchLearners );
+adminRoute.post('/create-learner-of-the-week', adminEnsureLoggedIn, createLearnerOfTheWeek);
+adminRoute.post('/create-teacher-of-the-month', adminEnsureLoggedIn, createteacherOfTheMonth);
+adminRoute.put('/update-learner-of-the-week/:id', adminEnsureLoggedIn, updateLearnerOfTheWeek);
+adminRoute.put('/update-teacher-of-the-month/:id', adminEnsureLoggedIn, updateTeacherOfTheMonth);
+adminRoute.get('/create-learner-of-the-week-page', adminEnsureLoggedIn, getCreatePageOfTheWeek);
+adminRoute.route('/upload-school-image/:id').post(adminEnsureLoggedIn, uploadSchoolLogo);
+adminRoute.route('/upload-banner/:id').post(adminEnsureLoggedIn, uploadSchoolImaging);
 
 module.exports = adminRoute;

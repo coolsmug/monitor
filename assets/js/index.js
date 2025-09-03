@@ -242,6 +242,49 @@ $(document).ready(function() {
 });
 
 
+$(document).ready(function() {
+  let isProcessing = false;
+
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+const forStaff = debounce(function() {
+    if (!isProcessing) {
+      const switchElem = $(this).find('input');
+      const switchId = switchElem.data('staffs-id');
+      const updatedStatus = switchElem.is(':checked');
+
+$.ajax({
+  url: `/admin/staff-is-staff/${switchId}`,
+  type: 'PATCH',
+  data: { isStaff: updatedStatus },
+  success: function(data) {
+    switchElem.prop('checked', updatedStatus);
+    alert('Status changed successfully');
+  },
+  error: function(error) {
+    console.error(error);
+  },
+  complete: function() {
+    isProcessing = false;
+  }
+});
+
+    }
+  }, 500); // Adjust the debounce time as needed
+
+  $('.switchers').click(forStaff);
+});
+
 
 
 $("#pull_out").submit(function (params) {

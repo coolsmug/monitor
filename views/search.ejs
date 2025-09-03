@@ -179,7 +179,11 @@ a {
                   <td><div class="avisis"> <p> ${learner.roll_no} </P><button class="copy-btns"><i class="fas fa-copy"></i></button></div></td>
                   <td> <div class="avis"> <p> ${learner.email} </P><button class="copy-btn"><i class="fas fa-copy"></i></button></div> </td>
                   <td> <a href="/admin/learner-detail?id=${learner._id}">${learner.first_name}</a></td>
-                  <td>${learner.img?.url ? `<img src="${learner.img.url}" alt="Learner Image" class="learner-img" width="40">` : '-'}</td>
+                 <td>
+                   ${learner && learner.img && learner.img.url
+    ? `<img src="${learner.img.url}" alt="Learner Image" class="learner-img" width="40">`
+    : `<img src="https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg" alt="Default Image" class="learner-img" width="40">`}
+                  </td>
                   <td>${learner.last_name}</td>
                   <td>${learner.gender || '-'}</td>
                   <td>${learner.age || '-'}</td>

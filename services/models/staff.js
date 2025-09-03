@@ -5,16 +5,24 @@ const staffSchema = new Schema({
   roll: {
     type: String,
     required: true,
-    trim: true,  // Removes surrounding whitespace
+    trim: true,  
   },
   name: {
     type: String,
     required: true,
+    trim: true,  
   },
+    position: {
+    type: String,
+    trim: true,
+ 
+  },
+   
   status: {
     type: Boolean,
     default: false,
   },
+
   isStaff: {
     type: Boolean,
     default: false,
@@ -29,13 +37,26 @@ const staffSchema = new Schema({
   ],
   password: {
     type: String,
-    required: true,
+    trim: true,
+    
   },
+  about: {
+    type: String,
+    trim: true,  // Trims whitespace
+  },
+  subject: {
+    type: String,
+    trim: true,
+  },
+
   mobile_phone: {
     type: String,
     trim: true,  // Trims whitespace
     
   },
+    award: [
+      String
+    ],
   address: {
     type: String,
     trim: true,  // Trims whitespace from addresses
@@ -53,6 +74,22 @@ const staffSchema = new Schema({
       },
       message: (props) => `${props.value} is not a valid email!`,
     },
+  },
+  x: {
+    type: String,
+    trim: true
+  },
+  instagram: {
+    type: String,
+    trim: true
+  },
+  facebook: {
+    type: String,
+    trim: true
+  },
+  linkedin: {
+    type: String,
+    trim: true
   },
   img: {
     url: String,  // Cloudinary image URL

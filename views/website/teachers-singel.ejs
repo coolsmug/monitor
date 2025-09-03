@@ -1,4 +1,4 @@
-<%- include ("./website/include/header.ejs") %> 
+<%- include ("../website/include/header.ejs") %> 
 
     <!--====== PAGE BANNER PART START ======-->
 
@@ -10,8 +10,8 @@
                         <h2>Teachers</h2>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Teachers</li>
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><%= title %></li>
                             </ol>
                         </nav>
                     </div> <!-- page banner cont -->
@@ -30,22 +30,23 @@
                 <div class="col-lg-4 col-md-8">
                     <div class="teachers-left mt-50">
                         <div class="hero">
-                            <img src="images/teachers/t-1.jpg" alt="Teachers">
+                            <img src="<%= teacher.img.url ? teacher.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg" %>" alt="Teachers">
                         </div>
                         <div class="name">
-                            <h6>Mark alen</h6>
-                            <span>Vice chencelor</span>
+                            <h6><%= title %></h6>
+                            <span><%= teacher.position %></span>
                         </div>
                         <div class="social">
                             <ul>
-                                <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+                                <li><a href="<%= teacher.facebook %>" target="_blank"><i class="fa fa-facebook-square"></i></a></li>
+                                <li><a href="<%= teacher.x %>" target="_blank"><i class="fa fa-twitter-square"></i></a></li>
+                                <li> <a href="mailto:<%= teacher.email %>"><i class="fa fa-google-plus-square"></i></a></li>
+                                <li><a href="<%= teacher.linkedin %>" target="_blank"><i class="fa fa-linkedin-square"></i></a></li>
                             </ul>
                         </div>
                         <div class="description">
-                            <p>Gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate..</p>
+                        <p><%= teacher.about.split(' ').slice(0, 20).join(' ') %>...</p>
+
                         </div>
                     </div> <!-- teachers left -->
                 </div>
@@ -67,11 +68,14 @@
                                 <div class="dashboard-cont">
                                     <div class="singel-dashboard pt-40">
                                         <h5>About</h5>
-                                        <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus .</p>
+                                        <p><%= teacher.about.split('.').join(' ') %></p>
                                     </div> <!-- singel dashboard -->
                                     <div class="singel-dashboard pt-40">
                                         <h5>Acchivments</h5>
-                                        <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus .</p>
+                                        <% teacher.award.forEach( ta => { %>
+                                        <p>🥇 <%= ta %></p>
+                                      
+                                        <% }) %>
                                     </div> <!-- singel dashboard -->
                                     <div class="singel-dashboard pt-40">
                                         <h5>My Objective</h5>
@@ -86,10 +90,10 @@
                                             <div class="singel-course mt-30">
                                                 <div class="thum">
                                                     <div class="image">
-                                                        <img src="images/course/cu-2.jpg" alt="Course">
+                                                        <img src="<%= img.url %>" alt="Course">
                                                     </div>
                                                     <div class="price">
-                                                        <span>$10</span>
+                                                        <span></span>
                                                     </div>
                                                 </div>
                                                 <div class="cont border">
@@ -100,14 +104,14 @@
                                                         <li><i class="fa fa-star"></i></li>
                                                         <li><i class="fa fa-star"></i></li>
                                                     </ul>
-                                                    <span>(20 Reviws)</span>
-                                                    <a href="#"><h4>Learn basis javascirpt from start for beginner</h4></a>
+                                                    <span>(20 Reviews)</span>
+                                                    <a href="#"><h4><%= teacher.subject %></h4></a>
                                                     <div class="course-teacher">
                                                         <div class="thum">
-                                                            <a href="#"><img src="images/course/teacher/t-2.jpg" alt="teacher"></a>
+                                                            <a href="#"><img src="<%= teacher.img.url ? teacher.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg" %>" alt="Teachers"></a>
                                                         </div>
                                                         <div class="name">
-                                                            <a href="#"><h6>Mark anthem</h6></a>
+                                                            <a href="#"><h6><%= title %></h6></a>
                                                         </div>
                                                         <div class="admin">
                                                             <ul>
@@ -123,7 +127,7 @@
                                             <div class="singel-course mt-30">
                                                 <div class="thum">
                                                     <div class="image">
-                                                        <img src="images/course/cu-3.jpg" alt="Course">
+                                                        <img src="<%= img.url %>" alt="Course">
                                                     </div>
                                                     <div class="price">
                                                         <span>$30</span>
@@ -298,4 +302,4 @@
 
     <!--====== EVENTS PART ENDS ======-->
 
-    <%- include ("./website/include/footer.ejs") %> 
+    <%- include ("../website/include/footer.ejs") %> 

@@ -2,40 +2,47 @@
 <!--====== SLIDER PART START ======-->
     
     <section id="slider-part" class="slider-active">
-        <div class="single-slider bg_cover pt-150" style="background-image: url(/slider/s-1.jpg)" data-overlay="4">
+        <% if (event.length > 0) { %>
+             <% for ( var i = 0; i < event.length; i++) {%>
+            <div class="single-slider bg_cover pt-150" style="background-image: url('<%= event[0].img.url %>');" data-overlay="4">
+              <div class="container">
+                <div class="row">
+                  <div class="col-xl-7 col-lg-9">
+                    <div class="slider-cont">
+                      <h1 data-animation="bounceInLeft" data-delay="1s"><%= event[0].event_name %></h1>
+                      <p data-animation="fadeInUp" data-delay="1.3s"><%= event[0].excerpt %></p>
+                      <ul>
+                        <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="/single-event/<%= event[0].dates %>/<%= event[0].slug%>">Read More</a></li>
+                        <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#"><%= event[0].event_type %></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div> <!-- row -->
+              </div> <!-- container -->
+            </div> <!-- single slider -->
+            <% } %>
+          <% } %>
+          
+          <% if (blog.length > 0) { %> 
+            <% for ( var i = 0; i < blog.length; i++  ) {%>
+        <div class="single-slider bg_cover pt-150" style="background-image: url('<%= blog[i].img.url %>')" data-overlay="4">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-7 col-lg-9">
                         <div class="slider-cont">
-                            <h1 data-animation="bounceInLeft" data-delay="1s">Choose the right theme for education</h1>
-                            <p data-animation="fadeInUp" data-delay="1.3s">Donec vitae sapien ut libearo venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt  Sed fringilla mauri amet nibh.</p>
+                            <h1 data-animation="bounceInLeft" data-delay="1s"><%= blog[i].headline %></h1>
+                            <p data-animation="fadeInUp" data-delay="1.3s"><%= blog[i].excerpt %></p>
                             <ul>
-                                <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="#">Read More</a></li>
-                                <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#">Get Started</a></li>
+                                <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="/single-blog/<%= blog[i]._id %>/<%= blog[i].slug %>">Read More</a></li>
+                                <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2"><%= blog[i].category %> News</a></li>
                             </ul>
                         </div>
                     </div>
                 </div> <!-- row -->
             </div> <!-- container -->
         </div> <!-- single slider -->
-        
-        <div class="single-slider bg_cover pt-150" style="background-image: url(/slider/s-2.jpg)" data-overlay="4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-7 col-lg-9">
-                        <div class="slider-cont">
-                            <h1 data-animation="bounceInLeft" data-delay="1s">Choose the right theme for education</h1>
-                            <p data-animation="fadeInUp" data-delay="1.3s">Donec vitae sapien ut libearo venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt  Sed fringilla mauri amet nibh.</p>
-                            <ul>
-                                <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="#">Read More</a></li>
-                                <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#">Get Started</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div> <!-- row -->
-            </div> <!-- container -->
-        </div> <!-- single slider -->
-        
+        <% } %>
+        <% } %>
         <div class="single-slider bg_cover pt-150" style="background-image: url(/slider/s-3.jpg)" data-overlay="4">
             <div class="container">
                 <div class="row">
@@ -158,11 +165,11 @@
                 <div class="col-lg-5">
                     <div class="section-title mt-50">
                         <h5>About us</h5>
-                        <h2>Welcome to Edubin </h2>
+                        <h2>Welcome to <%= school_name %> </h2>
                     </div> <!-- section title -->
                     <div class="about-cont">
-                        <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt  mauris. <br> <br> auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt  mauris</p>
-                        <a href="#" class="main-btn mt-55">Learn More</a>
+                        <p><%= about %></p>
+                       
                     </div>
                 </div> <!-- about cont -->
                 <div class="col-lg-6 offset-lg-1">
@@ -171,282 +178,82 @@
                             <h3>Upcoming events</h3>
                         </div> <!-- event title -->
                         <ul>
+                            <% event.forEach( events => { %>
+                           
                             <li>
                                 <div class="singel-event">
-                                    <span><i class="fa fa-calendar"></i> 2 December 2018</span>
-                                    <a href="events-singel.html"><h4>Campus clean workshop</h4></a>
+                                    <%  %>
+                                    <% const dating = events.dates %>
+                                    <% const date = new Date(dating)  %>
+                                    <% const options = { day: 'numeric', month: 'long', year: 'numeric' }; %>
+                                    <span class="date"><i class="fa fa-calendar"></i><%= date.toLocaleDateString('en-US', options) %></span>          
+                                    <a href="/single-event/<%= events.dates %>/<%= events.slug %>"><h4><%= events.event_name %></h4></a>
                                     <span><i class="fa fa-clock-o"></i> 10:00 Am - 3:00 Pm</span>
-                                    <span><i class="fa fa-map-marker"></i> Rc Auditorim</span>
+                                    <span><i class="fa fa-map-marker"></i> <%= events.venue %></span>
                                 </div>
                             </li>
-                            <li>
-                                <div class="singel-event">
-                                    <span><i class="fa fa-calendar"></i> 2 December 2018</span>
-                                    <a href="events-singel.html"><h4>Tech Summit</h4></a>
-                                    <span><i class="fa fa-clock-o"></i> 10:00 Am - 3:00 Pm</span>
-                                    <span><i class="fa fa-map-marker"></i> Rc Auditorim</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="singel-event">
-                                    <span><i class="fa fa-calendar"></i> 2 December 2018</span>
-                                    <a href="events-singel.html"><h4>Enviroement conference</h4></a>
-                                    <span><i class="fa fa-clock-o"></i> 10:00 Am - 3:00 Pm</span>
-                                    <span><i class="fa fa-map-marker"></i> Rc Auditorim</span>
-                                </div>
-                            </li>
+                      <% }) %>
+                            
                         </ul> 
                     </div> <!-- about event -->
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
         <div class="about-bg">
-            <img src="/about/bg-1.png" alt="About">
+            <img src="<%= img.url %>" alt="About">
         </div>
     </section>
     
     <!--====== ABOUT PART ENDS ======-->
    
     <!--====== APPLY PART START ======-->
-    
+    <% if (learner && teacher) {%>
     <section id="apply-aprt" class="pb-120">
+      
         <div class="container">
+             
             <div class="apply">
+                 <h2>Our Current Icons </h2>
                 <div class="row no-gutters">
                     <div class="col-lg-6">
+                        
                         <div class="apply-cont apply-color-1">
-                            <h3>Apply for fall 2019</h3>
-                            <p>Gravida nibh vel velit auctor aliquetn sollicitudirem sem quibibendum auci elit cons equat ipsutis sem nibh id elituis sed odio sit amet nibh vulputate cursus equat ipsutis.</p>
-                            <a href="#" class="main-btn">Apply Now</a>
+                            <div class="image" style="background: whitesmoke; width: 115px; height: 115px; border-radius: 7px; display: flex;justify-content: center;align-items: center;">
+                                <img style="width: 100px; height:100px; border-radius: 5px; border-bottom: 50px;" src="<%= learnerReal.img.url ? learnerReal.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg" %>" alt="Teachers">
+                            </div>
+                            <h3><%= learner.description %></h3>
+                            <a href="teachers-singel.html" style="color: aliceblue;"><%= learner.name %></a><br/><br/>
+                            <a href="#" class="main-btn">View Learners' Details</a>
+                            
                         </div> <!-- apply cont -->
                     </div>
                     <div class="col-lg-6">
                         <div class="apply-cont apply-color-2">
-                            <h3>Apply for scholarship</h3>
-                            <p>Gravida nibh vel velit auctor aliquetn sollicitudirem sem quibibendum auci elit cons equat ipsutis sem nibh id elituis sed odio sit amet nibh vulputate cursus equat ipsutis.</p>
-                            <a href="#" class="main-btn">Apply Now</a>
+                            <div class="image" style="background: whitesmoke; width: 115px; height: 115px; border-radius: 7px; display: flex; justify-content: center; align-items: center;">
+                                <img style="width: 100px; height: 100px; border-radius: 5px;" src="<%= teacherReal.img.url ? teacherReal.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg"  %>" alt="Teachers">
+                            </div>
+                            <h3><%= teacher.description %> </h3>
+                              <a href="teachers-singel.html" style="color: aliceblue;"><%= teacher.name %></a><br/><br/>
+                            <a href="#" class="main-btn">View Staff' Details</a>
                         </div> <!-- apply cont -->
                     </div> 
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
     </section>
-    
+    <% } %>
     <!--====== APPLY PART ENDS ======-->
    
-    <!--====== COURSE PART START ======-->
-    
-    <section id="course-part" class="pt-115 pb-120 gray-bg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="section-title pb-45">
-                        <h5>Our course</h5>
-                        <h2>Featured courses </h2>
-                    </div> <!-- section title -->
-                </div>
-            </div> <!-- row -->
-            <div class="row course-slied mt-30">
-                <div class="col-lg-4">
-                    <div class="singel-course">
-                        <div class="thum">
-                            <div class="image">
-                                <img src="/course/cu-1.jpg" alt="Course">
-                            </div>
-                            <div class="price">
-                                <span>Free</span>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <ul>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                            </ul>
-                            <span>(20 Reviws)</span>
-                            <a href="courses-singel.html"><h4>Learn basis javascirpt from start for beginner</h4></a>
-                            <div class="course-teacher">
-                                <div class="thum">
-                                    <a href="#"><img src="/course/teacher/t-1.jpg" alt="teacher"></a>
-                                </div>
-                                <div class="name">
-                                    <a href="#"><h6>Mark anthem</h6></a>
-                                </div>
-                                <div class="admin">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
-                                        <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- singel course -->
-                </div>
-                <div class="col-lg-4">
-                    <div class="singel-course">
-                        <div class="thum">
-                            <div class="image">
-                                <img src="/course/cu-2.jpg" alt="Course">
-                            </div>
-                            <div class="price">
-                                <span>Free</span>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <ul>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                            </ul>
-                            <span>(20 Reviws)</span>
-                            <a href="courses-singel.html"><h4>Learn basis javascirpt from start for beginner</h4></a>
-                            <div class="course-teacher">
-                                <div class="thum">
-                                    <a href="#"><img src="/course/teacher/t-2.jpg" alt="teacher"></a>
-                                </div>
-                                <div class="name">
-                                    <a href="#"><h6>Mark anthem</h6></a>
-                                </div>
-                                <div class="admin">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
-                                        <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- singel course -->
-                </div>
-                <div class="col-lg-4">
-                    <div class="singel-course">
-                        <div class="thum">
-                            <div class="image">
-                                <img src="/course/cu-3.jpg" alt="Course">
-                            </div>
-                            <div class="price">
-                                <span>Free</span>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <ul>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                            </ul>
-                            <span>(20 Reviws)</span>
-                            <a href="courses-singel.html"><h4>Learn basis javascirpt from start for beginner</h4></a>
-                            <div class="course-teacher">
-                                <div class="thum">
-                                    <a href="#"><img src="/course/teacher/t-3.jpg" alt="teacher"></a>
-                                </div>
-                                <div class="name">
-                                    <a href="#"><h6>Mark anthem</h6></a>
-                                </div>
-                                <div class="admin">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
-                                        <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- singel course -->
-                </div>
-                <div class="col-lg-4">
-                    <div class="singel-course">
-                        <div class="thum">
-                            <div class="image">
-                                <img src="/course/cu-4.jpg" alt="Course">
-                            </div>
-                            <div class="price">
-                                <span>Free</span>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <ul>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                            </ul>
-                            <span>(20 Reviws)</span>
-                            <a href="courses-singel.html"><h4>Learn basis javascirpt from start for beginner</h4></a>
-                            <div class="course-teacher">
-                                <div class="thum">
-                                    <a href="#"><img src="/course/teacher/t-4.jpg" alt="teacher"></a>
-                                </div>
-                                <div class="name">
-                                    <a href="#"><h6>Mark anthem</h6></a>
-                                </div>
-                                <div class="admin">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
-                                        <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- singel course -->
-                </div>
-                <div class="col-lg-4">
-                    <div class="singel-course">
-                        <div class="thum">
-                            <div class="image">
-                                <img src="/course/cu-5.jpg" alt="Course">
-                            </div>
-                            <div class="price">
-                                <span>Free</span>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <ul>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                                <li><i class="fa fa-star"></i></li>
-                            </ul>
-                            <span>(20 Reviws)</span>
-                            <a href="courses-singel.html"><h4>Learn basis javascirpt from start for beginner</h4></a>
-                            <div class="course-teacher">
-                                <div class="thum">
-                                    <a href="#"><img src="/course/teacher/t-5.jpg" alt="teacher"></a>
-                                </div>
-                                <div class="name">
-                                    <a href="#"><h6>Mark anthem</h6></a>
-                                </div>
-                                <div class="admin">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
-                                        <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- singel course -->
-                </div>
-            </div> <!-- course slied -->
-        </div> <!-- container -->
-    </section>
-    
-    <!--====== COURSE PART ENDS ======-->
    
     <!--====== VIDEO FEATURE PART START ======-->
     
-    <section id="video-feature" class="bg_cover pt-60 pb-110" style="background-image: url(images/bg-1.jpg)">
+    <!-- <section id="video-feature" class="bg_cover pt-60 pb-110" style="background-image: url('images/bg-1.jpg')">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 order-last order-lg-first">
                     <div class="video text-lg-left text-center pt-50">
                         <a class="Video-popup" href="https://www.youtube.com/watch?v=bRRtdzJH1oE"><i class="fa fa-play"></i></a>
-                    </div> <!-- row -->
+                    </div> 
                 </div>
                 <div class="col-lg-5 offset-lg-1 order-first order-lg-last">
                     <div class="feature pt-50">
@@ -463,7 +270,7 @@
                                         <h4>Global Certificate</h4>
                                         <p>Gravida nibh vel velit auctor aliquetn auci elit cons solliazcitudirem sem quibibendum sem nibhutis.</p>
                                     </div>
-                                </div> <!-- singel feature -->
+                                </div> 
                             </li>
                             <li>
                                 <div class="singel-feature">
@@ -474,7 +281,7 @@
                                         <h4>Alumni Support</h4>
                                         <p>Gravida nibh vel velit auctor aliquetn auci elit cons solliazcitudirem sem quibibendum sem nibhutis.</p>
                                     </div>
-                                </div> <!-- singel feature -->
+                                </div> 
                             </li>
                             <li>
                                 <div class="singel-feature">
@@ -485,16 +292,16 @@
                                         <h4>Books & Library</h4>
                                         <p>Gravida nibh vel velit auctor aliquetn auci elit cons solliazcitudirem sem quibibendum sem nibhutis.</p>
                                     </div>
-                                </div> <!-- singel feature -->
+                                </div> 
                             </li>
                         </ul>
-                    </div> <!-- feature -->
+                    </div> 
                 </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-        <div class="feature-bg"></div> <!-- feature bg -->
+            </div> 
+        </div> 
+        <div class="feature-bg"></div> 
     </section>
-    
+     -->
     <!--====== VIDEO FEATURE PART ENDS ======-->
    
     <!--====== TEACHERS PART START ======-->
@@ -508,177 +315,43 @@
                         <h2>Meet Our teachers</h2>
                     </div> <!-- section title -->
                     <div class="teachers-cont">
-                        <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt  mauris. <br> <br> auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt  mauris</p>
+                        <% about.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
                         <a href="#" class="main-btn mt-55">Career with us</a>
                     </div> <!-- teachers cont -->
                 </div>
+             <% if(staff) {%>
                 <div class="col-lg-6 offset-lg-1">
                     <div class="teachers mt-20">
                         <div class="row">
-                            <div class="col-sm-6">
+
+                             <% staff.forEach(s => { %>
+                            <div class="col-sm-6"> 
                                 <div class="singel-teachers mt-30 text-center">
                                     <div class="image">
-                                        <img src="/teachers/t-1.jpg" alt="Teachers">
+                                        <img src="<%= s.img.url ? s.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg" %>" alt="Teachers">
                                     </div>
                                     <div class="cont">
-                                        <a href="teachers-singel.html"><h6>Mark alen</h6></a>
+                                        <a href="/profile/<%= s._id %>/<%= s.name %>"><h6><%= s.name %></h6></a>
                                         <span>Vice chencelor</span>
                                     </div>
-                                </div> <!-- singel teachers -->
+                                </div> <!-- singel teachers -->  
                             </div>
-                            <div class="col-sm-6">
-                                <div class="singel-teachers mt-30 text-center">
-                                    <div class="image">
-                                        <img src="/teachers/t-2.jpg" alt="Teachers">
-                                    </div>
-                                    <div class="cont">
-                                        <a href="teachers-singel.html"><h6>David card</h6></a>
-                                        <span>Pro chencelor</span>
-                                    </div>
-                                </div> <!-- singel teachers -->
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="singel-teachers mt-30 text-center">
-                                    <div class="image">
-                                        <img src="/teachers/t-3.jpg" alt="Teachers">
-                                    </div>
-                                    <div class="cont">
-                                        <a href="teachers-singel.html"><h6>Rebeka alig</h6></a>
-                                        <span>Pro chencelor</span>
-                                    </div>
-                                </div> <!-- singel teachers -->
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="singel-teachers mt-30 text-center">
-                                    <div class="image">
-                                        <img src="/teachers/t-4.jpg" alt="Teachers">
-                                    </div>
-                                    <div class="cont">
-                                        <a href="teachers-singel.html"><h6>Hanna bein</h6></a>
-                                        <span>Aerobics head</span>
-                                    </div>
-                                </div> <!-- singel teachers -->
-                            </div>
+                            <% }) %>
+
                         </div> <!-- row -->
                     </div> <!-- teachers -->
                 </div>
+                <% } %>
             </div> <!-- row -->
         </div> <!-- container -->
     </section>
     
     <!--====== TEACHERS PART ENDS ======-->
    
-    <!--====== PUBLICATION PART START ======-->
-    
-    <section id="publication-part" class="pt-115 pb-120 gray-bg">
-        <div class="container">
-            <div class="row align-items-end">
-                <div class="col-lg-6 col-md-8 col-sm-7">
-                    <div class="section-title pb-60">
-                        <h5>Publications</h5>
-                        <h2>From Store </h2>
-                    </div> <!-- section title -->
-                </div>
-                <div class="col-lg-6 col-md-4 col-sm-5">
-                    <div class="products-btn text-right pb-60">
-                        <a href="#" class="main-btn">All Products</a>
-                    </div> <!-- products btn -->
-                </div>
-            </div> <!-- row -->
-            <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-6 col-sm-8">
-                    <div class="singel-publication mt-30">
-                        <div class="image">
-                            <img src="/publication/p-1.jpg" alt="Publication">
-                            <div class="add-cart">
-                                <ul>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <div class="name">
-                                <a href="shop-singel.html"><h6>Set for life </h6></a>
-                                <span>By Scott Trench</span>
-                            </div>
-                            <div class="button text-right">
-                                <a href="#" class="main-btn">Buy Now ($50)</a>
-                            </div>
-                        </div>
-                    </div> <!-- singel publication -->
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-8">
-                    <div class="singel-publication mt-30">
-                        <div class="image">
-                            <img src="/publication/p-2.jpg" alt="Publication">
-                            <div class="add-cart">
-                                <ul>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <div class="name">
-                                <a href="shop-singel.html"><h6>A Daughters </h6></a>
-                                <span>By Scott Trench</span>
-                            </div>
-                            <div class="button text-right">
-                                <a href="#" class="main-btn">Buy Now ($30)</a>
-                            </div>
-                        </div>
-                    </div> <!-- singel publication -->
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-8">
-                    <div class="singel-publication mt-30">
-                        <div class="image">
-                            <img src="/publication/p-3.jpg" alt="Publication">
-                            <div class="add-cart">
-                                <ul>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <div class="name">
-                                <a href="shop-singel.html"><h6>A Magnet </h6></a>
-                                <span>By Scott Trench</span>
-                            </div>
-                            <div class="button text-right">
-                                <a href="#" class="main-btn">Buy Now ($20)</a>
-                            </div>
-                        </div>
-                    </div> <!-- singel publication -->
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-8">
-                    <div class="singel-publication mt-30">
-                        <div class="image">
-                            <img src="/publication/p-4.jpg" alt="Publication">
-                            <div class="add-cart">
-                                <ul>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart-o"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <div class="name">
-                                <a href="shop-singel.html"><h6>Pices of light</h6></a>
-                                <span>By Scott Trench</span>
-                            </div>
-                            <div class="button text-right">
-                                <a href="#" class="main-btn">Buy Now ($75)</a>
-                            </div>
-                        </div>
-                    </div> <!-- singel publication -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </section>
-    
-    <!--====== PUBLICATION PART ENDS ======-->
    
     <!--====== TEASTIMONIAL PART START ======-->
     
@@ -757,79 +430,67 @@
                 </div>
             </div> <!-- row -->
             <div class="row">
+                <% if(oneBlog) {%>
                 <div class="col-lg-6">
                     <div class="singel-news mt-30">
                         <div class="news-thum pb-25">
-                            <img src="/news/n-1.jpg" alt="News">
+                            <img src="<%= oneBlog.img.url %>" alt="News">
                         </div>
                         <div class="news-cont">
                             <ul>
-                                <li><a href="#"><i class="fa fa-calendar"></i>2 December 2018 </a></li>
-                                <li><a href="#"> <span>By</span> Adam linn</a></li>
+                                <% const dating = oneBlog.createdAt %>
+                                <% const date = new Date(dating)  %>
+                                <% const options = { day: 'numeric', month: 'long', year: 'numeric' }; %>
+                                <li><a href="#"><i class="fa fa-calendar"></i><%= date.toLocaleDateString('en-US', options) %> </a></li>
+                                <li><a href="#"> <span>By</span> <%= oneBlog.author %></a></li>
                             </ul>
-                            <a href="blog-singel.html"><h3>Tips to grade high cgpa in university life</h3></a>
-                            <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt .</p>
+                            <a href="/single-blog/<%= oneBlog._id %>/<%= oneBlog.slug %>"><h3><%= oneBlog.headline %></h3></a>
+                             <% if (oneBlog && oneBlog.content) { %>
+                                <% var blogger = oneBlog.content.split(' ').slice(0, 40).join(' ') %>
+                            <% blogger.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %>...</p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div>
                     </div> <!-- singel news -->
                 </div>
+                <% } %>
                 <div class="col-lg-6">
+                    <% if(allBlog && allBlog.length) {%>
+                        <% for(var i = 0; i < allBlog.length; i++) {%>
                     <div class="singel-news news-list">
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="news-thum mt-30">
-                                    <img src="/news/ns-1.jpg" alt="News">
+                                    <img src="<%= allBlog[i].img.url %>" alt="News">
                                 </div>
                             </div>
                             <div class="col-sm-8">
                                 <div class="news-cont mt-30">
                                     <ul>
-                                        <li><a href="#"><i class="fa fa-calendar"></i>2 December 2018 </a></li>
-                                        <li><a href="#"> <span>By</span> Adam linn</a></li>
+                                          <% const dating = allBlog[i].createdAt %>
+                                            <% const date = new Date(dating)  %>
+                                            <% const options = { day: 'numeric', month: 'long', year: 'numeric' }; %>
+                                        <li><a href="#"><i class="fa fa-calendar"></i><%= date.toLocaleDateString('en-US', options) %></a></li>
+                                        <li><a href="#"> <span>By</span><%= allBlog[i].author %></a></li>
                                     </ul>
-                                    <a href="blog-singel.html"><h3>Intellectual communication</h3></a>
-                                    <p>Gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons  vel.</p>
+                                    <a href="/single-blog/<%= allBlog[i]._id %>/<%= allBlog[i].slug %>"><h3><%= allBlog[i].headline.split(' ').slice(0, 4).join(' ') %>...</h3></a>
+                                      <% if (allBlog[i] && allBlog[i].content) { %>
+                                <% var blogger = allBlog[i].content.split(' ').slice(0, 20).join(' ') %>
+                            <% blogger.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %>...</p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                                 </div>
                             </div>
                         </div> <!-- row -->
-                    </div> <!-- singel news -->
-                    <div class="singel-news news-list">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="news-thum mt-30">
-                                    <img src="/news/ns-2.jpg" alt="News">
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="news-cont mt-30">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-calendar"></i>2 December 2018 </a></li>
-                                        <li><a href="#"> <span>By</span> Adam linn</a></li>
-                                    </ul>
-                                    <a href="blog-singel.html"><h3>Study makes you perfect</h3></a>
-                                    <p>Gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons  vel.</p>
-                                </div>
-                            </div>
-                        </div> <!-- row -->
-                    </div> <!-- singel news -->
-                    <div class="singel-news news-list">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="news-thum mt-30">
-                                    <img src="/news/ns-3.jpg" alt="News">
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="news-cont mt-30">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-calendar"></i>2 December 2018 </a></li>
-                                        <li><a href="#"> <span>By</span> Adam linn</a></li>
-                                    </ul>
-                                    <a href="blog-singel.html"><h3>Technology edcution is now....</h3></a>
-                                    <p>Gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons  vel.</p>
-                                </div>
-                            </div>
-                        </div> <!-- row -->
-                    </div> <!-- singel news -->
+                    </div>
+                    <% } %> <!-- singel news -->
+                    <% } %>
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
@@ -840,38 +501,19 @@
     <!--====== PATNAR LOGO PART START ======-->
     
     <div id="patnar-logo" class="pt-40 pb-80 gray-bg">
+      
         <div class="container">
+            <div class="section-title pb-50">
+                <h5>Schools Using Monitrex</h5>
+            </div> 
             <div class="row patnar-slied">
+               <% allschool.forEach(schools => { %>
                 <div class="col-lg-12">
                     <div class="singel-patnar text-center mt-40">
-                        <img src="/patnar-logo/p-1.png" alt="Logo">
+                        <img src="<%= schools.img.url %>" alt="Logo" width="150">
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <div class="singel-patnar text-center mt-40">
-                        <img src="/patnar-logo/p-2.png" alt="Logo">
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="singel-patnar text-center mt-40">
-                        <img src="/patnar-logo/p-3.png" alt="Logo">
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="singel-patnar text-center mt-40">
-                        <img src="/patnar-logo/p-4.png" alt="Logo">
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="singel-patnar text-center mt-40">
-                        <img src="/patnar-logo/p-2.png" alt="Logo">
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="singel-patnar text-center mt-40">
-                        <img src="/patnar-logo/p-3.png" alt="Logo">
-                    </div>
-                </div>
+                <% }) %>
             </div> <!-- row -->
         </div> <!-- container -->
     </div> 

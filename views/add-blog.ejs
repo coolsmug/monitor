@@ -1,54 +1,100 @@
-<%- include ("./include/header.ejs") %> 
+<%- include ("./include/header.ejs") %>
 
-<%- include ("./include/_dash_board.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %>
 
 <div class="diverr">
-    <h4><i class="fas fa-house-user"></i>Add Event</h4>
-
+    <h4><i class="fas fa-pen-nib"></i> Add Blog</h4>
+    <div class="direct">
+        <a href="/admin/get-all-blogs/1" class="btn border-shadow"><i class="fas fa-arrow-left"></i> Back to Blogs</a>
+    </div>
     <div class="form_for_create">
         
         <%- include ('./partials/messages') %>
         
-        <form action="/admin/create-blog" method="POST" enctype="multipart/form-data">
+        <form id="eventForm" action="/admin/create-blog" method="POST">
 
             <div class="all-single-form">
                 <div class="mb-3">
                     <div class="hop">
                         <label for="author">Author:</label>
-                        <input type="text" name="author" value="<%= typeof author != 'undefined' ? author : '' %>" />
+                        <input type="text" name="author" value="<%= typeof author !== 'undefined' ? author : '' %>" required />
                     </div>
                     <div class="hop">
                         <label for="category">Category:</label>
-                        <input type="text" name="category" value="<%= typeof category != 'undefined' ? category : '' %>" />
+                        <select id="category" name="category" required>
+                        <option value="">-- Select Category --</option>
+                        
+                        <option value="politics">Politics</option>
+                        <option value="business">Business & Economy</option>
+                        <option value="technology">Technology</option>
+                        <option value="health">Health</option>
+                        <option value="education">Education</option>
+                        <option value="sports">Sports</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="lifestyle">Lifestyle</option>
+                        <option value="world">World News</option>
+                        <option value="opinion">Opinion / Editorial</option>
+                        </select>
                     </div>
                     <div class="hop">
                         <label for="headline">Headline:</label>
-                        <input type="headline" name="headline" value="<%= typeof headline != 'undefined' ? headline : '' %>" />
+                        <input type="text" name="headline" value="<%= typeof headline !== 'undefined' ? headline : '' %>" required />
                     </div>
                     <div class="hop">
                         <label for="content">Content:</label>
-                        <textarea name="content" id="content" placeholder="Enter your text here..."></textarea>
+                        <textarea name="content" id="content" placeholder="Enter your blog content here..." required><%= typeof content !== 'undefined' ? content : '' %></textarea>
                     </div>
                     <div class="hop">
-                        <label for="img">Page Cover:</label>
-                        <input type="file" name="img" id="img">
+                        <label for="tags">Tags (separated by commas):</label>
+                        <input type="text" name="tags" value="<%= typeof tags !== 'undefined' ? tags : '' %>" placeholder="e.g. education, school, teachers">
                     </div>
                     <div class="hop">
-                        <label for="image">Image:</label>
-                        <input type="file" name="image" id="image">
+                        <label for="metaDescription">Meta Description (optional):</label>
+                        <textarea name="metaDescription" placeholder="Short meta description (max 160 characters)"><%= typeof metaDescription !== 'undefined' ? metaDescription : '' %></textarea>
                     </div>
+            
                 </div>
             </div>                                                
 
             <div class="mb-3">
-                <input type="submit" value="Ok? Publish">
+                <input type="submit" value="Publish Blog">
             </div>
         </form>
     </div> 
 </div>
 
 <footer class="foot">
-    <h3>All rights reserved and Powered by Dark theme code <i class="fas fa-copyright"></i> 2024</h3>
+    <h3>All rights reserved and Powered by Dark Theme Code <i class="fas fa-copyright"></i> 2024</h3>
 </footer>   
+
+<script>
+  document.getElementById('eventForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+
+  try {
+    const response = await fetch('/admin/create-blog', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Error:', error);
+      return alert('Error creating event: ' + error.message);
+    }
+
+    const result = await response.json();
+    console.log('Redirect URL:', result.redirectUrl);
+    window.location.href = result.redirectUrl; // Redirect to the update-event page
+  } catch (error) {
+    console.error('Unexpected Error:', error);
+    alert('An unexpected error occurred.');
+  }
+});
+
+
+</script>
 
 <%- include ("./include/footer.ejs") %>

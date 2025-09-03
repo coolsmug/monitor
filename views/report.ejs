@@ -23,11 +23,9 @@
                 <a class="divol" href="/admin/learner-detail?id=<%= learner[i]._id %>">
                     <div class="avi">
                        
-                        <% if(!learner[i].img.url) { %> 
-                            <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png">
-                       <% } else if(learner[i].img.url){%> 
-                            <img src="<%= learner[i].img.url %>">
-                           <% } %> 
+                      
+                            <img src="<%= learner[i].img && learner[i].img.url && learner ? learner[i].img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg'%>" alt="Learner Image">
+                           
                     </div>
         
                     <div class="ddiv">
@@ -105,9 +103,12 @@
         height: 80;
     }
 
-    .pagination {
-        /* margin-top: -50px; */
-
+    .divol {
+        text-decoration: none;
+        color: black;
+        display: flex;
+        gap: 20px;
+        align-items: center;
     }
 
     .pagination_div {

@@ -14,14 +14,31 @@ const eventSchema = new Schema ({
     content: {
         type: String
     },
-     pageImage: { 
-        url: String,      
-        publicId: String,
+    start: {
+        type: String
     },
-    img: { 
-        url: String,      
-        publicId: String,
+    end: {
+        type: String
     },
+    excerpt: {
+      type: String,
+      maxlength: 300,
+    },
+    img: {
+        url: String,
+        publicId: String,
+      }, 
+    event_type: {
+        type: String,
+        enum: ['upcoming', 'past'],
+        default: 'upcoming'
+      },
+    event_status: {
+        type: String,
+        enum: ['active', 'inactive'],
+        default: 'active'
+      },   
+      slug: { type: String, unique: true },   
     schoolId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -30,7 +47,7 @@ const eventSchema = new Schema ({
       
     createdAt: {
         type: Date,
-        default: Date.now // Set default value to the current date and time when the document is created
+        default: Date.now
     }
 }, 
 {timestamps: true} );

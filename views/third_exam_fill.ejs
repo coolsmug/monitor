@@ -17,11 +17,9 @@
     
     <div class="cover_table">
         <div class="student-image">
-          <% if(users.img.url) {%> 
-            <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
-       <% } else {%> 
-           <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
-           <% } %> 
+          
+           <img src="<%= users && users.img.url ? users.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="" >
+         
         </div>
        <p style="font-size: 12px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= sections.name %> Result Arrangement - <%= sections.classof %> Session of <%= sessions.name %></p> 
        <form method="POST" id="myblessing">

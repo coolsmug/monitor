@@ -28,11 +28,9 @@
       <div class="wrapper">
          <div class="wrapall">
             <div class="avi aviss">
-               <% if (!users.img.url) { %>
-                  <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="No Image">
-                  <% } else if (users.img.url) { %>
-                  <img src="<%= users.img.url.replace('http://', 'https://') %>" alt="user Image">
-                  <% } %>
+              
+                  <img src="<%= users.img.url && user ? users.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="user Image" width="50">
+                 
              </div>
      <marquee > <h1 class="hhh"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s  Details</h1></marquee>
              <div class="mini-wrapp assiom">

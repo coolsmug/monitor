@@ -18,11 +18,7 @@
 
 <div class="cover_table">
     <div class="student-image">
-        <% if(users.img.url) {%> 
-            <img src="<%= users.img.url.replace('http://', 'https://')%>" alt="" >
-       <% } else {%> 
-           <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521761/image_mon_icon_jyx3cc.png" alt="" >
-           <% } %> 
+       <img src="<%= users && users.img.url ? users.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="" >
     </div>
     <p style="font-size: 15px; font-weight: none; text-shadow: none;"><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %>'s</p> <p><%= section.name %> Result Arrangement - <%= section.classof %> Session of <%= session.name %></p> 
     
@@ -343,8 +339,11 @@ input[type="checkbox"] {
                     <td><p style="font-size: 15px; color: green;">User Id </p> <p style="font-size: 10px; overflow:hidden; width: 50px; "><%= users._id %></p></td>
                     <td><p style="font-size: 15px;"><%= totalExamMark %></p> </td>
                     <td><p style="font-size: 15px;"><%= totalTermTotal %></p></td>
+                    <% var totality = exam.length %>
+                    <% totalScore = totality * 100 %>
+                    <% var cummulative = (Number(totalTermTotal)/Number(totalScore))*100%>
                     <td colspan="2">
-                      <input id="termtotal" type="number" name="total_score" value="<%= totalTermTotal %>" readonly>
+                      <input id="termtotal" type="number" name="total_score" value="<%= cummulative %>" readonly>
                     </td>
                    
                     <td>
