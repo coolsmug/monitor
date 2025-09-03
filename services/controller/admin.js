@@ -749,7 +749,7 @@ const payStackPayment = async ( req, res ) => {
             }
           ]
         },
-        callback_url: "https://monitorschoolmanagent.com.ng/admin/callback",
+        callback_url: "https://monitrex.work/admin/callback",
       });
       res.redirect(payment.data.authorization_url);
     }
