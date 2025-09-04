@@ -2,7 +2,7 @@ const School = require("../models/school.name");
 
 module.exports = async function subdomainRouter(req, res, next) {
   const host = req.headers.host;
-  const mainDomain = "localhost:2022";
+  const mainDomain = "monitrex.work";
 
   if (!host.endsWith(mainDomain)) {
     return next();
