@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+const nodemailer = require('nodemailer');
 const Event = require('../models/event');
 const Blog = require('../models/blog');
 const Aschool = require('../models/school.name');
@@ -6,6 +10,7 @@ const LearnerOfTheWeek = require('../models/learner_of_the_week');
 const TeacherOfTheMonth = require('../models/teacher_of_the_month');
 const Learner = require('../models/leaners');
 const Teacher = require('../models/staff');
+const Subject = require('../models/subject');
 // const Carear = require('../models/career.builder');
 
 const getSchoolHomePage = async (req, res) => {
@@ -160,17 +165,24 @@ const getAbout = async (req, res) => {
       phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
     } = school;
 
-    const [allschool] = await Promise.all([
+  
+
+    const [event, blog, aschool,totalSubject, totalLearner, totalPastLearner, totalTeacher, staffs] = await Promise.all([
       Event.find({ schoolId: school._id, event_status: 'active' }).sort({ createdAt: -1 }).limit(3),
       Blog.find({ schoolId: school._id, status: "published", isFeatured: true }).sort({ createdAt: -1 }).limit(3),
-      Aschool.find( { verified : true, status : true, fees : 'paid'}).select('img').sort( { created : 1 } )
-
+      Aschool.find( { verified : true, status : true, fees : 'paid'}).select('img').sort( { created : 1 } ),
+      Subject.countDocuments({ schoolId: school._id }),
+      Learner.countDocuments({ schoolId: school._id, status: true, deletes: false }),
+      Learner.countDocuments({ schoolId: school._id, status: false, deletes: false }),
+      Teacher.countDocuments({ schoolId: school._id, status: true }),
+      Teacher.find({ schoolId : school._id, status : true, isStaff: true}).sort({ roll : 1 }),
     ]);
 
      await res.render("website/about", {
       title: school_name,school_name,school_motto,website,country,state,
       city,address,address2,phone_no,phone_no2,email,img,about,mission,
-      vision,opening_hour,closing_hour,opening_day,closing_day,
+      vision,opening_hour,closing_hour,opening_day,closing_day,totalSubject,
+      totalLearner,totalTeacher,totalPastLearner,event, blog, aschool, staffs,
      } )
 
   } catch(error) {
@@ -248,13 +260,13 @@ const contactUs = async (req, res) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
+      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,subdomain
     } = school;
 
      await res.render("website/contact-2", {
       school_name,school_motto,website,country,state,
       city,address,address2,phone_no,phone_no2,email,img,about,mission,
-      vision,opening_hour,closing_hour,opening_day,closing_day,
+      vision,opening_hour,closing_hour,opening_day,closing_day,subdomain
      } )
     
   } catch (error) {
@@ -591,6 +603,65 @@ const getAllStaff = async (req, res) => {
 }
 
 
+
+
+
+const sendEmail = async (req, res) => {
+  try {
+    // Match the frontend form fields
+    const { name, email, subject, message, mobile } = req.body;
+    const school = req.school;
+
+    // Validation
+    if (!school) {
+      return res.status(404).json({ error: "School not found" });
+    }
+    if (!name || !email || !subject || !message || !mobile) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const schoolEmail = school.email;
+    if (!schoolEmail) {
+      return res.status(500).json({ error: "School email is not configured" });
+    }
+
+    // Configure transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "monitorschoolmanagementapp@gmail.com",
+        pass: process.env.GMAIL_PASSWORD, // use Gmail App Password here
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    // Send email
+    await transporter.sendMail({
+      from: "monitorschoolmanagementapp@gmail.com", // verified sender
+      replyTo: email, // so school can reply directly to user
+      to: schoolEmail,
+      subject: subject,
+      text: `
+        From: ${name} <${email}>
+        Mobile: ${mobile}
+        
+        Message:
+        ${message}
+      `,
+    });
+
+    return res.status(200).json({ message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ error: "Failed to send email" });
+  }
+};
+
+
+
+
 module.exports = {
     getSchoolHomePage,
     carearMade,
@@ -606,4 +677,5 @@ module.exports = {
     getSingleTeachers,
     getAllStaff,
     getAllEvents,
+    sendEmail,
 }

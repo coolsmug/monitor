@@ -1,48 +1,30 @@
 $(function() {
+  var form = $('#contact-form');
+  var formMessages = $('.form-message');
 
-	// Get the form.
-	var form = $('#contact-form');
+  $(form).submit(function(e) {
+    e.preventDefault();
 
-	// Get the messages div.
-	var formMessages = $('.form-message');
+    var formData = $(form).serialize();
 
-	// Set up an event listener for the contact form.
-	$(form).submit(function(e) {
-		// Stop the browser from submitting the form.
-		e.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: $(form).attr('action'), // now points to /send-email
+      data: formData
+    })
+    .done(function(response) {
+      $(formMessages).removeClass('error').addClass('success');
+      $(formMessages).text(response.message || "Message sent successfully!");
+      $('#contact-form input, #contact-form textarea').val('');
+    })
+    .fail(function(xhr) {
+      $(formMessages).removeClass('success').addClass('error');
 
-		// Serialize the form data.
-		var formData = $(form).serialize();
-
-		// Submit the form using AJAX.
-		$.ajax({
-			type: 'POST',
-			url: $(form).attr('action'),
-			data: formData
-		})
-		.done(function(response) {
-			// Make sure that the formMessages div has the 'success' class.
-			$(formMessages).removeClass('error');
-			$(formMessages).addClass('success');
-
-			// Set the message text.
-			$(formMessages).text(response);
-
-			// Clear the form.
-			$('#contact-form input,#contact-form textarea').val('');
-		})
-		.fail(function(data) {
-			// Make sure that the formMessages div has the 'error' class.
-			$(formMessages).removeClass('success');
-			$(formMessages).addClass('error');
-
-			// Set the message text.
-			if (data.responseText !== '') {
-				$(formMessages).text(data.responseText);
-			} else {
-				$(formMessages).text('Oops! An error occured and your message could not be sent.');
-			}
-		});
-	});
-
+      if (xhr.responseJSON && xhr.responseJSON.error) {
+        $(formMessages).text(xhr.responseJSON.error);
+      } else {
+        $(formMessages).text('Oops! ' + xhr.status + ' - ' + xhr.statusText);
+      }
+    });
+  });
 });
