@@ -38,6 +38,26 @@
                         <input type="datetime-local" name="dates" value="<%= typeof event.dates != 'undefined' ? event.dates : '' %>" />
                     </div>
                     <div class="hop">
+                        <label for="event_status">Event status</label>
+                        <select name="event_status" id="">
+                          <option value="<%= event.event_status %>"><%= event.event_status %></option>
+                          <option value="Inactive">Inactive</option>
+                          <option value="Active">Active</option>
+                          
+                        </select>
+                       
+                    </div>
+                     <div class="hop">
+                        <label for="event_type">Event Type</label>
+                         <select name="event_type" id="">
+                          <option value="<%= event.event_type %>"><%= event.event_type %></option>
+                          <option value="Upcoming">Upcoming</option>
+                          <option value="Past">Past</option>
+                          
+                        </select>
+                       
+                    </div>
+                    <div class="hop">
                         <label for="content">Content:</label>
                         <textarea name="content" id="content" placeholder="Enter your text here..."><%= event.content %></textarea>
                     </div>

@@ -36,7 +36,7 @@ const getSchoolHomePage = async (req, res) => {
       : [];
 
       const [event, blog, allschool, learner, teacher, staff, oneBlog, allBlog] = await Promise.all([
-        Event.find({ schoolId: school._id, event_status: 'active' }).sort({ createdAt: -1 }).limit(3),
+        Event.find({ schoolId: school._id, event_type: 'Upcoming', event_status : 'Active' }).sort({ createdAt: -1 }).limit(3),
         Blog.find({ schoolId: school._id, status: "published", isFeatured: true }).sort({ createdAt: -1 }).limit(3),
         Aschool.find( { verified : true, status : true, fees : 'paid'}).select('img').sort( { createdAt : -1 } ),
         LearnerOfTheWeek.find({ skoolId: school._id }).sort({ createdAt: -1 }).limit(1),
@@ -94,6 +94,7 @@ const getSchoolHomePage = async (req, res) => {
         closing_hour,
         opening_day,
         closing_day,
+        career,
         event,
         blog,
         allschool,
@@ -104,7 +105,7 @@ const getSchoolHomePage = async (req, res) => {
         staff,
         oneBlog : oneBlog[0] || null, 
         allBlog,
-        career
+        
       });
   
     } catch (err) {
@@ -258,14 +259,12 @@ const getAllEvents = async (req, res) => {
 
     const totalEvents = await Event.countDocuments({
       schoolId: school._id,
-      event_status: 'active',
     });
 
     const eventList = await Event.find({
       schoolId: school._id,
-      event_status: 'active',
     })
-      .sort({ createdAt: -1 })
+      .sort({ event_status: -1 })
       .skip(skip)
       .limit(limit);
 
@@ -302,7 +301,7 @@ const getSingleEvent = async (req, res) => {
 
     const { slug, dates } = req.params
     
-    const event = await Event.findOne({ slug: slug, dates: dates, event_status: 'active' });
+    const event = await Event.findOne({ slug: slug, dates: dates, event_status: 'Active' });
 
     if (!event) {
       return res.status(404).send('Event not found');
@@ -646,7 +645,7 @@ const getCarear = async (req, res) => {
       Teacher.find({ schoolId : school._id, status : true, isStaff: true}).sort({ roll : 1 }),
     ]);
 
-    const carear = await Carear.find({ status : true }).sort({ created : -1 } ).exec()
+    const carear = await Carear.find({ status : true, schoolId: school._id  }).sort({ created : -1 } ).exec()
     res.render('website/job', {
       school_name, school_motto, website, country, state, city, address, address2,
       phone_no, phone_no2, email, img, about, mission, vision,

@@ -4,16 +4,16 @@
     <section id="slider-part" class="slider-active">
         <% if (event.length > 0) { %>
              <% for ( var i = 0; i < event.length; i++) {%>
-            <div class="single-slider bg_cover pt-150" style="background-image: url('<%= event[0].img.url %>');" data-overlay="4">
+            <div class="single-slider bg_cover pt-150" style="background-image: url('<%= event[i].img.url %>');" data-overlay="4">
               <div class="container">
                 <div class="row">
                   <div class="col-xl-7 col-lg-9">
                     <div class="slider-cont">
-                      <h1 data-animation="bounceInLeft" data-delay="1s"><%= event[0].event_name %></h1>
-                      <p data-animation="fadeInUp" data-delay="1.3s"><%= event[0].excerpt %></p>
+                      <h1 data-animation="bounceInLeft" data-delay="1s"><%= event[i].event_name %></h1>
+                      <p data-animation="fadeInUp" data-delay="1.3s"><%= event[i].excerpt %></p>
                       <ul>
-                        <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="/single-event/<%= event[0].dates %>/<%= event[0].slug%>">Read More</a></li>
-                        <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#"><%= event[0].event_type %></a></li>
+                        <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="/single-event/<%= event[i].dates %>/<%= event[i].slug%>">Read More</a></li>
+                        <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#"><%= event[i].event_type %></a></li>
                       </ul>
                     </div>
                   </div>

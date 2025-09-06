@@ -35,7 +35,7 @@
                            <img src="<%= blog[i].img ? blog[i].img.url : "images/blog/b-1.jpg" %>" alt="Blog">
                        </div>
                        <div class="blog-cont">
-                           <a href="blog-singel.html"><h3><%= blog[i].headline %></h3></a>
+                           <a href="/single-blog/<%= blog[i]._id %>/<%= blog[i].slug %>"><h3><%= blog[i].headline %></h3></a>
                            <ul>
                                                         <% const dating = blog[i].createdAt %>
                                                         <% const date = new Date(dating)  %>

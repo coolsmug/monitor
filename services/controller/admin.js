@@ -3730,7 +3730,7 @@ const mongoose = require('mongoose');
 
 const editEvent = async ( req , res ) => {
   try {
-      const {event_name, dates, content, end, start, venue} = req.body;
+      const {event_name, dates, content, end, start, venue, event_type, event_status} = req.body;
        const eventId = req.params.id;
 
        if (!mongoose.Types.ObjectId.isValid(eventId)) {
@@ -3738,7 +3738,7 @@ const editEvent = async ( req , res ) => {
     }
 
 
-      if (!event_name || !venue || !dates || !content || !start || !end) {
+      if (!event_name || !venue || !dates || !content || !start || !end || !event_type || !event_status) {
         throw new Error("All fields are required");
       }
 
@@ -3747,7 +3747,9 @@ const editEvent = async ( req , res ) => {
         event_name,
         venue,
         dates,
-        content, 
+        content,
+        event_type, 
+        event_status,
         end,
         start,
         slug: slugify(event_name, { lower: true, strict: true }),
