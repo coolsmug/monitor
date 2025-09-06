@@ -30,13 +30,13 @@ const eventSchema = new Schema ({
       }, 
     event_type: {
         type: String,
-        enum: ['upcoming', 'past'],
-        default: 'upcoming'
+        enum: ['Upcoming', 'past'],
+        default: 'Upcoming'
       },
     event_status: {
         type: String,
-        enum: ['active', 'inactive'],
-        default: 'active'
+        enum: ['Active', 'Inactive'],
+        default: 'Active'
       },   
       slug: { type: String, unique: true },   
     schoolId: {
