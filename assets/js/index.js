@@ -242,6 +242,55 @@ $(document).ready(function() {
 });
 
 
+//jobstatus
+$(document).ready(function() {
+  let isProcessing = false;
+
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+  const debouncedClickHandler = debounce(function() {
+    if (!isProcessing) {
+      var switchId = $(this).find('input').data('user-id');
+      var updatedStatus = $(this).find('input').is(':checked');
+
+      isProcessing = true;
+
+      $.ajax({
+        url: `/admin/patch-carear/${switchId}`,
+        type: 'PATCH',
+        data: { status: updatedStatus},
+        success: function(data) {
+          // Update the switch status immediately without a page reload
+          $(this).find('input').prop('checked', updatedStatus);
+          alert('Status changed successfully');
+          
+        },
+        error: function(error) {
+          console.error(error);
+          console.log('not foung')
+        },
+        complete: function() {
+          isProcessing = false;
+        }
+      });
+    }
+  }, 500); // Adjust the debounce time as needed
+
+  $('.switchering').click(debouncedClickHandler);
+});
+
+
+
 $(document).ready(function() {
   let isProcessing = false;
 

@@ -11,7 +11,7 @@ const TeacherOfTheMonth = require('../models/teacher_of_the_month');
 const Learner = require('../models/leaners');
 const Teacher = require('../models/staff');
 const Subject = require('../models/subject');
-// const Carear = require('../models/career.builder');
+const Carear = require('../models/carear');
 
 const getSchoolHomePage = async (req, res) => {
     try {
@@ -67,6 +67,7 @@ const getSchoolHomePage = async (req, res) => {
         closing_hour,
         opening_day,
         closing_day,
+        career,
        
       } = school;
 
@@ -103,6 +104,7 @@ const getSchoolHomePage = async (req, res) => {
         staff,
         oneBlog : oneBlog[0] || null, 
         allBlog,
+        career
       });
   
     } catch (err) {
@@ -113,43 +115,6 @@ const getSchoolHomePage = async (req, res) => {
     }
   };
 
-
-
-const carearMade = async (req , res) => {
-   
-      try {
-        const {jobName, jobDescription } = req.body
-    
-        const errors = []
-        if(!jobName || !jobDescription) {
-          errors.push({ msg: "Please fill in all fields." });
-        }
-        if(errors.length > 0) {
-          res.render('', {
-            errors: errors,
-            jobName: jobName,
-            jobDescription: jobDescription,
-            
-          });
-        } else {
-          const JobName =  {
-            jobName: jobName,
-            jobDescription: jobDescription.split('.').map(jobDescription => jobDescription.trim()),
-          };
-    
-          Carear.create(JobName)
-                          .then((data) => {
-                            req.flash("success_msg", "Job Registered !");
-                            res.redirect('/admin/career-builder');
-                          }).catch((err) => {
-                            console.log(err)
-                          })
-        }
-      } catch (error) {
-        console.log(error);
-      }
-   
-  }
 
 
 // page link routes
@@ -659,12 +624,47 @@ const sendEmail = async (req, res) => {
   }
 };
 
+const getCarear = async (req, res) => {
+  try {
+     const school = req.school;
+    if (!school) {
+      return res.status(404).json({ error: "School not found" });
+    }
+   const {
+      school_name, school_motto, website, country, state, city, address, address2,
+      phone_no, phone_no2, email, img, about, mission, vision,
+      opening_hour, closing_hour, opening_day, closing_day, career
+    } = school;
+
+    const [aschool, totalSubject, totalLearner, totalPastLearner, totalTeacher, staff] = await Promise.all([
+     
+      Aschool.find( { verified : true, status : true, fees : 'paid'}).select('img').sort( { created : 1 } ),
+      Subject.countDocuments({ schoolId: school._id }),
+      Learner.countDocuments({ schoolId: school._id, status: true, deletes: false }),
+      Learner.countDocuments({ schoolId: school._id, status: false, deletes: false }),
+      Teacher.countDocuments({ schoolId: school._id, status: true }),
+      Teacher.find({ schoolId : school._id, status : true, isStaff: true}).sort({ roll : 1 }),
+    ]);
+
+    const carear = await Carear.find({ status : true }).sort({ created : -1 } ).exec()
+    res.render('website/job', {
+      school_name, school_motto, website, country, state, city, address, address2,
+      phone_no, phone_no2, email, img, about, mission, vision,
+      opening_hour, closing_hour, opening_day, closing_day, carear,career, aschool, totalSubject, totalLearner, totalPastLearner, totalTeacher, staff
+    })
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ error: "Failed to send email" });
+  }
+
+    
+}
+
 
 
 
 module.exports = {
     getSchoolHomePage,
-    carearMade,
     getAbout,
     // getEventPage,
     getTeacherPage,
@@ -678,4 +678,5 @@ module.exports = {
     getAllStaff,
     getAllEvents,
     sendEmail,
+    getCarear,
 }

@@ -1,0 +1,255 @@
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+
+<div class="dele">
+    <h2 class="all"><i class="fas fa-puzzle-piece"></i> All Jobs Created</h2>
+</div>
+<div class="table">
+    
+    <table>
+        <thead>
+            <tr>  
+                <th>Name</th>
+                <th>Descriptions</th>
+                <th>Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% for (var i = 0; i < jobs.length; i++) { %> 
+    
+    <form action="/admin/edit-carear/<%= jobs[i]._id %>" method="post" id="okay" class="now" >
+         <tr>
+                <td><input type="text" name="jobName" class="ols new" value="<%= jobs[i].jobName %>"></td>
+                <td><textarea name="jobDescription"  class="new" id=""><%= jobs[i].jobDescription %></textarea></td>
+                <td>
+                     <label class="switchering">
+                        <input type="checkbox" id="mySwitch" data-user-id="<%= jobs[i]._id %>" <%= jobs[i].status == true ? 'checked' : '' %> >
+                        <span class="slider">
+
+                        </span>
+                    </label>
+                </td>
+                <td>
+                     <div class="div-button">
+                        <button class="butn"> <i class="far fa-save"></i> </button>
+                        <a href="/admin/delete-patch/<%=jobs[i]._id%>" class="btn border-shadow deleteSection" data-id="<%= jobs[i]._id %> ">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                     </div>
+                </td>
+            </tr>
+    </form>   
+           
+            <% } %> 
+        </tbody>
+    </table>
+
+</div>
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+</footer>   
+
+<%- include ("./include/footer.ejs") %> 
+
+
+
+ <style>
+        .switchering {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switcherings {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+    
+        .switchering input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switcherings input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+    
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+         .sliders {
+            position: absolute;
+            cursor: pointer;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+    
+        .slider:before {
+            position: absolute;
+            content: 'Active';
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(104, 148, 16);
+            font-size: 9px;
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+         .sliders:before {
+            position: absolute;
+            content: 'Active';
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(104, 148, 16);
+            font-size: 9px;
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+    
+        input:checked + .slider {
+            background-color: var(--deep-blue);
+    
+        }
+
+         input:checked + .sliders {
+            background-color: var(--deep-blue);
+    
+        }
+    
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196f3;
+        }
+    
+         input:focus + .sliders {
+            box-shadow: 0 0 1px #2196f3;
+        }
+
+        input:checked +.slider:before {
+            -webkit-transform:  translateX(26px);
+            -ms-transform:  translateX(26px);
+            transform:  translateX(26px);
+    
+        }
+
+         input:checked +.sliders:before {
+            -webkit-transform:  translateX(26px);
+            -ms-transform:  translateX(26px);
+            transform:  translateX(26px);
+    
+        }
+    
+        .slider {
+            border-radius: 34px;
+        }
+
+         .sliders {
+            border-radius: 34px;
+        }
+    
+        .slider:before {
+            border-radius: 50%;
+        }
+
+          .sliders:before {
+            border-radius: 50%;
+        }
+
+        .div-button {
+            display: flex;
+            flex-direction: row;
+            padding: 5px;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            
+        }
+        .new {
+            outline: none;
+            border: none;
+            background-color: none;
+            background: none;
+            box-shadow: none;
+        }
+
+        .ols {
+            padding: 12px 16px  ;
+        }
+
+        .butn {
+            background: none;
+            color: #4ca;
+            
+        }
+
+        .butn i {
+            font-size: 30px;
+        }
+        .fa-trash-alt {
+            color: red;
+             font-size: 30px;
+        }
+        
+
+    </style>
+
+   <script>
+// // $("#okay").submit(function (params) {
+// //   params.preventDefault();
+
+// //   let unindexed_arrays = $(this).serializeArray();
+// //   let data = {}
+
+// //   $.map(unindexed_arrays, function (n, i) {
+// //     data[ n[ "name" ]] = n[ "value" ]
+// //   }); 
+// //   console.log(data);
+
+// //   let request = {
+// //     "url" : `/admin/edit-carear/${data.id}`,
+// //     "method" : "POST",
+// //     "data" : data,
+// //   };
+
+// //   $.ajax(request).done(function (response) {
+// //     alert("Session Updated Successfully!")
+// //     location.reload();
+    
+// //   });
+// });
+
+
+   </script>

@@ -113,10 +113,15 @@ SchoolSchema = new Schema({
         type: String, 
         
     },
+    career: {
+        type: String,
+    },
+
     vision:{ 
         type: String, 
        
     }, 
+
     status: { 
         type: Boolean, 
         default: true,

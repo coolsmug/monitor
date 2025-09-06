@@ -24,6 +24,14 @@
                         <label for="venue">Venue:</label>
                         <input type="text" name="venue" value="<%= typeof venue != 'undefined' ? venue : '' %>" />
                     </div>
+                      <div class="hop">
+                        <label for="start">Event Start At:</label>
+                        <input type="text" name="start" value="<%= typeof start != 'undefined' ? start : '' %>" placeholder="example 8:00AM" />
+                    </div>
+                      <div class="hop">
+                        <label for="end">Event End at:</label>
+                        <input type="text" name="end" value="<%= typeof end != 'undefined' ? end : '' %>" placeholder="example 3:00PM"/>
+                    </div>
                     <div class="hop">
                         <label for="dates">Set Date and Time:</label>
                         <input type="datetime-local" name="dates" value="<%= typeof dates != 'undefined' ? dates : '' %>" />

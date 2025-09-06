@@ -80,10 +80,10 @@
             </div>
         </form>
     </div> 
-</div>
 
 
-<div class="diverr">
+
+
     <h4><i class="fas fa-user-graduate"></i> Teacher of the Week</h4>
     <div class="direct">
         <a href="/admin/get-all-learners-week/1" class="btn border-shadow"><i class="fas fa-arrow-left"></i> Back</a>
@@ -155,6 +155,39 @@
                      <div class="hop">
                         <label for="quote">Quote:</label>
                        <textarea name="quote" placeholder="Inspiring quote by the staff" rows="" cols=""></textarea>
+                </div>
+            </div>                                                
+            <div class="mb-3">
+                <input type="submit" value="Save staff">
+            </div>
+        </form>
+    </div> 
+
+
+     <h4><i class="fas fa-user-graduate"></i>Create Job</h4>
+    <div class="direct">
+        <a href="/admin/get-all-learners-week/1" class="btn border-shadow"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="form_for_create">
+      
+        
+        <!-- Learner of the Week Form -->
+        <form id="learnerForm" action="/admin/career-builder" method="POST">
+            <div class="all-single-form">
+                <div class="mb-3">
+
+                    <div class="hop">
+                        <label for="jobName">Job Title:</label>
+                        <input type="text" name="jobName"  />
+                    </div>
+                   
+                     
+                     <div class="hop">
+                        <label for="jobDescription">JobDescription:</label>
+                        <textarea name="jobDescription" placeholder="list the job deccrptions and use double to seperate them" required></textarea>
+                    </div>
+                   
                 </div>
             </div>                                                
             <div class="mb-3">

@@ -120,8 +120,7 @@ const {
     uploadBlogImg, 
     getEditBlogPage,
     editBlogImage,
-    getAddBlog,
-    //monitor admin  
+    getAddBlog, 
     editStaffImage, 
 
     //weekly and monthly
@@ -130,7 +129,12 @@ const {
     updateLearnerOfTheWeek,
     updateTeacherOfTheMonth,
     getCreatePageOfTheWeek,
-    uploadSchoolImaging
+    uploadSchoolImaging,
+     carearMade,
+    getIconAndJob,
+    updateCarear,
+    patchCarear,
+    deleteCarear,
                                                                                    
 } = require("../controller/admin");
 
@@ -252,5 +256,10 @@ adminRoute.put('/update-teacher-of-the-month/:id', adminEnsureLoggedIn, updateTe
 adminRoute.get('/create-learner-of-the-week-page', adminEnsureLoggedIn, getCreatePageOfTheWeek);
 adminRoute.route('/upload-school-image/:id').post(adminEnsureLoggedIn, uploadSchoolLogo);
 adminRoute.route('/upload-banner/:id').post(adminEnsureLoggedIn, uploadSchoolImaging);
+adminRoute.route('/career-builder').post(adminEnsureLoggedIn, carearMade);
+adminRoute.route('/carear-page').get(adminEnsureLoggedIn, getIconAndJob);
+adminRoute.route('/edit-carear/:id').post(adminEnsureLoggedIn, updateCarear);
+adminRoute.route('/patch-carear/:id').patch(adminEnsureLoggedIn, patchCarear);
+adminRoute.route('/delete-patch').delete(adminEnsureLoggedIn, deleteCarear);
 
 module.exports = adminRoute;

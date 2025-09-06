@@ -37,6 +37,7 @@ const Sharp = require('sharp');
 const LearnerOfTheWeek = require('../models/learner_of_the_week');
 const sharp = require('sharp');
 const TeacherOfTheMonth = require('../models/teacher_of_the_month');
+const Carear = require('../models/carear');
 
 
 
@@ -2813,11 +2814,11 @@ const getAllLearner = async ( req , res ) => {
     var perPage = 9
     var page = req.params.page || 1
 
-     Learner
+    await Learner
         .find({ status : true, deletes: false, schoolId: req.user._id })
         .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
         .skip((perPage * page) - perPage)
-        .sort({roll_no : 1})
+        .sort({classes : 1})
         .limit(perPage)
         .exec(function(err,learner) {
             Learner.count({schoolId: req.user._id, status : true, deletes: false}).exec(function(err, count) {
@@ -4293,12 +4294,152 @@ const getCreatePageOfTheWeek = async (req, res) => {
   }
 };
 
+const carearMade = async (req , res) => {
+   
+      try {
+        const {jobName, jobDescription } = req.body
+    
+        const errors = []
+        if(!jobName || !jobDescription) {
+          errors.push({ msg: "Please fill in all fields." });
+        }
+        if(errors.length > 0) {
+          res.render('', {
+            errors: errors,
+            jobName: jobName,
+            jobDescription: jobDescription,
+            schoolId: req.user._id,
+            
+          });
+        } else {
+          const JobName =  {
+            jobName: jobName,
+            jobDescription: jobDescription.split('  ').map(jobDescription => jobDescription.trim()),
+          };
+    
+          Carear.create(JobName)
+                          .then((data) => {
+                            req.flash("success_msg", "Job Registered !");
+                             res.redirect('/admin/create-learner-of-the-week-page');
+                          }).catch((err) => {
+                            console.log(err)
+                          })
+        }
+      } catch (error) {
+        console.log(error);
+      }
+   
+  }
 
+
+  const getIconAndJob = async ( req , res) => {
+    try {
+      res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+    
+      const [jobs] = await Promise.all([
+        
+        Carear.find({ schoolId : req.user._id } ).sort({createdAt : -1 }).exec()
+      ]);
+
+      res.render('icons-and-job', { user: req.user, jobs });
+    
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    } 
+  }
+
+const deleteCarear =   async(req, res) => {
+    const id = req.params.id;
+      await CareerCreation.findByIdAndDelete(id)
+      .then((data) => {
+        if (!data) {
+          res
+            .status(404)
+            .send({ message: `Cannot Delete with id ${id}. May be id is wrong` });
+        } else {
+          res.send({
+            message: "Data was deleted successfully!",
+          });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: "Could not delete Data with id=" + id + "with err:" + err,
+        });
+      });
+     
+  };
+
+
+const updateCarear = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const { jobName, jobDescription } = req.body;
+      if (!jobName || !jobDescription) {
+        throw new Error("All fields are required");
+      }
+      const job = {
+        jobName,
+        jobDescription: jobDescription.split('  ').map(jobDescription => jobDescription.trim()),
+      };
+      const updatedJob = await Carear.findOneAndUpdate(
+        { _id: id },
+        { $set: job },
+        { new: true }
+      );
+      if (!updatedJob) {
+        return res.status(404).json({ error: "Job not found" });
+      }
+      req.flash("success_msg", "Job Updated Successfully!");
+      res.redirect('/admin/carear-page');
+    } catch (error) { 
+      console.error(error);
+      res.status(500).json({ error: error.message || "Server error" });
+    }
+  }
+
+const patchCarear = async (req, res) => {
+  const id = req.params.id;
+  const { status } = req.body;
+
+  console.log("Incoming request ID:", id);
+  console.log("Incoming status value:", status);
+
+  try {
+    const switchDoc = await Carear.findByIdAndUpdate(id, { status }, { new: true });
+    
+    if (!switchDoc) {
+      console.log("No document found with ID:", id);
+      return res.status(404).send('switch not found');
+    }
+
+    console.log("Document updated successfully:", switchDoc);
+    res.send(switchDoc);
+
+  } catch (err) {
+    console.error("Error during DB update:", err.message);
+    res.status(500).send(err.message);
+  }
+};
+
+
+
+        
 
 
 
 
 module.exports = {
+  //carear 
+  carearMade,
+    getIconAndJob,
+    updateCarear,
+    patchCarear,
+    deleteCarear,
   //event
     createEvent,
     editEventImage,
@@ -4421,6 +4562,7 @@ module.exports = {
     updateTeacherOfTheMonth,
     getCreatePageOfTheWeek,
     uploadSchoolImaging,
+    
 }
 
 

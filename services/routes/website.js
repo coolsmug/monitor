@@ -14,6 +14,8 @@ const {
       getAllEvents,
       // sendEmail
       sendEmail,
+      getCarear,
+     
       
 } = require('../controller/website')
 
@@ -33,6 +35,8 @@ module.exports = (req, res, next) => {
     router.get('/all-staffs', getAllStaff);
     router.get('/all-events', getAllEvents);
     router.post('/send-email', sendEmail);
+    router.get('/carear', getCarear);
+    
    
    
   

@@ -9,13 +9,18 @@ const careerSchema = new Schema ({
         required: true,
         trim: true
     },
+      schoolId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'School'
+      },
    
     jobDescription: [
          String
     ],
     status: {
         type: Boolean,
-        default: true,
+        default: false,
     },
     createdAt: {
         type: Date,
