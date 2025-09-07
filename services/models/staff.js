@@ -1,7 +1,12 @@
+const { unique } = require('agenda/dist/job/unique');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const staffSchema = new Schema({
+  admin_no: {
+    type: String,
+    trim: true
+  },
   roll: {
     type: String,
     required: true,

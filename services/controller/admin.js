@@ -828,7 +828,7 @@ const getHomePageLearenrReg = async ( req , res ) => {
     }
   
     let zeroCount = totalNumber;
-    let numerCode = `${zeroCount}${learner + 1}`;
+    let numerCode = `${zeroCount}${learner}`;
     // for (let i = 0; i < 2; i++) {
     //   numerCode += numer.charAt(Math.floor(Math.random() * numer.length));
     // }
@@ -1003,11 +1003,59 @@ const deleteProprietor = async ( req , res ) => {
 
 const createStaff = async ( req , res ) => {
   try {
-    const { roll, name, email, mobile_phone, address, password, password_2, about, subject, award } = req.body;
-    let errors = [];
-    console.log( `ROll: ${ roll } Name: ${ name }` )
+
+
+      const alpha = '1234567890';
+      let alphaCode = '';
+      
+      while (alphaCode.length < 2) {
+        const randomChar = alpha.charAt(Math.floor(Math.random() * alpha.length));
+        if (!alphaCode.includes(randomChar)) {
+          alphaCode += randomChar;
+        }
+      }
+      
+      console.log(alphaCode);
+      
+
+    const staff = await Staff.count( { schoolId : req.user._id } ).exec();
+    console.log(staff)
+    // const numer = "1234567890";
+    let totalNumber = '';
+    if(staff < 10 ) {
+      totalNumber = "00"
+    }else if ( staff > 9 && staff < 100){
+      totalNumber = "0"
+    }else {
+       totalNumber = ""
+    }
+  
    
-    if(!name ||!roll ||!email ||!mobile_phone ||!address || !password || !password_2 || !about || !subject || !award) {
+    let numerCode = `${totalNumber}${staff}`;
+    // for (let i = 0; i < 2; i++) {
+    //   numerCode += numer.charAt(Math.floor(Math.random() * numer.length));
+    // }
+  
+    var day = new Date();
+    var year = day.getFullYear().toString(); // Convert year to a string
+    var justTwo = year.split("");
+    var one = justTwo[2];
+    var two = justTwo[3];
+    const OneTwo = one + two;
+   
+    const schoolName = req.user.school_name
+    const userSchool = schoolName.split('');
+    const schoolAbb = userSchool[0] + userSchool[1] + userSchool[2];
+    const schoolAbbToUpper = schoolAbb.toUpperCase()
+  
+    const staffAdminNo = `${OneTwo}/${alphaCode}${schoolAbbToUpper}${numerCode}STF`;
+
+
+    const { admin_no, roll, name, email, mobile_phone, address, password, password_2, about, subject, award } = req.body;
+   
+   
+   
+    if(!admin_no || !name ||!roll ||!email ||!mobile_phone ||!address || !password || !password_2 || !about || !subject || !award) {
         errors.push( { msg : "Please fill in all fields"});
     }
     
@@ -1017,6 +1065,7 @@ const createStaff = async ( req , res ) => {
   if (password.length < 8) {
     errors.push({ msg: "password atleast 8 character" });
   }
+
 
     if(errors.length > 0) {
         res.render('student', {
@@ -1032,11 +1081,13 @@ const createStaff = async ( req , res ) => {
             subject: subject,
             award: award,
            user: req.user,
+           admin_no: staffAdminNo,
         })
     }  else {
     
                 const newStaff = new Staff({
                   roll: roll,
+                  admin_no : staffAdminNo,
                   name: name,
                   status: true,
                   email: email,
@@ -1085,6 +1136,52 @@ const getUpdateStaffUpdatePage = async ( req , res ) => {
       res.setHeader('Expires', '-1');
       res.setHeader('Pragma', 'no-cache');
 
+       const alpha = '1234567890';
+      let alphaCode = '';
+      
+      while (alphaCode.length < 2) {
+        const randomChar = alpha.charAt(Math.floor(Math.random() * alpha.length));
+        if (!alphaCode.includes(randomChar)) {
+          alphaCode += randomChar;
+        }
+      }
+      
+      console.log(alphaCode);
+      
+
+    const staffss = await Staff.count( { schoolId : req.user._id } ).exec();
+    console.log(staffss)
+    // const numer = "1234567890";
+    let totalNumber = '';
+    if(staffss < 10 ) {
+      totalNumber = "00"
+    }else if ( staffss > 9 && staffss < 100){
+      totalNumber = "0"
+    }else {
+       totalNumber = ""
+    }
+  
+   
+    let numerCode = `${totalNumber}${staffss}`;
+    // for (let i = 0; i < 2; i++) {
+    //   numerCode += numer.charAt(Math.floor(Math.random() * numer.length));
+    // }
+  
+    var day = new Date();
+    var year = day.getFullYear().toString(); // Convert year to a string
+    var justTwo = year.split("");
+    var one = justTwo[2];
+    var two = justTwo[3];
+    const OneTwo = one + two;
+   
+    const schoolName = req.user.school_name
+    const userSchool = schoolName.split('');
+    const schoolAbb = userSchool[0] + userSchool[1] + userSchool[2];
+    const schoolAbbToUpper = schoolAbb.toUpperCase()
+  
+    const staffAdminNo = `${OneTwo}/${alphaCode}${schoolAbbToUpper}${numerCode}STF`;
+
+
 
     if (req.query.id) {
       const id = req.query.id;
@@ -1093,11 +1190,11 @@ const getUpdateStaffUpdatePage = async ( req , res ) => {
           if (!staff) {
              res.status(404).send({ message: "Section not found" });
           } else {
-            res.render("staffs", { staff : staff, user: req.user, previousUrl: req.get("Referer") });
+            res.render("staffs", { staff : staff, user: req.user, previousUrl: req.get("Referer"), staffAdminNo });
           }
         })
         .catch((err) => {
-          res.render("error404", {title: "Error 500:. Error retrieving Session id" + ' ' + err})
+          res.render("error404", {title: "Error 500:. Error retrieving Staff id" + ' ' + err})
         });
     }
   } catch (err) {
@@ -1167,8 +1264,10 @@ const editStaffImage = (req, res) => {
 
 
 const updateStaff = async (req, res) => {
+
   try {
     const { id } = req.params;
+    
     const  {
        roll, 
       name,
@@ -1187,6 +1286,7 @@ const updateStaff = async (req, res) => {
       instagramm,
       facebook,
       linkedin,
+      admin_no,
     } = req.body;
 
     // Build staff object from req.body
@@ -1208,6 +1308,7 @@ const updateStaff = async (req, res) => {
       instagramm,
       facebook,
       linkedin,
+      admin_no
     };
 
     const updatedStaff = await Staff.findByIdAndUpdate(id, staff, {
@@ -4090,7 +4191,7 @@ const getAddBlog = async ( req , res) => {
 
 const createLearnerOfTheWeek = async (req, res) => {
   try {
-    const { name, skoolId, description, hobbies, achievements, likes, dislikes, futureGoals, quote, rollno } = req.body;
+    const { name, skoolId, description, hobbies, achievements, likes, dislikes, futureGoals, quote, rollno, slug } = req.body;
 
     const errors = [];
     if (!name || !skoolId || !description || !hobbies || !achievements || !likes || !dislikes || !futureGoals || !quote || !rollno) {
@@ -4112,19 +4213,20 @@ const createLearnerOfTheWeek = async (req, res) => {
         name,
         description,
         skoolId,
-        hobbies: hobbies.split('.').map(h => h.trim()).filter(Boolean),
-        achievements: achievements.split('.').map(a => a.trim()).filter(Boolean),
-        likes: likes.split('.').map(l => l.trim()).filter(Boolean),
-        dislikes: dislikes.split('.').map(d => d.trim()).filter(Boolean),
-        futureGoals: futureGoals.split('.').map(f => f.trim()).filter(Boolean),
+        hobbies: hobbies.split('  ').map(h => h.trim()).filter(Boolean),
+        achievements: achievements.split('  ').map(a => a.trim()).filter(Boolean),
+        likes: likes.split('  ').map(l => l.trim()).filter(Boolean),
+        dislikes: dislikes.split('  ').map(d => d.trim()).filter(Boolean),
+        futureGoals: futureGoals.split('  ').map(f => f.trim()).filter(Boolean),
         quote,
+        slug : slugify(`${name} ${description}`, { lower: true, strict: true }),
       };
 
       // Save new Learner of the Week
       await LearnerOfTheWeek.create(learnerData);
 
       req.flash("success_msg", "Learner of the Week Registered!");
-      res.redirect('/admin/learner-of-the-week');
+      res.redirect('/admin/create-learner-of-the-week-page');
     
   } catch (error) {
     console.error(error);
@@ -4135,7 +4237,7 @@ const createLearnerOfTheWeek = async (req, res) => {
 
 const createteacherOfTheMonth = async (req, res) => {
   try {
-    const { name, teacherId, description, skoolId, hobbies, achievements, likes, dislikes, subject, quote } = req.body;
+    const { name, teacherId, description, skoolId, hobbies, achievements, likes, dislikes, subject, quote, slug} = req.body;
 
     const errors = [];
     if (!name || !description || !skoolId || !hobbies || !achievements || !likes || !dislikes || !subject || !quote || !teacherId) {
@@ -4164,6 +4266,7 @@ const createteacherOfTheMonth = async (req, res) => {
       dislikes: dislikes.split('.').map(d => d.trim()),
       subject: subject.split(',').map(s => s.trim()),
       quote,
+      slug : slugify(`${name} ${description}`, { lower: true, strict: true }),
     };
 
     await TeacherOfTheMonth.create(teacherData);
@@ -4197,19 +4300,21 @@ const createteacherOfTheMonth = async (req, res) => {
         likes,
         dislikes,
         futureGoals,
-        quote
+        quote,
+        slug,
       });
     } else {
       const learnerData = {
         description,
         img,
         skoolId,
-        hobbies: hobbies.split('.').map(h => h.trim()),
-        achievements: achievements.split('.').map(a => a.trim()),
-        likes: likes.split('.').map(l => l.trim()),
-        dislikes: dislikes.split('.').map(d => d.trim()),
+        hobbies: hobbies.split('  ').map(h => h.trim()),
+        achievements: achievements.split('  ').map(a => a.trim()),
+        likes: likes.split('  ').map(l => l.trim()),
+        dislikes: dislikes.split('  ').map(d => d.trim()),
         futureGoals,
-        quote
+        quote,
+        slug : slugify(`${name} ${description}`, { lower: true, strict: true }),
       };
 
       await LearnerOfTheWeek.findByIdAndUpdate(learnerId, learnerData, { new: true });
@@ -4225,10 +4330,10 @@ const createteacherOfTheMonth = async (req, res) => {
 
 const updateTeacherOfTheMonth = async (req, res) => {
   try {
-    const { teacherId, name, description,  skoolId, hobbies, achievements, likes, dislikes, subject, quote } = req.body;
+    const { teacherId, name, description,  skoolId, hobbies, achievements, likes, dislikes, subject, quote, slug } = req.body;
     const errors = [];
 
-    if (!teacherId || !name || !description || !skoolId || !hobbies || !achievements || !likes || !dislikes || !subject || !quote) {
+    if (!teacherId || !name || !description || !skoolId || !hobbies || !achievements || !likes || !dislikes || !subject || !quote ) {
       errors.push({ msg: "Please fill in all fields." });
     }
 
@@ -4245,18 +4350,20 @@ const updateTeacherOfTheMonth = async (req, res) => {
         dislikes,
         subject,
         quote,
+        slug
       });
     } else {
       const teacherData = {
         name,
         description,
         skoolId,
-        hobbies: hobbies.split('.').map(h => h.trim()),
-        achievements: achievements.split('.').map(a => a.trim()),
-        likes: likes.split('.').map(l => l.trim()),
-        dislikes: dislikes.split('.').map(d => d.trim()),
+        hobbies: hobbies.split('  ').map(h => h.trim()),
+        achievements: achievements.split('  ').map(a => a.trim()),
+        likes: likes.split('  ').map(l => l.trim()),
+        dislikes: dislikes.split('  ').map(d => d.trim()),
         subject,
         quote,
+         slug : slugify(`${name} ${description}`, { lower: true, strict: true }),
       };
 
       TeacherOfTheMonth.findByIdAndUpdate(teacherId, teacherData, { new: true })
@@ -4287,8 +4394,9 @@ const getCreatePageOfTheWeek = async (req, res) => {
     res.setHeader('Pragma', 'no-cache');  
     const learners = await Learner.find({ schoolId: req.user._id, status : true, deletes : false}).select('first_name last_name middle_name roll_no').exec();
     const existing = await LearnerOfTheWeek.findOne({ skoolId: req.user._id }).exec();
-     const staffs = await Staff.find({ schoolId: req.user._id, status : true}).select('name roll').exec();
-    res.render('week-and-month', { user: req.user, learners, existing, staffs });
+    const existings = await TeacherOfTheMonth.findOne({ skoolId: req.user._id }).exec();
+     const staffs = await Staff.find({ schoolId: req.user._id, status : true}).select('name admin_no').exec();
+    res.render('week-and-month', { user: req.user, learners, existing, existings, staffs });
    
   } catch (error) {
     console.error(error);

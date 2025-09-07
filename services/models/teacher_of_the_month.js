@@ -16,6 +16,9 @@ const teacherOfTheMonthSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    slug: {
+      type: String
+    },
     skoolId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "School",

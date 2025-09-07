@@ -22,6 +22,9 @@ const learnerOfTheWeekSchema = new mongoose.Schema(
       ref: "School",
       required: true,
     },
+    slug: {
+      type: String
+    },
     hobbies: [String],
     achievements: [String],
     likes: [String],

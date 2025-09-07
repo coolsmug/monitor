@@ -1,0 +1,226 @@
+<%- include ("../website/include/header.ejs") %> 
+
+   <!--====== PAGE BANNER PART START ======-->
+
+    <section id="page-banner" class="pt-105 pb-130 bg_cover" data-overlay="8" style="background-image: url('<%=teacher.img.url%>')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-banner-cont">
+                        <h2><%= teachers.description %></h2>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><%= teachers.teacherId %>/<%= teachers.slug %></li>
+                            </ol>
+                        </nav>
+                    </div> <!-- page banner cont -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+
+    <!--====== PAGE BANNER PART ENDS ======-->
+
+    <!--====== TEACHERS PART START ======-->
+    
+    <section id="teachers-singel" class="pt-70 pb-120 gray-bg">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-8">
+                    <div class="teachers-left mt-50">
+                        <div class="hero">
+                            <img src="<%= teacher && teacher.img.url ? teacher.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="Teachers">
+                        </div>
+                        <div class="name">
+                            <h6><%= teachers.name %></h6>
+                            <span><%= teacher.position %></span>
+                        </div>
+                        <div class="social">
+                            <ul>
+                                <li><a href="<%= teacher.facebook %>"><i class="fa fa-facebook-square"></i></a></li>
+                                <li><a href="<%= teacher.x %>"><i class="fa fa-twitter-square"></i></a></li>
+                                <li><a href="mailto:<%= teacher.email %>"><i class="fa fa-google-plus-square"></i></a></li>
+                                <li><a href="<%= teacher.linkedin %>"><i class="fa fa-linkedin-square"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="description">
+                          <p><%= teachers.description %></p>
+                        </div>
+                    </div> <!-- teachers left -->
+                </div>
+                <div class="col-lg-8">
+                    <div class="teachers-right mt-50">
+                        <ul class="nav nav-justified" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="active" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="courses-tab" data-toggle="tab" href="#courses" role="tab" aria-controls="courses" aria-selected="false">Courses/Subjects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews</a>
+                            </li>
+                        </ul> <!-- nav -->
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                <div class="dashboard-cont">
+                                    <div class="singel-dashboard pt-40">
+                                        <h5>About</h5>
+                                        <p><%= teacher.about %></p>
+                                    </div> <!-- singel dashboard -->
+                                    <div class="singel-dashboard pt-40">
+                                        <h5>Achievements</h5>
+                                          <% if(teachers.achievements)  {%>
+                                <% teachers.achievements.forEach(t => { %>
+                           <p><%= t %></p> 
+                            <% }) %>
+                            <% } %>
+                                    </div> <!-- singel dashboard -->
+                                    <div class="singel-dashboard pt-40">
+                                        <h5>My Quote</h5>
+                                        <p><%= teachers.quote %></p>
+                                    </div> <!-- singel dashboard -->
+                                </div> <!-- dashboard cont -->
+                            </div>
+                            <div class="tab-pane fade" id="courses" role="tabpanel" aria-labelledby="courses-tab">
+                                <div class="courses-cont pt-20">
+                                    <div class="row">
+                                        <% if ( teachers.subject) {%>
+                                            <% teachers.subject.forEach(s => {%>
+                                        <div class="col-md-6">
+                                            <div class="singel-course mt-30">
+                                                <div class="thum">
+                                                    <div class="image">
+                                                        <img src="<%= img.url ? img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="Course">
+                                                    </div>
+                                                    <div class="price">
+                                                        <span><%= teachers._teacherId %></span>
+                                                    </div>
+                                                </div>
+                                                <div class="cont border">
+                                                    <ul>
+                                                        <li><i class="fa fa-star"></i></li>
+                                                        <li><i class="fa fa-star"></i></li>
+                                                        <li><i class="fa fa-star"></i></li>
+                                                        <li><i class="fa fa-star"></i></li>
+                                                        <li><i class="fa fa-star"></i></li>
+                                                    </ul>
+                                                    <span>(20 Reviws)</span>
+                                                    <a href="#"><h4>I teaches <%= s %></h4></a>
+                                                    <div class="course-teacher">
+                                                        <div class="thum">
+                                                            <a href="#"><img src="<%= teacher && teacher.img.url ? teacher.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="teacher"></a>
+                                                        </div>
+                                                        <div class="name">
+                                                            <a href="#"><h6><%= teacher.name %></h6></a>
+                                                        </div>
+                                                        <div class="admin">
+                                                            <ul>
+                                                                <li><a href="#"><i class="fa fa-user"></i><span>31</span></a></li>
+                                                                <li><a href="#"><i class="fa fa-heart"></i><span>10</span></a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- singel course -->
+                                            <% }) %>
+                                            <% } %>
+                                        </div>
+                                        
+                                    </div> <!-- row -->
+                                </div> <!-- courses cont -->
+                            </div>
+                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                <div class="reviews-cont">
+                                    <div class="title">
+                                        <h6>Reviews</h6>
+                                    </div>
+                                    <ul>
+                                       <li>
+                                           <div class="singel-reviews">
+                                                <div class="reviews-author">
+                                                    
+                                                    <div class="author-name">
+                                                        <h6><%= teachers.name %> Likes</h6>
+                                                       
+                                                    </div>
+                                                </div>
+                                                <div class="reviews-description pt-20">
+                                                    
+                                                    <div class="rating">
+                                                        
+                                                         <ul>
+                                                            <% if(teachers)  {%>
+                                                                <% teachers.likes.forEach( l => {%>
+                                                           <li>❤<%= l %></li>
+                                                           <%  })  %>
+                                                           <%} %>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- singel reviews -->
+                                       </li>
+                                       <li>
+                                           <div class="singel-reviews">
+                                                <div class="reviews-author">
+                                                   
+                                                    <div class="author-name">
+                                                        <h6><%= teachers.name %> Hobbies</h6>
+                                                       
+                                                    </div>
+                                                </div>
+                                                <div class="reviews-description pt-20">
+                                                  
+                                                    <div class="rating">
+                                                          <ul>
+                                                            <% if(teachers)  {%>
+                                                                <% teachers.hobbies.forEach( l => {%>
+                                                           <li>❤<%= l %></li>
+                                                           <%  })  %>
+                                                           <%} %>
+                                                        </ul>
+                                                      
+                                                    </div>
+                                                </div>
+                                            </div> <!-- singel reviews -->
+                                       </li>
+                                       <li>
+                                           <div class="singel-reviews">
+                                                <div class="reviews-author">
+                                                   
+                                                    <div class="author-name">
+                                                          <h6><%= teachers.name %> Dislikes</h6>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="reviews-description pt-20">
+                                                   
+                                                    <div class="rating">
+                                                       <ul>
+                                                            <% if(teachers)  {%>
+                                                                <% teachers.dislikes.forEach( l => {%>
+                                                           <li>❤<%= l %></li>
+                                                           <%  })  %>
+                                                           <%} %>
+                                                        </ul>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div> <!-- singel reviews -->
+                                       </li>
+                                    </ul>
+                                    
+                                </div> <!-- reviews cont -->
+                            </div>
+                        </div> <!-- tab content -->
+                    </div> <!-- teachers right -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+
+    <!--====== EVENTS PART ENDS ======-->
+
+
+<%- include ("../website/include/footer.ejs") %> 

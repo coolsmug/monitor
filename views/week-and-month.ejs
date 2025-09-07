@@ -20,8 +20,14 @@
                         <select name="name" id="" required>
                             <option value="">-- Select Learner --</option>
                             <% learners.forEach(learner => { %>
-                                <option value="<%= learner.first_name + ' ' + learner.middle_name + ' ' + learner.last_name %>">
-                                    <%= learner.first_name + ' ' + learner.middle_name + ' ' + learner.last_name %> (Roll No: <%= learner.roll_no %>)
+                                <% let learn = '' %>
+                                <% if(learner.middle_name) {%>
+                                    <% learn = learner.middle_name %>
+                                    <% } else {%>
+                                        <% learn = '' %>
+                                        <% } %>
+                                <option value="<%= learner.first_name + ' ' + learn + ' ' + learner.last_name %>">
+                                    <%= learner.first_name + ' ' + learn + ' ' + learner.last_name %> (Roll No: <%= learner.roll_no %>)
                                 </option>
                             <% }) %>
                             </select>
@@ -46,33 +52,34 @@
                     <div class="hop">
                         <label for="description">Description:</label>
                         <select name="description" id="">
+                            <option value="<%= existing.description %>"><%= existing.description %></option>
                             <option value="Learner of the Week">Learner of the Week</option>
                             <option value="Learner of the Month">Learner of the Month</option>
                         </select>
                        
                      <div class="hop">
-                        <label for="hobbies">Hobbies:</label>
-                        <textarea name="hobbies" placeholder="hobbies like reading, swimming etc" required></textarea>
+                        <label for="hobbies">Hobbies:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="hobbies" placeholder="hobbies like reading, swimming etc" required><%= existing.hobbies %></textarea>
                     </div>
                      <div class="hop">
-                        <label for="achievements">Reasons:</label>
-                        <textarea name="achievements" placeholder="Why learner of the week?" required></textarea>
+                        <label for="achievements">Reasons:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="achievements" placeholder="Why learner of the week?" required><%= existing.achievements %></textarea>
                     </div>
                      <div class="hop">
-                        <label for="likes">Likes:</label>
-                        <textarea name="likes" placeholder="what learner likes" required></textarea>
+                        <label for="likes">Likes:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="likes" placeholder="what learner likes" required><%= existing.likes %></textarea>
                     </div>
                     <div class="hop">
-                        <label for="dislikes">Disikes:</label>
-                        <textarea name="dislikes" placeholder="what learner dislikes" required></textarea>
+                        <label for="dislikes">Disikes:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="dislikes" placeholder="what learner dislikes" required><%= existing.dislikes %></textarea>
                     </div>
                     <div class="hop">
-                        <label for="futureGoals">Future Goals:</label>
-                        <textarea name="futureGoals" placeholder="what learner ambitions and future goals" required></textarea>
+                        <label for="futureGoals">Future Goals:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="futureGoals" placeholder="what learner ambitions and future goals" required><%= existing.futureGoals %></textarea>
                     </div>
                      <div class="hop">
-                        <label for="quote">Quote:</label>
-                       <textarea name="quote" placeholder="Inspiring quote by the staff" rows="" cols=""></textarea>
+                        <label for="quote">Quote:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                       <textarea name="quote" placeholder="Inspiring quote by the staff" rows="" cols=""><%= existing.quote %></textarea>
                 </div>
             </div>                                                
             <div class="mb-3">
@@ -114,8 +121,8 @@
                         <select name="teacherId" id="" required>
                             <option value="">-- Select Admin No --</option>
                             <% staffs.forEach(staff => { %>
-                                <option value="<%= staff.roll %>">
-                                    <%= staff.roll %> 
+                                <option value="<%= staff.admin_no %>">
+                                    <%= staff.admin_no %> 
                                 </option>
                             <% }) %>
                         </select>
@@ -128,33 +135,34 @@
                     <div class="hop">
                         <label for="description">Description:</label>
                         <select name="description" id="">
+                            <option value="<%=existings.description %>"><%=existings.description %></option>
                             <option value="staff of the Week">Staff of the Week</option>
                             <option value="staff of the Month">Staff of the Month</option>
                         </select>
                        
                      <div class="hop">
-                        <label for="hobbies">Hobbies:</label>
-                        <textarea name="hobbies" placeholder="hobbies like reading, swimming etc" required></textarea>
+                        <label for="hobbies">Hobbies:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5> </label>
+                        <textarea name="hobbies" placeholder="hobbies like reading, swimming etc" required><%= existings.hobbies %></textarea>
                     </div>
                      <div class="hop">
-                        <label for="achievements">Reasons:</label>
-                        <textarea name="achievements" placeholder="Why staff of the week?" required></textarea>
+                        <label for="achievements">Reasons:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5> </label>
+                        <textarea name="achievements" placeholder="Why staff of the week?" required><%= existings.achievements %></textarea>
                     </div>
                      <div class="hop">
-                        <label for="likes">Likes:</label>
-                        <textarea name="likes" placeholder="what staff likes" required></textarea>
+                        <label for="likes">Likes:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="likes" placeholder="what staff likes" required><%= existings.likes %></textarea>
                     </div>
                     <div class="hop">
-                        <label for="dislikes">Disikes:</label>
-                        <textarea name="dislikes" placeholder="what staff dislikes" required></textarea>
+                        <label for="dislikes">Disikes:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="dislikes" placeholder="what staff dislikes" required><%= existings.dislikes %></textarea>
                     </div>
                     <div class="hop">
-                        <label for="subject">Subject:</label>
-                        <textarea name="subject" placeholder="what staff ambitions and Subject" required></textarea>
+                        <label for="subject">Subject:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                        <textarea name="subject" placeholder="what staff ambitions and Subject" required><%= existings.subject %></textarea>
                     </div>
                      <div class="hop">
-                        <label for="quote">Quote:</label>
-                       <textarea name="quote" placeholder="Inspiring quote by the staff" rows="" cols=""></textarea>
+                        <label for="quote">Quote:<h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
+                       <textarea name="quote" placeholder="Inspiring quote by the staff" rows="" cols=""><%= existings.quote %></textarea>
                 </div>
             </div>                                                
             <div class="mb-3">

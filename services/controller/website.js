@@ -660,6 +660,75 @@ const getCarear = async (req, res) => {
 }
 
 
+const getTeacherOfTheMonthPage = async ( req , res ) => {
+  try {
+
+      const school = req.school;
+    if (!school) {
+      return res.status(404).json({ error: "School not found" });
+    }
+
+
+    const { teacherId, slug } = req.params;
+
+    const teachers = await TeacherOfTheMonth.findOne( { skoolId : school._id, slug : slug, teacherId : teacherId} ).exec();
+
+    const teacher = teachers ? await Teacher.findOne({ admin_no: teachers.teacherId }) : [];
+
+    
+   const {
+      school_name, school_motto, website, country, state, city, address, address2,
+      phone_no, phone_no2, email, img, about, mission, vision,
+      opening_hour, closing_hour, opening_day, closing_day
+    } = school;
+
+     res.render('website/teacher-of-the-week', {
+      school_name, school_motto, website, country, state, city, address, address2,
+      phone_no, phone_no2, email, img, about, mission, vision,
+      opening_hour, closing_hour, opening_day, closing_day, teachers, teacher
+    })
+  } catch (error) {
+     console.error("Error:", error);
+    return res.status(500).json({ error: "Oops! Internal Server Error" });
+  }
+};
+
+const getlearnerOfTheMonthPage = async ( req , res ) => {
+  try {
+
+      const school = req.school;
+    if (!school) {
+      return res.status(404).json({ error: "School not found" });
+    }
+
+     const { rollno, slug } = req.params;
+    const teachers = await LearnerOfTheWeek.findOne( { skoolId : school._id, slug: slug, rollno : rollno } ).exec();
+    console.log(teachers.rollno)
+    const teacher = teachers
+      ? await Learner.findOne({ roll_no : teachers.rollno })
+      : [];
+
+     
+
+   const {
+      school_name, school_motto, website, country, state, city, address, address2,
+      phone_no, phone_no2, email, img, about, mission, vision,
+      opening_hour, closing_hour, opening_day, closing_day
+    } = school;
+
+
+     res.render('website/learner-of-the-week', {
+      school_name, school_motto, website, country, state, city, address, address2,
+      phone_no, phone_no2, email, img, about, mission, vision,
+      opening_hour, closing_hour, opening_day, closing_day, teachers, teacher
+    })
+  } catch (error) {
+     console.error("Error sending email:", error);
+    return res.status(500).json({ error: "Failed to send email" });
+  }
+}
+
+
 
 
 module.exports = {
@@ -678,4 +747,6 @@ module.exports = {
     getAllEvents,
     sendEmail,
     getCarear,
+    getTeacherOfTheMonthPage,
+    getlearnerOfTheMonthPage
 }

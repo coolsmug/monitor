@@ -21,7 +21,21 @@
                         name="roll" 
                         value="<%= staff.roll %>" />
                     </div>
-                   
+                </div>
+                <div class="mb-3">
+                    <% let staffNo = '' %>
+                  <% if(staff.admin_no) {%>
+                    <% staffNo = staff.admin_no %>
+                    <% }else { %>
+                        <% staffNo = staffAdminNo %>
+                        <% } %>
+                    <div class="hop">
+                        <label for="admin_no">Staff Admin No:</label>
+                        <input 
+                        type="name" 
+                        name="admin_no" 
+                        value="<%= staffNo %>" />
+                    </div>
                   
                 </div>
                 <div class="mb-3">

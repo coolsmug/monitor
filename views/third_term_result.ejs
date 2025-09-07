@@ -326,22 +326,22 @@
                         <table>
                
                     
-                            <% if(position && position.position) { %> 
+                           <% if(position && position.position) { %> 
                     <%
                     var pos = position.position;
                   
                     // Ensure pos is a string
                     if (typeof pos !== 'string') {
-                      pos = pos.toString(); // Convert to string if necessary
+                      pos = pos.toString(); 
                     }
                   
-                    var posi = pos.split('');
-                    var lastDigit = posi[posi.length - 1]; 
-                    var secondLastDigit = posi[posi.length - 2]; 
+                    
+                    var lastDigit = pos[pos.length - 1]; 
+                    var secondLastDigit = pos.length > 1 ? pos[pos.length -2] : null; 
                   
                   
                     var rate;
-                    if (secondLastDigit === '1' || (lastDigit === '1' && (secondLastDigit !== '1' && secondLastDigit !== '2' && secondLastDigit !== '3'))) {
+                    if (secondLastDigit === '1') {
                       // For numbers ending in '11', '12', or '13', or when the last digit is '1' but not '11', '12', or '13', always use 'th'
                       rate = 'th';
                     } else {

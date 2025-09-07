@@ -15,6 +15,8 @@ const {
       // sendEmail
       sendEmail,
       getCarear,
+      getTeacherOfTheMonthPage,
+      getlearnerOfTheMonthPage
      
       
 } = require('../controller/website')
@@ -36,6 +38,8 @@ module.exports = (req, res, next) => {
     router.get('/all-events', getAllEvents);
     router.post('/send-email', sendEmail);
     router.get('/carear', getCarear);
+    router.get('/icon/:rollno/:slug', getlearnerOfTheMonthPage);
+    router.get('/icons/:teacherId/:slug', getTeacherOfTheMonthPage)
     
    
    

@@ -219,22 +219,22 @@
                         
                         <div class="apply-cont apply-color-1">
                             <div class="image" style="background: whitesmoke; width: 115px; height: 115px; border-radius: 7px; display: flex;justify-content: center;align-items: center;">
-                                <img style="width: 100px; height:100px; border-radius: 5px; border-bottom: 50px;" src="<%= learnerReal.img.url ? learnerReal.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg" %>" alt="Teachers">
+                                <img style="width: 100px; height:100px; border-radius: 5px; border-bottom: 50px;" src="<%= learnerReal && learnerReal.img.url ? learnerReal.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg" %>" alt="Teachers">
                             </div>
                             <h3><%= learner.description %></h3>
-                            <a href="teachers-singel.html" style="color: aliceblue;"><%= learner.name %></a><br/><br/>
-                            <a href="#" class="main-btn">View Learners' Details</a>
+                            <a href="/icon/<%= encodeURIComponent(learner.rollno) %>/<%= learner.slug %>" style="color: aliceblue;"><%= learner.name %></a><br/><br/>
+                            <a href="/icon/<%= encodeURIComponent(learner.rollno) %>/<%= learner.slug %>" class="main-btn">View Learners' Details</a>
                             
                         </div> <!-- apply cont -->
                     </div>
                     <div class="col-lg-6">
                         <div class="apply-cont apply-color-2">
                             <div class="image" style="background: whitesmoke; width: 115px; height: 115px; border-radius: 7px; display: flex; justify-content: center; align-items: center;">
-                                <img style="width: 100px; height: 100px; border-radius: 5px;" src="<%= teacherReal.img.url ? teacherReal.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg"  %>" alt="Teachers">
+                                <img style="width: 100px; height: 100px; border-radius: 5px;" src="<%= teacherReal && teacherReal.img.url ? teacherReal.img.url : "https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg"  %>" alt="Teachers">
                             </div>
                             <h3><%= teacher.description %> </h3>
-                              <a href="teachers-singel.html" style="color: aliceblue;"><%= teacher.name %></a><br/><br/>
-                            <a href="#" class="main-btn">View Staff' Details</a>
+                              <a href="/icons/<%= encodeURIComponent(teacher.teacherId) %>/<%= teacher.slug %>" style="color: aliceblue;"><%= teacher.name %></a><br/><br/>
+                            <a href="/icons/<%= encodeURIComponent(teacher.teacherId) %>/<%= teacher.slug %>" class="main-btn">View Staff' Details</a>
                         </div> <!-- apply cont -->
                     </div> 
                 </div>
