@@ -10,6 +10,42 @@
     
     <!--====== Title ======-->
     <title><%= school_name %></title>
+
+    <% if (typeof blog !== 'undefined' && blog && blog.img && blog.img.url) { %>
+  <!-- Open Graph meta tags ... -->
+  <meta property="og:title" content="<%= blog.headline %>" />
+  <meta property="og:description" content="<%= blog.category %>" />
+  <meta property="og:url" content="<%= typeof currentUrl !== 'undefined' ? currentUrl : '' %>" id="og-url" />
+
+
+  <!-- Include images for sharing -->
+  <meta property="og:image" content="<%= blog.img.url %>" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card meta tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<%= blog.headline %>" />
+  <meta name="twitter:description" content="<%= blog.category %>" />
+  <meta name="twitter:image" content="<%= blog.img.url %>" />
+<% } else { %>
+  <!-- Default meta tags -->
+  <meta property="og:title" content="Default Title" />
+  <meta property="og:description" content="Default Description" />
+  <meta property="og:url" content="<%= typeof currentUrl !== 'undefined' ? currentUrl : '' %>" id="og-url" />
+
+
+  <!-- Include a default image for sharing -->
+  <meta property="og:image" content="default-image-url.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card meta tags with default values -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Default Title" />
+  <meta name="twitter:description" content="Default Description" />
+  <meta name="twitter:image" content="default-image-url.jpg" />
+<% } %>
     
     <!--====== Favicon Icon ======-->
     <link rel="shortcut icon" href="<%= img.url %>" type="image/png">

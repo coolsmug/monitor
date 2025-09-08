@@ -58,7 +58,7 @@
 
   <!-- Facebook -->
   <li>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
+    <a onclick="shareOnFacebook()" href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
        target="_blank">
       <i class="fa fa-facebook-f"></i>
     </a>
@@ -66,7 +66,7 @@
 
   <!-- Twitter (X) -->
   <li>
-    <a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(blog.headline) %>&url=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
+    <a onclick="shareOnTwitter()" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(blog.headline) %>&url=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
    target="_blank">
    <i class="fa fa-twitter"></i>
     </a>
@@ -74,7 +74,7 @@
   </li>
 
   <!-- WhatsApp -->
-  <li>
+  <li >
     <a href="https://wa.me/?text=<%= encodeURIComponent(blog.headline + ' ' + `https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
    target="_blank">
    <i class="fa fa-whatsapp"></i>
@@ -84,7 +84,7 @@
 
   <!-- LinkedIn -->
   <li>
-    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
+    <a onclick="shareOnLinkedIn()" href="https://www.linkedin.com/sharing/share-offsite/?url=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
        target="_blank">
       <i class="fa fa-linkedin"></i>
     </a>
@@ -92,11 +92,14 @@
 
   <!-- Instagram (Note: Instagram doesn’t support direct web share links) -->
   <li>
-    <a href="https://www.instagram.com/" target="_blank">
+    <a onclick="shareOnInstagram()" href="https://www.instagram.com/" target="_blank">
       <i class="fa fa-instagram"></i>
     </a>
   </li>
 </ul>
+
+  <button onclick="shareContent()" class="button"> <i class="fas fa-share-alt"></i> share </button>
+        <div id="blogData" data-category="<%= blog.category %>" data-topic="<%= blog.topic %>"></div>
 
                            
                            
@@ -189,6 +192,16 @@
         color: #333;
     }
 
+    .button{
+        outline: none;
+        border: none;
+        border-radius: 10px;
+        background: #007bff;
+        color: white;
+        margin: 20px;
+        padding: 10px;
+    }
+
     .pagination span.active {
         background: #007bff;
         color: #fff;
@@ -200,3 +213,56 @@
     }
 </style>
 
+<script>
+      async function shareContent() {
+  const blogDataElement = document.getElementById('blogData');
+  const category = blogDataElement.getAttribute('data-category');
+  const topic = blogDataElement.getAttribute('data-topic');
+
+  const content = {
+    title: category,
+    text: topic,
+    url: window.location.href,
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(content);
+    } else {
+      alert('Web Share API not supported on this browser.');
+    }
+  } catch (error) {
+    console.error('Error sharing content:', error);
+  }
+}
+
+
+
+
+function shareOnTwitter() {
+      const newsTitle = '<%=blog.topic%>';
+      const newsUrl = window.location.href;
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(newsTitle)}&url=${encodeURIComponent(newsUrl)}`;
+      window.open(twitterUrl, '_blank');
+    }
+
+    function shareOnFacebook() {
+      const newsTitle = '<%=blog.topic%>';
+      const newsUrl = window.location.href;
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newsUrl)}`;
+      window.open(facebookUrl, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const newsTitle = '<%=blog.topic%>';
+      const newsUrl = window.location.href;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(newsUrl)}`;
+    window.open(linkedInUrl, '_blank');
+  }
+
+
+  function shareOnInstagram() {
+    // Provide instructions to users to share content manually on Instagram.
+    alert('To share on Instagram, open the Instagram app and upload your content. or USE SECOND SHARE BUTTON');
+  }
+</script>
