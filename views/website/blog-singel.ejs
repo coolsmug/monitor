@@ -3,7 +3,7 @@
     <!--====== PAGE BANNER PART START ======-->
     
     
-    <section id="page-banner" class="pt-105 pb-130 bg_cover" data-overlay="8" style="background-image: url('<%= blog.img ? blog.img.url : "images/page-banner-1.jpg" %>')">
+    <section id="page-banner" class="pt-105 pb-130 bg_cover" data-overlay="8" style="background-image: url('<%= blog.img.url %>')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -53,14 +53,51 @@
                             <% }) %>
                             <% } %>
 
-                           <ul class="share">
-                               <li class="title">Share :</li>
-                               <li><a href="#"><i class="fa fa-facebook-f"></i></a></li>
-                               <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                               <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                               <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                               <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                           </ul>
+                          <ul class="share">
+  <li class="title">Share :</li>
+
+  <!-- Facebook -->
+  <li>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
+       target="_blank">
+      <i class="fa fa-facebook-f"></i>
+    </a>
+  </li>
+
+  <!-- Twitter (X) -->
+  <li>
+    <a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(blog.headline) %>&url=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
+   target="_blank">
+   <i class="fa fa-twitter"></i>
+    </a>
+
+  </li>
+
+  <!-- WhatsApp -->
+  <li>
+    <a href="https://wa.me/?text=<%= encodeURIComponent(blog.title + ' ' + `https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
+   target="_blank">
+   <i class="fa fa-whatsapp"></i>
+</a>
+
+  </li>
+
+  <!-- LinkedIn -->
+  <li>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%= encodeURIComponent(`https://${subdomain}.monitrex.work/single-blog/${blog._id}/${blog.slug}`) %>" 
+       target="_blank">
+      <i class="fa fa-linkedin"></i>
+    </a>
+  </li>
+
+  <!-- Instagram (Note: Instagram doesn’t support direct web share links) -->
+  <li>
+    <a href="https://www.instagram.com/" target="_blank">
+      <i class="fa fa-instagram"></i>
+    </a>
+  </li>
+</ul>
+
                            
                            
                       </div> <!-- cont -->

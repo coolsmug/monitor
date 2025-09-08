@@ -329,7 +329,7 @@ const getSingleBlog = async (req, res) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
+      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,subdomain
     } = school;
     
     const { slug, id } = req.params
@@ -345,7 +345,7 @@ const getSingleBlog = async (req, res) => {
      await res.render("website/blog-singel", {
       school_name,school_motto,website,country,state,
       city,address,address2,phone_no,phone_no2,email,img,about,mission,
-      vision,opening_hour,closing_hour,opening_day,closing_day,blog,blogs,blogFew,
+      vision,opening_hour,closing_hour,opening_day,closing_day,blog,blogs,blogFew,subdomain
      } )
     
   } catch (error) {
