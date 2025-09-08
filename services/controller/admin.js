@@ -4118,7 +4118,7 @@ const editBlog = async (req, res) => {
       excerpt: content.length > 300 ? content.substring(0, 297) + '...' : content,
       tags: typeof tags === 'string' && tags.trim() ? tags.split(',').map(tag => tag.trim()) : [],
       metaDescription: metaDescription || content.substring(0, 160),
-      isFeatured: isFeatured === 'true',
+      isFeatured: isFeatured === true || isFeatured === 'true',
       status,
     };
 
