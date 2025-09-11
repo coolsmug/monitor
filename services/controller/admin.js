@@ -4422,8 +4422,9 @@ const getCreatePageOfTheWeek = async (req, res) => {
     res.setHeader('Expires', '-1');
     res.setHeader('Pragma', 'no-cache');  
     const learners = await Learner.find({ schoolId: req.user._id, status : true, deletes : false}).select('first_name last_name middle_name roll_no').exec();
-    const existing = await LearnerOfTheWeek.findOne({ skoolId: req.user._id }).exec();
-    const existings = await TeacherOfTheMonth.findOne({ skoolId: req.user._id }).exec();
+    const existing = await LearnerOfTheWeek.findOne({ skoolId: req.user._id }).exec() || {};
+const existings = await TeacherOfTheMonth.findOne({ skoolId: req.user._id }).exec() || {};
+
      const staffs = await Staff.find({ schoolId: req.user._id, status : true}).select('name admin_no').exec();
     res.render('week-and-month', { user: req.user, learners, existing, existings, staffs });
    
@@ -4454,6 +4455,7 @@ const carearMade = async (req , res) => {
           const JobName =  {
             jobName: jobName,
             jobDescription: jobDescription.split('  ').map(jobDescription => jobDescription.trim()),
+            schoolId: req.user._id,
           };
     
           Carear.create(JobName)
@@ -4664,7 +4666,7 @@ const bulkUpload = async (req, res) => {
         const learnerRollNo = `${year}/${alphaCode}${schoolAbb}${numerCode}`;
         const learnerEmail = `${year}.${alphaCode}${schoolAbb}${numerCode}@school.com`;
 
-        const password = row.password || learnerRollNo || "123456";
+        const password = row.password ? String(row.password).trim() : "123456789";
         const hashedPassword = await bcrypt.hash(password, 10);
 
         return {

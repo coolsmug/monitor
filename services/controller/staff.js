@@ -675,7 +675,7 @@ const registerPosition = async ( req , res ) => {
 
     }
   } catch (err) {
-    console.error(error);
+  
     req.flash("error_msg", "An error occurred");
     res.redirect("/staff/error"); 
   }
@@ -710,6 +710,25 @@ const updatePosition = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error", message: err.message });
   }
 };
+
+
+const deletePosition = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const position = await Position.findByIdAndDelete(id);
+
+    if (!position) {
+      return res.status(404).json({ error: "Position not found" });
+    }
+
+    res.status(200).json({ message: "Position deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Internal Server Error", message: err.message });
+  }
+};
+
+
 
 const updateLearnerPosition = async (req, res) => {
   try {
@@ -1008,5 +1027,6 @@ module.exports = {
     registerPosition,
     updatePosition,
     updateLearnerPosition,
+    deletePosition,
 };
   

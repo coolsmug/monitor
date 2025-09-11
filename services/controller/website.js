@@ -69,6 +69,7 @@ const getSchoolHomePage = async (req, res) => {
         opening_day,
         closing_day,
         career,
+        core_value,
        
       } = school;
 
@@ -97,6 +98,7 @@ const getSchoolHomePage = async (req, res) => {
         opening_day,
         closing_day,
         career,
+        core_value,
         event,
         blog,
         allschool,
@@ -130,7 +132,7 @@ const getAbout = async (req, res) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,image,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
+      phone_no2,email,img,image,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day, core_value,
     } = school;
 
   
@@ -150,7 +152,7 @@ const getAbout = async (req, res) => {
       title: school_name,school_name,school_motto,website,country,state,
       city,address,address2,phone_no,phone_no2,email,img,image,about,mission,
       vision,opening_hour,closing_hour,opening_day,closing_day,totalSubject,
-      totalLearner,totalTeacher,totalPastLearner,event, blog, aschool, staffs,
+      totalLearner,totalTeacher,totalPastLearner,event, blog, aschool, staffs,core_value,
      } )
 
   } catch(error) {

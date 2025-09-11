@@ -364,6 +364,9 @@ input[type="checkbox"] {
                       <p style="font-size: 12px;">Save to set position</p>
                       <input style="cursor: pointer; color: var(--lighter-blue); background-color: var(--deep-blue);" type="submit" value="Save">
                     </td>
+                    <td>
+                      <button type="button" class="btn-delete" data-id="<%= position._id %>">Delete</button>
+                    </td>
                   </tr>
                 </form>
                 <% } %>
@@ -661,6 +664,50 @@ $("#setPosition").submit(function(eventss) {
       }
     });
   }
+
+
+  $(document).ready(function () {
+  // Handle update (normal submit)
+  $("#setPosition").submit(function (e) {
+    e.preventDefault();
+
+    let id = $(this).find("input[name='id']").val();
+    let total_score = $(this).find("input[name='total_score']").val();
+
+    $.ajax({
+      url: `/staff/update-position/${id}`,
+      method: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({ total_score }),
+      success: function (res) {
+        alert(res.message);
+        location.reload();
+      },
+      error: function (xhr) {
+        alert("Error updating: " + xhr.responseText);
+      }
+    });
+  });
+
+  // Handle delete
+  $(".btn-delete").click(function () {
+    let id = $(this).data("id");
+
+    if (confirm("Are you sure you want to delete this position?")) {
+      $.ajax({
+        url: `/staff/delete-position/${id}`,
+        method: "DELETE",
+        success: function (res) {
+          alert(res.message);
+          location.reload();
+        },
+        error: function (xhr) {
+          alert("Error deleting: " + xhr.responseText);
+        }
+      });
+    }
+  });
+});
 
 
 

@@ -808,99 +808,135 @@ State.getStatesOfCountryByName = function(countryName) {
     return transformed;
   };
   
-  const submitExam = async (req, res) => {
-    try {
-      // Log the entire request body for debugging
-      console.log('Request Body:', req.body);
-  
-      // Transform the request body to the correct format
-      const transformedBody = transformAnswers(req.body);
-      console.log('Transformed Body:', transformedBody);
-  
-      const { answers } = transformedBody;
-      if (!answers) {
-        return res.status(400).send('Answers are required');
-      }
-  
-      const test = await CBT.findById(req.params.testId).populate('questions');
-      if (!test) {
-        return res.status(404).send('Test not found');
-      }
-  
-      if (!req.user) {
-        return res.status(403).send('User not authenticated');
-      }
-  
-      console.log('Submitted answers:', answers);
-  
-      let score = 0;
-      const answeredQuestions = [];
-  
-      for (let question of test.questions) {
-        const questionId = question._id.toString();
-  
-        if (answers[questionId] !== undefined) {
-          const userAnswer = answers[questionId];
-          const correctAnswer = question.correctAnswer;
-  
-          if (Array.isArray(userAnswer)) {
-            if (userAnswer.includes(correctAnswer)) {
-              score += 1;
-            }
-          } else if (userAnswer === correctAnswer) {
-            score += 1;
-          }
-  
-          answeredQuestions.push(question._id);
-        }
-      }
-  
-      const submission = new Submission({
-        userId: req.user._id,
-        testId: test._id,
-        answers: answers,
-        score: score,
-        session: test.session,
-        term: test.term,
-        subject: test.title,
-        type: test.type,
-        ca_pos: test.ca_pos,
-        submittedAt: new Date(),
-      });
-  
+ const submitExam = async (req, res, next) => {
+  try {
+    // Debugging: Log the entire request body
+    console.log("Request Body:", req.body);
 
-      await submission.save();
-  
-    
-      const userExamId =  req.user._id;
-  
-    if (!Array.isArray(test.userId)) {
-        test.userId = [];
+    // Transform the request body into a usable format
+    const transformedBody = transformAnswers(req.body);
+    console.log("Transformed Body:", transformedBody);
+
+    const { answers } = transformedBody;
+    if (!answers) {
+      return res.status(400).send("Answers are required");
     }
 
+    // Fetch the test and its questions
+    const test = await CBT.findById(req.params.testId).populate("questions");
+    if (!test) {
+      return res.status(404).send("Test not found");
+    }
+
+    // Ensure the user is authenticated
+    if (!req.user) {
+      return res.status(403).send("User not authenticated");
+    }
+
+    console.log("Submitted answers:", answers);
+
+    let score = 0;
+    const answeredQuestions = [];
+
+    // Helper function for normalization
+    const normalize = (val) => {
+      if (typeof val === "string") return val.trim().toLowerCase();
+      if (typeof val === "number") return String(val);
+      return String(val).trim().toLowerCase();
+    };
+
+    // Evaluate answers
+    for (let question of test.questions) {
+  const questionId = question._id.toString();
+
+  if (answers[questionId] !== undefined) {
+    let userAnswer = answers[questionId];
+    let correctAnswer = question.correctAnswer;
+
+    const normalize = (val) => {
+      if (typeof val === "string") return val.trim().toLowerCase();
+      if (typeof val === "number") return String(val);
+      return String(val).trim().toLowerCase();
+    };
+
+    if (Array.isArray(userAnswer)) {
+      if (Array.isArray(correctAnswer)) {
+        // ✅ Partial scoring for multiple answers
+        const normalizedCorrect = correctAnswer.map(normalize);
+        const normalizedUser = userAnswer.map(normalize);
+
+        const matched = normalizedUser.filter(ans => normalizedCorrect.includes(ans));
+        const partialScore = matched.length / normalizedCorrect.length;
+
+        score += partialScore; // add fractional score
+      } else {
+        // Correct answer is single value
+        if (userAnswer.some(ans => normalize(ans) === normalize(correctAnswer))) {
+          score += 1;
+        }
+      }
+    } else {
+      if (Array.isArray(correctAnswer)) {
+        // Single user answer vs multiple correct → still allow partial
+        const normalizedCorrect = correctAnswer.map(normalize);
+        if (normalizedCorrect.includes(normalize(userAnswer))) {
+          score += 1 / normalizedCorrect.length; // give fractional credit
+        }
+      } else {
+        // Both are single values
+        if (normalize(userAnswer) === normalize(correctAnswer)) {
+          score += 1;
+        }
+      }
+    }
+
+    answeredQuestions.push(question._id);
+  }
+}
+
+
+    // Save submission
+    const submission = new Submission({
+      userId: req.user._id,
+      testId: test._id,
+      answers,
+      score,
+      session: test.session,
+      term: test.term,
+      subject: test.title,
+      type: test.type,
+      ca_pos: test.ca_pos,
+      submittedAt: new Date(),
+    });
+
+    await submission.save();
+
+    // Track user participation in test
+    const userExamId = req.user._id;
+    if (!Array.isArray(test.userId)) {
+      test.userId = [];
+    }
     if (!test.userId.includes(userExamId.toString())) {
       test.userId.push(userExamId);
     }
+    await test.save();
 
-      await test.save();
-  
-      
-      const testId = req.params.id; 
-      req.logOut(function (err) {
-        if (err) {
-            return next(err);
-        }
-        req.flash('success_msg', 'Session Terminated');
-        res.render('success', { title: `Your score is ${score} out of ${test.questions.length}` });
-    })
-     
-   
-    } catch (err) {
-      console.error(err);
-      res.render('error5', { title: "Internal Server Error. " + err.message });
-    }
-  };
-  
+    // End session and show score
+    req.logOut(function (err) {
+      if (err) return next(err);
+
+      req.flash("success_msg", "Session Terminated");
+      res.render("success", {
+        title: `Your score is ${score} out of ${test.questions.length}`,
+      });
+    });
+  } catch (err) {
+    console.error("Error in submitExam:", err);
+    res.render("error5", { title: "Internal Server Error. " + err.message });
+  }
+};
+
+
 
   const studentLogin = async (req, res, next) => {
     const testId = req.params.id; // Capture testId here

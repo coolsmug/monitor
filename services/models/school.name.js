@@ -116,6 +116,9 @@ SchoolSchema = new Schema({
     career: {
         type: String,
     },
+     core_value: {
+        type: String,
+    },
 
     vision:{ 
         type: String, 

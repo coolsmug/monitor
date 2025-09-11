@@ -192,7 +192,7 @@
                    
                      
                      <div class="hop">
-                        <label for="jobDescription">JobDescription:</label>
+                        <label for="jobDescription">JobDescription: <h5 style="color: red;">use DOUBLE SPACING to seperate your choice</h5></label>
                         <textarea name="jobDescription" placeholder="list the job deccrptions and use double to seperate them" required></textarea>
                     </div>
                    
@@ -211,27 +211,7 @@
 </footer>   
 
 <script>
-  async function handleFormSubmit(formId, url) {
-    document.getElementById(formId).addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      try {
-        const response = await fetch(url, { method: 'POST', body: formData });
-        if (!response.ok) {
-          const error = await response.json();
-          return alert('Error: ' + error.message);
-        }
-        const result = await response.json();
-        window.location.href = result.redirectUrl;
-      } catch (error) {
-        console.error('Unexpected Error:', error);
-        alert('An unexpected error occurred.');
-      }
-    });
-  }
 
-  handleFormSubmit('learnerForm', '/admin/create-learner-of-the-week');
-  handleFormSubmit('teacherForm', '/admin/create-teacher-of-the-month');
 </script>
 
 <%- include ("./include/footer.ejs") %>
