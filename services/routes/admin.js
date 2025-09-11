@@ -1,12 +1,15 @@
 const express = require('express');
 const adminRoute = express.Router();
-
+// const learnerController = require('../controller/admin');
+const multer = require("multer");
+const uploader = multer({ dest: "uploads/" });
 
 
 
 const { adminEnsureLoggedIn } = require('../middleware/authentication');
 
 const {
+   bulkUpload,
   searchLearners,
   getSearchPage,
  registerLearner,
@@ -135,6 +138,8 @@ const {
     updateCarear,
     patchCarear,
     deleteCarear,
+    getBulkUploadPage,
+
                                                                                    
 } = require("../controller/admin");
 
@@ -235,11 +240,11 @@ adminRoute.route('/delete-test/:id').delete(adminEnsureLoggedIn, deleteCBTs);
 adminRoute.route('/create-event').post(adminEnsureLoggedIn, createEvent);
 adminRoute.route('/upload-event-cover-image/:id').post( adminEnsureLoggedIn, editEventImage);
 adminRoute.route('/update-event').get(adminEnsureLoggedIn, getEditEventPage);
-adminRoute.route('/update-event/:id').put(adminEnsureLoggedIn, editEvent);
+adminRoute.route('/update-event/:id').post(adminEnsureLoggedIn, editEvent);
 adminRoute.route('/delete-event/:id').delete( adminEnsureLoggedIn, deleteEvent);
 adminRoute.route('/create-blog').post( adminEnsureLoggedIn, createBlog);
 adminRoute.route('/delete-blog/:id').delete( adminEnsureLoggedIn, deleteBlog);
-adminRoute.route('/edit-blog/:id').put( adminEnsureLoggedIn, editBlog);
+adminRoute.route('/edit-blog/:id').post( adminEnsureLoggedIn, editBlog);
 adminRoute.route('/edit-blog-image/:id').post( adminEnsureLoggedIn, editBlogImage);
 adminRoute.route('/update-blog').get( adminEnsureLoggedIn, getEditBlogPage);
 adminRoute.route('/edit-staff-image/:id').post(adminEnsureLoggedIn, editStaffImage);
@@ -261,5 +266,7 @@ adminRoute.route('/carear-page').get(adminEnsureLoggedIn, getIconAndJob);
 adminRoute.route('/edit-carear/:id').post(adminEnsureLoggedIn, updateCarear);
 adminRoute.route('/patch-carear/:id').patch(adminEnsureLoggedIn, patchCarear);
 adminRoute.route('/delete-patch').delete(adminEnsureLoggedIn, deleteCarear);
+adminRoute.post("/learners/upload", uploader.single("filePath"), bulkUpload);
+adminRoute.get('/bulk-Upload', adminEnsureLoggedIn, getBulkUploadPage)
 
 module.exports = adminRoute;

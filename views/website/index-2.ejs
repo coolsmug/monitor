@@ -200,7 +200,7 @@
             </div> <!-- row -->
         </div> <!-- container -->
         <div class="about-bg">
-            <img src="<%= img.url %>" alt="About">
+            <img src="<%= image.url %>" alt="About">
         </div>
     </section>
     
@@ -357,7 +357,7 @@
    
     <!--====== TEASTIMONIAL PART START ======-->
     
-    <section id="testimonial" class="bg_cover pt-115 pb-115" data-overlay="8" style="background-image: url(images/bg-2.jpg)">
+    <section id="testimonial" class="bg_cover pt-115 pb-115" data-overlay="8" style="background-image: url('<%= image.url ? image.url : "images/bg-2.jpg" %>')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">

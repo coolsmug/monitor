@@ -1,0 +1,151 @@
+<%- include ("./include/header.ejs") %>
+
+<%- include ("./include/_dash_board.ejs") %>
+
+<div class="diverr">
+  <h4><i class="fas fa-upload"></i> Upload Bulk Learners</h4>
+  
+  <div class="direct">
+    <a href="/admin/all-learner/1" class="btn btn-back">
+      <i class="fas fa-arrow-left"></i> All Learners
+    </a>
+  </div>
+
+  <div class="form_for_create">
+    <%- include ('./partials/messages') %>
+
+    <form id="bulkUploadForm" enctype="multipart/form-data" class="upload-form">
+      <label for="filePath" class="form-label">Upload Students (CSV or Excel):</label>
+      <input type="file" id="filePath" name="filePath" accept=".csv,.xlsx" required class="form-input" />
+      
+      <button type="submit" class="btn btn-upload">
+        <i class="fas fa-cloud-upload-alt"></i> Upload
+      </button>
+    </form>
+
+    <div id="uploadMessage" class="upload-message"></div>
+  </div>
+</div>
+
+<style>
+.diverr {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 30px auto;
+  font-family: Arial, sans-serif;
+}
+
+.diverr h4 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.direct {
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.btn-back {
+  background: #f1f1f1;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-back:hover {
+  background: #e2e2e2;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #444;
+}
+
+.form-input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.3s;
+}
+
+.form-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+.btn-upload {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-upload:hover {
+  background: #0056b3;
+}
+
+.upload-message {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+</style>
+
+
+<footer class="foot">
+    <h3>All rights reserved and Powered by Dark Theme Code <i class="fas fa-copyright"></i> 2024</h3>
+</footer>   
+
+<%- include ("./include/footer.ejs") %>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $("#bulkUploadForm").on("submit", function (e) {
+    e.preventDefault(); // stop normal form submit
+
+    let formData = new FormData(this);
+
+    $.ajax({
+      url: "/admin/learners/upload",
+      type: "POST",
+      data: formData,
+      processData: false, // prevent jQuery from processing
+      contentType: false, // prevent jQuery from setting content type
+      beforeSend: function () {
+        $("#uploadMessage").html("<p style='color:blue;'>Uploading...</p>");
+      },
+      success: function (response) {
+        $("#uploadMessage").html(
+          "<p style='color:green;'>" + response.message + "</p>"
+        );
+      },
+      error: function (xhr) {
+        let error =
+          xhr.responseJSON?.error || "Something went wrong. Try again!";
+        $("#uploadMessage").html("<p style='color:red;'>" + error + "</p>");
+      },
+    });
+  });
+</script>

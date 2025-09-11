@@ -60,6 +60,7 @@ const getSchoolHomePage = async (req, res) => {
         phone_no2,
         email,
         img,
+        image,
         about,
         mission,
         vision,
@@ -87,6 +88,7 @@ const getSchoolHomePage = async (req, res) => {
         phone_no2,
         email,
         img,
+        image,
         about,
         mission,
         vision,
@@ -128,7 +130,7 @@ const getAbout = async (req, res) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
+      phone_no2,email,img,image,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
     } = school;
 
   
@@ -146,7 +148,7 @@ const getAbout = async (req, res) => {
 
      await res.render("website/about", {
       title: school_name,school_name,school_motto,website,country,state,
-      city,address,address2,phone_no,phone_no2,email,img,about,mission,
+      city,address,address2,phone_no,phone_no2,email,img,image,about,mission,
       vision,opening_hour,closing_hour,opening_day,closing_day,totalSubject,
       totalLearner,totalTeacher,totalPastLearner,event, blog, aschool, staffs,
      } )
@@ -167,7 +169,7 @@ const getTeacherPage = async ( req , res ) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
+      phone_no2,email,img,image,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
     } = school;
 
     const [teacher] = await Promise.all([
@@ -177,7 +179,7 @@ const getTeacherPage = async ( req , res ) => {
 
      await res.render("website/teachers", {
       school_name,school_motto,website,country,state,
-      city,address,address2,phone_no,phone_no2,email,img,about,mission,
+      city,address,address2,phone_no,phone_no2,email,img,image,about,mission,
       vision,opening_hour,closing_hour,opening_day,closing_day,
      } )
     
@@ -196,7 +198,7 @@ const getBlogs = async ( req , res ) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
+      phone_no2,email,img,image,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
     } = school;
 
     const [blog] = await Promise.all([
@@ -206,7 +208,7 @@ const getBlogs = async ( req , res ) => {
 
      await res.render("website/blog", {
       school_name,school_motto,website,country,state,
-      city,address,address2,phone_no,phone_no2,email,img,about,mission,
+      city,address,address2,phone_no,phone_no2,email,img,image,about,mission,
       vision,opening_hour,closing_hour,opening_day,closing_day,
      } )
     
@@ -226,12 +228,12 @@ const contactUs = async (req, res) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,subdomain
+      phone_no2,email,img,image,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,subdomain
     } = school;
 
      await res.render("website/contact-2", {
       school_name,school_motto,website,country,state,
-      city,address,address2,phone_no,phone_no2,email,img,about,mission,
+      city,address,address2,phone_no,phone_no2,email,img,image,about,mission,
       vision,opening_hour,closing_hour,opening_day,closing_day,subdomain
      } )
     
@@ -250,7 +252,7 @@ const getAllEvents = async (req, res) => {
       return res.status(404).send('School not found');
     }
  const {school_name,school_motto,website,country,state,city,address,address2,phone_no,
-      phone_no2,email,img,about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
+      phone_no2,email,img,image, about,mission,vision,opening_hour,closing_hour,opening_day,closing_day,
     } = school;
     
     const page = parseInt(req.query.page) || 1;   
@@ -272,7 +274,7 @@ const getAllEvents = async (req, res) => {
     const totalPages = Math.ceil(totalEvents / limit);
     res.render("website/events", {
       school_name, school_motto, website, country, state,
-      city, address, address2, phone_no, phone_no2, email, img,
+      city, address, address2, phone_no, phone_no2, email, img,image,
       about, mission, vision, opening_hour, closing_hour, opening_day,
       closing_day, eventList,
       currentPage: page,
@@ -366,7 +368,7 @@ const getBlogByCategory = async (req, res) => {
 
     const {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, image, about, mission, vision,
       opening_hour, closing_hour, opening_day, closing_day,
     } = school;
 
@@ -406,7 +408,7 @@ const getBlogByCategory = async (req, res) => {
 
     res.render("website/blog", {
       school_name, school_motto, website, country, state,
-      city, address, address2, phone_no, phone_no2, email, img,
+      city, address, address2, phone_no, phone_no2, email, img,image,
       about, mission, vision, opening_hour, closing_hour, opening_day,
       closing_day, blog, blogs, blogFew,
       currentPage: page,
@@ -428,7 +430,7 @@ const getBlogByAll = async (req, res) => {
 
     const {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, about, mission, vision,image,
       opening_hour, closing_hour, opening_day, closing_day,
     } = school;
 
@@ -466,7 +468,7 @@ const getBlogByAll = async (req, res) => {
       school_name, school_motto, website, country, state,
       city, address, address2, phone_no, phone_no2, email, img,
       about, mission, vision, opening_hour, closing_hour, opening_day,
-      closing_day, blog, blogs, blogFew,
+      closing_day, blog, blogs, blogFew,image,
       currentPage: page,
       totalPages,
     });
@@ -487,7 +489,7 @@ const getSingleTeachers = async (req, res) => {
     const {
       school_name, school_motto, website, country, state, city, address, address2,
       phone_no, phone_no2, email, img, about, mission, vision,
-      opening_hour, closing_hour, opening_day, closing_day,
+      opening_hour, closing_hour, opening_day, closing_day,image,
     } = school;
 
     const teacher = await Staff.findOne({ _id: id, schoolId: school._id, isStaff: true, status: true, name: name });
@@ -500,7 +502,7 @@ const getSingleTeachers = async (req, res) => {
       title: teacher.name,
       teacher, school_name, school_motto, website, country, state,
       city, address, address2, phone_no, phone_no2, email, img,
-      about, mission, vision, opening_hour, closing_hour, opening_day,
+      about, mission, vision, opening_hour, closing_hour, opening_day,image,
       closing_day,
     });
   } catch (error) {
@@ -518,7 +520,7 @@ const getAllStaff = async (req, res) => {
 
     const {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, image, about, mission, vision,
       opening_hour, closing_hour, opening_day, closing_day,
     } = school;
 
@@ -548,7 +550,7 @@ const getAllStaff = async (req, res) => {
      res.render("website/teachers", {
 
       school_name, school_motto, website, country, state,
-      city, address, address2, phone_no, phone_no2, email, img,
+      city, address, address2, phone_no, phone_no2, email, img, image,
       about, mission, vision, opening_hour, closing_hour, opening_day,
       closing_day,
       currentPage: page,
@@ -565,10 +567,6 @@ const getAllStaff = async (req, res) => {
   }
 
 }
-
-
-
-
 
 const sendEmail = async (req, res) => {
   try {
@@ -678,13 +676,13 @@ const getTeacherOfTheMonthPage = async ( req , res ) => {
     
    const {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, about, mission, vision, image,
       opening_hour, closing_hour, opening_day, closing_day
     } = school;
 
      res.render('website/teacher-of-the-week', {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, about, mission, vision,image,
       opening_hour, closing_hour, opening_day, closing_day, teachers, teacher
     })
   } catch (error) {
@@ -712,14 +710,14 @@ const getlearnerOfTheMonthPage = async ( req , res ) => {
 
    const {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, about, mission, vision,image,
       opening_hour, closing_hour, opening_day, closing_day
     } = school;
 
 
      res.render('website/learner-of-the-week', {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, about, mission, vision,image,
       opening_hour, closing_hour, opening_day, closing_day, teachers, teacher
     })
   } catch (error) {

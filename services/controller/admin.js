@@ -394,8 +394,15 @@ const learnersDetails = async ( req , res ) => {
 const uploadLearnerImage = async (req, res) => {
   try {
     // Process file upload
-    uploadLearnerImages(req, res, async (learner) => {
-      if (learner) {
+    uploadLearnerImages(req, res, async (err) => {
+   if (err) {  
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user})   
+      }
+      console.log(err)
+       if (err instanceof multer.MulterError) {
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user}) 
+      }
+
         const id = req.params.id;
         const user = await Learner.findById(id);
 
@@ -437,7 +444,7 @@ const uploadLearnerImage = async (req, res) => {
 
         req.flash('success_msg', 'Image uploaded successfully');
         return res.redirect('/admin/update-learner?id=' + id);
-      }
+    
     });
   } catch (error) {
     console.error(error);
@@ -813,12 +820,9 @@ const getHomePageLearenrReg = async ( req , res ) => {
         }
       }
       
-      console.log(alphaCode);
-      
 
     const learnerId = req.user._id
     const learner = await Learner.count( { schoolId : req.user._id } ).exec();
-    console.log(learner)
     // const numer = "1234567890";
     let totalNumber = '';
     if(learner < 10 ) {
@@ -1209,8 +1213,15 @@ const getUpdateStaffUpdatePage = async ( req , res ) => {
 const editStaffImage = (req, res) => {
   try {
       // Process file upload
-      uploadStaffImages(req, res, async (staff) => {
-          if (staff) {
+      uploadStaffImages(req, res, async (err) => {
+           if (err) {  
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user})   
+      }
+      console.log(err)
+
+      if (err instanceof multer.MulterError) {
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user}) 
+      }
 
           const id = req.params.id;
           const user = await Staff.findById(id);
@@ -1252,7 +1263,7 @@ const editStaffImage = (req, res) => {
 
           req.flash('success_msg', 'Image uploaded successfully');
           return res.redirect('/admin/update-staff?id=' + id);
-        }
+      
       });
   } catch (error) {
       console.error(error);
@@ -1764,7 +1775,7 @@ const uploadSchoolImaging = async ( req , res ) => {
       if (err instanceof multer.MulterError) {
         return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user}) 
       }
-        const id = req.param.id;
+        const id = req.params.id;
         const user = await School.findById(id);
     
         if (!user) {
@@ -1781,7 +1792,7 @@ const uploadSchoolImaging = async ( req , res ) => {
           // Get the original extension (jpg or png)
           const ext = path.extname(req.file.originalname).toLowerCase();
 
-          let sharpPipeline = sharp(req.file.path).resize(1200);
+          let sharpPipeline = sharp(req.file.path).resize(800);
 
           // If PNG, keep PNG format
           if (ext === ".png") {
@@ -3156,10 +3167,14 @@ const oldLearnersStautusUpdate = async ( req , res ) => {
 //---------------------------Learners Promotion ------------------------------------------------
 const promoteSingleLearner = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const classId = req.body.id;
+    const learnerId = req.params.id;      // learner id from route
+    const classId = req.body.classId;     // FIX: must match <select name="classId">
 
-    const userClass = await Currentclass.findById(classId);
+    console.log('Learner ID:', learnerId);
+    console.log('Class ID:', classId);
+
+    // find class
+    const userClass = await Currentclass.find({ _id : classId}).exec();
     if (!userClass) {
       const message = 'Class not found';
       if (req.xhr) return res.status(404).json({ message });
@@ -3167,29 +3182,25 @@ const promoteSingleLearner = async (req, res) => {
       return res.status(404).redirect('/admin/promote');
     }
 
-    if (classId) {
-      const user = await Learner.findById(userId);
-      if (!user) {
-        const message = 'User not found';
-        if (req.xhr) return res.status(404).json({ message });
-        req.flash('error_msg', message);
-        return res.status(404).redirect('/admin/promote');
-      }
-
-      user.classId = classId;
-      user.classes = userClass.name;
-      await user.save();
-
-      const message = 'Learner promoted successfully';
-      if (req.xhr) return res.status(200).json({ message });
-      req.flash('success_msg', message);
-      return res.redirect(`/admin/promote?id=${classId}`);
-    } else {
-      const message = 'Class ID not provided';
-      if (req.xhr) return res.status(400).json({ message });
+    // find learner
+    const learner = await Learner.findById(learnerId);
+    if (!learner) {
+      const message = 'Learner not found';
+      if (req.xhr) return res.status(404).json({ message });
       req.flash('error_msg', message);
-      return res.status(400).redirect('/admin/promote');
+      return res.status(404).redirect('/admin/promote');
     }
+
+    // update learner
+    learner.classId = classId;
+    learner.classes = userClass.name;
+    await learner.save();
+
+    const message = 'Learner promoted successfully';
+    if (req.xhr) return res.status(200).json({ message });
+    req.flash('success_msg', message);
+    return res.redirect(`/admin/promote?id=${classId}`);
+
   } catch (error) {
     console.error(error);
     const message = 'Internal server error';
@@ -3198,6 +3209,8 @@ const promoteSingleLearner = async (req, res) => {
     return res.status(500).redirect('/admin/promote');
   }
 };
+
+
 
 
 
@@ -3725,8 +3738,16 @@ const getAllEvents = async ( req , res ) => {
 
 const editEventImage = async (req, res) => {
   try {
-    uploadEventImg(req, res, async (event) => {
-      if (event) {
+    uploadEventImg(req, res, async (err) => {
+      if (err) {  
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user})   
+      }
+      console.log(err)
+
+       if (err instanceof multer.MulterError) {
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user}) 
+      }
+
         const id = req.params.id;
         const user = await Event.findById(id);
 
@@ -3739,24 +3760,23 @@ const editEventImage = async (req, res) => {
         }
 
         // 🔹 Compress image to max 50KB using Sharp
-        const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+         const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+            console.log(req.file.originalname)
 
-        await Sharp(req.file.path)
-          .jpeg({ quality: 70 }) // start with 70% quality
-          .toBuffer()
-          .then(async (buffer) => {
-            let quality = 70;
-            let outputBuffer = buffer;
+          // Get the original extension (jpg or png)
+          const ext = path.extname(req.file.originalname).toLowerCase();
 
-            while (outputBuffer.length > 50480 && quality > 10) {
-              quality -= 10;
-              outputBuffer = await Sharp(req.file.path)
-                .jpeg({ quality })
-                .toBuffer();
-            }
+          let sharpPipeline = sharp(req.file.path).resize(800);
 
-            await Sharp(outputBuffer).toFile(compressedPath);
-          });
+          // If PNG, keep PNG format
+          if (ext === ".png") {
+            sharpPipeline = sharpPipeline.png({ quality: 80, compressionLevel: 9 });
+          } else {
+            // Default to JPEG
+            sharpPipeline = sharpPipeline.jpeg({ quality: 70 });
+          }
+
+          await sharpPipeline.toFile(compressedPath);
 
         if (user.img && user.img.publicId) {
           await cloudinary.uploader.destroy(user.img.publicId);
@@ -3779,7 +3799,7 @@ const editEventImage = async (req, res) => {
 
         req.flash("success_msg", "Image uploaded successfully");
         return res.redirect(`/admin/update-event?eventId=${id}`);
-      }
+      
     });
   } catch (error) {
     console.error(error);
@@ -3838,10 +3858,14 @@ const editEvent = async ( req , res ) => {
       return res.status(400).json({ error: "Invalid blog ID" });
     }
 
+          if (typeof event_name !== "string" || !event_name.trim()) {
+  throw new Error("Event name must be a non-empty string");
+}
 
       if (!event_name || !venue || !dates || !content || !start || !end || !event_type || !event_status) {
         throw new Error("All fields are required");
       }
+
 
  
       const event = {
@@ -3853,7 +3877,7 @@ const editEvent = async ( req , res ) => {
         event_status,
         end,
         start,
-        slug: slugify(event_name, { lower: true, strict: true }),
+        slug: slugify(String(event_name), { lower: true, strict: true }),
         excerpt: content.length > 50 ? content.substring(0, 50) + '...' : content,
     }; 
  
@@ -3910,9 +3934,7 @@ const createBlog = async (req, res) => {
     const { author, category, content, headline, tags, metaDescription } = req.body;
     const errors = [];
 
-    if (!author || !category || !content || !headline) {
-      errors.push({ msg: "Please fill in all the fields." });
-    }
+   
 
     if (errors.length > 0) {
       const errorMessage = errors[0].msg;
@@ -3926,7 +3948,7 @@ const createBlog = async (req, res) => {
       headline,
       slug: slugify(headline, { lower: true, strict: true }),
       excerpt: content.length > 50 ? content.substring(0, 50) + '...' : content,
-      tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+      tags: tags ? tags.split('  ').map(tag => tag.trim()) : [],
       metaDescription: metaDescription || content.substring(0, 160),
       schoolId: req.user._id,
     };
@@ -3989,8 +4011,18 @@ const getAllBlogs = async ( req , res ) => {
 //Edit Blog
 const editBlogImage = async ( req , res ) => {
   try {
-    uploadBlogImg (req , res, async (blog) => {
-      if (blog) {
+    uploadBlogImg (req , res, async (err) => {
+
+      if (err) {  
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user})   
+      }
+      console.log(err)
+
+      if (err instanceof multer.MulterError) {
+        return res.render("error404", {title: "Error 400:. oops! " + err, user: req.user}) 
+      }
+
+     
         const id = req.params.id;
         const user = await Blog.findById(id);
     
@@ -4003,26 +4035,23 @@ const editBlogImage = async ( req , res ) => {
       }
 
        // 🔹 Compress image to max 50KB using Sharp
-        const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+         const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+            console.log(req.file.originalname)
 
-        await Sharp(req.file.path)
-          .jpeg({ quality: 70 }) // start with 70% quality
-          .toBuffer()
-          .then(async (buffer) => {
-            let quality = 70;
-            let outputBuffer = buffer;
+          // Get the original extension (jpg or png)
+          const ext = path.extname(req.file.originalname).toLowerCase();
 
-            // Keep reducing until <= 50KB
-            while (outputBuffer.length > 50480 && quality > 10) {
-              quality -= 10;
-              outputBuffer = await Sharp(req.file.path)
-                .jpeg({ quality })
-                .toBuffer();
-            }
+          let sharpPipeline = sharp(req.file.path).resize(800);
 
-            // Save compressed file temporarily
-            await Sharp(outputBuffer).toFile(compressedPath);
-          });
+          // If PNG, keep PNG format
+          if (ext === ".png") {
+            sharpPipeline = sharpPipeline.png({ quality: 80, compressionLevel: 9 });
+          } else {
+            // Default to JPEG
+            sharpPipeline = sharpPipeline.jpeg({ quality: 70 });
+          }
+
+          await sharpPipeline.toFile(compressedPath);
 
         if (user.img && user.img.publicId) {
           await cloudinary.uploader.destroy(user.img.publicId);
@@ -4048,7 +4077,7 @@ const editBlogImage = async ( req , res ) => {
        
         // return res.json({ message: 'Image uploaded successfully', imgUrl: result.secure_url });
         
-      }
+      
     })
    
   } catch (error) {
@@ -4116,7 +4145,7 @@ const editBlog = async (req, res) => {
       headline,
       slug: slugify(headline, { lower: true, strict: true }),
       excerpt: content.length > 300 ? content.substring(0, 297) + '...' : content,
-      tags: typeof tags === 'string' && tags.trim() ? tags.split(',').map(tag => tag.trim()) : [],
+      tags: typeof tags === 'string' && tags.trim() ? tags.split('  ').map(tag => tag.trim()) : [],
       metaDescription: metaDescription || content.substring(0, 160),
       isFeatured: isFeatured === true || isFeatured === 'true',
       status,
@@ -4537,15 +4566,169 @@ const patchCarear = async (req, res) => {
 };
 
 
+// Helper to normalize dates
+function parseDate(dateStr) {
+  if (!dateStr) return null;
 
-        
+  // Already a Date
+  if (dateStr instanceof Date) return dateStr;
+
+  // Excel serial number (days since 1900-01-01)
+  if (!isNaN(dateStr)) {
+    const excelEpoch = new Date(1900, 0, 1);
+    return new Date(excelEpoch.getTime() + (dateStr - 2) * 86400000); 
+    // -2 because Excel counts 1900 as a leap year
+  }
+
+  // String format
+  dateStr = String(dateStr).trim().replace(/[-.]/g, "/");
+  const parts = dateStr.split("/");
+  if (parts.length === 3) {
+    let [p1, p2, p3] = parts.map(x => parseInt(x, 10));
+
+    // Assume MM/DD/YYYY
+    if (p3 > 1000) {
+      return new Date(p3, p1 - 1, p2);
+    }
+  }
+
+  return new Date(dateStr); // fallback
+}
 
 
+
+
+const csv = require("csv-parser");
+const xlsx = require("xlsx");
+
+
+// Bulk Upload Function
+const bulkUpload = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Please upload a file" });
+    }
+
+    const userId = req.user._id;
+    const schoolName = req.user.school_name || "SCH";
+    const schoolAbb = schoolName.substring(0, 3).toUpperCase();
+    
+    // Get current learner count
+    let learnerCount = await Learner.countDocuments({ schoolId: userId });
+
+    // Year prefix (last 2 digits of year)
+    const year = new Date().getFullYear().toString().slice(-2);
+
+    const filePath = req.file.path;
+    let learners = [];
+
+    // Parse file
+    if (req.file.originalname.endsWith(".csv")) {
+      await new Promise((resolve, reject) => {
+        fs.createReadStream(filePath)
+          .pipe(csv())
+          .on("data", (row) => learners.push(row))
+          .on("end", resolve)
+          .on("error", reject);
+      });
+    } else if (req.file.originalname.endsWith(".xlsx")) {
+      const workbook = xlsx.readFile(filePath);
+      const sheetName = workbook.SheetNames[0];
+      learners = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    } else {
+      return res.status(400).json({ error: "Only CSV or Excel files are allowed" });
+    }
+
+    // Process Learners
+    const docs = await Promise.all(
+      learners.map(async (row) => {
+
+          const alpha = '1234567890';
+      let alphaCode = '';
+      
+      while (alphaCode.length < 2) {
+        const randomChar = alpha.charAt(Math.floor(Math.random() * alpha.length));
+        if (!alphaCode.includes(randomChar)) {
+          alphaCode += randomChar;
+        }
+      }
+      
+      console.log(alphaCode);
+      
+        learnerCount++; // increment count for each learner
+
+        // Pad number e.g. 001, 045, 120
+        const numerCode = String(learnerCount).padStart(3, "0");
+
+        // Generate roll number & email
+        const learnerRollNo = `${year}/${alphaCode}${schoolAbb}${numerCode}`;
+        const learnerEmail = `${year}.${alphaCode}${schoolAbb}${numerCode}@school.com`;
+
+        const password = row.password || learnerRollNo || "123456";
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        return {
+           roll_no: learnerRollNo,
+          classId: row.classId,
+          arm: row.arm,
+          classes: row.classes,
+          first_name: row.first_name,
+          last_name: row.last_name,
+          middle_name: row.middle_name,
+          email: learnerEmail,
+          password: hashedPassword,
+          gender: row.gender,
+          age: row.age,
+          parent_number: row.parent_number,
+          dob: parseDate(row.dob),            // ✅ use here
+          date_enrolled: parseDate(row.date_enrolled), // ✅ use here
+          date_ended: parseDate(row.date_ended),       // ✅ use here
+          blood_group: row.blood_group,
+          genotype: row.genotype,
+          religion: row.religion,
+          state: row.state,
+          lg: row.lg,
+          tribe: row.tribe,
+          schoolId: userId,
+          status: row.status,
+        };
+      })
+    );
+
+    // Save to DB
+    await Learner.insertMany(docs);
+
+    fs.unlinkSync(filePath); // clean up
+    res.status(200).json({ message: "Learners uploaded successfully" });
+
+  } catch (error) {
+    console.error("Bulk upload error:", error);
+    res.status(500).json({ error: "Failed to upload learners" });
+  }
+};
+
+const getBulkUploadPage = async ( req , res ) => {
+  try {
+     res.setHeader('Expires', '-1');
+      res.setHeader('Pragma', 'no-cache');
+
+    const user = req.user;
+
+    res.render("bulkupload", {
+     
+      user
+    })
+  } catch (error) {
+    console.log(err.message)
+    res.status(500).send( 'Internal Server Error' + ' ' + err.message);
+   }
+  }
 
 
 module.exports = {
   //carear 
-  carearMade,
+    getBulkUploadPage,
+    carearMade,
     getIconAndJob,
     updateCarear,
     patchCarear,
@@ -4672,6 +4855,8 @@ module.exports = {
     updateTeacherOfTheMonth,
     getCreatePageOfTheWeek,
     uploadSchoolImaging,
+    bulkUpload,
+  
     
 }
 

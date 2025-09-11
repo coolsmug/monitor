@@ -34,6 +34,8 @@
                         <option value="lifestyle">Lifestyle</option>
                         <option value="world">World News</option>
                         <option value="opinion">Opinion / Editorial</option>
+                        <option value="religion">Religion News</option>
+                        <option value="school_news">School News</option>
                         </select>
                     </div>
                     <div class="hop">
@@ -45,7 +47,7 @@
                         <textarea name="content" id="content" placeholder="Enter your blog content here..." required><%= typeof content !== 'undefined' ? content : '' %></textarea>
                     </div>
                     <div class="hop">
-                        <label for="tags">Tags (separated by commas):</label>
+                        <label for="tags">Tags (separated by double spacing):</label>
                         <input type="text" name="tags" value="<%= typeof tags !== 'undefined' ? tags : '' %>" placeholder="e.g. education, school, teachers">
                     </div>
                     <div class="hop">
@@ -68,26 +70,27 @@
 </footer>   
 
 <script>
-  document.getElementById('eventForm').addEventListener('submit', async (e) => {
+document.getElementById('eventForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries()); // convert FormData → plain object
 
   try {
     const response = await fetch('/admin/create-blog', {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     });
 
+    const result = await response.json();
+
     if (!response.ok) {
-      const error = await response.json();
-      console.error('Error:', error);
-      return alert('Error creating event: ' + error.message);
+      alert('Error creating blog: ' + result.message);
+      return;
     }
 
-    const result = await response.json();
-    console.log('Redirect URL:', result.redirectUrl);
-    window.location.href = result.redirectUrl; // Redirect to the update-event page
+    window.location.href = result.redirectUrl;
   } catch (error) {
     console.error('Unexpected Error:', error);
     alert('An unexpected error occurred.');

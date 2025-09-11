@@ -13,14 +13,6 @@ const cors = require('cors');
 const fs = require('fs');
 const methodOverride = require('method-override');
 require("./services/config/passport")(passport);
-const multer = require('multer');
-const sharp = require("sharp");
-const grid = require("gridfs-stream");
-const Learner = require("./services/models/leaners");
-const Schoolname = require("./services/models/school.name");
-const SharpMulter  =  require("sharp-multer");
-const cloudinary = require('cloudinary').v2;
-const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 const MongoStore = require('connect-mongo');
 const subDomainRouter = require("./services/middleware/weburl");
 
@@ -50,7 +42,8 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ 
-      mongoUrl: 'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
+      mongoUrl: 'mongodb://127.0.0.1:27017/Result',
+      // 'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
       collectionName: 'sessions'
     }),
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
@@ -77,13 +70,6 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   next();
 });
-
-
-// cloudinary
-
-const upload = multer({ dest: 'uploads/' });
-app.use(upload.single('img'));
-
 
 
 app.use(function(req, res, next) {

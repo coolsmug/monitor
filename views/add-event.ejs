@@ -59,15 +59,17 @@
 
 
 <script>
-  document.getElementById('eventForm').addEventListener('submit', async (e) => {
+document.getElementById('eventForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries()); // convert FormData → object
 
   try {
     const response = await fetch('/admin/create-event', {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
@@ -78,12 +80,13 @@
 
     const result = await response.json();
     console.log('Redirect URL:', result.redirectUrl);
-    window.location.href = result.redirectUrl; // Redirect to the update-event page
+    window.location.href = result.redirectUrl;
   } catch (error) {
     console.error('Unexpected Error:', error);
     alert('An unexpected error occurred.');
   }
 });
+
 
 
 </script>

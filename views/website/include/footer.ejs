@@ -140,7 +140,7 @@
 <script src="/js/jquery.nice-number.min.js"></script>
 
 <!--====== Count Down js ======-->
-<script src="/jquery.countdown.min.js"></script>
+<script src="/js/jquery.countdown.min.js"></script>
 
 <!--====== Validator js ======-->
 <script src="/js/validator.min.js"></script>
@@ -148,13 +148,23 @@
 <!--====== Ajax Contact js ======-->
 <script src="/js/ajax-contact.js"></script>
 
-<!--====== Main js ======-->
+<!--====== Google Map js ======-->
+<script src="/js/map-script.js"></script>
+<script 
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=basicmap" 
+  async defer>
+</script>
+
+
+<!--====== FontAwesome js ======-->
+<script src="/js/fontawesome/all.min.js"></script>
+
+<!--====== Main js (should be LAST) ======-->
 <script src="/js/main.js"></script>
 
-<!--====== Map js ======-->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC3Ip9iVC0nIxC6V14CKLQ1HZNF_65qEQ"></script>
-<script src="/js/map-script.js"></script>
-<script src="/js/main.js">
+    
+<script>
+
        var currentUrl = window.location.href;
     document.getElementById('og-url').content = currentUrl;
   </script>

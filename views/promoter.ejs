@@ -17,17 +17,15 @@
             <p><%= users[l].classes %> </p>
           </div>
           <div class="div_forms">
-            <label for="name">Class Name:</label>
-            <% if (classed) { %> 
-            <select name="id" id="name">
-              <option value="">...</option>
-              <% for (var x = 0; x < classed.length; x++) { %> 
-                <option value="<%= classed[x]._id %>">
-                  <%= classed[x].name %> of <%= classed[x].class_code %> of <%= classed[x].arm %>
-                </option>
-              <% } %> 
+            <label for="id">Class Name:</label>
+            <select name="classId" id="classId">
+                
+                <% for (var i = 0; i < classed.length; i++) { %>
+                    <option value="<%= classed[i]._id %>">
+                      <%= classed[i].name %> of <%= classed[i].arm %>
+                    </option>
+                <% } %>
             </select>
-            <% } %> 
           </div>
           <div class="div_forms">
             <button type="button" class="promote-button" data-user-id="<%= users[l]._id %>">Ok? promote!</button>
@@ -43,7 +41,9 @@
             <select name="classId" id="classId">
                 
                 <% for (var i = 0; i < classed.length; i++) { %>
-                    <option value="<%= classed[i]._id %>"><%= classed[i].name %></option>
+                    <option value="<%= classed[i]._id %>">
+                      <%= classed[i].name %>
+                    </option>
                 <% } %>
             </select>
         </div>

@@ -11,7 +11,6 @@ const LearnerSchema = new Schema(
 
     classId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: 'Currentclass'
     },
 

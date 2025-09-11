@@ -354,12 +354,22 @@ $(function() {
     
     //===== Count Down
     
-    $('[data-countdown]').each(function() {
-      var $this = $(this), finalDate = $(this).data('countdown');
-      $this.countdown(finalDate, function(event) {
-        $this.html(event.strftime('<div class="count-down-time"><div class="singel-count"><span class="number">%D :</span><span class="title">Days</span></div><div class="singel-count"><span class="number">%H :</span><span class="title">Hours</span></div><div class="singel-count"><span class="number">%M :</span><span class="title">Minuits</span></div><div class="singel-count"><span class="number">%S</span><span class="title">Seconds</span></div></div>'));
-      });
-    });
+ $('[data-countdown]').each(function() {
+  var $this = $(this),
+      finalDate = $this.attr('data-countdown'); // raw attribute value
+
+  $this.countdown(finalDate, function(event) {
+    $this.html(event.strftime(
+      '<div class="count-down-time">' +
+        '<div class="singel-count"><span class="number">%D :</span><span class="title">Days</span></div>' +
+        '<div class="singel-count"><span class="number">%H :</span><span class="title">Hours</span></div>' +
+        '<div class="singel-count"><span class="number">%M :</span><span class="title">Minutes</span></div>' +
+        '<div class="singel-count"><span class="number">%S</span><span class="title">Seconds</span></div>' +
+      '</div>'
+    ));
+  });
+});
+
     
     
     //=====  Rating selection

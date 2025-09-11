@@ -52,16 +52,24 @@
                 <div class="mb-3">
                     <div class="hop">
                         <label for="classes">Re-selsect Class Option:</label> 
-                        <% if(learnerClass) {%> 
-                            <select name="classId" id="classes">
-                                <% if(learnerCurrentClass) {%> 
-                                <option value="<%= learnerCurrentClass._id%>" ><%= learnerCurrentClass.name %></option>
-                                <% } %>
-                                <% for (var i = 0; i < learnerClass.length; i++) {%> 
-                                    <option value="<%= learnerClass[i]._id%>"> <%= learnerClass[i].name %> of <%= learnerClass[i].arm %>-<%= learnerClass[i].class_code %></option>
-                                <% } %> 
-                            </select>
-                            <% } %> 
+                        <% if (learnerClass && learnerClass.length > 0) { %>
+  <select name="classId" id="classes">
+    <% if (learnerCurrentClass) { %>
+      <option value="<%= learnerCurrentClass._id %>" selected>
+        <%= learnerCurrentClass.name %>
+      </option>
+    <% } %>
+
+    <% learnerClass.forEach(function(cls) { %>
+      <% if (!learnerCurrentClass || learnerCurrentClass._id.toString() !== cls._id.toString()) { %>
+        <option value="<%= cls._id %>">
+          <%= cls.name %> of <%= cls.arm %> - <%= cls.class_code %>
+        </option>
+      <% } %>
+    <% }); %>
+  </select>
+<% } %>
+
                     </div>
                    
                 </div>

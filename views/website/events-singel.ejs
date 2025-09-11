@@ -39,13 +39,22 @@
                             <a href="#"><span><i class="fa fa-clock-o"></i> <%= event.start %> - <%= event.end %></span></a>
                             <a href="#"><span><i class="fa fa-map-marker"></i> <%= event.venue %> </span></a>
                             <img src="<%= event && event.img ? event.img.url : 'images/event/singel-event/coundown.jpg' %>" alt="Event">
-                            <p><%= event.content %></p>
+                            <% if (event && event.content) { %>
+                            <% event.content.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div> <!-- events left -->
                     </div>
+                   
                     <div class="col-lg-4">
                         <div class="events-right">
                             <div class="events-coundwon bg_cover" data-overlay="8" style="background-image: url('<%= event && event.img ? event.img.url : 'images/event/singel-event/coundown.jpg' %>')">
-                                <div data-countdown="<%= event.dates %>"></div>
+                               <div data-countdown="<%= new Date(event.dates).toISOString().slice(0,19).replace(/-/g,'/').replace('T',' ') %>"></div>
+
+
                                 <div class="events-coundwon-btn pt-30">
                                     <a href="#" class="main-btn">Book Your Seat</a>
                                 </div>
@@ -86,14 +95,119 @@
                                         </div> <!-- singel address -->
                                     </li>
                                 </ul>
-                                <div id="contact-map" class="mt-25"></div> <!-- Map -->
+                                <div id="contact-maps" style="height: 400px;"></div>
+
                             </div> <!-- events address -->
                         </div> <!-- events right -->
                     </div>
                 </div> <!-- row -->
+                 <button onclick="shareContent()" class="buttoning"> <i class="fa-regular fa-share-from-square"></i> share </button>
+        <div id="eventData" data-category="<%= event.excerpt %>" data-topic="<%= event.event_name %>"></div>
             </div> <!-- events-area -->
         </div> <!-- container -->
     </section>
     <% } %>
     <!--====== EVENTS PART ENDS ======-->
 <%- include ("../website/include/footer.ejs") %> 
+
+<style>
+   .buttoning{
+        outline: none;
+        border: none;
+        border-radius: 10px;
+        background: #007bff;
+        color: white;
+        margin: 20px;
+        padding: 10px;
+    }
+</style>
+
+<script>
+      async function shareContent() {
+  const eventDataElement = document.getElementById('eventData');
+  const category = eventDataElement.getAttribute('data-category');
+  const topic = eventDataElement.getAttribute('data-topic');
+
+  const content = {
+    title: category,
+    text: topic,
+    url: window.location.href,
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(content);
+    } else {
+      alert('Web Share API not supported on this browser.');
+    }
+  } catch (error) {
+    console.error('Error sharing content:', error);
+  }
+}
+
+
+$(document).ready(function () {
+  $('#countdown').each(function () {
+    let $this = $(this);
+    let finalDate = $this.data('date'); // gets from data-date attribute
+
+    // Initialize countdown
+    $this.countdown(finalDate, function (event) {
+      $this.html(
+        event.dates('%D days %H:%M:%S')
+      );
+    });
+  });
+});
+
+
+
+
+
+// Get the venue from EJS
+var venueAddress = "<%= event.venue %>" || "Ilorin, Nigeria"; // fallback
+
+// Init map (default Nigeria center)
+var map = L.map('contact-maps').setView([8.5, 4.5], 7);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+}).addTo(map);
+
+function showMarker(lat, lon, label) {
+  map.setView([lat, lon], 13);
+  L.marker([lat, lon]).addTo(map).bindPopup(`<b>${label}</b>`).openPopup();
+}
+
+if (venueAddress.trim() !== "") {
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(venueAddress)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.length > 0) {
+        // Found venue → show it
+        showMarker(data[0].lat, data[0].lon, venueAddress);
+      } else {
+        // Venue not found → try city/state
+        return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=Ilorin, Nigeria`);
+      }
+    })
+    .then(res => res && res.json())
+    .then(data => {
+      if (data && data.length > 0) {
+        // Fallback to city
+        showMarker(data[0].lat, data[0].lon, "Fallback: Ilorin, Nigeria");
+      }
+    })
+    .catch(err => {
+      console.error("Geocoding error:", err);
+      // Last fallback
+      showMarker(8.5, 4.5, "Fallback: Ilorin, Nigeria");
+    });
+} else {
+  // Empty venue → use fallback
+  showMarker(8.5, 4.5, "Fallback: Ilorin, Nigeria");
+}
+
+
+
+</script>

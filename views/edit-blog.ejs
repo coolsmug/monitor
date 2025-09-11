@@ -13,7 +13,7 @@
         <%- include ('./partials/messages') %>
 
         <!-- Blog Details Form -->
-        <form id="eventForm" action="/admin/edit-blog/<%= blog._id %>" method="PUT">
+        <form id="eventForm" action="/admin/edit-blog/<%= blog._id %>" method="POST">
           <div class="all-single-form">
             <div class="mb-3">
               <div class="hop">
@@ -36,6 +36,8 @@
                   <option value="lifestyle">Lifestyle</option>
                   <option value="world">World News</option>
                   <option value="opinion">Opinion / Editorial</option>
+                  <option value="religion">Religion News</option>
+                  <option value="school_news">School News</option>
                 </select>
                 <script>
                   // Set the selected category based on the blog data
@@ -57,7 +59,7 @@
               </div>
         
               <div class="hop">
-                <label for="tags">Tags (separated by commas):</label>
+                <label for="tags">Tags (separated by double spacing):</label>
                 <input type="text" name="tags" value="<%= blog.tags || '' %>" placeholder="e.g. education, school, teachers" />
               </div>
         
@@ -114,20 +116,23 @@
 </footer>
 
 <script>
-
   document.addEventListener('DOMContentLoaded', function () {
-
-    // Event details form AJAX
     const eventForm = document.getElementById('eventForm');
+
     if (eventForm) {
       eventForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
+
+        // Convert form fields into a plain JS object
+        const formDataObj = Object.fromEntries(new FormData(e.target).entries());
 
         try {
           const response = await fetch(e.target.action, {
-            method: 'PUT',
-            body: formData,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataObj),
           });
 
           if (response.ok) {
@@ -136,7 +141,7 @@
             window.location.href = result.redirectUrl;
           } else {
             const error = await response.json();
-            alert('Error updating event: ' + error.message);
+            alert('Error updating event: ' + error.error); // use .error since backend sends { error: ... }
           }
         } catch (err) {
           console.error('Error:', err);
@@ -144,49 +149,6 @@
         }
       });
     }
-
- 
-    // Page Image upload form AJAX
-//     const pageImageForm = document.getElementById('pageImageForm');
-// if (pageImageForm) {
-//   pageImageForm.addEventListener('submit', async (e) => {
-//     e.preventDefault();
-//     const formData = new FormData(e.target);
-
-//     try {
-//       const response = await fetch(e.target.action, {
-//         method: 'POST',
-//         body: formData,
-//       });
-
-//       const contentType = response.headers.get("content-type") || "";
-
-//       if (response.ok) {
-//         // Check if the response contains JSON data
-//         if (contentType.includes("application/json")) {
-//           const result = await response.json();
-//           alert(result.message); // Show success message from backend
-//         } else {
-//           alert("Page image uploaded, but received a non-JSON response.");
-//         }
-//       } else {
-//         if (contentType.includes("application/json")) {
-//           const error = await response.json();
-//           alert("Error uploading page image: " + error.message); // Show error message from backend
-//         } else {
-//           const text = await response.text();
-//           console.error("Server returned non-JSON error:", text);
-//           alert("An unexpected error occurred.");
-//         }
-//       }
-//     } catch (err) {
-//       console.error('Error:', err);
-//       alert('An error occurred while uploading the page image.');
-//     }
-//   });
-// }
-
-
   });
 </script>
 
