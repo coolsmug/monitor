@@ -51,21 +51,39 @@
                         <div class="about-singel-items mt-30">
                             <span>01</span>
                             <h4>Our Mission</h4>
-                            <p><%= mission %></p>
+                             <% if (mission) { %>
+                            <% mission.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div> <!-- about singel -->
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-10">
                         <div class="about-singel-items mt-30">
                             <span>02</span>
                             <h4>Our vission</h4>
-                            <p><%= vision %></p>
+                            <% if (vision) { %>
+                            <% vision.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div> <!-- about singel -->
                     </div>
                       <div class="col-lg-4 col-md-6 col-sm-10">
                         <div class="about-singel-items mt-30">
                             <span>03</span>
                             <h4>Our Core Value</h4>
-                            <p><%= core_value %></p>
+                              <% if (core_value) { %>
+                            <% core_value.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div> <!-- about singel -->
                     </div>
                 </div> <!-- row -->
@@ -211,6 +229,7 @@
     <!--====== PATNAR LOGO PART START ======-->
     
     <div id="patnar-logo" class="pt-40 pb-80 gray-bg">
+        
         <div class="container">
             <div class="row patnar-slied">
                 <% if(aschool) {%>

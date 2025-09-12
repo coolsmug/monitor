@@ -505,14 +505,12 @@
     <div id="patnar-logo" class="pt-40 pb-80 gray-bg">
       
         <div class="container">
-            <div class="section-title pb-50">
-                <h5>Schools Using Monitrex</h5>
-            </div> 
+            
             <div class="row patnar-slied">
                <% allschool.forEach(schools => { %>
                 <div class="col-lg-12">
                     <div class="singel-patnar text-center mt-40">
-                        <img src="<%= schools.img.url %>" alt="Logo" width="150">
+                        <img src="<%= schools.img && schools.img.url ? schools.img.url : "https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg" %>" alt="Logo" width="200px">
                     </div>
                 </div>
                 <% }) %>

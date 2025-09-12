@@ -781,39 +781,89 @@ State.getStatesOfCountryByName = function(countryName) {
   };
 
 
-  const transformAnswers = (body) => {
-    const transformed = {};
-    
-    for (const key in body) {
-      if (key.startsWith('answers[') && key.endsWith('][]')) {
-        const questionId = key.slice(8, -3);
-        if (!transformed.answers) {
-          transformed.answers = {};
-        }
-        if (!transformed.answers[questionId]) {
-          transformed.answers[questionId] = [];
-        }
-        transformed.answers[questionId].push(body[key]);
-      } else if (key.startsWith('answers[')) {
-        const questionId = key.slice(8, -1);
-        if (!transformed.answers) {
-          transformed.answers = {};
-        }
-        transformed.answers[questionId] = body[key];
-      } else {
-        transformed[key] = body[key];
-      }
-    }
-    
-    return transformed;
-  };
-  
- const submitExam = async (req, res, next) => {
+  // ---------- HELPERS (put near top of file) ----------
+const natural = require('natural'); // optional; used for stemming if installed
+
+const stopwords = new Set([
+  'a','an','the','for','of','and','or','is','are','to','in','on','any',
+  'that','this','these','those','with','by','as','be','it','its','from',
+  'at','but','if','then','so','was','were','has','have','had','or','but'
+]);
+
+const normalizeStr = (v) => {
+  if (v == null) return '';
+  if (typeof v === 'number') return String(v);
+  return String(v).trim().toLowerCase();
+};
+
+// tokenization + optional stemming
+const stemToken = (tok) => {
   try {
-    // Debugging: Log the entire request body
+    if (natural && natural.PorterStemmer) return natural.PorterStemmer.stem(tok);
+  } catch (e) { /* fallback */ }
+  // naive fallback: remove trailing 's' for plurals
+  if (tok.length > 3 && tok.endsWith('s')) return tok.slice(0, -1);
+  return tok;
+};
+
+const tokenize = (s) => {
+  const clean = normalizeStr(s).replace(/[^\w\s]/g, ' ');
+  return clean
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter(tok => !stopwords.has(tok))
+    .map(tok => stemToken(tok));
+};
+
+// compute precision / recall / f1 for token sets
+const tokenSetMetrics = (correctStr, userStr) => {
+  const a = tokenize(correctStr);
+  const b = tokenize(userStr);
+  if (a.length === 0 || b.length === 0) {
+    return { precision: 0, recall: 0, f1: 0, common: 0, aLen: a.length, bLen: b.length };
+  }
+  const setB = new Set(b);
+  const common = a.filter(x => setB.has(x)).length;
+  const precision = common / b.length;
+  const recall = common / a.length;
+  const f1 = (precision + recall) > 0 ? (2 * precision * recall) / (precision + recall) : 0;
+  return { precision, recall, f1, common, aLen: a.length, bLen: b.length };
+};
+
+const isNumericLike = (v) => {
+  if (v == null) return false;
+  const s = String(v).trim();
+  if (s === '') return false;
+  return !Number.isNaN(Number(s));
+};
+
+// Transform body for checkbox/multiple answers
+const transformAnswers = (body) => {
+  const transformed = {};
+  
+  for (const key in body) {
+    if (key.startsWith("answers[") && key.endsWith("][]")) {
+      const questionId = key.slice(8, -3);
+      if (!transformed.answers) transformed.answers = {};
+      if (!transformed.answers[questionId]) transformed.answers[questionId] = [];
+      transformed.answers[questionId].push(body[key]);
+    } else if (key.startsWith("answers[")) {
+      const questionId = key.slice(8, -1);
+      if (!transformed.answers) transformed.answers = {};
+      transformed.answers[questionId] = body[key];
+    } else {
+      transformed[key] = body[key];
+    }
+  }
+
+  return transformed;
+};
+
+const submitExam = async (req, res, next) => {
+  try {
     console.log("Request Body:", req.body);
 
-    // Transform the request body into a usable format
+    // Transform request body into usable answers object
     const transformedBody = transformAnswers(req.body);
     console.log("Transformed Body:", transformedBody);
 
@@ -822,13 +872,12 @@ State.getStatesOfCountryByName = function(countryName) {
       return res.status(400).send("Answers are required");
     }
 
-    // Fetch the test and its questions
+    // Fetch test + questions
     const test = await CBT.findById(req.params.testId).populate("questions");
     if (!test) {
       return res.status(404).send("Test not found");
     }
 
-    // Ensure the user is authenticated
     if (!req.user) {
       return res.status(403).send("User not authenticated");
     }
@@ -838,7 +887,7 @@ State.getStatesOfCountryByName = function(countryName) {
     let score = 0;
     const answeredQuestions = [];
 
-    // Helper function for normalization
+    // Normalization helper
     const normalize = (val) => {
       if (typeof val === "string") return val.trim().toLowerCase();
       if (typeof val === "number") return String(val);
@@ -846,53 +895,91 @@ State.getStatesOfCountryByName = function(countryName) {
     };
 
     // Evaluate answers
-    for (let question of test.questions) {
+  const FUZZY_FULL_THRESHOLD = 0.75;   // stricter full credit
+const FUZZY_PARTIAL_THRESHOLD = 0.50; // partial credit
+
+for (let question of test.questions) {
   const questionId = question._id.toString();
+  if (answers[questionId] === undefined) continue;
 
-  if (answers[questionId] !== undefined) {
-    let userAnswer = answers[questionId];
-    let correctAnswer = question.correctAnswer;
+  let userAnswer = answers[questionId];
+  let correctAnswer = question.correctAnswer;
+  let awarded = 0;
 
-    const normalize = (val) => {
-      if (typeof val === "string") return val.trim().toLowerCase();
-      if (typeof val === "number") return String(val);
-      return String(val).trim().toLowerCase();
-    };
+  // CASE 1: both arrays (checkboxes / multi-select)
+  if (Array.isArray(userAnswer) && Array.isArray(correctAnswer)) {
+    const normalizedCorrect = correctAnswer.map(x => normalizeStr(x));
+    const normalizedUser = userAnswer.map(x => normalizeStr(x));
 
-    if (Array.isArray(userAnswer)) {
-      if (Array.isArray(correctAnswer)) {
-        // ✅ Partial scoring for multiple answers
-        const normalizedCorrect = correctAnswer.map(normalize);
-        const normalizedUser = userAnswer.map(normalize);
+    const matched = normalizedUser.filter(u => normalizedCorrect.includes(u)).length;
+    const incorrectSelected = normalizedUser.length - matched;
 
-        const matched = normalizedUser.filter(ans => normalizedCorrect.includes(ans));
-        const partialScore = matched.length / normalizedCorrect.length;
+    let base = matched / normalizedCorrect.length;
+    let penalty = incorrectSelected / (2 * normalizedCorrect.length);
+    awarded = Math.max(0, Math.min(1, base - penalty));
+  }
+  // CASE 2: correct is array, user single answer
+  else if (!Array.isArray(userAnswer) && Array.isArray(correctAnswer)) {
+    const normalizedCorrect = correctAnswer.map(x => normalizeStr(x));
+    const normalizedUser = normalizeStr(userAnswer);
 
-        score += partialScore; // add fractional score
-      } else {
-        // Correct answer is single value
-        if (userAnswer.some(ans => normalize(ans) === normalize(correctAnswer))) {
-          score += 1;
-        }
-      }
+    if (normalizedCorrect.includes(normalizedUser)) {
+      awarded = 1 / normalizedCorrect.length;
     } else {
-      if (Array.isArray(correctAnswer)) {
-        // Single user answer vs multiple correct → still allow partial
-        const normalizedCorrect = correctAnswer.map(normalize);
-        if (normalizedCorrect.includes(normalize(userAnswer))) {
-          score += 1 / normalizedCorrect.length; // give fractional credit
-        }
-      } else {
-        // Both are single values
-        if (normalize(userAnswer) === normalize(correctAnswer)) {
-          score += 1;
+      const jointCorrect = normalizedCorrect.join(' ');
+      const { f1, precision, recall, common } = tokenSetMetrics(jointCorrect, normalizedUser);
+      if (f1 >= FUZZY_FULL_THRESHOLD && precision >= 0.4 && recall >= 0.5 && common >= 2) {
+        awarded = 1 / normalizedCorrect.length;
+      } else if (f1 >= FUZZY_PARTIAL_THRESHOLD && common >= 1) {
+        awarded = f1 / normalizedCorrect.length;
+      }
+    }
+  }
+  // CASE 3: user array, correct single
+  else if (Array.isArray(userAnswer) && !Array.isArray(correctAnswer)) {
+    const normalizedCorrect = normalizeStr(correctAnswer);
+    const normalizedUser = userAnswer.map(x => normalizeStr(x));
+
+    if (normalizedUser.includes(normalizedCorrect)) {
+      awarded = 1;
+    } else {
+      for (const u of normalizedUser) {
+        const { f1 } = tokenSetMetrics(normalizedCorrect, u);
+        if (f1 >= FUZZY_FULL_THRESHOLD) {
+          awarded = 1; break;
+        } else if (f1 >= FUZZY_PARTIAL_THRESHOLD) {
+          awarded = Math.max(awarded, f1);
         }
       }
     }
-
-    answeredQuestions.push(question._id);
   }
+  // CASE 4: both single
+  else {
+    const normalizedUser = normalizeStr(userAnswer);
+    const normalizedCorrect = normalizeStr(correctAnswer);
+
+    if (isNumericLike(normalizedUser) && isNumericLike(normalizedCorrect)) {
+      awarded = Number(normalizedUser) === Number(normalizedCorrect) ? 1 : 0;
+    } else if (normalizedUser === normalizedCorrect) {
+      awarded = 1;
+    } else {
+      const { precision, recall, f1, common, aLen } = tokenSetMetrics(normalizedCorrect, normalizedUser);
+      const minCommonNeeded = Math.max(2, Math.floor(aLen * 0.3)); // at least 2–3 words
+
+      if (f1 >= FUZZY_FULL_THRESHOLD && precision >= 0.4 && recall >= 0.5 && common >= minCommonNeeded) {
+        awarded = 1;
+      } else if (f1 >= FUZZY_PARTIAL_THRESHOLD && common >= 2) {
+        awarded = f1 * 0.8; // scale partial credit down
+      } else {
+        awarded = 0;
+      }
+    }
+  }
+
+  score += awarded;
+  answeredQuestions.push(question._id);
 }
+
 
 
     // Save submission
@@ -911,12 +998,12 @@ State.getStatesOfCountryByName = function(countryName) {
 
     await submission.save();
 
-    // Track user participation in test
-    const userExamId = req.user._id;
+    // Track user participation
+    const userExamId = req.user._id.toString();
     if (!Array.isArray(test.userId)) {
       test.userId = [];
     }
-    if (!test.userId.includes(userExamId.toString())) {
+    if (!test.userId.includes(userExamId)) {
       test.userId.push(userExamId);
     }
     await test.save();
@@ -927,7 +1014,7 @@ State.getStatesOfCountryByName = function(countryName) {
 
       req.flash("success_msg", "Session Terminated");
       res.render("success", {
-        title: `Your score is ${score} out of ${test.questions.length}`,
+        title: `Your score is ${score.toFixed(2)} out of ${test.questions.length}`,
       });
     });
   } catch (err) {
@@ -935,6 +1022,7 @@ State.getStatesOfCountryByName = function(countryName) {
     res.render("error5", { title: "Internal Server Error. " + err.message });
   }
 };
+
 
 
 

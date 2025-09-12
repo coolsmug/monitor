@@ -114,21 +114,39 @@
                         <div class="about-singel-items mt-30">
                             <span>01</span>
                             <h4>Why Choose us</h4>
-                            <p><%= about %></p>
+                              <% if (core_value) { %>
+                            <% core_value.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div> <!-- about singel -->
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-10">
                         <div class="about-singel-items mt-30">
                             <span>02</span>
                             <h4>Our Mission</h4>
-                            <p><%= mission %></p>
+                              <% if (mission) { %>
+                            <% mission.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div> <!-- about singel -->
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-10">
                         <div class="about-singel-items mt-30">
                             <span>03</span>
                             <h4>Our vission</h4>
-                            <p><%= vision %></p>
+                              <% if (vision) { %>
+                            <% vision.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         </div> <!-- about singel -->
                     </div>
                 </div> <!-- row -->

@@ -631,7 +631,7 @@ const getCarear = async (req, res) => {
     }
    const {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, about, mission, vision,core_value,
       opening_hour, closing_hour, opening_day, closing_day, career
     } = school;
 
@@ -648,7 +648,7 @@ const getCarear = async (req, res) => {
     const carear = await Carear.find({ status : true, schoolId: school._id  }).sort({ created : -1 } ).exec()
     res.render('website/job', {
       school_name, school_motto, website, country, state, city, address, address2,
-      phone_no, phone_no2, email, img, about, mission, vision,
+      phone_no, phone_no2, email, img, about, mission, vision,core_value,
       opening_hour, closing_hour, opening_day, closing_day, carear,career, aschool, totalSubject, totalLearner, totalPastLearner, totalTeacher, staff
     })
   } catch (error) {
