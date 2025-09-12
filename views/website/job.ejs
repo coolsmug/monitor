@@ -36,7 +36,13 @@
                    
                     
                     <div class="about-cont">
-                        <p><%= career %></p>
+                        <% if (career) { %>
+                            <% career.split(/\r?\n/).forEach(p => { %>
+                                <% if (p.trim()) { %>
+                                <p><%= p %></p>
+                                <% } %>
+                            <% }) %>
+                            <% } %>
                         <p> 
                             Explore the exciting career opportunities at <%= school_name %>. We are currently hiring for the<br> 
                             following position(s).
