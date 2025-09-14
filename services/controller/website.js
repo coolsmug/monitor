@@ -272,7 +272,7 @@ const getAllEvents = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-      console.log(eventList)
+
     const totalPages = Math.ceil(totalEvents / limit);
     res.render("website/events", {
       school_name, school_motto, website, country, state,

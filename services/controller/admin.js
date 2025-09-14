@@ -416,14 +416,23 @@ const uploadLearnerImage = async (req, res) => {
         }
 
       
-       const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
-          await sharp(req.file.path)
-              .resize(130, 160) // Resize to 300x300 pixels
-              .toFormat('jpeg') // Convert to JPEG format
-              .jpeg({ quality: 100 }) // Set JPEG quality
-              .toFile(compressedPath); // Save to a new file
+         const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+            console.log(req.file.originalname)
 
+          // Get the original extension (jpg or png)
+          const ext = path.extname(req.file.originalname).toLowerCase();
 
+          let sharpPipeline = sharp(req.file.path).resize(300);
+
+          // If PNG, keep PNG format
+          if (ext === ".png") {
+            sharpPipeline = sharpPipeline.png({ quality: 60, compressionLevel: 9 });
+          } else {
+            // Default to JPEG
+            sharpPipeline = sharpPipeline.jpeg({ quality: 60 });
+          }
+
+          await sharpPipeline.toFile(compressedPath);
           if (user.img && user.img.publicId) {
           await cloudinary.uploader.destroy(user.img.publicId);
         }
@@ -1235,14 +1244,24 @@ const editStaffImage = (req, res) => {
               return res.render("error404", {title: "Error 400:. oops! No file provided", user: req.user})
           }
 
-           const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
-          await sharp(req.file.path)
-              .resize(150, 200) // Resize to 300x300 pixels
-              .toFormat('jpeg') // Convert to JPEG format
-              .jpeg({ quality: 100 }) // Set JPEG quality
-              .toFile(compressedPath); // Save to a new file
+          // 🔹 Compress image to max 50KB using Sharp
+         const compressedPath = `uploads/compressed-${Date.now()}-${req.file.originalname}`;
+            console.log(req.file.originalname)
 
+          // Get the original extension (jpg or png)
+          const ext = path.extname(req.file.originalname).toLowerCase();
 
+          let sharpPipeline = sharp(req.file.path).resize(300);
+
+          // If PNG, keep PNG format
+          if (ext === ".png") {
+            sharpPipeline = sharpPipeline.png({ quality: 60, compressionLevel: 9 });
+          } else {
+            // Default to JPEG
+            sharpPipeline = sharpPipeline.jpeg({ quality: 60 });
+          }
+
+          await sharpPipeline.toFile(compressedPath);
           if (user.img && user.img.publicId) {
           await cloudinary.uploader.destroy(user.img.publicId);
         }
@@ -3766,14 +3785,14 @@ const editEventImage = async (req, res) => {
           // Get the original extension (jpg or png)
           const ext = path.extname(req.file.originalname).toLowerCase();
 
-          let sharpPipeline = sharp(req.file.path).resize(800);
+          let sharpPipeline = sharp(req.file.path).resize(300);
 
           // If PNG, keep PNG format
           if (ext === ".png") {
-            sharpPipeline = sharpPipeline.png({ quality: 80, compressionLevel: 9 });
+            sharpPipeline = sharpPipeline.png({ quality: 60, compressionLevel: 9 });
           } else {
             // Default to JPEG
-            sharpPipeline = sharpPipeline.jpeg({ quality: 70 });
+            sharpPipeline = sharpPipeline.jpeg({ quality: 60 });
           }
 
           await sharpPipeline.toFile(compressedPath);
@@ -4041,14 +4060,14 @@ const editBlogImage = async ( req , res ) => {
           // Get the original extension (jpg or png)
           const ext = path.extname(req.file.originalname).toLowerCase();
 
-          let sharpPipeline = sharp(req.file.path).resize(800);
+          let sharpPipeline = sharp(req.file.path).resize(300);
 
           // If PNG, keep PNG format
           if (ext === ".png") {
-            sharpPipeline = sharpPipeline.png({ quality: 80, compressionLevel: 9 });
+            sharpPipeline = sharpPipeline.png({ quality: 60, compressionLevel: 9 });
           } else {
             // Default to JPEG
-            sharpPipeline = sharpPipeline.jpeg({ quality: 70 });
+            sharpPipeline = sharpPipeline.jpeg({ quality: 60 });
           }
 
           await sharpPipeline.toFile(compressedPath);
