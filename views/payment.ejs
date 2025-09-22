@@ -3,17 +3,41 @@
 
 <h2 class="ofhtwo"><i class="fas fa-cash-register"></i> Pay to get code to generate Voucher</h2>
 <%- include ('./partials/messages') %> 
+
 <form action="/admin/pay" method="POST" class="voucher-form">
-    <label class="email-label" for="email">Email:</label>
-    <input type="text" id="email" name="email">
-    <br>
-    <label  class="email-amount" for="amount">Amount:</label>
-    <input type="number" value="2700" id="amount" name="amount" readonly>
-    <br>
-    <button class="clickbutton" type="submit">Pay with PayStack</button>
-  </form>
+   
+  <label class="email-label" for="email">Email:</label>
+  <input type="text" id="email" name="email" value="<%= user.email %>" readonly>
+  <br>
+
+  <label class="email-page" for="page">No of Page:</label>
+  <input type="number" id="page" name="page" value="1" min="1">
+  <br>
+
+  <label class="email-amount" for="amount">Amount (₦):</label>
+  <input type="number" id="amount" name="amount" value="3000" readonly>
+  <br>
+    
+  <button class="clickbutton" type="submit">Pay with PayStack</button>
+</form>
+
+<script>
+  const pageInput = document.getElementById("page");
+  const amountInput = document.getElementById("amount");
+
+  pageInput.addEventListener("input", () => {
+    const pages = parseInt(pageInput.value) || 1;
+    amountInput.value = pages * 3000;
+  });
+</script>
   
-  <footer class="foot">
-    <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
+<footer class="foot">
+  <h3>All rights reserved and Powered by Dark theme code <i class="fas fa-copyright"></i> 2024</h3>
 </footer>   
-  <%- include ('./include/footer.ejs') %> 
+
+<%- include ('./include/footer.ejs') %>
+<style>
+  .voucher-form {
+    margin-top: 0;
+  }
+</style>

@@ -10,6 +10,7 @@ const { adminEnsureLoggedIn } = require('../middleware/authentication');
 
 const {
    bulkUpload,
+   updateBulkUploads,
   searchLearners,
   getSearchPage,
  registerLearner,
@@ -91,6 +92,7 @@ const {
  oldLearnersStautusUpdate,
  promoteSingleLearner,
  promoteAllLearner,
+ getAllLearnerWitNoclass,
  getPromotePage,
  checkResultFirstAndSecond,
  getFirstAndSecondResult,
@@ -158,7 +160,7 @@ adminRoute.route('/create-voucher').post(adminEnsureLoggedIn, voucherPrinting);
 adminRoute.route('/get-gen-voucher/:page').get(adminEnsureLoggedIn, getVoucherPage);
 adminRoute.route('/voucher-payment').get(adminEnsureLoggedIn, getVoucherPaymentPage);
 adminRoute.route('/pay').post(adminEnsureLoggedIn, payStackPayment);
-adminRoute.route('/callback').get(adminEnsureLoggedIn, payStackCallBack);
+adminRoute.route('/callback').get(payStackCallBack);
 adminRoute.route('/create-learner').get(adminEnsureLoggedIn, getHomePageLearenrReg);
 adminRoute.route('/add_proprietor').post(adminEnsureLoggedIn, registerProprietorStatement);
 adminRoute.route('/update-proprietor').get(adminEnsureLoggedIn, getProprietorUpdatePage);
@@ -222,7 +224,7 @@ adminRoute.route('/alumni/:page').get(adminEnsureLoggedIn, getAlumniPage);
 adminRoute.route('/olduser-status').patch(adminEnsureLoggedIn, oldLearnersStautusUpdate);
 adminRoute.route('/promotion/:id').post(adminEnsureLoggedIn, promoteSingleLearner);
 adminRoute.route('/promotionall').post(adminEnsureLoggedIn, promoteAllLearner);
-adminRoute.route('/promote').get(adminEnsureLoggedIn, getPromotePage);
+adminRoute.route('/promote').get(adminEnsureLoggedIn,getAllLearnerWitNoclass, getPromotePage);
 adminRoute.route('/check_result').get(adminEnsureLoggedIn, checkResultFirstAndSecond);
 adminRoute.route('/result').get(adminEnsureLoggedIn, getFirstAndSecondResult);
 adminRoute.route('/result_third_term').get(adminEnsureLoggedIn, getThirdResult);
@@ -267,6 +269,7 @@ adminRoute.route('/edit-carear/:id').post(adminEnsureLoggedIn, updateCarear);
 adminRoute.route('/patch-carear/:id').patch(adminEnsureLoggedIn, patchCarear);
 adminRoute.route('/delete-patch').delete(adminEnsureLoggedIn, deleteCarear);
 adminRoute.post("/learners/upload", uploader.single("filePath"), bulkUpload);
-adminRoute.get('/bulk-Upload', adminEnsureLoggedIn, getBulkUploadPage)
+adminRoute.get('/bulk-Upload', adminEnsureLoggedIn, getBulkUploadPage);
+adminRoute.post('/insert-class', adminEnsureLoggedIn,  uploader.none(), updateBulkUploads);
 
 module.exports = adminRoute;

@@ -33,7 +33,6 @@ const Position = require("../models/positionFirstTerm");
 const CBT = require('../models/test');
 const Question = require('../models/question');
 const Submission = require('../models/submit');
-const Sharp = require('sharp');
 const LearnerOfTheWeek = require('../models/learner_of_the_week');
 const sharp = require('sharp');
 const TeacherOfTheMonth = require('../models/teacher_of_the_month');
@@ -110,24 +109,28 @@ const getSearchPage = async ( req, res ) => {
   }
 }
 
-const searchLearners = async ( req , res ) => {
+const searchLearners = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = '' } = req.query;
 
-    // Create a case-insensitive regex for searching
     const searchRegex = new RegExp(search, 'i');
 
-    // Build the query for searching across multiple fields
+    // Detect if search is numeric
+    const searchNumber = Number(search);
+    const isNumber = !isNaN(searchNumber);
+
+    // Build the query
     const query = {
       $or: [
-        { roll_no: searchRegex },
+        // roll_no: if it's a number, match exact; if not, regex
+        ...(isNumber ? [{ roll_no: searchNumber }] : [{ roll_no: searchRegex }]),
+
         { arm: searchRegex },
         { classes: searchRegex },
         { first_name: searchRegex },
         { middle_name: searchRegex },
         { last_name: searchRegex },
         { gender: searchRegex },
-        { age: searchRegex },
         { email: searchRegex },
         { blood_group: searchRegex },
         { genotype: searchRegex },
@@ -135,18 +138,26 @@ const searchLearners = async ( req , res ) => {
         { state: searchRegex },
         { lg: searchRegex },
         { tribe: searchRegex },
+
+        // only add age if search is numeric
+        ...(isNumber ? [{ age: searchNumber }] : []),
       ],
     };
 
-    const filter = Object.assign({ status: true, deletes: false, schoolId : req.user._id }, query);
-    // Pagination options
-    const learners = await Learner.find( filter )
+    const filter = {
+      status: true,
+      deletes: false,
+      schoolId: req.user._id,
+      ...query,
+    };
+
+    // Pagination
+    const learners = await Learner.find(filter)
       .skip((page - 1) * limit)
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });
 
-      const filters = Object.assign({ status: true, deletes: false, schoolId : req.user._id }, query);
-    const total = await Learner.countDocuments(filters);
+    const total = await Learner.countDocuments(filter);
 
     res.json({
       learners,
@@ -157,7 +168,8 @@ const searchLearners = async ( req , res ) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
+
 
 // All codes on Learners------------------------------------//
 const registerLearner = async ( req, res ) => {
@@ -606,33 +618,29 @@ const voucherPrinting = async (req, res) => {
     const { pin } = req.body;
     let errors = [];
 
-    if (!pin) {
-      errors.push({ msg: "Please fill in your PIN" });
-    }
-
-    if (pin.length !== 6) {
-      errors.push({ msg: "Oops! PIN must be exactly six digits" });
-    }
-
+    if (!pin) errors.push({ msg: "Please fill in your PIN" });
+    if (pin.length !== 6) errors.push({ msg: "Oops! PIN must be exactly six digits" });
     if (errors.length > 0) {
-      req.flash("error_msg", "Error registration: " + errors[0].msg);
+      req.flash("error_msg", errors[0].msg);
       return res.redirect("/admin/get-gen-voucher/1");
     }
 
-    const pins = await VoucherPayment.findOne({ pin }).exec();
+    const pins = await VoucherPayment.findOne({ pin, status: "paid" });
     if (!pins) {
-      req.flash("error_msg", `This PIN: ${pin} you provided is Invalid`);
+      req.flash("error_msg", `Invalid PIN: ${pin}`);
       return res.redirect("/admin/get-gen-voucher/1");
     }
-
+    if (pins.expiresAt < new Date()) {
+      req.flash("error_msg", `This PIN "${pins.pin}" is expired`);
+      return res.redirect("/admin/get-gen-voucher/1");
+    }
     if (pins.used) {
-      req.flash("error_msg", `This PIN: "${pins.pin}" has been used, kindly pay for a new PIN`);
+      req.flash("error_msg", `This PIN "${pins.pin}" has been used`);
       return res.redirect("/admin/get-gen-voucher/1");
     }
 
     await VoucherPayment.updateOne({ pin }, { used: true });
 
-    // Generate a unique voucher serial (same for all 10 vouchers)
     const generateRandomNumber = (length) => {
       let digits = "0123456789";
       return Array.from({ length }, () => digits[Math.floor(Math.random() * digits.length)]).join("");
@@ -642,9 +650,9 @@ const voucherPrinting = async (req, res) => {
     const expirationDate = new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
     const serial = `${generateRandomNumber(8)}${currentDate.getFullYear()}MON`;
 
-    // Generate 10 vouchers with the same serial number
     let vouchers = [];
-    for (let i = 0; i < 10; i++) {
+    const totalVouchers = pins.number * 10; // e.g., 10 pages => 100 vouchers
+    for (let i = 0; i < totalVouchers; i++) {
       vouchers.push({
         code: generateRandomNumber(12),
         serial_no: serial,
@@ -655,9 +663,7 @@ const voucherPrinting = async (req, res) => {
       });
     }
 
-    // Insert all 10 vouchers into the database
     await Voucher.insertMany(vouchers);
-
     res.redirect("/admin/get-gen-voucher/1");
   } catch (err) {
     console.error(err.message);
@@ -705,8 +711,9 @@ const getVoucherPaymentPage = async ( req, res ) => {
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
       res.setHeader('Expires', '-1');
       res.setHeader('Pragma', 'no-cache');
+      const payments = "3000"
 
-    await res.render('payment', {user: req.user})
+    await res.render('payment', {user: req.user, payments})
   } catch (err) {
     console.log(err.message)
     res.status(500).send('Internal Server Error' + ' ' + err.message);
@@ -726,90 +733,83 @@ const onPrintAtti = async ( req , res ) => {
 }
 
 //-------------------------------payment method --------------------------------------//
-const payStackPayment = async ( req, res ) => {
+const payStackPayment = async (req, res) => {
   try {
-  
-    const email = req.body.email;
-    const amount = req.body.amount * 100; // Paystack amount is in kobo (1/100 of a naira)
-    let errors = []
+    const { email, page } = req.body;
+    const pages = parseInt(page, 10) || 1; // default to 1 if empty
+    const amount = pages * 3000 * 100; // kobo
 
-    if (!email || !amount) {
-      errors.push( { msg: "Please input Your Email" } );
+    let errors = [];
+    if (!email || !pages) errors.push({ msg: "Please input your Email and number of pages" });
+    if (amount < 300000) errors.push({ msg: "You cannot pay less than ₦3000" });
+    if (email !== req.user.email) errors.push({ msg: "Email does not match your account email" });
+
+    if (errors.length > 0) {
+      return res.render('payment', { errors, email, amount: amount / 100, user: req.user });
     }
-    if(amount < 270000) {
-      errors.push( { msg: "You can not pay less than the encrypted amount" } );
-    }
-    if(errors.length > 0){
-      res.render('payment', {
-        errors: errors,
-        email: email,
-        amount: amount,
-        user: req.user,
-      })
-    }if(email !== req.user.email){
-      errors.push( { msg: "Email not tally with the Your Email" } );
-      res.render('payment', {
-        errors: errors,
-        email: email,
-        amount: amount,
-        user: req.user,
-      })
-    }else{
-      const payment = await paystack.transaction.initialize({
-        email: email,
-        amount: amount,
-        metadata: {
-          custom_fields: [
-            {
-              display_name: "Generated Code",
-              variable_name: "generated_code",
-            }
-          ]
-        },
-        callback_url: "https://monitrex.work/admin/callback",
-      });
-      res.redirect(payment.data.authorization_url);
-    }
-   
+
+    const payment = await paystack.transaction.initialize({
+      email,
+      amount,
+      metadata: { pages },
+      callback_url: "https://monitrex.work/admin/callback",
+    });
+
+    res.redirect(payment.data.authorization_url);
   } catch (error) {
     console.log(error);
     res.redirect('/admin/error');
   }
-}
-
-const payStackCallBack = async ( req , res ) => {
-  try {
-         
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let voucherCode = '';
-    for (let i = 0; i < 6; i++) {
-      voucherCode += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-  const codes = voucherCode
-  const reference = req.query.reference;
-  const payment = await paystack.transaction.verify(reference);
-  if (payment.data.status === 'success') {
-    const email = payment.data.customer.email;
-    const amount = payment.data.amount / 100; // convert from kobo to naira
-    const pin = codes; // custom code generation function
-    const order = new VoucherPayment({
-      email: email,
-      amount: amount,
-      reference: reference,
-      pin: pin,
-      status: 'paid',
-    });
-    await order.save();
-    res.render('success', { title: `Congratulations! your #2700 payment was successfull, 
-    Copy this code: "${order.pin}" to purchase Vouchers`, user: req.user, });
-  } else {
-    res.redirect('/error');
-  }
-} catch (error) {
-  console.log(error);
-  res.redirect('/admin/error');
-}
 };
+
+
+const payStackCallBack = async (req, res) => {
+  try {
+    const reference = req.query.reference;
+    const payment = await paystack.transaction.verify(reference);
+
+    if (payment.data.status === 'success') {
+      const email = payment.data.customer.email;
+      const amount = payment.data.amount / 100; 
+      const pages = payment.data.metadata.pages || 1;
+
+      // generate 6-digit pin
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let voucherCode = '';
+      for (let i = 0; i < 6; i++) {
+        voucherCode += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+
+      // expiry 30 days
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + 30);
+
+      const order = new VoucherPayment({
+        email,
+        amount,
+        reference,
+        pin: voucherCode,
+        status: 'paid',
+        number: pages, // save number of pages
+        expiresAt: expiryDate
+      });
+
+      await order.save();
+      res.render('call-back-for-voucher', {
+        title: `Congratulations! Your payment of ₦${amount} was successful. Copy this code: "${order.pin}" to generate your vouchers.`,
+        user: req.user,
+        order,
+      });
+    } else {
+      res.redirect('/error');
+    }
+  } catch (error) {
+    console.log(error);
+    res.redirect('/admin/error');
+  }
+};
+
+
 
 const getHomePageLearenrReg = async ( req , res ) => {
    try {
@@ -860,7 +860,7 @@ const getHomePageLearenrReg = async ( req , res ) => {
   
     const learnerRollNo = `${OneTwo}/${alphaCode}${schoolAbbToUpper}${numerCode}`;
     const learnerEmail = `${OneTwo}.${alphaCode}${schoolAbbToUpper}${numerCode}`;
-      await Currentclass
+       Currentclass
               .find({schoolId: req.user._id} )
               .select("_id name arm")
               .exec((err, current) => {
@@ -2823,7 +2823,7 @@ const getPaymentErrorPage = async ( req , res ) => {
 
     await 
       res.
-      render("error404", {title: 'An error occurred while processing your payment'});
+      render("error404", {title: 'An error occurred while processing your payment', user: req.user});
   } catch (err) {
     if(err) 
     console.log(err.message)
@@ -2945,7 +2945,7 @@ const getAllLearner = async ( req , res ) => {
     var perPage = 9
     var page = req.params.page || 1
 
-    await Learner
+     Learner
         .find({ status : true, deletes: false, schoolId: req.user._id })
         .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
         .skip((perPage * page) - perPage)
@@ -3229,10 +3229,6 @@ const promoteSingleLearner = async (req, res) => {
   }
 };
 
-
-
-
-
 const promoteAllLearner = async (req, res) => {
   try {
     const { classId, newClassId } = req.body; 
@@ -3267,7 +3263,7 @@ const getPromotePage = async ( req , res  ) => {
     if (req.query.id) {
       const id = req.query.id;
       const presentClass = await Currentclass.findById(id).exec()
-      await Currentclass.find( { schoolId : req.user._id } )
+       Currentclass.find( { schoolId : req.user._id } )
                          .select("name arm _id") 
                          .sort({ roll_no : 1})
                          .exec((err, classed) => {
@@ -3294,6 +3290,50 @@ const getPromotePage = async ( req , res  ) => {
   
 
 };
+
+const getAllLearnerWitNoclass = async ( req , res, next) => {
+  try {
+    const id = req.query.id;
+    const user = req.user;
+    const student = await Learner.find({ schoolId : user._id, classId: { $exists: false }, status: true, deletes: false });
+    res.locals.student = student; // pass data forward
+    next(); // ✅ continue to getPromotePage
+  } catch (error) {
+      res.status(500).send('Internal Server Error' + ' ' + error);
+      console.log(error)
+      next(error);
+  }
+}
+
+
+const updateBulkUploads = async (req, res) => {
+  try {
+    let { classId, classes, learners, arm } = req.body;
+
+    if (!learners) {
+      return res.status(400).json({ message: "No learners selected" });
+    }
+
+    // Normalize values
+    learners = Array.isArray(learners) ? learners : [learners];
+    classId = Array.isArray(classId) ? classId[0] : classId;
+    classes = Array.isArray(classes) ? classes[0] : classes;
+    arm = Array.isArray(arm) ? arm[0] : arm;
+
+    await Learner.updateMany(
+      { _id: { $in: learners } },
+      { $set: { classId: classId, classes: classes, arm : arm } }
+    );
+
+    res.status(200).json({ message: "Learners Updated Successfully" });
+  } catch (err) {
+    console.error("Error:", err.message);
+    res.status(500).send("Internal Server Error: " + err.message);
+  }
+};
+
+
+
 
 
 //-----------------------------checking Result-------------------------------------
@@ -4877,7 +4917,8 @@ module.exports = {
     getCreatePageOfTheWeek,
     uploadSchoolImaging,
     bulkUpload,
-  
+    getAllLearnerWitNoclass,
+    updateBulkUploads,
     
 }
 

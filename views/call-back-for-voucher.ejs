@@ -1,0 +1,52 @@
+<%- include ("./include/header.ejs") %>
+
+<%- include ("./include/_dash_board.ejs") %>
+
+<div class="call-back-receipt">
+    <h2 class="ofhtwo"><i class="fas fa-receipt"></i> Payment Receipt</h2>
+    <%- include ('./partials/messages') %> 
+
+    <div class="receipt-details">
+        <p><strong>Transaction Reference:</strong> <%= order.reference %></p>
+        <p><strong>Email:</strong> <%= order.email %></p>
+        <p><strong>Amount Paid (₦):</strong> <%= order.amount %></p>
+        <p><strong>Number of Pages:</strong> <%= order.number %></p>
+        <p><strong>Voucher Code:</strong> <%= order.pin %></p>
+        <p><strong>Status:</strong> <%= order.status %></p>
+    </div>
+</div>
+
+
+<style>
+    .call-back-receipt {
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .receipt-details {
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 500px;
+        height: 600px;
+        background-color: #f9f9f9;
+        text-align: left;
+        line-height: 50px;
+    }
+    
+    .receipt-details p {
+        margin: 10px 0;
+        font-size: 16px;
+    }
+    
+    .receipt-details strong {
+        color: #333;
+    }
+
+</style>
+
+
+
+
+<%- include ("./include/footer.ejs") %>
