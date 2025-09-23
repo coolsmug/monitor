@@ -19,7 +19,7 @@ const subDomainRouter = require("./services/middleware/weburl");
 
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 const SECRET = process.env.SESSION_SECRET;
 const connectDB = require('./services/database/connection');
 connectDB();
@@ -42,7 +42,8 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ 
-      mongoUrl:'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
+      mongoUrl: 'mongodb://127.0.0.1:27017/Result',
+      // mongoUrl:'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
       collectionName: 'sessions'
     }),
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
