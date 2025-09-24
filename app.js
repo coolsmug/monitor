@@ -174,10 +174,10 @@ app.use("/name", require('./services/routes/website'));
 
 
 
-const server = app.listen(PORT, () => {
-    let host = server.address().address;
-    let port = server.address().port;
-    console.log(`server running and listening at http:/%s, %%s, ${host}, ${port}`);
+const PORT = process.env.PORT || 3000;
 
-})
+const server = app.listen(PORT, '0.0.0.0', () => {
+  const { address, port } = server.address();
+  console.log(`Server running and listening at http://${address}:${port}`);
+});
 
