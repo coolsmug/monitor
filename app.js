@@ -174,7 +174,7 @@ app.use("/name", require('./services/routes/website'));
 
 
 
-const PORT = process.env.PORT || 3000;
+
 
 const server = app.listen(PORT, '0.0.0.0', () => {
   const { address, port } = server.address();
