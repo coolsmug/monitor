@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= users.first_name %> <%= users.last_name %> <%= users.middle_name %></title>
-    <link rel="icon" href="/img/monitor_lo-01.png" type="image/x-icon">
+    <link rel="icon" href="https://res.cloudinary.com/idrynod-001/image/upload/v1758499673/e-logo_phpxzg.png" type="image/x-icon">
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -21,12 +21,17 @@
     
 
 <div id="divid">
-    <div>
+    
         <div class="body" id="htmlToimage">
    
             <div class="sidebar">
                 <div class="student-image">
-                   <img src="<%= users && users.img.url ? users.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="Learner Image">
+                   <img 
+                    src="<%= users && users.img.url ? users.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" 
+                    alt="Learner Image" 
+                    crossOrigin="anonymous"
+                    onerror="this.onerror=null;this.src='https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg';"
+                    />
                 </div>
                
                 <div class="student-name">
@@ -94,11 +99,12 @@
                             <p class="school-email"><i class="fas fa-envelope-open-text"></i> Email: <%= user.email %>    |   <i class="fas fa-atlas"></i> Website: <%= user.website %></p>
                     </div>
                     <div id="school-logo">
-                        <% if(user.img.url) {%> 
-                            <img src="<%= user.img.url.replace('http://', 'https://') %>" alt="Learner Image">
-                         <% } else {%> 
-                             <img src="/img/school_logo-01-01.png" alt="" width="200">
-                             <% } %> 
+                         <img 
+                    src="<%= user && user.img.url ? user.img.url.replace('http://','https://') : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" 
+                    alt="School Logo" 
+                    crossOrigin="anonymous"
+                    onerror="this.onerror=null;this.src='https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg';"
+                    />
                     </div>
                 </div>
                 
@@ -386,85 +392,76 @@
         
             </div> 
         </div>
-    </div>
+   
 </div>
 
 <div class="click">
-    <button id="downloader" class="clickbtn">
-       <i class="fas fa-camera-retro"></i> 
-       Snap
-   </button> 
-   <button class="clickbtn" onclick='printDiv()'>
-       <i class="fas fa-print"></i> 
-       Print
-   </button>
+     <button id="downloader" class="clickbtn" onclick="downloadPNG()">
+        <i class="fas fa-camera-retro"></i> 
+        Snap
+    </button> 
+    <button class="clickbtn" onclick='printDivs()'>
+        <i class="fas fa-print"></i> 
+        Print
+    </button>
+   <!-- <button id="pdfDownload" class="clickbtn">
+        <i class="fas fa-file-pdf"></i> 
+        Pdf
+    </button> -->
+
 </div>
+
 
 <footer class="foot">
     <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
   </footer> 
 
 <%- include ("./include/footer.ejs") %> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+
 <script>
-
-    const printDiv = async ()=>{
-        try {
-            let schooLogo = document.querySelector(".body");
-           if( schooLogo.style.margin = "0px") {
-                schooLogo.style.margin = "auto"
-           }
-            var printContents = document.getElementById('divid').innerHTML
-            var originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContents;
-           await window.print();
-        } catch (error) {
-            console.error(error.message)
-        }
-    
-     document.body.innerHTML = originalContents;  
-       
-    $(document).ready(function() {
-    
-    $("#downloader").click(function() {
-      let schooLogo = document.querySelector(".body");
-      if( schooLogo.style.margin = "auto") {
-          schooLogo.style.margin = "0px"
+// ---------- utility: wait for images ----------
+async function waitForImages(parent) {
+  const images = parent ? parent.querySelectorAll('img') : [];
+  const promises = Array.from(images).map(img => {
+    return new Promise(resolve => {
+      if (img.complete) resolve();
+      else {
+        img.onload = img.onerror = () => resolve();
       }
-        var domNode = document.getElementById('htmlToimage');
-        domtoimage.toPng(domNode, {quality: 1}).then(function (dataUrl) {
-    var link = document.createElement('a');
-    link.download = 'monitor_E-result.jpeg';
+    });
+  });
+  return Promise.all(promises);
+}
+
+// ---------- PRINT (unchanged) ----------
+function printDivs() {
+  const divToPrint = document.getElementById('divid');
+  const printContents = divToPrint.innerHTML;
+  const originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = printContents;
+  window.print();
+  document.body.innerHTML = originalContents;
+}
+
+// ---------- DOWNLOAD PNG (uses dom-to-image) ----------
+async function downloadPNG() {
+  try {
+    const domNode = document.getElementById('divid');
+    await waitForImages(domNode);
+
+    // dom-to-image tends to be reliable for PNG exports
+    const dataUrl = await domtoimage.toPng(domNode, { quality: 10, cacheBust: true, width: domNode.scrollWidth, height: domNode.scrollHeight });
+    const link = document.createElement('a');
+    link.download = 'learner_result.png';
     link.href = dataUrl;
     link.click();
-    
-    }).catch((err) => {
-    if(err) console.log( err)
-    })
-    
-    })
-    })
-    }
-    
-       
-    $(document).ready(function() {
-    
-    $("#downloader").click(function() {
-      let schooLogo = document.querySelector(".body");
-      if( schooLogo.style.margin = "auto") {
-          schooLogo.style.margin = "0px"
-      }
-        var domNode = document.getElementById('htmlToimage');
-        domtoimage.toPng(domNode, {quality: 1}).then(function (dataUrl) {
-    var link = document.createElement('a');
-    link.download = 'monitor_E-result.jpeg';
-    link.href = dataUrl;
-    link.click();
-    
-    }).catch((err) => {
-    if(err) console.log( err)
-    })
-    
-    })
-    })
-    </script>
+  } catch (err) {
+    console.error('Error generating PNG:', err);
+    alert('Could not generate PNG. See console for details.');
+  }
+}
 
+</script>

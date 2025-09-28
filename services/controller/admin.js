@@ -763,24 +763,35 @@ const payStackPayment = async (req, res) => {
 };
 
 
+const nodemailer = require('nodemailer');
+
 const payStackCallBack = async (req, res) => {
   try {
     const reference = req.query.reference;
-    const payment = await paystack.transaction.verify(reference);
+    const response = await paystack.transaction.verify(reference);
 
-    if (payment.data.status === 'success') {
-      const email = payment.data.customer.email;
-      const amount = payment.data.amount / 100; 
-      const pages = payment.data.metadata.pages || 1;
+    console.log('Full verification response:', response);
 
-      // generate 6-digit pin
+    if (!response.status || !response.data) {
+      console.log('Paystack verification failed:', response.message);
+      return res.redirect('/admin/error');
+    }
+
+    const payment = response.data;
+    console.log('Payment status:', payment.status);
+
+    if (payment.status && payment.status.toLowerCase() === 'success') {
+      const email = payment.customer.email;
+      const amount = payment.amount / 100;
+      const pages = (payment.metadata && payment.metadata.pages) || 1;
+
+      // generate pin
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
       let voucherCode = '';
       for (let i = 0; i < 6; i++) {
         voucherCode += characters.charAt(Math.floor(Math.random() * characters.length));
       }
 
-      // expiry 30 days
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 30);
 
@@ -790,24 +801,55 @@ const payStackCallBack = async (req, res) => {
         reference,
         pin: voucherCode,
         status: 'paid',
-        number: pages, // save number of pages
-        expiresAt: expiryDate
+        number: pages,
+        expiresAt: expiryDate,
       });
-
       await order.save();
-      res.render('call-back-for-voucher', {
-        title: `Congratulations! Your payment of ₦${amount} was successful. Copy this code: "${order.pin}" to generate your vouchers.`,
+
+      // try email but don't break page if it fails
+      try {
+        const transporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+            port: 465,
+          auth: {
+            user:'monitorschoolmanagementapp@gmail.com',
+            pass:process.env.GMAIL_PASSWORD,
+          },
+          tls: { rejectUnauthorized: false },
+        });
+
+        await transporter.sendMail({
+          from: 'monitorschoolmanagementapp@gmail.com',
+          to: email,
+          subject: 'Your Voucher Purchase',
+          html: `
+            <h2>Payment Successful</h2>
+            <p>Thank you for your payment of ₦${amount}.</p>
+            <p><strong>Voucher Code:</strong> ${order.pin}</p>
+            <p><strong>Number of Pages:</strong> ${order.number}</p>
+            <p><strong>Reference:</strong> ${order.reference}</p>
+            <p><strong>Expires:</strong> ${expiryDate.toDateString()}</p>
+          `,
+        });
+      } catch (mailErr) {
+        console.error('Email sending error:', mailErr);
+      }
+
+      return res.render('call-back-for-voucher', {
+        title: `Congratulations! Your payment of ₦${amount} was successful. A copy of your voucher has been sent to ${email}.`,
         user: req.user,
         order,
       });
-    } else {
-      res.redirect('/error');
     }
+
+    // fallback
+    return res.redirect('/admin/error');
   } catch (error) {
-    console.log(error);
-    res.redirect('/admin/error');
+    console.error('Callback error:', error);
+    return res.redirect('/admin/error');
   }
 };
+
 
 
 
@@ -3186,14 +3228,12 @@ const oldLearnersStautusUpdate = async ( req , res ) => {
 //---------------------------Learners Promotion ------------------------------------------------
 const promoteSingleLearner = async (req, res) => {
   try {
-    const learnerId = req.params.id;      // learner id from route
-    const classId = req.body.classId;     // FIX: must match <select name="classId">
+    const learnerId = req.params.id;
+    const { classId } = req.body;
 
-    console.log('Learner ID:', learnerId);
-    console.log('Class ID:', classId);
-
-    // find class
-    const userClass = await Currentclass.find({ _id : classId}).exec();
+    
+    // find class (single doc)
+    const userClass = await Currentclass.findById(classId).exec();
     if (!userClass) {
       const message = 'Class not found';
       if (req.xhr) return res.status(404).json({ message });
@@ -3202,7 +3242,7 @@ const promoteSingleLearner = async (req, res) => {
     }
 
     // find learner
-    const learner = await Learner.findById(learnerId);
+    const learner = await Learner.findById(learnerId).exec();
     if (!learner) {
       const message = 'Learner not found';
       if (req.xhr) return res.status(404).json({ message });
@@ -3211,8 +3251,10 @@ const promoteSingleLearner = async (req, res) => {
     }
 
     // update learner
-    learner.classId = classId;
+    learner.classId = userClass._id;
     learner.classes = userClass.name;
+    learner.arm = userClass.arm;
+
     await learner.save();
 
     const message = 'Learner promoted successfully';

@@ -18,7 +18,7 @@
           </div>
           <div class="div_forms">
             <label for="id">Class Name:</label>
-            <select name="classId" id="classId">
+            <select name="classId">
                 
                 <% for (var i = 0; i < classed.length; i++) { %>
                     <option value="<%= classed[i]._id %>">
@@ -231,30 +231,33 @@ input[type="checkbox"] {
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
   const promoteButtons = document.querySelectorAll(".promote-button");
 
   promoteButtons.forEach((button) => {
     button.addEventListener("click", async (event) => {
+      event.preventDefault();
       const form = button.closest(".promote-form");
-      const formData = new FormData(form);
       const userId = button.getAttribute("data-user-id");
+      // get your classId from the form or a data attribute:
+      const classId = form.querySelector("[name='classId']").value;
 
       try {
         const response = await fetch(`/admin/promotion/${userId}`, {
           method: "POST",
-          body: formData,
           headers: {
+            "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",
           },
+          body: JSON.stringify({ classId }), // now it’s JSON
         });
 
+        const result = await response.json();
         if (response.ok) {
-          const result = await response.json();
-          alert(result.message); // Success message
+          alert(result.message);
+          location.reload();
         } else {
-          const error = await response.json();
-          alert(error.message); // Error message
+          alert(result.message);
         }
       } catch (error) {
         console.error("Error promoting learner:", error);
@@ -263,6 +266,7 @@ input[type="checkbox"] {
     });
   });
 });
+
 
 $("#bulkUpdateForm").submit(function (event) {
   event.preventDefault();

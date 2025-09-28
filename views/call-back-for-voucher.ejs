@@ -1,52 +1,108 @@
 <%- include ("./include/header.ejs") %>
 
-<%- include ("./include/_dash_board.ejs") %>
-
-<div class="call-back-receipt">
-    <h2 class="ofhtwo"><i class="fas fa-receipt"></i> Payment Receipt</h2>
-    <%- include ('./partials/messages') %> 
-
-    <div class="receipt-details">
-        <p><strong>Transaction Reference:</strong> <%= order.reference %></p>
-        <p><strong>Email:</strong> <%= order.email %></p>
-        <p><strong>Amount Paid (₦):</strong> <%= order.amount %></p>
-        <p><strong>Number of Pages:</strong> <%= order.number %></p>
-        <p><strong>Voucher Code:</strong> <%= order.pin %></p>
-        <p><strong>Status:</strong> <%= order.status %></p>
-    </div>
-</div>
-
 
 <style>
-    .call-back-receipt {
-        margin-top: 20px;
-        text-align: center;
-    }
-    
-    .receipt-details {
-        margin: 20px auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 500px;
-        height: 600px;
-        background-color: #f9f9f9;
-        text-align: left;
-        line-height: 50px;
-    }
-    
-    .receipt-details p {
-        margin: 10px 0;
-        font-size: 16px;
-    }
-    
-    .receipt-details strong {
-        color: #333;
-    }
-
+  .receipt-container {
+    max-width: 700px;
+    margin: 150px auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    background: #fff;
+    font-family: Arial, sans-serif;
+  }
+  .receipt-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .receipt-header img {
+    height: 60px;
+    margin: 0 10px;
+  }
+  .receipt-header h2 {
+    margin: 5px 0;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .receipt-details p {
+    margin: 6px 0;
+    font-size: 15px;
+  }
+  .receipt-footer {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 15px;
+    color: #555;
+  }
+  .btn-download {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background: #0069d9;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-download:hover {
+    background: #0053b3;
+  }
 </style>
 
+<div class="receipt-container" id="receipt">
+  <div class="receipt-header">
+    <!-- Replace with your actual logo paths -->
+    <img src="https://res.cloudinary.com/idrynod-001/image/upload/v1758499673/e-logo_phpxzg.png" alt="Monitrex Logo">
+    <img src="<%= user && user.img ? user.img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg' %>" alt="School Logo">
+    <h2>Payment Receipt</h2>
+    <p>Thank you for your payment</p>
+  </div>
+
+  <div class="receipt-details">
+  <p><strong>Name:</strong> <%= order.name %></p>
+  <p><strong>Email:</strong> <%= order.email %></p>
+  <p><strong>Transaction Reference:</strong> <%= order.reference %></p>
+  <p><strong>Amount Paid (₦):</strong> <%= order.amount %></p>
+  <p><strong>Number of Pages:</strong> <%= order.number %></p>
+
+  <p><strong>Voucher Code:</strong>
+    <input type="text" id="voucherCode" value="<%= order.pin %>" readonly style="border:none; font-weight:bold; color:#333; background:#f1f1f1; padding:4px;">
+    <button onclick="copyVoucher()" style="padding:4px 8px;">Copy</button>
+  </p>
+
+  <p><strong>Status:</strong> <%= order.status %></p>
+</div>
+
+  <button class="btn-download" onclick="downloadReceipt()">Download PDF Receipt</button>
+
+  <div class="receipt-footer">
+    &copy; <%= new Date().getFullYear() %> Monitrex School – All Rights Reserved.
+  </div>
+</div>
+
+<!-- include html2pdf.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  function downloadReceipt() {
+    const element = document.getElementById('receipt');
+    const opt = {
+      margin:       10,
+      filename:     'Monitrex_Receipt_<%= order.reference %>.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  }
 
 
+
+   function copyVoucher() {
+    const voucherInput = document.getElementById('voucherCode');
+    voucherInput.select();
+    voucherInput.setSelectionRange(0, 99999); // For mobile devices
+    document.execCommand('copy');
+    alert('Voucher code copied: ' + voucherInput.value);
+  }
+</script>
 
 <%- include ("./include/footer.ejs") %>

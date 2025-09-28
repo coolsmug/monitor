@@ -212,7 +212,7 @@ adminRoute.route('/create-currentclass').get(adminEnsureLoggedIn, getCreateClass
 adminRoute.route('/create-subject').get(adminEnsureLoggedIn, getCreateSubjectPage);
 adminRoute.route('/create-session').get(adminEnsureLoggedIn, getCreateSessionPage);
 adminRoute.route('/create-section').get(adminEnsureLoggedIn, getCreateSectionPage);
-adminRoute.route('/error').get(adminEnsureLoggedIn, getPaymentErrorPage);
+adminRoute.route('/error').get(getPaymentErrorPage);
 adminRoute.route('/all-session/:page').get(adminEnsureLoggedIn, getAllSession);
 adminRoute.route('/all-section/:page').get(adminEnsureLoggedIn, getAllSection);
 adminRoute.route('/all-thirdsection/:page').get(adminEnsureLoggedIn, getAllThirdSecton);

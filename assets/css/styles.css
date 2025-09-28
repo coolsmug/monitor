@@ -80,15 +80,16 @@ body::-webkit-scrollbar {
 
    .black {
     color: black;
-    font-weight: bolder;
+    font-weight: bold;
 }
 
 .red {
     color: rgb(12, 134, 3);
-    font-weight: bolder;
+    font-weight: bold;
     font-family: var(--montserrat-bold);
 
 }
+
 
 
 .sidebar {
@@ -167,7 +168,7 @@ body::-webkit-scrollbar {
 
 .the-school-name {
     font-family: var(--montserrat-bold);
-    font-weight: bolder;
+    font-weight: bold;
     font-size: 35px;
     color: var(--deepest-blue);
     margin: 0;
@@ -311,7 +312,7 @@ body::-webkit-scrollbar {
 }
 
 .payable-fees table tbody tr td:first-child{
-    font-weight: bolder;
+    font-weight: bold;
 }
 
 .payable-fees td {
@@ -337,22 +338,25 @@ body::-webkit-scrollbar {
 }
 
 .flex-comment table tbody tr td:first-child{
-    font-weight: bolder;
+    font-weight: bold;
 }
 
 .flex-comment tr:nth-child(even) {
     background-color: var(--white);
     
 }
-
+.nowing {
+        margin-top: -20px;
+        
+    }
+.overall{
+        color: blueviolet;
+    }
 .click {
-    margin: auto;
-    display:flex;
-    flex-direction: row;
-    margin-top:20px;
-    padding: 5px 11px; 
-    margin-left: 5px;
-    gap: 10px;
+    position: absolute;
+    bottom: -700px;
+    left: 20px;
+
 
 }
 
