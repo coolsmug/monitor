@@ -8,23 +8,18 @@
                                    
                             <div class="dreout">
                               
-                                <form action="/admin/allocate_class?id=<%= staff._id %>" method="post">
-                                    <h5>Assign class for Staff</h5>
-                                
-                                    <select name="classID" id="">
-                                        <option value="">select class</option>
-                                        <% classes.forEach((staffclass) => { %>
-                                    
-                                            <option value="<%= staffclass._id %>"> <%= staffclass.name %><%= staffclass.arm %></option>
-
-                                        <% }) %>
-                                    </select>
-                            
-                                <input type="submit" value="allocate">
-                            </form>
+                                <form id="allocateForm">
+                                <input type="hidden" id="staffId" value="<%= staff._id %>">
+                                <select id="classID" required>
+                                    <% classes.forEach(c => { %>
+                                    <option value="<%= c._id %>"><%= c.name %></option>
+                                    <% }) %>
+                                </select>
+                                <button type="submit">Allocate Class</button>
+                                </form>
                             </div>
                            
-                                        <table>
+                                    <table>
                                           
                                         <tbody>
                                             <h3>Staff's Details</h3> 
@@ -40,17 +35,14 @@
                                             </th>
                                                 <td>
                                                     
-                                                    <% for (let i = 0; i < allocatedClasses.length; i++) { %>
-                                                        <% const sclass = allocatedClasses[i]; %>
-                                                        <% if (sclass) { %>
-                                                            
-                                                        <li class="li"><%= sclass.name %><%= sclass.arm %>
-                                                            <a href="/admin/disallocate/<%= staff._id %>?classed=<%= sclass._id %>">
-                                                                <i class="fas fa-trash"></i>
-                                                            </a>
+                                                    <ul id="staffClasses">
+                                                    <% allocatedClasses.forEach(c => { %>
+                                                        <li class="newl">
+                                                        <%= c.name || c %>
+                                                        <button class="remove-btn" data-class="<%= c._id || c %>" data-staff="<%= staff._id %>">❌ </button>
                                                         </li>
-                                                        <% } %>
-                                                    <% } %>
+                                                    <% }) %>
+                                                    </ul>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -58,7 +50,8 @@
                        
            
         
-                                            </table>
+                                    </table>
+                                            <div id="message"></div>
    
 </div>
 <footer class="foot">
@@ -80,7 +73,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
+    /* background-color: #fff; */
     padding: 20px;
     box-shadow: 2px 2px 10px rgb(187, 187, 187);
     gap: 50px;
@@ -105,6 +98,7 @@
 
 table tbody {
     box-sizing: border-box;
+   
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -147,7 +141,7 @@ table tr {
     align-items: center;
     font-size: 15px;
     gap: 50px;
-    border: 1px solid  var(--white_one);
+    border: 2px solid  var(--light-blue);
     overflow: auto;
     padding: 10px;
     
@@ -156,7 +150,7 @@ table tr {
 th, td {
     text-align: left;
     width: 150px;
-    border: 1px solid  var(--white_one);
+    /* border: 2px solid  var(--light-blue); */
 }
 
 tr td  p {
@@ -214,59 +208,116 @@ form {
     gap: 20px;
 }
 
+.newl {
+    display: flex;
+    justify-content: center;
+    width: 150px;
+    background: #ccc;
+    margin-bottom: 5px;
+    color: #fff;
+
+}
+ul button {
+    background: none;
+}
+
+.dreout button {
+     padding: 12px 14px;
+        outline: none;
+        border: none;
+        background: linear-gradient(to right, rgb(6, 167, 241),rgb(45, 238, 212));
+        color: white;
+        border-radius: 10px;
+        transition: ease-in-out;
+}
+
+  .dreout button:hover {
+      padding: 12px 14px;
+        background: linear-gradient(to right, rgb(6, 22, 241),rgb(45, 238, 61));
+        color: white;
+    }
 </style>
 
+
+
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const messageBox = document.getElementById("message");
+  const staffId = document.getElementById("staffId").value;
+  const allocateForm = document.getElementById("allocateForm");
+  const classSelect = document.getElementById("classID");
+  const classList = document.getElementById("staffClasses");
 
+  // Utility to show messages
+  const showMessage = (msg, color = "green") => {
+    messageBox.textContent = msg;
+    messageBox.style.color = color;
+    setTimeout(() => messageBox.textContent = "", 3000);
+  };
+
+  // 🟢 Allocate Class (AJAX)
+  allocateForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const classID = classSelect.value;
+    const className = classSelect.options[classSelect.selectedIndex].text;
+
+    try {
+      const res = await fetch(`/admin/allocate-staff-class?id=${staffId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ classID }),
+      });
+
+      if (res.ok) {
+        showMessage("✅ Class allocated successfully!");
+        // Dynamically add new class to list
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${className}
+          <button class="remove-btn" data-class="${classID}" data-staff="${staffId}">❌</button>
+        `;
+        classList.appendChild(li);
+
+        // Reattach event to new remove button
+        attachRemoveHandler(li.querySelector(".remove-btn"));
+      } else {
+        const data = await res.text();
+        showMessage("⚠️ " + data, "red");
+      }
+    } catch (err) {
+      console.error(err);
+      showMessage("❌ Error allocating class.", "red");
+    }
+  });
+
+  // 🔴 Function to attach Remove Handler
+  const attachRemoveHandler = (btn) => {
+    btn.addEventListener("click", async () => {
+      const staffId = btn.dataset.staff;
+      const classed = btn.dataset.class;
+      const parentLi = btn.closest("li");
+
+      if (!confirm("Are you sure you want to remove this class?")) return;
+
+      try {
+        const res = await fetch(`/admin/disallocate-staff-class/${staffId}?classed=${classed}`, {
+          method: "GET",
+        });
+
+        if (res.ok) {
+          showMessage("✅ Class disallocated successfully!");
+          parentLi.remove(); // remove instantly
+        } else {
+          showMessage("⚠️ Failed to disallocate class.", "red");
+        }
+      } catch (err) {
+        console.error(err);
+        showMessage("❌ Error disallocating class.", "red");
+      }
+    });
+  };
+
+  // Attach remove handler to existing buttons at page load
+  document.querySelectorAll(".remove-btn").forEach(attachRemoveHandler);
+});
 </script>
-
-<!-- //     let open = document.getElementsByClassName("list_ones");
-
-// let i;
-
-// for(i = 0; i < open.length; i++) {
-//     open[i].onclick = function() {
-//         this.classList.toggle("actives");
-//         let hideit = this.nextElementSibling;
-//         if(hideit.style.maxHeight) {
-//             hideit.style.maxHeight = null;
-//             hideit.style.opacity = '0'
-//        }else {
-//             hideit.style.maxHeight = hideit.scrollHeight + "px";
-//             hideit.style.opacity = '1'
-//         }
-//     }    
-// }
-
-// let open = document.getElementsByClassName("list_ones");
-
-// let i;
-
-// for(i = 0; i < open.length; i++) {
-//     open[i].onclick = function() {
-//         // Toggle the "actives" class on the clicked element
-//         this.classList.toggle("actives");
-        
-//         // Find the next sibling element
-//         let hideit = this.nextElementSibling;
-        
-//         // Loop through all elements with the "list_ones" class
-//         for (let j = 0; j < open.length; j++) {
-//             // Check if the current element has maxHeight set
-//             if (open[j].nextElementSibling.style.maxHeight) {
-//                 // If so, unset it
-//                 open[j].nextElementSibling.style.maxHeight = null;
-//                 open[j].nextElementSibling.style.opacity = '0';
-//             }
-//         }
-        
-//         // Set the maxHeight of the clicked element's next sibling
-//         if (hideit.style.maxHeight) {
-//             hideit.style.maxHeight = null;
-//             hideit.style.opacity = '0';
-//         } else {
-//             hideit.style.maxHeight = hideit.scrollHeight + "px";
-//             hideit.style.opacity = '1';
-//         }
-//     }    
-// } -->

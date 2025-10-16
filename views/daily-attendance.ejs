@@ -1,0 +1,149 @@
+<!-- for daily attendance -->
+<%- include("./include/header.ejs") %>
+<%- include("./include/_dash_board.ejs") %>
+
+<div class="okayys">
+
+<h2>📅 Staff Daily Attendance</h2>
+
+<form id="dailyForm">
+  <label for="staffId">Select Staff:</label>
+  <select id="staffId" name="staffId" required>
+    <% staffList.forEach(s => { %>
+        <option value="">Select option...</option>
+        <option value="<%= s._id %>"><%= s.name %></option>
+    <% }) %>
+  </select>
+
+  <label for="month">Month:</label>
+  <select id="month" name="month" required>
+    <% for(let i=1; i<=12; i++){ %>
+      <option value="<%= i %>"><%= new Date(0, i-1).toLocaleString('default', { month: 'long' }) %></option>
+    <% } %>
+  </select>
+
+  <label for="year">Year:</label>
+  <select id="year" name="year" required>
+    <% for(let y=2023; y<=2030; y++){ %>
+      <option value="<%= y %>"><%= y %></option>
+    <% } %>
+  </select>
+
+  <button type="submit">View</button>
+</form>
+
+<div id="dailyAttendanceContainer" style="margin-top: 20px;">
+  <table border="1" cellpadding="6" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Clock In</th>
+        <th>Clock Out</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="dailyTableBody"></tbody>
+  </table>
+
+  <div id="summary" style="margin-top: 15px;"></div>
+</div>
+
+
+</div>
+
+
+
+
+
+<style>
+    .okayys {
+        width: 700px;
+        margin: auto;
+    }
+    select {
+        padding: 12px 14px;
+        outline: none;
+        border: none;
+        background-color: rgb(6, 167, 241);
+         border-radius: 10px;
+        color: white;
+    }
+
+    button {
+      padding: 12px 14px;
+        outline: none;
+        border: none;
+        background: linear-gradient(to right, rgb(6, 167, 241),rgb(45, 238, 212));
+        color: white;
+        border-radius: 10px;
+        transition: ease-in-out;
+    }
+
+     button:hover {
+      padding: 12px 14px;
+        background: linear-gradient(to right, rgb(6, 22, 241),rgb(45, 238, 61));
+        color: white;
+    }
+  h2 { margin-bottom: 15px; }
+  .filter-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+  }
+  th {
+    background: #4caf50;
+    color: white;
+  }
+  td, th {
+    text-align: center;
+  }
+</style>
+
+<script>
+document.getElementById("dailyForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const staffId = document.getElementById("staffId").value;
+  const month = document.getElementById("month").value;
+  const year = document.getElementById("year").value;
+
+  const res = await fetch(`/admin/staff-daily-attendance?staffId=${staffId}&month=${month}&year=${year}`);
+  const data = await res.json();
+
+  const tbody = document.getElementById("dailyTableBody");
+  tbody.innerHTML = "";
+
+  if (!data.dailyAttendance || data.dailyAttendance.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='4'>No attendance data.</td></tr>";
+    return;
+  }
+
+  data.dailyAttendance.forEach(day => {
+    const row = `
+      <tr>
+        <td>${day.date}</td>
+        <td>${day.clockIn}</td>
+        <td>${day.clockOut}</td>
+        <td>${day.status}</td>
+      </tr>
+    `;
+    tbody.insertAdjacentHTML("beforeend", row);
+  });
+
+  document.getElementById("summary").innerHTML = `
+    <strong>Total Days:</strong> ${data.totalDays} |
+    <strong>Present:</strong> ${data.totalPresent} |
+    <strong>Absent:</strong> ${data.totalAbsent}
+  `;
+});
+</script>
+
+
+
+<!-- daily attandance ends here -->
+ <%- include("./include/footer.ejs") %>

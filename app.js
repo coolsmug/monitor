@@ -35,6 +35,10 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(flash({ html: true }));
+app.use(express.static("assets"));
+app.use('/models', express.static(path.join(__dirname, 'assets/models')));
+
+
 
 app.use(
   session({
@@ -42,8 +46,8 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ 
-      // mongoUrl: 'mongodb://127.0.0.1:27017/Result',
-      mongoUrl:'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
+      mongoUrl: 'mongodb://127.0.0.1:27017/Result',
+      // mongoUrl:'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
       collectionName: 'test'
     }),
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour

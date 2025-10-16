@@ -1,109 +1,48 @@
-const { unique } = require('agenda/dist/job/unique');
+// models/Staff.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const staffSchema = new Schema({
-  admin_no: {
-    type: String,
-    trim: true
-  },
-  roll: {
-    type: String,
-    required: true,
-    trim: true,  
-  },
-  name: {
-    type: String,
-    required: true,
-    trim: true,  
-  },
-    position: {
-    type: String,
-    trim: true,
- 
-  },
-   
-  status: {
-    type: Boolean,
-    default: false,
-  },
-
-  isStaff: {
-    type: Boolean,
-    default: false,
-  },
-  schoolId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'School',  // Reference to the School model
-  },
-  classId: [
-    String,  // Array of strings; if this references another model, change to ObjectId
-  ],
-  password: {
-    type: String,
-    trim: true,
-    
-  },
-  about: {
-    type: String,
-    trim: true,  // Trims whitespace
-  },
-  subject: {
-    type: String,
-    trim: true,
-  },
-
-  mobile_phone: {
-    type: String,
-    trim: true,  // Trims whitespace
-    
-  },
-    award: [
-      String
-    ],
-  address: {
-    type: String,
-    trim: true,  // Trims whitespace from addresses
-  },
+  admin_no: { type: String, trim: true },
+  roll: { type: String, required: true, trim: true },
+  name: { type: String, required: true, trim: true },
+  position: { type: String, trim: true },
+  status: { type: Boolean, default: false },
+  isStaff: { type: Boolean, default: false },
+  schoolId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'School' },
+  classId: [String],
+  password: { type: String, trim: true },
+  about: { type: String, trim: true },
+  subject: { type: String, trim: true },
+  mobile_phone: { type: String, trim: true },
+  award: [String],
+  address: { type: String, trim: true },
   email: {
     type: String,
     required: true,
-    unique: true,  // Ensures emails are unique
-    sparse: true,  // Allows some records to have no email if needed (but combined with `required: true`, it might not be necessary)
+    unique: true,
     trim: true,
     minlength: 3,
     validate: {
-      validator: function (v) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);  // Simple email regex for validation
-      },
-      message: (props) => `${props.value} is not a valid email!`,
-    },
+      validator: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+      message: props => `${props.value} is not a valid email!`
+    }
   },
-  x: {
-    type: String,
-    trim: true
+  social: {
+    x: { type: String, trim: true },
+    instagram: { type: String, trim: true },
+    facebook: { type: String, trim: true },
+    linkedin: { type: String, trim: true },
   },
-  instagram: {
-    type: String,
-    trim: true
+ img: {
+  url: String,          
+  publicId: String,    
+},
+faceEmbedding: {
+    type: [Number],
+    default: [],
   },
-  facebook: {
-    type: String,
-    trim: true
-  },
-  linkedin: {
-    type: String,
-    trim: true
-  },
-  img: {
-    url: String,  // Cloudinary image URL
-    publicId: String,  // Cloudinary public ID for image management
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  createdAt: { type: Date, default: Date.now }
 });
 
 const Staff = mongoose.model('Staff', staffSchema);

@@ -1137,6 +1137,7 @@ const createStaff = async ( req , res ) => {
             award: award,
            user: req.user,
            admin_no: staffAdminNo,
+           
         })
     }  else {
     
@@ -1332,6 +1333,37 @@ const editStaffImage = (req, res) => {
       res.render("error404", {title: "Error 500:. oops! Internal Server Error" + ' ' + error})
   }
 };
+
+//image Embedding in staff update
+
+// controller/admin.js
+const registerStaffFace = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { embedding } = req.body;
+
+    if (!embedding) {
+      return res.status(400).send("No embedding received.");
+    }
+
+    const parsedEmbedding = JSON.parse(embedding);
+
+    const staff = await Staff.findById(id);
+    if (!staff) {
+      return res.status(404).send("Staff not found.");
+    }
+
+    staff.faceEmbedding = parsedEmbedding;
+    await staff.save();
+
+    console.log(`✅ Face embedding saved for ${staff.name}`);
+    res.send("✅ Staff face registered successfully!");
+  } catch (err) {
+    console.error("Error saving embedding:", err);
+    res.status(500).send("❌ Server error while saving embedding.");
+  }
+};
+
 
 
 
@@ -4828,7 +4860,244 @@ const getBulkUploadPage = async ( req , res ) => {
   }
 
 
+  // Attendance............................................//
+
+//  utility to compare face 
+
+const { findStaffByFace } = require('../middleware/utils');
+const StaffAttendance = require("../models/teacherAttendance");
+
+// ✅ Register Staff Face
+const autoAttendance = async (req, res) => {
+  try {
+    let { embedding } = req.body;
+
+    if (typeof embedding === "string") {
+      try {
+        embedding = JSON.parse(embedding);
+      } catch (err) {
+        return res.status(400).json({ message: "Invalid embedding format" });
+      }
+    }
+
+    if (!embedding || !Array.isArray(embedding) || embedding.length < 128) {
+      return res.status(400).json({ message: "Invalid embedded data" });
+    }
+
+    const staff = await findStaffByFace(embedding);
+    if (!staff) return res.status(400).json({ message: "Face not recognized" });
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let attendance = await StaffAttendance.findOne({ staffId: staff._id, date: today });
+
+    if (!attendance) {
+      
+      attendance = new StaffAttendance({
+        staffId: staff._id,
+        date: today,
+        clockIn: new Date(),
+      });
+      await attendance.save();
+      return res.json({ message: `${staff.name} clocked in successfully` });
+    }
+
+    if (attendance && attendance.clockIn && !attendance.clockOut) {
+     
+      attendance.clockOut = new Date();
+      await attendance.save();
+      return res.json({ message: `${staff.name} clocked out successfully` });
+    }
+
+    return res.status(400).json({ message: `${staff.name} already completed attendance today.` });
+  } catch (err) {
+    console.error("Auto Attendance Error:", err);
+    res.status(500).json({ message: "Error processing attendance" });
+  }
+};
+
+const getClockInPage = async ( req , res ) => {
+  try {
+    
+      res.render('teachersAttend', {
+        user: req.user
+      })
+  } catch (err) {
+     console.error("error loading page:", err);
+    res.status(500).json({ message: "error loading page" });
+  }
+}
+
+const getAttendancePage = async ( req , res ) => {
+  try {
+    const user = req.user;
+    
+      res.render('attendance', {
+       user,
+      })
+  } catch (err) {
+     console.error("error loading page:", err);
+    res.status(500).json({ message: "error loading page" });
+  }
+}
+
+const getDailyAttendancePage = async ( req , res ) => {
+  try {
+    const user = req.user;
+    const staffList = await Staff.find({ schoolId : user._id, status: true})
+    
+      res.render('daily-attendance', {
+       user,
+       staffList,
+      })
+  } catch (err) {
+     console.error("error loading page:", err);
+    res.status(500).json({ message: "error loading page" });
+  }
+}
+
+
+// Get Attendance Report
+const getTeacherAttend = async (req, res) => {
+  try {
+    let { month, year } = req.query;
+
+    // Ensure month and year are provided
+    if (!month || !year) {
+      return res.status(400).json({ error: "Month and year are required." });
+    }
+
+    // Convert to integers safely
+    const m = parseInt(month, 10);
+    const y = parseInt(year, 10);
+
+    if (isNaN(m) || isNaN(y) || m < 1 || m > 12) {
+      return res.status(400).json({ error: "Invalid month or year value." });
+    }
+
+    // Define the start and end of the month
+    const startDate = new Date(y, m - 1, 1);
+    const endDate = new Date(y, m, 0, 23, 59, 59);
+    const totalDaysInMonth = new Date(y, m, 0).getDate();
+
+    //  Fetch all staff
+    const allStaff = await Staff.find({ schoolId : req.user._id, status: true}); 
+
+    const summaries = await Promise.all(
+      allStaff.map(async (staff) => {
+        const records = await StaffAttendance.find({
+          staffId: staff._id,
+          date: { $gte: startDate, $lte: endDate },
+        });
+
+        const totalPresent = records.length;
+        const totalAbsent = totalDaysInMonth - totalPresent;
+        const attendancePercentage = ((totalPresent / totalDaysInMonth) * 100).toFixed(2);
+
+        return {
+          name: staff.name,
+          staffId: staff._id,
+          totalDaysInMonth,
+          totalPresent,
+          totalAbsent,
+          attendancePercentage,
+        };
+      })
+    );
+
+    res.json({ month, year, summaries });
+  } catch (err) {
+    console.error("Error fetching monthly attendance:", err);
+    res.status(500).json({ error: "Server error fetching attendance" });
+  }
+};
+
+const getStaffDailyAttendance = async (req, res) => {
+  try {
+    const { staffId, month, year } = req.query;
+
+    if (!staffId || !month || !year) {
+      return res.status(400).json({ error: "Staff, month and year are required." });
+    }
+
+    const m = parseInt(month, 10);
+    const y = parseInt(year, 10);
+    if (isNaN(m) || isNaN(y)) {
+      return res.status(400).json({ error: "Invalid month or year." });
+    }
+
+    const startDate = new Date(y, m - 1, 1);
+    const endDate = new Date(y, m, 0, 23, 59, 59);
+    const totalDays = new Date(y, m, 0).getDate();
+
+    // Fetch attendance for the month
+    const records = await StaffAttendance.find({
+      staffId,
+      date: { $gte: startDate, $lte: endDate },
+    });
+
+    // Map days with attendance info
+    const dailyAttendance = [];
+    for (let day = 1; day <= totalDays; day++) {
+      const date = new Date(y, m - 1, day);
+      const record = records.find(
+        (r) => new Date(r.date).toDateString() === date.toDateString()
+      );
+
+      if (record) {
+        dailyAttendance.push({
+          date: date.toDateString(),
+          clockIn: record.clockIn
+            ? new Date(record.clockIn).toLocaleTimeString()
+            : "—",
+          clockOut: record.clockOut
+            ? new Date(record.clockOut).toLocaleTimeString()
+            : "—",
+          status: record.clockIn ? "Present" : "Absent",
+        });
+      } else {
+        dailyAttendance.push({
+          date: date.toDateString(),
+          clockIn: "—",
+          clockOut: "—",
+          status: "Absent",
+        });
+      }
+    }
+
+    const totalPresent = dailyAttendance.filter(
+      (d) => d.status === "Present"
+    ).length;
+    const totalAbsent = totalDays - totalPresent;
+
+    res.json({
+      staffId,
+      month,
+      year,
+      totalDays,
+      totalPresent,
+      totalAbsent,
+      dailyAttendance,
+    });
+  } catch (err) {
+    console.error("Error fetching daily attendance:", err);
+    res.status(500).json({ error: "Server error fetching daily attendance" });
+  }
+};
+
+
+
 module.exports = {
+  //teacher attendance
+   autoAttendance,
+    getTeacherAttend,
+    registerStaffFace,
+    getClockInPage,
+    getAttendancePage,
+    getStaffDailyAttendance,
+    getDailyAttendancePage,
+
   //carear 
     getBulkUploadPage,
     carearMade,

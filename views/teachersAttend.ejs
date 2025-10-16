@@ -1,0 +1,195 @@
+
+<%- include ("./include/header.ejs") %> 
+<%- include ("./include/_dash_board.ejs") %> 
+<div class="okayys">
+   <h3><a href="/admin/attendance">All Teachers Attendance Summary</a></h3>
+   <h3><a href="/admin/dailyattendance">Daily Attendance</a></h3>  
+<h2>Teacher Face Attendance</h2>
+
+      <div class="camera-container">
+        <video id="video" width="320" height="240" autoplay playsinline></video>
+        <canvas id="overlay" width="320" height="240"></canvas>
+      </div>
+
+      <div class="controls">
+        <button id="switchCameraBtn" type="button">🔄 Switch Camera</button>
+        <button id="captureBtn" type="button">📸 Capture Face</button>
+      </div>
+
+      <form id="faceForm" method="POST" action="/admin/teacher-clock-in">
+        <input type="hidden" name="embedding" id="embedding">
+        <button id="submitBtn" type="submit">✅ Submit Attendance</button>
+      </form>
+
+      <pre id="status"></pre>
+
+</div>
+
+<style>
+  .okayys {
+    width: 400px;
+    background: linear-gradient(to left, skyblue 50%, rgb(14, 177, 241) 50%);
+  margin: auto;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  color: #ffffff;
+ }
+.camera-container {
+
+  position: relative;
+  display: inline-block;
+ 
+}
+#video, #overlay {
+  border-radius: 10px;
+  transform: scaleX(1); /* ✅ Not mirrored */
+}
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.controls {
+  margin-top: 10px;
+}
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+     border: 2px solid rgba(0, 0, 255, 0.322);
+     border-radius: 10px;
+}
+#status {
+  margin-top: 15px;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+</style>
+
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("overlay");
+  const captureBtn = document.getElementById("captureBtn");
+  const switchBtn = document.getElementById("switchCameraBtn");
+  const embeddingInput = document.getElementById("embedding");
+  const statusBox = document.getElementById("status");
+
+  let currentStream = null;
+  let useBackCamera = true; // default: back camera
+  let availableCameras = [];
+
+  // 🧠 Load models
+  await Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+    faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+    faceapi.nets.faceRecognitionNet.loadFromUri("/models")
+  ]);
+  statusBox.textContent = "✅ Face models loaded.";
+
+  // 🎥 Function to start camera
+  async function startCamera() {
+    try {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+      }
+
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      availableCameras = devices.filter(d => d.kind === "videoinput");
+
+      let selectedDevice = null;
+
+      if (availableCameras.length > 1) {
+        selectedDevice = availableCameras.find(d =>
+          useBackCamera ? /back|rear|environment/i.test(d.label) : /front|user/i.test(d.label)
+        );
+      }
+
+      const constraints = {
+        video: selectedDevice
+          ? { deviceId: selectedDevice.deviceId }
+          : { facingMode: useBackCamera ? "environment" : "user" }
+      };
+
+      currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+      video.srcObject = currentStream;
+
+      const side = useBackCamera ? "Back" : "Front";
+      statusBox.textContent = `📸 ${side} camera active. Position your face clearly.`;
+    } catch (err) {
+      console.error("Camera error:", err);
+      statusBox.textContent = "❌ Unable to access camera.";
+    }
+  }
+
+  // 🧭 Switch between front/back cameras
+  switchBtn.addEventListener("click", async () => {
+    useBackCamera = !useBackCamera;
+    await startCamera();
+  });
+
+  // Start camera automatically
+  await startCamera();
+
+  // 🧩 Capture and generate embedding
+  captureBtn.addEventListener("click", async () => {
+    const detection = await faceapi
+      .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!detection) {
+      statusBox.textContent = "⚠️ No face detected. Try again.";
+      return;
+    }
+
+    const resized = faceapi.resizeResults(detection, { width: video.width, height: video.height });
+    faceapi.draw.drawDetections(canvas, resized);
+
+    embeddingInput.value = JSON.stringify(Array.from(detection.descriptor));
+    statusBox.textContent = "✅ Face captured. You can now submit.";
+  });
+
+  // ✅ ✳️ ADD THIS PART HERE — form submission logic
+  const form = document.getElementById("faceForm");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      try {
+        const embeddingValue = document.getElementById("embedding").value;
+        const embedding = JSON.parse(embeddingValue);
+
+        const res = await fetch("/admin/teacher-clock-in", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ embedding }),
+        });
+
+        const data = await res.json();
+        statusBox.textContent = data.message || "No response from server.";
+      } catch (err) {
+        console.error("Submission Error:", err);
+        statusBox.textContent = "❌ Failed to submit attendance.";
+      }
+    });
+  }
+});
+
+</script>
+
+
+
+    
+<%- include ("./include/footer.ejs") %> 
+

@@ -183,11 +183,146 @@
             <div class="mb-3">
               <input type="submit" value="Upload Image">
             </div>
-        </form>
-          
+        </form><br><br><br><br>
+
+
+        <!-- // Face Embedding Capture Form -->
+  <h2>Register Staff Face</h2>
+
+<div style="text-align:center">
+  <video id="video" width="320" height="240" autoplay playsinline></video>
+  <canvas id="overlay" width="320" height="240"></canvas>
+  <div>
+    <button id="switchCameraBtn" type="button">Switch Camera</button>
+    <button id="captureBtn" type="button">Capture Face</button>
+  </div>
+
+  <form action="/admin/register-staff-face/<%= staff._id %>" method="POST">
+    <input type="hidden" name="embedding" id="embedding">
+    <button id="saveBtn" type="submit">Save Face</button>
+  </form>
+
+  <pre id="result"></pre>
+</div>
+
+<style>
+  #video, #overlay {
+    position: relative;
+    /* border: 2px solid #333; */
+    border-radius: 10px;
+  }
+  #overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  button {
+    margin: 10px 5px;
+    padding: 8px 16px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  #result {
+    margin-top: 10px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+</style>
+
+<footer class="foot">
+  <h3>All rights reserved and Powered by Dark theme code <i class="fas fa-copyright"></i> 2024</h3>
+</footer>
+
+<%- include ("./include/footer.ejs") %> 
+
+<!-- ✅ Face API -->
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const video = document.getElementById("video");
+  const overlay = document.getElementById("overlay");
+  const captureBtn = document.getElementById("captureBtn");
+  const saveBtn = document.getElementById("saveBtn");
+  const switchCameraBtn = document.getElementById("switchCameraBtn");
+  const embeddingInput = document.getElementById("embedding");
+  const result = document.getElementById("result");
+
+  const canvasCtx = overlay.getContext("2d");
+  let usingBackCamera = true;
+  let currentStream = null;
+
+  // ✅ Load FaceAPI models
+  await Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+    faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+    faceapi.nets.faceRecognitionNet.loadFromUri("/models")
+  ]);
+  console.log("✅ FaceAPI Models loaded");
+
+  // 🎥 Start video stream
+  async function startVideo() {
+    try {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+      }
+
+      const facingMode = usingBackCamera ? "environment" : "user";
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+      currentStream = stream;
+      video.srcObject = stream;
+      console.log("📷 Using camera:", facingMode);
+    } catch (err) {
+      console.error("Camera error:", err);
+      alert("⚠️ Please allow camera access.");
+    }
+  }
+
+  await startVideo();
+
+  // 🔄 Switch camera
+  switchCameraBtn.addEventListener("click", async () => {
+    usingBackCamera = !usingBackCamera;
+    await startVideo();
+  });
+
+  // 🧠 Capture face embedding
+  async function captureFaceEmbedding() {
+    const detection = await faceapi
+      .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+
+    if (!detection) {
+      alert("⚠️ No face detected. Please adjust and try again.");
+      return;
+    }
+
+    // Draw detection box
+    const dims = faceapi.matchDimensions(overlay, video, true);
+    const resizedDet = faceapi.resizeResults(detection, dims);
+    canvasCtx.clearRect(0, 0, overlay.width, overlay.height);
+    faceapi.draw.drawDetections(overlay, resizedDet);
+
+    // Save embedding
+    embeddingInput.value = JSON.stringify(Array.from(detection.descriptor));
+    result.textContent = "✅ Face captured successfully!";
+  }
+
+  captureBtn.addEventListener("click", captureFaceEmbedding);
+});
+</script>
+
+
       
     </div>
+    
+
 </div>
+
+
      
 <footer class="foot">
     <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>

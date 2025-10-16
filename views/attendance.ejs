@@ -1,0 +1,160 @@
+<%- include("./include/header.ejs") %>
+<%- include("./include/_dash_board.ejs") %>
+
+<div class="okayys">
+  <h2>📊 Staff Monthly Attendance Summary</h2>
+
+  <form id="filterForm" class="filter-form">
+    <label for="month">Month:</label>
+    <select id="month" name="month" required>
+      <% for(let i=1; i<=12; i++){ %>
+        <option value="<%= i %>"><%= new Date(0, i-1).toLocaleString('default', { month: 'long' }) %></option>
+      <% } %>
+    </select>
+
+    <label for="year">Year:</label>
+    <select id="year" name="year" required>
+      <% for(let y=2023; y<=2030; y++){ %>
+        <option value="<%= y %>"><%= y %></option>
+      <% } %>
+    </select>
+
+    <button type="submit">View Summary</button>
+  </form>
+
+  <div id="summaryContainer" style="margin-top: 20px;">
+    <table id="attendanceTable" border="1" cellspacing="0" cellpadding="6">
+      <thead>
+        <tr>
+          <th>Staff Name</th>
+          <th>Days in Month</th>
+          <th>Present</th>
+          <th>Absent</th>
+          <th>Attendance %</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <canvas id="attendanceChart" width="400" height="200" style="margin-top:20px;"></canvas>
+  </div>
+</div>
+
+<style>
+    .okayys {
+        width: 700px;
+        margin: auto;
+    }
+    select {
+        padding: 12px 14px;
+        outline: none;
+        border: none;
+        background-color: rgb(6, 167, 241);
+         border-radius: 10px;
+        color: white;
+    }
+
+    button {
+      padding: 12px 14px;
+        outline: none;
+        border: none;
+        background: linear-gradient(to right, rgb(6, 167, 241),rgb(45, 238, 212));
+        color: white;
+        border-radius: 10px;
+        transition: ease-in-out;
+    }
+
+     button:hover {
+      padding: 12px 14px;
+        background: linear-gradient(to right, rgb(6, 22, 241),rgb(45, 238, 61));
+        color: white;
+    }
+  h2 { margin-bottom: 15px; }
+  .filter-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+  }
+  th {
+    background: #4caf50;
+    color: white;
+  }
+  td, th {
+    text-align: center;
+  }
+</style>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.getElementById("filterForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const month = document.getElementById("month").value;
+  const year = document.getElementById("year").value;
+  const res = await fetch(`/admin/teacher-attendance?month=${month}&year=${year}`);
+  const data = await res.json();
+
+  const tbody = document.querySelector("#attendanceTable tbody");
+  tbody.innerHTML = "";
+
+  if (!data.summaries || data.summaries.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='5'>No data found for this month.</td></tr>";
+    return;
+  }
+
+  const labels = [];
+  const percentages = [];
+
+  data.summaries.forEach(staff => {
+    const row = `
+      <tr>
+        <td>${staff.name}</td>
+        <td>${staff.totalDaysInMonth}</td>
+        <td>${staff.totalPresent}</td>
+        <td>${staff.totalAbsent}</td>
+        <td>${staff.attendancePercentage}</td>
+      </tr>
+    `;
+    tbody.insertAdjacentHTML("beforeend", row);
+    labels.push(staff.name);
+    percentages.push(parseFloat(staff.attendancePercentage));
+  });
+
+  renderChart(labels, percentages, month, year);
+});
+
+let chartInstance;
+function renderChart(labels, data, month, year) {
+  const ctx = document.getElementById("attendanceChart").getContext("2d");
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: `Attendance % for ${new Date(0, month-1).toLocaleString('default', { month: 'long' })} ${year}`,
+        data,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true, max: 100 } },
+      plugins: {
+        legend: { display: true },
+        tooltip: { enabled: true }
+      }
+    }
+  });
+}
+</script>
+
+<%- include("./include/footer.ejs") %>

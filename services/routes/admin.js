@@ -142,6 +142,15 @@ const {
     deleteCarear,
     getBulkUploadPage,
 
+    //teacher attendance
+   autoAttendance,
+    getTeacherAttend,
+    registerStaffFace,
+    getClockInPage,
+    getAttendancePage,
+    getStaffDailyAttendance,
+    getDailyAttendancePage,
+
                                                                                    
 } = require("../controller/admin");
 
@@ -173,8 +182,8 @@ adminRoute.route('/delete_staff/:id').delete(adminEnsureLoggedIn, deleteStaff);
 adminRoute.route('/staff-status/:id').patch(adminEnsureLoggedIn, staffStatus);
 adminRoute.route('/staff-is-staff/:id').patch(adminEnsureLoggedIn, staffIsStaff)
 adminRoute.route('/staffdetail').get(adminEnsureLoggedIn, staffDetails);
-adminRoute.route('/allocate_class').post(adminEnsureLoggedIn, allocateStaffClass);
-adminRoute.route('/disallocate/:id').get(adminEnsureLoggedIn, disallocateStaffClass);
+adminRoute.route('/allocate-staff-class').post(adminEnsureLoggedIn, allocateStaffClass);
+adminRoute.route('/disallocate-staff-class/:id').get(adminEnsureLoggedIn, disallocateStaffClass);
 adminRoute.route('/add_staffs_statement').post(adminEnsureLoggedIn, createStaffStatement);
 adminRoute.route('/update-staff-statement').get(adminEnsureLoggedIn, getUpdateStatementPage);
 adminRoute.route('/update-staff-statement/:id').put(adminEnsureLoggedIn, updateStaffState);
@@ -271,5 +280,13 @@ adminRoute.route('/delete-patch').delete(adminEnsureLoggedIn, deleteCarear);
 adminRoute.post("/learners/upload", uploader.single("filePath"), bulkUpload);
 adminRoute.get('/bulk-Upload', adminEnsureLoggedIn, getBulkUploadPage);
 adminRoute.post('/insert-class', adminEnsureLoggedIn,  uploader.none(), updateBulkUploads);
+adminRoute.get('/teacher-attendance', adminEnsureLoggedIn, getTeacherAttend);
+adminRoute.post('/teacher-clock-in', adminEnsureLoggedIn, autoAttendance);
+adminRoute.post("/register-staff-face/:id", adminEnsureLoggedIn, registerStaffFace);
+adminRoute.get('/clock-in-out',adminEnsureLoggedIn, getClockInPage );
+adminRoute.get('/attendance', adminEnsureLoggedIn, getAttendancePage);
+adminRoute.get('/staff-daily-attendance', adminEnsureLoggedIn, getStaffDailyAttendance);
+adminRoute.get('/dailyattendance', adminEnsureLoggedIn, getDailyAttendancePage)
+
 
 module.exports = adminRoute;

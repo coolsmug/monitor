@@ -648,30 +648,30 @@ $(function() {
   });
 });
 
-$(function() {
-  $('a.staffClasses').click(function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag
-    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
-    var row = $(this).closest('tr');
-   // Assuming you are working with a table row, adjust this based on your HTML structure
+// $(function() {
+//   $('a.staffClasses').click(function(e) {
+//     e.preventDefault(); // Prevent the default behavior of the anchor tag
+//     var url = $(this).attr('href'); // Get the URL to send the DELETE request to
+//     var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
+//     var row = $(this).closest('tr');
+//    // Assuming you are working with a table row, adjust this based on your HTML structure
 
-    if (confirm('Are you sure you want to remove this data?')) {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        data: { id: id },
-        success: function(result) {
-          alert('Data deleted successfully!');
-          row.remove(); // Remove the deleted row from the DOM
-        },
-        error: function(xhr, status, error) {
-          alert('Error deleting Data: ' + error);
-        }
-      });
-    }
-  });
-});
+//     if (confirm('Are you sure you want to remove this data?')) {
+//       $.ajax({
+//         url: url,
+//         type: 'DELETE',
+//         data: { id: id },
+//         success: function(result) {
+//           alert('Data deleted successfully!');
+//           row.remove(); // Remove the deleted row from the DOM
+//         },
+//         error: function(xhr, status, error) {
+//           alert('Error deleting Data: ' + error);
+//         }
+//       });
+//     }
+//   });
+// });
 
 
 //all section delete

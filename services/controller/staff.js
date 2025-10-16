@@ -999,6 +999,34 @@ const stafflogOut = async ( req , res ) => {
 })
 };
 
+// attendance _________________________________??//
+
+const LearnerAttendance = require("../models/learnerAttendance");
+
+const studentAttendance = async (req, res) => {
+  try {
+    const { learnerId, status } = req.body;
+    const today = new Date().toISOString().split("T")[0];
+
+    const existing = await LearnerAttendance.findOne({
+      learnerId,
+      date: { $gte: new Date(today), $lt: new Date(new Date(today).setDate(new Date(today).getDate() + 1)) }
+    });
+
+    if (existing) {
+      existing.status = status; // update status if already marked
+      await existing.save();
+      return res.json({ message: "Learner attendance updated", record: existing });
+    }
+
+    const record = new LearnerAttendance({ learnerId, status, date: new Date() });
+    await record.save();
+    res.status(201).json({ message: "Learner attendance saved", record });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
 
