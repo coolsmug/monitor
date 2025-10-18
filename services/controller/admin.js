@@ -1056,134 +1056,79 @@ const deleteProprietor = async ( req , res ) => {
   }
 };
 
-const createStaff = async ( req , res ) => {
+const createStaff = async (req, res) => {
   try {
+    let errors = [];
 
-
-      const alpha = '1234567890';
-      let alphaCode = '';
-      
-      while (alphaCode.length < 2) {
-        const randomChar = alpha.charAt(Math.floor(Math.random() * alpha.length));
-        if (!alphaCode.includes(randomChar)) {
-          alphaCode += randomChar;
-        }
-      }
-      
-      console.log(alphaCode);
-      
-
-    const staff = await Staff.count( { schoolId : req.user._id } ).exec();
-    console.log(staff)
-    // const numer = "1234567890";
-    let totalNumber = '';
-    if(staff < 10 ) {
-      totalNumber = "00"
-    }else if ( staff > 9 && staff < 100){
-      totalNumber = "0"
-    }else {
-       totalNumber = ""
-    }
-  
-   
-    let numerCode = `${totalNumber}${staff}`;
-    // for (let i = 0; i < 2; i++) {
-    //   numerCode += numer.charAt(Math.floor(Math.random() * numer.length));
-    // }
-  
-    var day = new Date();
-    var year = day.getFullYear().toString(); // Convert year to a string
-    var justTwo = year.split("");
-    var one = justTwo[2];
-    var two = justTwo[3];
-    const OneTwo = one + two;
-   
-    const schoolName = req.user.school_name
-    const userSchool = schoolName.split('');
-    const schoolAbb = userSchool[0] + userSchool[1] + userSchool[2];
-    const schoolAbbToUpper = schoolAbb.toUpperCase()
-  
-    const staffAdminNo = `${OneTwo}/${alphaCode}${schoolAbbToUpper}${numerCode}STF`;
-
-
-    const { admin_no, roll, name, email, mobile_phone, address, password, password_2, about, subject, award } = req.body;
-   
-   
-   
-    if(!admin_no || !name ||!roll ||!email ||!mobile_phone ||!address || !password || !password_2 || !about || !subject || !award) {
-        errors.push( { msg : "Please fill in all fields"});
-    }
+    const count = await Staff.countDocuments({ schoolId: req.user._id });
+    const serial = count.toString().padStart(3, "0");
     
-    if(password !== password_2) {
-      errors.push( { msg : "Password dont macth" } )
-  } 
-  if (password.length < 8) {
-    errors.push({ msg: "password atleast 8 character" });
-  }
 
+    const alpha = '1234567890';
+    const alphaCode = Array.from({ length: 2 }, () =>
+      alpha[Math.floor(Math.random() * alpha.length)]
+    ).join('');
 
-    if(errors.length > 0) {
-        res.render('student', {
-          errors: errors,
-          roll: roll,
-           name: name,
-           email: email,
-           mobile_phone: mobile_phone,
-           address: address,
-           password : password,
-           password_2 : password_2,
-            about: about,
-            subject: subject,
-            award: award,
-           user: req.user,
-           admin_no: staffAdminNo,
-           
-        })
-    }  else {
-    
-                const newStaff = new Staff({
-                  roll: roll,
-                  admin_no : staffAdminNo,
-                  name: name,
-                  status: true,
-                  email: email,
-                  address: address,
-                  password: password,
-                  mobile_phone: mobile_phone,
-                  about: about,
-                  subject: subject,
-                  award: award.split(',').map(item => item.trim()),
-                  schoolId: req.user._id,
-                    
-                })
+    const year = new Date().getFullYear().toString().slice(-2);
+    const schoolAbb = (req.user?.school_name || "SCH").substring(0, 3).toUpperCase();
+    const staffAdminNo = `${year}/${alphaCode}${schoolAbb}${serial}STF`;
 
-                bcrypt.genSalt(10, (err, salt) =>
-                bcrypt.hash(newStaff.password, salt,
-                    (err, hash) => {
-                        if (err) throw err;
+    const { roll, name, email, mobile_phone, address, password, password_2, about, subject, award } = req.body;
 
-                        newStaff.password = hash;
+    if (!name || !roll || !email || !mobile_phone || !address || !password || !password_2 || !about || !subject || !award) {
+      errors.push({ msg: "Please fill in all fields" });
+    }
 
-                        newStaff.save()
-                            .then((value) => {
-                                console.log(value)
-                                req.flash(
-                                  "success_msg",
-                                  "A staff Registered !"
-                                );
-                                res.redirect('/admin/create_staff')
-                            })
-                            .catch(value => console.log(value))
-                    }))
-      
-            }
+    if (password !== password_2) errors.push({ msg: "Passwords do not match" });
+    if (password.length < 8) errors.push({ msg: "Password must be at least 8 characters" });
+
+    if (errors.length > 0) {
+      return res.render("student", {
+        errors,
+        roll,
+        name,
+        email,
+        mobile_phone,
+        address,
+        password,
+        password_2,
+        about,
+        subject,
+        award,
+        user: req.user,
+        admin_no: staffAdminNo,
+      });
+    }
+
+    const newStaff = new Staff({
+      roll,
+      admin_no: staffAdminNo,
+      name,
+      status: true,
+      email,
+      address,
+      mobile_phone,
+      about,
+      subject,
+      award: award.split(/\s*,\s*/).map(a => a.trim()),
+      schoolId: req.user._id,
+      password,
+    });
+
+    const salt = await bcrypt.genSalt(10);
+    newStaff.password = await bcrypt.hash(password, salt);
+    await newStaff.save();
+
+    req.flash("success_msg", "Staff Registered Successfully!");
+    res.redirect("/admin/create_staff");
 
   } catch (err) {
-    if(err) 
-    console.log(err.message)
-    res.status(500).send('Internal Server Error' + ' ' + err.message);
+    console.error("❌ Error creating staff:", err);
+    req.flash("error_msg", "Internal Server Error");
+    res.redirect("/admin/create_staff");
   }
 };
+
 
 const getUpdateStaffUpdatePage = async ( req , res ) => {
   try {
@@ -4867,11 +4812,12 @@ const getBulkUploadPage = async ( req , res ) => {
 const { findStaffByFace } = require('../middleware/utils');
 const StaffAttendance = require("../models/teacherAttendance");
 
-// ✅ Register Staff Face
+//  Register Staff Face
 const autoAttendance = async (req, res) => {
   try {
-    let { embedding } = req.body;
+    let { embedding, deviceTime } = req.body;
 
+    // Parse embedding if sent as JSON string
     if (typeof embedding === "string") {
       try {
         embedding = JSON.parse(embedding);
@@ -4880,42 +4826,63 @@ const autoAttendance = async (req, res) => {
       }
     }
 
+    // Validate embedding
     if (!embedding || !Array.isArray(embedding) || embedding.length < 128) {
       return res.status(400).json({ message: "Invalid embedded data" });
     }
 
+    // Validate and check device time
+    if (!deviceTime) {
+      return res.status(400).json({ message: "Device time not provided" });
+    }
+
+    const serverNow = new Date();
+    const deviceDate = new Date(deviceTime);
+    const diffMinutes = Math.abs((serverNow - deviceDate) / 60000);
+
+    // Reject if time difference is too large (e.g. more than 10 mins)
+    if (diffMinutes > 10) {
+      return res.status(400).json({ message: "Device time is too far from server time." });
+    }
+
+    // Find staff by face embedding
     const staff = await findStaffByFace(embedding);
     if (!staff) return res.status(400).json({ message: "Face not recognized" });
 
+    // Use the current day (same date, ignoring time)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     let attendance = await StaffAttendance.findOne({ staffId: staff._id, date: today });
 
+    // Clock In
     if (!attendance) {
-      
       attendance = new StaffAttendance({
         staffId: staff._id,
         date: today,
-        clockIn: new Date(),
+        clockIn: deviceDate, // use device time
       });
       await attendance.save();
-      return res.json({ message: `${staff.name} clocked in successfully` });
+      return res.json({ message: `${staff.name} clocked in successfully at ${deviceDate.toLocaleTimeString()}` });
     }
 
+    // Clock Out
     if (attendance && attendance.clockIn && !attendance.clockOut) {
-     
-      attendance.clockOut = new Date();
+      attendance.clockOut = deviceDate; // use device time
       await attendance.save();
-      return res.json({ message: `${staff.name} clocked out successfully` });
+      return res.json({ message: `${staff.name} clocked out successfully at ${deviceDate.toLocaleTimeString()}` });
     }
 
     return res.status(400).json({ message: `${staff.name} already completed attendance today.` });
+
   } catch (err) {
     console.error("Auto Attendance Error:", err);
     res.status(500).json({ message: "Error processing attendance" });
   }
 };
+
+
+
 
 const getClockInPage = async ( req , res ) => {
   try {

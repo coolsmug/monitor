@@ -3,14 +3,14 @@
 <%- include("./include/_dash_board.ejs") %>
 
 <div class="okayys">
-
+   <h3><a href="/admin/clock-in-out" style="font-size: 30px; text-decoration: none;">🔙</a></h3>
 <h2>📅 Staff Daily Attendance</h2>
 
 <form id="dailyForm">
   <label for="staffId">Select Staff:</label>
   <select id="staffId" name="staffId" required>
+      <option value="">Select option...</option>
     <% staffList.forEach(s => { %>
-        <option value="">Select option...</option>
         <option value="<%= s._id %>"><%= s.name %></option>
     <% }) %>
   </select>
@@ -57,8 +57,13 @@
 
 <style>
     .okayys {
-        width: 700px;
+          width: 700px;
         margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items:center ;
+        margin-top: 100px;
     }
     select {
         padding: 12px 14px;

@@ -19,7 +19,7 @@ const subDomainRouter = require("./services/middleware/weburl");
 
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const SECRET = process.env.SESSION_SECRET;
 const connectDB = require('./services/database/connection');
 connectDB();
@@ -46,8 +46,8 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ 
-      mongoUrl: 'mongodb://127.0.0.1:27017/Result',
-      // mongoUrl:'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
+      // mongoUrl: 'mongodb://127.0.0.1:27017/Result',
+      mongoUrl:'mongodb+srv://monitor:04PYpR1DhwlBSH1S@monitor.ja30o6x.mongodb.net/?retryWrites=true&w=majority&appName=Monitor',
       collectionName: 'test'
     }),
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
@@ -134,48 +134,6 @@ app.use("/admin", require("./services/routes/admin"));
 app.use('/learner', require("./services/routes/learners"));
 app.use("/staff", require("./services/routes/staff"));
 app.use("/name", require('./services/routes/website'));
-
-
-
-//setting up Multer//
-
-// const storage =  
-//  SharpMulter ({
-//               destination:(req, file, callback) =>callback(null, "uploads"),
-//               imageOptions:{
-//                fileFormat: "jpg",
-//                quality: 50,
-//                resize: { width: 170, 
-//                 height: 170  },
-//                  }
-//            });
-
-// const upload = multer({ storage });
-
-// app.post('/edit-profile/:id', upload.single("image"), async(req, res) => {
-//   const id = req.params.id;
-//      await Learner.findById(id)
-//             .then((user) => {
-              
-//                 user.img = {
-//                   data: fs.readFileSync(
-//                       path.join( __dirname + "/uploads/" + req.file.filename)
-//                   ),
-//                   contentType: "image/png",
-//                 };
-//               user
-//                 .save()
-//                 .then(() => {
-//                   res.json("User Image Uploaded...")
-//                 })
-//                 .catch((err) => res.status(400).json(`Error${err}`))
-
-//             })
-//             .catch((err) => res.status(400).json(`Error${err}`))
-// })
-
-
-
 
 
 

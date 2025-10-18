@@ -1029,7 +1029,7 @@ for (let question of test.questions) {
   const studentLogin = async (req, res, next) => {
     const testId = req.params.id; // Capture testId here
   
-    passport.authenticate("learner-login", async (err, user, info) => {
+    passport.authenticate("cbt-login", async (err, user, info) => {
       if (err) {
         return next(err);
       }

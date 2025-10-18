@@ -11,6 +11,7 @@
             <thead>
                 <tr>
                     <th>Roll No</th>
+                    <th>Admin No</th>
                     <th>Name</th>
                     <th>Status</th>
                     <th>Censor</th>
@@ -23,6 +24,7 @@
                     <td><%= staff[i].roll %> <div class="image" style="background: whitesmoke; width: 115px; height: 115px; border-radius: 7px; display: flex; justify-content: center; align-items: center;">
                                 <img style="width: 100px; height: 100px; border-radius: 5px;" src="<%= staff && staff[i].img.url ? staff[i].img.url : 'https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg'%>" alt="Teachers">
                             </div></td>
+                            <td><%= staff[i].admin_no %></td>
                     <td><%= staff[i].name %></td>
                     <td>
                         <label class="switcher">

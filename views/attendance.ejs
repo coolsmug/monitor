@@ -2,6 +2,7 @@
 <%- include("./include/_dash_board.ejs") %>
 
 <div class="okayys">
+  <h3><a href="/admin/clock-in-out" style="font-size: 30px; text-decoration: none;">🔙</a></h3>
   <h2>📊 Staff Monthly Attendance Summary</h2>
 
   <form id="filterForm" class="filter-form">
@@ -44,6 +45,11 @@
     .okayys {
         width: 700px;
         margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items:center ;
+        margin-top: 100px;
     }
     select {
         padding: 12px 14px;

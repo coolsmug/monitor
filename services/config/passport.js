@@ -66,6 +66,26 @@ module.exports = (passport) => {
       return done(error);
     }
   }));
+
+   passport.use('cbt-login', new LocalStrategy({
+    usernameField: 'roll_no',
+    passwordField: 'first_name'
+  }, async (roll_no, first_name, done) => {
+    try {
+      const cbtlearner = await Learner.findOne({ roll_no, status:true, deletes: false });
+      if (!cbtlearner) {
+        return done(null, false, { message: 'Incorrect admin_no or first_name.' });
+      }
+      const isValid = await Learner.findOne({ first_name, status:true, deletes: false });
+      if (!isValid) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      
+      return done(null, cbtlearner);
+    } catch (error) {
+      return done(error);
+    }
+  }));
   
   passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -86,6 +106,11 @@ module.exports = (passport) => {
       const staff = await Staff.findById(id);
       if (staff) {
         done(null, staff);
+        return;
+      }
+       const cbtlearner = await Learner.findById(id);
+       if (cbtlearner) {
+        done(null, cbtlearner);
         return;
       }
       done(new Error('User not found.'));

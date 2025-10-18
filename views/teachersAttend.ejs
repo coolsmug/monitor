@@ -4,6 +4,8 @@
 <div class="okayys">
    <h3><a href="/admin/attendance">All Teachers Attendance Summary</a></h3>
    <h3><a href="/admin/dailyattendance">Daily Attendance</a></h3>  
+
+  <div class="oka"> 
 <h2>Teacher Face Attendance</h2>
 
       <div class="camera-container">
@@ -16,27 +18,47 @@
         <button id="captureBtn" type="button">📸 Capture Face</button>
       </div>
 
+      <script>
+         document.getElementById("faceForm").addEventListener("submit", function (e) {
+    // set the local device time just before submission
+    document.getElementById("deviceTime").value = new Date().toISOString();
+  });
+      </script>
+
       <form id="faceForm" method="POST" action="/admin/teacher-clock-in">
         <input type="hidden" name="embedding" id="embedding">
+        <!-- new hidden input for local device time -->
+        <input type="hidden" name="deviceTime" id="deviceTime">
+        
         <button id="submitBtn" type="submit">✅ Submit Attendance</button>
       </form>
 
-      <pre id="status"></pre>
 
+      <pre id="status"></pre>
+</div>
 </div>
 
 <style>
-  .okayys {
-    width: 400px;
-    background: linear-gradient(to left, skyblue 50%, rgb(14, 177, 241) 50%);
-  margin: auto;
-  margin-top: 100px;
-  display: flex;
+  .oka {
+    
+    background: linear-gradient(to right, rgb(6, 167, 241),rgb(45, 238, 212));
+     display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
   color: #ffffff;
+  transition: ease-in-out;
+  }
+.oka:hover {
+   background: linear-gradient(to right, rgb(6, 22, 241),rgb(45, 238, 61));
+}
+
+  .okayys {
+    width: 400px;
+  margin: auto;
+  margin-top: 100px;
+ 
  }
 .camera-container {
 
@@ -71,6 +93,8 @@ button {
 }
 </style>
 
+
+
 <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
 <script>
@@ -81,12 +105,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const switchBtn = document.getElementById("switchCameraBtn");
   const embeddingInput = document.getElementById("embedding");
   const statusBox = document.getElementById("status");
+  const deviceTimeInput = document.getElementById("deviceTime");
 
   let currentStream = null;
-  let useBackCamera = true; // default: back camera
+  let useBackCamera = true;
   let availableCameras = [];
 
-  // 🧠 Load models
   await Promise.all([
     faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
     faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
@@ -94,7 +118,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   ]);
   statusBox.textContent = "✅ Face models loaded.";
 
-  // 🎥 Function to start camera
   async function startCamera() {
     try {
       if (currentStream) {
@@ -105,7 +128,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       availableCameras = devices.filter(d => d.kind === "videoinput");
 
       let selectedDevice = null;
-
       if (availableCameras.length > 1) {
         selectedDevice = availableCameras.find(d =>
           useBackCamera ? /back|rear|environment/i.test(d.label) : /front|user/i.test(d.label)
@@ -129,7 +151,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 🧭 Switch between front/back cameras
   switchBtn.addEventListener("click", async () => {
     useBackCamera = !useBackCamera;
     await startCamera();
@@ -138,7 +159,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Start camera automatically
   await startCamera();
 
-  // 🧩 Capture and generate embedding
   captureBtn.addEventListener("click", async () => {
     const detection = await faceapi
       .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
@@ -160,33 +180,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     statusBox.textContent = "✅ Face captured. You can now submit.";
   });
 
-  // ✅ ✳️ ADD THIS PART HERE — form submission logic
+  // 🕒 Handle form submission
   const form = document.getElementById("faceForm");
-  if (form) {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      try {
-        const embeddingValue = document.getElementById("embedding").value;
-        const embedding = JSON.parse(embeddingValue);
+    // Capture device time just before sending
+    const deviceTime = new Date().toISOString();
+    deviceTimeInput.value = deviceTime;
 
-        const res = await fetch("/admin/teacher-clock-in", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ embedding }),
-        });
+    const embeddingValue = embeddingInput.value;
+    if (!embeddingValue) {
+      statusBox.textContent = "⚠️ Please capture your face before submitting.";
+      return;
+    }
 
-        const data = await res.json();
-        statusBox.textContent = data.message || "No response from server.";
-      } catch (err) {
-        console.error("Submission Error:", err);
-        statusBox.textContent = "❌ Failed to submit attendance.";
-      }
-    });
-  }
+    try {
+      const res = await fetch("/admin/teacher-clock-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ embedding: JSON.parse(embeddingValue), deviceTime }),
+      });
+
+      const data = await res.json();
+      statusBox.textContent = data.message || "No response from server.";
+    } catch (err) {
+      console.error("Submission Error:", err);
+      statusBox.textContent = "❌ Failed to submit attendance.";
+    }
+  });
 });
-
 </script>
+
 
 
 
