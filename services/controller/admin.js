@@ -602,13 +602,20 @@ const adminLogin = async ( req , res, next ) => {
 
 
 const adminlogOut = async ( req , res ) => {
-  req.logOut(function (err) {
-    if (err) {
-        return next(err);
-    }
-    req.flash('success_msg', 'Session Terminated');
-    res.redirect('/')
-})
+   try {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Logout Error:", err);
+        return res.status(500).json({ message: "Logout failed" });
+      }
+
+      res.clearCookie("connect.sid"); 
+      return res.status(200).json({ message: "Logout successful" });
+    });
+  } catch (error) {
+    console.error("Unexpected Logout Error:", error);
+    res.status(500).json({ message: "Server error during logout" });
+  }
 };
 
 //--------------------------Voucher Creation--------------------------------//
@@ -4826,62 +4833,84 @@ const autoAttendance = async (req, res) => {
       }
     }
 
-    // Validate embedding
+    //Validate embedding
     if (!embedding || !Array.isArray(embedding) || embedding.length < 128) {
       return res.status(400).json({ message: "Invalid embedded data" });
     }
 
-    // Validate and check device time
+    //Validate and check device time
     if (!deviceTime) {
       return res.status(400).json({ message: "Device time not provided" });
     }
 
-    const serverNow = new Date();
     const deviceDate = new Date(deviceTime);
-    const diffMinutes = Math.abs((serverNow - deviceDate) / 60000);
-
-    // Reject if time difference is too large (e.g. more than 10 mins)
-    if (diffMinutes > 10) {
-      return res.status(400).json({ message: "Device time is too far from server time." });
+    if (isNaN(deviceDate.getTime())) {
+      return res.status(400).json({ message: "Invalid device time format" });
     }
 
-    // Find staff by face embedding
+    //Optional: Prevent users who change phone clock to cheat
+    const serverNow = new Date();
+    const diffMinutes = Math.abs((serverNow - deviceDate) / 60000);
+    if (diffMinutes > 10) {
+      return res.status(400).json({
+        message: "Device time is too far from server time. Please correct your device clock.",
+      });
+    }
+
+    //Find staff by face embedding
     const staff = await findStaffByFace(embedding);
     if (!staff) return res.status(400).json({ message: "Face not recognized" });
 
-    // Use the current day (same date, ignoring time)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    //Use device local date (not server UTC)
+    const localTime = new Date(deviceTime);
+    const dateOnly = new Date(localTime);
+    dateOnly.setHours(0, 0, 0, 0);
 
-    let attendance = await StaffAttendance.findOne({ staffId: staff._id, date: today });
+    let attendance = await StaffAttendance.findOne({
+      staffId: staff._id,
+      date: dateOnly,
+    });
 
     // Clock In
     if (!attendance) {
       attendance = new StaffAttendance({
         staffId: staff._id,
-        date: today,
-        clockIn: deviceDate, // use device time
+        date: dateOnly,
+        clockIn: localTime, // save the user's device time
       });
       await attendance.save();
-      return res.json({ message: `${staff.name} clocked in successfully at ${deviceDate.toLocaleTimeString()}` });
+      return res.json({
+        message: `${staff.name} clocked in successfully at ${localTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })}`,
+      });
     }
 
-    // Clock Out
+    //Clock Out
     if (attendance && attendance.clockIn && !attendance.clockOut) {
-      attendance.clockOut = deviceDate; // use device time
+      attendance.clockOut = localTime;
       await attendance.save();
-      return res.json({ message: `${staff.name} clocked out successfully at ${deviceDate.toLocaleTimeString()}` });
+      return res.json({
+        message: `${staff.name} clocked out successfully at ${localTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })}`,
+      });
     }
 
-    return res.status(400).json({ message: `${staff.name} already completed attendance today.` });
-
+    return res
+      .status(400)
+      .json({ message: `${staff.name} already completed attendance today.` });
   } catch (err) {
     console.error("Auto Attendance Error:", err);
     res.status(500).json({ message: "Error processing attendance" });
   }
 };
-
-
 
 
 const getClockInPage = async ( req , res ) => {

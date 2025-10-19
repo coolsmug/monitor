@@ -7,6 +7,13 @@
 
   <div class="oka"> 
 <h2>Teacher Face Attendance</h2>
+<div class="clock" ></div>
+<script>
+  setInterval(() => {
+  document.querySelector('.clock').innerHTML = new Date().toLocaleTimeString();
+}, 1000);
+
+</script>
 
       <div class="camera-container">
         <video id="video" width="320" height="240" autoplay playsinline></video>
@@ -14,23 +21,28 @@
       </div>
 
       <div class="controls">
-        <button id="switchCameraBtn" type="button">🔄 Switch Camera</button>
-        <button id="captureBtn" type="button">📸 Capture Face</button>
+        <button class="button" id="switchCameraBtn" type="button">🔄 Switch Camera</button>
+        <button class="button" id="captureBtn" type="button">📸 Capture Face</button>
       </div>
 
-      <script>
-         document.getElementById("faceForm").addEventListener("submit", function (e) {
-    // set the local device time just before submission
-    document.getElementById("deviceTime").value = new Date().toISOString();
+     <script>
+  document.getElementById("faceForm").addEventListener("submit", function (e) {
+    // Capture exact local device time before submission
+    const now =  new Date()
+
+    // Save it in local timezone (not UTC)
+    const localTime = now.toLocaleTimeString();; // e.g. "10/9/2025, 9:15:22 AM"
+    document.getElementById("deviceTime").value = localTime;
   });
-      </script>
+</script>
+
 
       <form id="faceForm" method="POST" action="/admin/teacher-clock-in">
         <input type="hidden" name="embedding" id="embedding">
         <!-- new hidden input for local device time -->
         <input type="hidden" name="deviceTime" id="deviceTime">
         
-        <button id="submitBtn" type="submit">✅ Submit Attendance</button>
+        <button class="button" id="submitBtn" type="submit">✅ Submit Attendance</button>
       </form>
 
 
@@ -78,7 +90,7 @@
 .controls {
   margin-top: 10px;
 }
-button {
+.button {
   margin: 5px;
   padding: 10px 20px;
   font-size: 15px;

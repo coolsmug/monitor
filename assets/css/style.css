@@ -365,12 +365,61 @@ body::-webkit-scrollbar-thumb {
     color: var(--deepest-blue);
   }
 
+  .ul-one {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    right: 5px;
+    top: 100px;
+     z-index: 1;
+  }
 
-  button {
-    width: 150px;
+.keep-on {
+   right: -50px; 
+}
+
+  .next{
+    position: fixed;
+    right:60px;
+    top: 120px;
+    transition: .4s ease-in-out;
+    cursor: pointer;
+    color: #ffff;
+    font-weight: bolder;
+    text-shadow: 2px 5px rgb(177, 177, 177) ;
+    text-align: right;
+    background-color: rgb(70, 115, 173);
+    z-index: 1;
+
+  }
+  .vertical-text {
+  writing-mode: vertical-rl; /* makes text flow vertically (top → bottom) */
+  text-orientation: upright; /* keeps each letter upright */
+text-align: right;
+font-size: 15px;
+ margin: 0;
+}
+
+  .noxt {
+    right:0px;
+  }
+
+  .ul-one button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border:2px solid #fff;
+    box-shadow: 2px 5px pink;
     cursor: pointer;
     border: none;
     font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .btn-open, .btn-opens {
@@ -385,6 +434,15 @@ body::-webkit-scrollbar-thumb {
     box-shadow: 2px 2px 5px grey;
   }
 
+  .btn:hover {
+    background: linear-gradient(90deg,#5bb5f5 0% 50%, #006fbe 50% 100%);
+  }
+
+  .btn:focus {
+    background: linear-gradient(90deg, #5bb5f5 0% 50%, #006ebd 50% 100%);
+    outline: 2px solid var(--white);
+  }
+
   .btns {
     display: inline-block;
     padding: 10px 12px;
@@ -395,9 +453,6 @@ body::-webkit-scrollbar-thumb {
     text-align: center;
     font-size: 1em;
   }
-
-
-  
 
   .btns:hover {
     background: repeating-radial-gradient(circle, #0096FF 0% 30%, #5bb5f5 30% 60%);
@@ -474,100 +529,6 @@ body::-webkit-scrollbar-thumb {
     scale: 1.5;
     transform: translateY(7px);
     }
-
-.ul-one {
-    position: fixed;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 7%;
-    width: 100;
-    z-index: 1;  
-   
-
-}
-.logOUT {
-    position: absolute;
-    top: -70px;
-    left: 180px;
-   
-}
-
-.logOUT button {
-    background: none;
-    background-color: none;
-}
-
-.ul-one .fa-sign-out-alt{
-    position: relative;
-    font-size: 25px;
-    color: var(--deep-blue);
-    margin-bottom: 0;
-}
-
-.ul-one .fa-sign-out-alt::after{
-    position: absolute;
-    content: 'Sign Out';
-    color: var(--crimson);
-    font-family: var(--montserrat-light);
-    font-size: 15px;
-    top: -15px;
-    left: -70%;
-    width: 100px;
-    transition: all .3s ease-in-out;
-    visibility: hidden;
-    opacity: 0; 
-}
-
-.ul-one ul li a:hover .fa-sign-out-alt::after{
-    visibility: visible;
-    opacity: 1; 
-}
-
-.ul-one ul {
-    width: 550px;
-    margin: auto;
-    display: flex;
-    margin-top: -50px;
-    flex-direction: row;
-
-}
-.ul-one ul p {
-   font-weight: bolder;
-   margin-bottom: 0;
-   text-align: center;
-   color: royalblue;
-}
-
-.ul-one ul li {
-    list-style: none; 
-    padding: 5px;
-
-}
-
-.ul-one ul li a {
-    position: inherit;
-    color: var(--white);
-    text-decoration: none;
-    padding: 14px 16px;
-    transition: .3s ease-in-out;
-    -webkit-transition: .3s ease-in-out;
-    -moz-transition: .3s ease-in-out;
-    -ms-transition: .3s ease-in-out;
-    -o-transition: .3s ease-in-out;
-
-}
-
-.ul-one ul li a:active {
-    border-bottom: 4px solid var(--bad-red);
-}
-
-.ul-one ul li a:visited{
-    color: var(--white_three);
-}
-
-.ul-one ul li a:focus{
-   color: var(--white);
-}
 
 
 .side_bar {
@@ -3087,81 +3048,6 @@ box-shadow: 2px 5px grey;
   }
   
 
-  @media only screen and (max-width: 660px){
-
-        .ul-one {
-            position: fixed;
-            top: 50%;
-            width: 100%;
-            height: 100%;
-            background: #07294d79;
-            z-index: 5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: .2s ease-in-out;
-          
-        }
-
-        .x-it {
-            opacity: 0;
-            left: -800px;
-            transition: .2s ease-in-out;
-        }
-
-
-        .ul-one  ul {
-            margin-top: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 150px;
-        }
-
-        .ul-one .fa-sign-out-alt::after{
-            color: var(--white);
-        }
-
-        .ul-one ul p {
-            font-weight: bolder;
-            margin-bottom: 0;
-            text-align: center;
-            color: var(--white);
-         }
-
-         .ul-one .fa-sign-out-alt{
-           
-            color: var(--crimson);
-            margin-bottom: 10px;
-        }
-        .div-timess, .div-bar {
-            position: absolute;
-            display: block;
-      }
-      .divmenuHide {
-        position: fixed;
-      }
-
-      .div-timess {
-        top: 20px;
-        right: 20px;
-        font-size: 35px;
-        color: var(--crimson);
-      }
-
-      .div-timess i:hover {
-        color: #fff;
-      }
-
-      .div-bar {
-        top: 50px;
-        right: 20px;
-        font-size: 30px;
-        color: var(--deep-blue);
-      }
-  }
- 
   /* **********************Learner's details  ************************** */
 .wrapper {
     position: relative;
