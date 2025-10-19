@@ -25,24 +25,25 @@
         <button class="button" id="captureBtn" type="button">📸 Capture Face</button>
       </div>
 
-     <script>
-  document.getElementById("faceForm").addEventListener("submit", function (e) {
-    // Capture exact local device time before submission
-    const now =  new Date()
+  <script>
+      document.getElementById("faceForm").addEventListener("submit", function (e) {
+        // local date/time from device
+        const localTime = new Date();
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // e.g. "Africa/Lagos"
 
-    // Save it in local timezone (not UTC)
-    const localTime = now.toLocaleTimeString();; // e.g. "10/9/2025, 9:15:22 AM"
-    document.getElementById("deviceTime").value = localTime;
-  });
-</script>
+        document.getElementById("deviceTime").value = localTime.toISOString();
+        document.getElementById("deviceZone").value = timeZone;
+
+       
+      });
+  </script>
 
 
       <form id="faceForm" method="POST" action="/admin/teacher-clock-in">
         <input type="hidden" name="embedding" id="embedding">
-        <!-- new hidden input for local device time -->
         <input type="hidden" name="deviceTime" id="deviceTime">
-        
-        <button class="button" id="submitBtn" type="submit">✅ Submit Attendance</button>
+        <input type="hidden" name="deviceZone" id="deviceZone">
+        <button class="button" type="submit">✅ Submit Attendance</button>
       </form>
 
 
@@ -168,7 +169,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await startCamera();
   });
 
-  // Start camera automatically
   await startCamera();
 
   captureBtn.addEventListener("click", async () => {
@@ -197,8 +197,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Capture device time just before sending
     const deviceTime = new Date().toISOString();
+    const deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     deviceTimeInput.value = deviceTime;
 
     const embeddingValue = embeddingInput.value;
@@ -211,7 +211,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await fetch("/admin/teacher-clock-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ embedding: JSON.parse(embeddingValue), deviceTime }),
+        body: JSON.stringify({
+          embedding: JSON.parse(embeddingValue),
+          deviceTime,
+          deviceZone, // ✅ include timezone
+        }),
       });
 
       const data = await res.json();

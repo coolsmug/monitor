@@ -389,9 +389,8 @@ body::-webkit-scrollbar-thumb {
     cursor: pointer;
     color: #ffff;
     font-weight: bolder;
-    text-shadow: 2px 5px rgb(177, 177, 177) ;
     text-align: right;
-    background-color: rgb(70, 115, 173);
+    background-color: rgb(2, 76, 173);
     z-index: 1;
 
   }

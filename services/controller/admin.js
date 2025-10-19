@@ -4822,95 +4822,74 @@ const StaffAttendance = require("../models/teacherAttendance");
 //  Register Staff Face
 const autoAttendance = async (req, res) => {
   try {
-    let { embedding, deviceTime } = req.body;
+    let { embedding, deviceTime, deviceZone } = req.body;
 
-    // Parse embedding if sent as JSON string
-    if (typeof embedding === "string") {
-      try {
-        embedding = JSON.parse(embedding);
-      } catch (err) {
-        return res.status(400).json({ message: "Invalid embedding format" });
-      }
+    if (!deviceTime || !deviceZone) {
+      return res.status(400).json({ message: "Missing device time or timezone" });
     }
 
-    //Validate embedding
-    if (!embedding || !Array.isArray(embedding) || embedding.length < 128) {
-      return res.status(400).json({ message: "Invalid embedded data" });
+    // Convert device time to a proper Date
+    const localDate = new Date(deviceTime);
+
+    // Validate
+    if (isNaN(localDate.getTime())) {
+      return res.status(400).json({ message: "Invalid device time" });
     }
 
-    //Validate and check device time
-    if (!deviceTime) {
-      return res.status(400).json({ message: "Device time not provided" });
-    }
+    // Example: format the time using the user's own timezone
+    const formattedTime = localDate.toLocaleString("en-US", {
+      timeZone: deviceZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true
+    });
 
-    const deviceDate = new Date(deviceTime);
-    if (isNaN(deviceDate.getTime())) {
-      return res.status(400).json({ message: "Invalid device time format" });
-    }
-
-    //Optional: Prevent users who change phone clock to cheat
     const serverNow = new Date();
-    const diffMinutes = Math.abs((serverNow - deviceDate) / 60000);
+    const diffMinutes = Math.abs((serverNow - localDate) / 60000);
     if (diffMinutes > 10) {
       return res.status(400).json({
         message: "Device time is too far from server time. Please correct your device clock.",
       });
     }
 
-    //Find staff by face embedding
+    // Save attendance record using the user's local time
     const staff = await findStaffByFace(embedding);
     if (!staff) return res.status(400).json({ message: "Face not recognized" });
 
-    //Use device local date (not server UTC)
-    const localTime = new Date(deviceTime);
-    const dateOnly = new Date(localTime);
-    dateOnly.setHours(0, 0, 0, 0);
+    const day = new Date(localDate);
+    day.setHours(0, 0, 0, 0);
 
-    let attendance = await StaffAttendance.findOne({
-      staffId: staff._id,
-      date: dateOnly,
-    });
+    let attendance = await StaffAttendance.findOne({ staffId: staff._id, date: day });
 
-    // Clock In
     if (!attendance) {
       attendance = new StaffAttendance({
         staffId: staff._id,
-        date: dateOnly,
-        clockIn: localTime, // save the user's device time
+        date: day,
+        clockIn: localDate,
       });
       await attendance.save();
       return res.json({
-        message: `${staff.name} clocked in successfully at ${localTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true,
-        })}`,
+        message: `${staff.name} clocked in successfully at ${formattedTime} (${deviceZone})`
       });
     }
 
-    //Clock Out
     if (attendance && attendance.clockIn && !attendance.clockOut) {
-      attendance.clockOut = localTime;
+      attendance.clockOut = localDate;
       await attendance.save();
       return res.json({
-        message: `${staff.name} clocked out successfully at ${localTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true,
-        })}`,
+        message: `${staff.name} clocked out successfully at ${formattedTime} (${deviceZone})`
       });
     }
 
-    return res
-      .status(400)
-      .json({ message: `${staff.name} already completed attendance today.` });
+    return res.status(400).json({ message: `${staff.name} already completed attendance today.` });
+
   } catch (err) {
     console.error("Auto Attendance Error:", err);
     res.status(500).json({ message: "Error processing attendance" });
   }
 };
+
 
 
 const getClockInPage = async ( req , res ) => {

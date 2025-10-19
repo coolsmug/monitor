@@ -19,7 +19,7 @@ const subDomainRouter = require("./services/middleware/weburl");
 
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const SECRET = process.env.SESSION_SECRET;
 const connectDB = require('./services/database/connection');
 connectDB();
