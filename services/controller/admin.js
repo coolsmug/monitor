@@ -4829,15 +4829,15 @@ const autoAttendance = async (req, res) => {
     }
 
     // Convert device time to a proper Date
-    const localDate = new Date(deviceTime);
+    const localDates = new Date(deviceTime);
 
     // Validate
-    if (isNaN(localDate.getTime())) {
+    if (isNaN(localDates.getTime())) {
       return res.status(400).json({ message: "Invalid device time" });
     }
 
     // Example: format the time using the user's own timezone
-    const formattedTime = localDate.toLocaleString("en-US", {
+    const formattedTime = localDates.toLocaleString("en-US", {
       timeZone: deviceZone,
       hour: "2-digit",
       minute: "2-digit",
@@ -4846,7 +4846,7 @@ const autoAttendance = async (req, res) => {
     });
 
     const serverNow = new Date();
-    const diffMinutes = Math.abs((serverNow - localDate) / 60000);
+    const diffMinutes = Math.abs((serverNow - localDates) / 60000);
     if (diffMinutes > 10) {
       return res.status(400).json({
         message: "Device time is too far from server time. Please correct your device clock.",
@@ -4857,25 +4857,35 @@ const autoAttendance = async (req, res) => {
     const staff = await findStaffByFace(embedding);
     if (!staff) return res.status(400).json({ message: "Face not recognized" });
 
-    const day = new Date(localDate);
-    day.setHours(0, 0, 0, 0);
+    //  Convert device time into user's local date properly
+      const deviceDate = new Date(deviceTime);
+      const localDate = new Date(
+        deviceDate.getFullYear(),
+        deviceDate.getMonth(),
+        deviceDate.getDate()
+      ); // strips to local midnight, not UTC midnight
 
-    let attendance = await StaffAttendance.findOne({ staffId: staff._id, date: day });
-
-    if (!attendance) {
-      attendance = new StaffAttendance({
+      let attendance = await StaffAttendance.findOne({
         staffId: staff._id,
-        date: day,
-        clockIn: localDate,
+        date: localDate,
       });
-      await attendance.save();
-      return res.json({
-        message: `${staff.name} clocked in successfully at ${formattedTime} (${deviceZone})`
-      });
-    }
+
+      // Clock In
+      if (!attendance) {
+        attendance = new StaffAttendance({
+          staffId: staff._id,
+          date: localDate,
+          clockIn: deviceDate, // save the exact local timestamp
+        });
+        await attendance.save();
+        return res.json({
+          message: `${staff.name} clocked in successfully at ${formattedTime} (${deviceZone})`
+        });
+      }
+
 
     if (attendance && attendance.clockIn && !attendance.clockOut) {
-      attendance.clockOut = localDate;
+      attendance.clockOut = deviceDate;
       await attendance.save();
       return res.json({
         message: `${staff.name} clocked out successfully at ${formattedTime} (${deviceZone})`
@@ -5006,34 +5016,39 @@ const getStaffDailyAttendance = async (req, res) => {
     const endDate = new Date(y, m, 0, 23, 59, 59);
     const totalDays = new Date(y, m, 0).getDate();
 
-    // Fetch attendance for the month
+    // Fetch attendance records from MongoDB
     const records = await StaffAttendance.find({
       staffId,
       date: { $gte: startDate, $lte: endDate },
     });
 
-    // Map days with attendance info
+    // 🔹 This is the key timezone fix
+    // If you plan to store the user's timezone in the record (like `deviceZone`), use it here
+    // Otherwise, default to "Africa/Lagos" or your desired timezone
     const dailyAttendance = [];
+
     for (let day = 1; day <= totalDays; day++) {
       const date = new Date(y, m - 1, day);
       const record = records.find(
         (r) => new Date(r.date).toDateString() === date.toDateString()
       );
 
+      const tz = record?.deviceZone || "Africa/Lagos"; // 🕒 Adjust timezone
+
       if (record) {
         dailyAttendance.push({
-          date: date.toDateString(),
+          date: new Date(record.date).toLocaleDateString("en-GB", { timeZone: tz }),
           clockIn: record.clockIn
-            ? new Date(record.clockIn).toLocaleTimeString()
+            ? new Date(record.clockIn).toLocaleTimeString("en-GB", { timeZone: tz })
             : "—",
           clockOut: record.clockOut
-            ? new Date(record.clockOut).toLocaleTimeString()
+            ? new Date(record.clockOut).toLocaleTimeString("en-GB", { timeZone: tz })
             : "—",
           status: record.clockIn ? "Present" : "Absent",
         });
       } else {
         dailyAttendance.push({
-          date: date.toDateString(),
+          date: date.toLocaleDateString("en-GB", { timeZone: tz }),
           clockIn: "—",
           clockOut: "—",
           status: "Absent",
@@ -5041,9 +5056,7 @@ const getStaffDailyAttendance = async (req, res) => {
       }
     }
 
-    const totalPresent = dailyAttendance.filter(
-      (d) => d.status === "Present"
-    ).length;
+    const totalPresent = dailyAttendance.filter((d) => d.status === "Present").length;
     const totalAbsent = totalDays - totalPresent;
 
     res.json({
