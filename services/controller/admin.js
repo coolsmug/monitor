@@ -46,20 +46,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Multer configuration for file uploads
-// const uploads = multer({
-//   dest: 'uploads/',
-//   limits: {
-//     fileSize: 3 * 1024 * 1024, // 3 MB limit
-//   },
-//   fileFilter: (req, file, cb) => {
-//     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
-//     if (!allowedMimeTypes.includes(file.mimetype)) {
-//       return cb(new Error('Invalid file type'), false);
-//     }
-//     cb(null, true);
-//   }
-// });
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -311,7 +298,7 @@ const updateLearner = async ( req, res ) => {
                               if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                                 age--
                               }
-                              req.body.age = age--
+                              req.body.age = age
                               return req.body.age
                              
                             }
@@ -1316,55 +1303,19 @@ const registerStaffFace = async (req, res) => {
   }
 };
 
-
-
-
 const updateStaff = async (req, res) => {
-
   try {
     const { id } = req.params;
-    
-    const  {
-       roll, 
-      name,
-      position,
-      status,
-      isStaff,
-      schoolId,
-      classId,
-      password,
-      about,
-      subject,
-      mobile_phone,
-      award,
-      address,
-      x,
-      instagramm,
-      facebook,
-      linkedin,
-      admin_no,
+
+    const {
+      roll, name, position, about, subject, mobile_phone, award, address,
+      x, instagram, facebook, linkedin, admin_no, email,
     } = req.body;
 
-    // Build staff object from req.body
     const staff = {
-      roll, 
-      name,
-      position,
-      status,
-      isStaff,
-      schoolId,
-      classId,
-      password,
-      about,
-      subject,
-      mobile_phone,
-      award: award.split(',').map(item => item.trim()),
-      address,
-      x,
-      instagramm,
-      facebook,
-      linkedin,
-      admin_no
+      roll, name, position, about, subject, mobile_phone, email,
+      award: award ? award.split(',').map(item => item.trim()) : [],
+      address, x, instagram, facebook, linkedin, admin_no
     };
 
     const updatedStaff = await Staff.findByIdAndUpdate(id, staff, {
@@ -1376,10 +1327,11 @@ const updateStaff = async (req, res) => {
       return res.status(404).json({ error: "Staff not found" });
     }
 
-    res.json({ message: "Staff updated successfully", staff: updatedStaff });
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send("Internal Server Error " + err.message);
+    res.json({ message: "Staff updated successfully" });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error " + error.message);
   }
 };
 
@@ -2063,7 +2015,6 @@ const addSession = async ( req, res ) => {
              res.status(500).send({message:"Error Updating session information" + err})
         })
     } catch (error) {
-      if(err) 
       console.log(err.message)
       res.status(500).send('Internal Server Error' + ' ' + err.message);
     }
@@ -2171,7 +2122,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+             res.status(500).send({ message: "Error retrieving Section id", error: err.message });
           });
       }
     } catch (err) {
@@ -2307,7 +2258,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+            res.status(500).send({ message: "Error retrieving Section id", error: err.message });
           });
       }
     } catch (err) {
@@ -2454,7 +2405,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+             res.status(500).send({ message: "Error retrieving Class id", error: err.message });
           });
       }
     } catch (err) {
@@ -2608,7 +2559,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+           res.status(500).send({ message: "Error retrieving Subject id", error: err.message });
           });
       }
     } catch (err) {
@@ -3049,7 +3000,7 @@ const getAllClasses = async ( req , res ) => {
         .sort({roll_no : 1})
         .limit(perPage)
         .exec(function(err, classes) {
-            Currentclass.count().exec(function(err, count) {
+            Currentclass.count({schoolId: req.user._id}).exec(function(err, count) {
                 if (err) return next(err)
                 res.render('all_currentclass', {
                     classes: classes,
@@ -4580,7 +4531,7 @@ const carearMade = async (req , res) => {
 
 const deleteCarear =   async(req, res) => {
     const id = req.params.id;
-      await CareerCreation.findByIdAndDelete(id)
+      Carear.findByIdAndDelete(id)
       .then((data) => {
         if (!data) {
           res
@@ -4805,10 +4756,10 @@ const getBulkUploadPage = async ( req , res ) => {
      
       user
     })
-  } catch (error) {
+  } catch (err) {
     console.log(err.message)
     res.status(500).send( 'Internal Server Error' + ' ' + err.message);
-   }
+  }
   }
 
 

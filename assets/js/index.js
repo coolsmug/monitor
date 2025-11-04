@@ -988,7 +988,7 @@ $("#creat-Classing").submit(function (params) {
   $.map(unindexed_arrays, function (n, i) {
     data[ n[ "name" ]] = n[ "value" ]
   }); 
-  console.log(data);
+ 
 
   let request = {
     "url" : `/admin/update-staff/${data.id}`,

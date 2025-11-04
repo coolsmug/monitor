@@ -28,12 +28,12 @@ const staffSchema = new Schema({
       message: props => `${props.value} is not a valid email!`
     }
   },
-  social: {
+ 
     x: { type: String, trim: true },
     instagram: { type: String, trim: true },
     facebook: { type: String, trim: true },
     linkedin: { type: String, trim: true },
-  },
+  
  img: {
   url: String,          
   publicId: String,    
