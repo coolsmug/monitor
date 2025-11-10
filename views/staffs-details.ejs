@@ -36,12 +36,20 @@
                                                 <td>
                                                     
                                                     <ul id="staffClasses">
+                                                      <% if(allocatedClasses.length > 0) {%>
                                                     <% allocatedClasses.forEach(c => { %>
+
+                                                      <% if (c) {%>
                                                         <li class="newl">
                                                         <%= c.name || c %>
                                                         <button class="remove-btn" data-class="<%= c._id || c %>" data-staff="<%= staff._id %>">❌ </button>
                                                         </li>
+                                                        <% } %>
                                                     <% }) %>
+                                                    <% } else { %>
+                                                        <p>No classes allocated.</p>
+                                                    <% } %>
+                                                    
                                                     </ul>
                                                 </td>
                                             </tr>

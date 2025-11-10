@@ -1,63 +1,78 @@
-
-
-
-<div id="preloader"> <img src="https://res.cloudinary.com/idrynod-001/image/upload/v1758499673/e-logo_phpxzg.png" width="100" ></div>
-
+<!-- Preloader -->
+<div id="preloader">
+  <div class="loader-spinner"></div>
+  <img id="loader-logo" src="https://res.cloudinary.com/idrynod-001/image/upload/v1758499673/e-logo_phpxzg.png" alt="Logo">
+</div>
 
 <style>
-
-
-#preloader  {
+/* ===== Preloader Container ===== */
+#preloader {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   z-index: 9999;
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.8); 
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
-#preloader img {
-  
-  position: fixed;
-  top: calc(50% - 30px);
-  left: calc(50% - 30px);
+/* ===== Spinner ===== */
+.loader-spinner {
   border: 6px solid #f2f2f2;
   border-top: 6px solid #3167f0;
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  animation: animate-preloader 1s linear infinite;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
 }
 
-@keyframes animate-preloader {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+/* ===== Logo ===== */
+#loader-logo {
+  width: 100px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
+/* ===== Animations ===== */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
+@keyframes bounceIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+#loader-logo {
+  animation: bounceIn 1s ease forwards;
+}
 
 </style>
 
-
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+// When the page finishes loading
+window.addEventListener("load", function () {
   const preloader = document.getElementById("preloader");
+  const logo = document.getElementById("loader-logo");
+  const spinner = document.querySelector(".loader-spinner");
 
+  // Step 1: Stop the spinner and show logo
+  spinner.style.display = "none";
+  logo.style.opacity = "1";
+  logo.style.transform = "scale(1)";
 
-  preloader.style.display = "block";
-
-  window.addEventListener("load", function() {
-    preloader.style.display = "none";
-  });
+  // Step 2: Wait a moment, then fade out
+  setTimeout(() => {
+    preloader.style.opacity = "0";
+    preloader.style.visibility = "hidden";
+  }, 1000); // fade out after logo shows
 });
-
-
 </script>
-
