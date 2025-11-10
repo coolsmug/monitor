@@ -368,29 +368,33 @@ body::-webkit-scrollbar-thumb {
   .ul-one {
     position: fixed;
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    right: 0px;
+    top: 100px;
+     z-index: 1;
+     background-color: rgb(255, 255, 255);
+  }
+
+
+
+  .next{
+    position: relative;
+    width: 40px;
+    height: 150px;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    right: 5px;
-    top: 100px;
-     z-index: 1;
-  }
-
-.keep-on {
-   right: -50px; 
-}
-
-  .next{
-    position: fixed;
-    right:60px;
-    top: 120px;
-    transition: .4s ease-in-out;
+    transition: .1s ease-out;
     cursor: pointer;
     color: #ffff;
     font-weight: bolder;
     text-align: right;
-    background-color: rgb(2, 76, 173);
+    background-color: rgb(0, 183, 255);
     z-index: 1;
 
   }
@@ -402,45 +406,39 @@ font-size: 15px;
  margin: 0;
 }
 
-  .noxt {
-    right:0px;
-  }
 
   .ul-one button {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
-    border:2px solid #fff;
-    box-shadow: 2px 5px pink;
     cursor: pointer;
     border: none;
+    outline: none;
     font-weight: 600;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-bottom: 1px solid grey;
+  }
+
+  .ul-one button:hover {
+    background-color: rgb(220, 220, 220);
+    color: white;
+  }
+
+  .keep-on {
+    right: -60px;
   }
 
   .btn-open, .btn-opens {
     display: inline-block;
     padding: 5px;
     font-weight: 700;
-    background: linear-gradient(90deg, #838ef8 0% 50%, #94a2f3 50% 100% );
-    color: var(--white);
-    border-radius: 5px;
-    font-size: 1em;
-    border: 4px solid var(--white);
-    box-shadow: 2px 2px 5px grey;
+    color: rgb(6, 87, 134);
+    font-size: 1.5em;
+    background: none;
   }
 
-  .btn:hover {
-    background: linear-gradient(90deg,#5bb5f5 0% 50%, #006fbe 50% 100%);
-  }
-
-  .btn:focus {
-    background: linear-gradient(90deg, #5bb5f5 0% 50%, #006ebd 50% 100%);
-    outline: 2px solid var(--white);
-  }
 
   .btns {
     display: inline-block;
@@ -448,19 +446,10 @@ font-size: 15px;
     font-weight: 700;
     background-color: #0096FF;
     color: var(--white);
-    border-radius: 5px;
     text-align: center;
     font-size: 1em;
   }
 
-  .btns:hover {
-    background: repeating-radial-gradient(circle, #0096FF 0% 30%, #5bb5f5 30% 60%);
-  }
-
-  .btns:focus {
-    background: repeating-radial-gradient(circle, #5bb5f5 0% 30%, #0096FF 30% 60%);
-    outline: 2px solid var(--white);
-  }
   .btn-close, .btn-closes {
     position: absolute;
     right: 10px;
@@ -510,7 +499,7 @@ font-size: 15px;
 .p_head {
     width: 100%;
     height: 50px;
-    background: var(--white);
+    background: rgb(0, 183, 255);
     box-shadow: 2px 2px 5px grey;
     position: fixed;
     top: 0;
@@ -575,7 +564,7 @@ font-size: 15px;
   .bar {
     width: 100%;
     height: 3px;
-    background-color:var(--deep-blue); 
+    background-color: #fff; 
     margin: 5px 0;
     transition: all 0.3s ease;
    
@@ -583,7 +572,7 @@ font-size: 15px;
   
   .menu-toggle.open .bar:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
   }
   
   .menu-toggle.open .bar:nth-child(2) {
@@ -592,7 +581,7 @@ font-size: 15px;
   
   .menu-toggle.open .bar:nth-child(3) {
     transform: rotate(-45deg) translate(6px, -6px);
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
   }
   
 
@@ -606,9 +595,6 @@ font-size: 15px;
       opacity: 1;
     }
   }
-
-
-
 
 .side_bar p {
     color: var(--lighter-blue);
@@ -840,7 +826,7 @@ label #menu {
 
 .foot {
     margin: auto;
-    background:linear-gradient(to bottom, var(--deepest-blue), var(--deep-blue));
+    background:linear-gradient(to bottom, rgb(0, 183, 255), rgb(125, 215, 250));
     width: 70%;
     margin-top: 400px;
     height: 50px;

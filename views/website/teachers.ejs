@@ -10,7 +10,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Managements/Staffs</li>
+                                <li class="breadcrumb-item active" aria-current="page">Managements & Staffs</li>
                             </ol>
                         </nav>
                     </div>  <!-- page banner cont -->
@@ -31,7 +31,7 @@
                <div class="col-lg-3 col-sm-6">
                    <div class="singel-teachers mt-30 text-center">
                         <div class="image">
-                            <img src="<%= sfg.img.url ? sfg.img.url : 'https://res.cloudinary.com/dj6xdawqc/image/upload/v1756586318/emblems_qgaxgk.jpg' %>" alt="Teachers">
+                             <img src="<%= sfg && sfg.img && sfg.img.url ? sfg.img.url : "https://res.cloudinary.com/idrynod-001/image/upload/v1756835528/emblems_jk6gea.jpg" %>" alt="Teachers">
                         </div>
                         <div class="cont">
                             <a href="/profile/<%= sfg._id %>/<%= sfg.name %>"><h6><%= sfg.name %></h6></a>

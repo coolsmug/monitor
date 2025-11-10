@@ -6,40 +6,39 @@
       <p>Status changed successfully!</p>
       <button id="closePopup">Close</button>
     </div>
-  </div>
+</div>
   
 <div class="p_head">
     <% if(user.img.url) {%> 
         <img src="<%= user.img.url %>" alt="Learner Image" width="100">
      <% } else {%> 
-         <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521762/school_logo-01_rf6ogn.png" alt="" width="100">
+         <img src="https://res.cloudinary.com/idrynod-001/image/upload/v1758499673/e-logo_phpxzg.png" alt="" width="100">
          <% } %> 
 </div>
 
 
 <div class="ul-one keep-on" id="big-door">
- 
-    <button id="logoutBtn" class="logout-btn"> <i class="bi bi-box-arrow-right"></i></button>
+ <div class="next noxt">
+      <p class="vertical-text">RESULTS</p>
+    </div>
+    <div class="div_mid">
+    <button id="logoutBtn" class="logout-btn"> <i class="bi bi-box-arrow-right"><p></p></i></button>
     <button  class="btn btn-open"><p>1/2</p></button>
     <button  class="btn btn-opens"><p>3</p></button>   
-    
-</div>
-<div class="next noxt"><p class="vertical-text">RESULTS</p>
+    </div>
 </div>
 
 <style>
   .logout-btn {
-    background: crimson;
-    color: white;
+    color: rgb(6, 87, 134);;
     border: none;
     padding: 8px 15px;
-    border-radius: 6px;
+    background: none;
     cursor: pointer;
     font-weight: bold;
+    font-size: 20px;
   }
-  .logout-btn:hover {
-    background: darkred;
-  }
+
 </style>
 
 
@@ -239,17 +238,11 @@ const unfloatbu = document.querySelector('.ul-one');
 
 const keepOn = () => {
    unfloatbu.classList.toggle('keep-on')
-   float.classList.toggle('noxt')
 
 }
 
 float.addEventListener('click',keepOn )
-
-
-
-
-
-    
+  
   </script>
   
 

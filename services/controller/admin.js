@@ -46,20 +46,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Multer configuration for file uploads
-// const uploads = multer({
-//   dest: 'uploads/',
-//   limits: {
-//     fileSize: 3 * 1024 * 1024, // 3 MB limit
-//   },
-//   fileFilter: (req, file, cb) => {
-//     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
-//     if (!allowedMimeTypes.includes(file.mimetype)) {
-//       return cb(new Error('Invalid file type'), false);
-//     }
-//     cb(null, true);
-//   }
-// });
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -311,7 +298,7 @@ const updateLearner = async ( req, res ) => {
                               if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                                 age--
                               }
-                              req.body.age = age--
+                              req.body.age = age
                               return req.body.age
                              
                             }
@@ -1316,55 +1303,19 @@ const registerStaffFace = async (req, res) => {
   }
 };
 
-
-
-
 const updateStaff = async (req, res) => {
-
   try {
     const { id } = req.params;
-    
-    const  {
-       roll, 
-      name,
-      position,
-      status,
-      isStaff,
-      schoolId,
-      classId,
-      password,
-      about,
-      subject,
-      mobile_phone,
-      award,
-      address,
-      x,
-      instagramm,
-      facebook,
-      linkedin,
-      admin_no,
+
+    const {
+      roll, name, position, about, subject, mobile_phone, award, address,
+      x, instagram, facebook, linkedin, admin_no, email,
     } = req.body;
 
-    // Build staff object from req.body
     const staff = {
-      roll, 
-      name,
-      position,
-      status,
-      isStaff,
-      schoolId,
-      classId,
-      password,
-      about,
-      subject,
-      mobile_phone,
-      award: award.split(',').map(item => item.trim()),
-      address,
-      x,
-      instagramm,
-      facebook,
-      linkedin,
-      admin_no
+      roll, name, position, about, subject, mobile_phone, email,
+      award: award ? award.split(',').map(item => item.trim()) : [],
+      address, x, instagram, facebook, linkedin, admin_no
     };
 
     const updatedStaff = await Staff.findByIdAndUpdate(id, staff, {
@@ -1376,10 +1327,11 @@ const updateStaff = async (req, res) => {
       return res.status(404).json({ error: "Staff not found" });
     }
 
-    res.json({ message: "Staff updated successfully", staff: updatedStaff });
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send("Internal Server Error " + err.message);
+    res.json({ message: "Staff updated successfully" });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error " + error.message);
   }
 };
 
@@ -2063,7 +2015,6 @@ const addSession = async ( req, res ) => {
              res.status(500).send({message:"Error Updating session information" + err})
         })
     } catch (error) {
-      if(err) 
       console.log(err.message)
       res.status(500).send('Internal Server Error' + ' ' + err.message);
     }
@@ -2171,7 +2122,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+             res.status(500).send({ message: "Error retrieving Section id", error: err.message });
           });
       }
     } catch (err) {
@@ -2307,7 +2258,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+            res.status(500).send({ message: "Error retrieving Section id", error: err.message });
           });
       }
     } catch (err) {
@@ -2454,7 +2405,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+             res.status(500).send({ message: "Error retrieving Class id", error: err.message });
           });
       }
     } catch (err) {
@@ -2608,7 +2559,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+           res.status(500).send({ message: "Error retrieving Subject id", error: err.message });
           });
       }
     } catch (err) {
@@ -2961,40 +2912,43 @@ const getAllThirdSecton = async ( req , res ) => {
   }
 };
 
-const getAllLearner = async ( req , res ) => {
+const getAllLearner = async (req, res, next) => {
   try {
-
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-      res.setHeader('Expires', '-1');
-      res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
 
-    var perPage = 9
-    var page = req.params.page || 1
+    const perPage = 9;
+    const page = parseInt(req.params.page) || 1;
 
-     Learner
-        .find({ status : true, deletes: false, schoolId: req.user._id })
-        .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
-        .skip((perPage * page) - perPage)
-        .sort({classes : 1})
-        .limit(perPage)
-        .exec(function(err,learner) {
-            Learner.count({schoolId: req.user._id, status : true, deletes: false}).exec(function(err, count) {
-                if (err) return next(err)
-               
-                res.render('all_learners', {
-                    learner: learner,
-                    user: req.user,
-                    current: page,
-                    pages: Math.ceil(count / perPage)
-                });
-                
-            })
-        })
+    const learners = await Learner.find({
+      status: true,
+      deletes: false,
+      schoolId: req.user._id,
+    })
+      .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code")
+      .sort({ createdAt : -1 })
+      .skip((perPage * page) - perPage)
+      .limit(perPage);
+
+    const count = await Learner.countDocuments({
+      status: true,
+      deletes: false,
+      schoolId: req.user._id,
+    });
+
+    res.render('all_learners', {
+      learner: learners,
+      user: req.user,
+      current: page,
+      pages: Math.ceil(count / perPage),
+    });
   } catch (err) {
-    console.log(err.message)
-    res.status(500).send('Internal Server Error' + ' ' + err.message);
+    console.log(err.message);
+    res.status(500).send('Internal Server Error ' + err.message);
   }
 };
+
 
 const getAllSubject = async ( req , res ) => {
   try {
@@ -3049,7 +3003,7 @@ const getAllClasses = async ( req , res ) => {
         .sort({roll_no : 1})
         .limit(perPage)
         .exec(function(err, classes) {
-            Currentclass.count().exec(function(err, count) {
+            Currentclass.count({schoolId: req.user._id}).exec(function(err, count) {
                 if (err) return next(err)
                 res.render('all_currentclass', {
                     classes: classes,
@@ -4580,7 +4534,7 @@ const carearMade = async (req , res) => {
 
 const deleteCarear =   async(req, res) => {
     const id = req.params.id;
-      await CareerCreation.findByIdAndDelete(id)
+      Carear.findByIdAndDelete(id)
       .then((data) => {
         if (!data) {
           res
@@ -4725,6 +4679,7 @@ const bulkUpload = async (req, res) => {
     } else {
       return res.status(400).json({ error: "Only CSV or Excel files are allowed" });
     }
+    
 
     // Process Learners
     const docs = await Promise.all(
@@ -4794,6 +4749,76 @@ const bulkUpload = async (req, res) => {
   }
 };
 
+
+// Subject bulkUpload 
+
+const subjectBulkUpload = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Please upload a file" });
+    }
+
+    const userId = req.user._id;
+    
+    // Get current learner count
+    let subjectCount = await Subject.countDocuments({ schoolId: userId });
+
+    const filePath = req.file.path;
+    let subjects = [];
+
+    // Parse file
+    if (req.file.originalname.endsWith(".csv")) {
+      await new Promise((resolve, reject) => {
+        fs.createReadStream(filePath)
+          .pipe(csv())
+          .on("data", (row) => subjects.push(row))
+          .on("end", resolve)
+          .on("error", reject);
+      });
+    } else if (req.file.originalname.endsWith(".xlsx")) {
+      const workbook = xlsx.readFile(filePath);
+      const sheetName = workbook.SheetNames[0];
+      subjects = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    } else {
+      return res.status(400).json({ error: "Only CSV or Excel files are allowed" });
+    }
+    
+
+    // Process Learners
+    const docs = await Promise.all(
+      subjects.map(async (row) => {
+
+      
+        subjectCount++; // increment count for each learner
+
+        // Pad number e.g. 001, 045, 120
+        const numerCode = String(subjectCount).padStart(3, "0");
+
+        // Generate roll number & email
+        const subjectRollNo = numerCode;
+      
+
+        return {
+           roll_no: subjectRollNo,
+          name: row.name,
+          category: row.category,
+          schoolId: userId,
+        };
+      })
+    );
+
+    // Save to DB
+    await Subject.insertMany(docs);
+
+    fs.unlinkSync(filePath); // clean up
+    res.status(200).json({ message: "Subjects uploaded successfully" });
+
+  } catch (error) {
+    console.error("Bulk upload error:", error);
+    res.status(500).json({ error: "Failed to upload Subjects" });
+  }
+};
+
 const getBulkUploadPage = async ( req , res ) => {
   try {
      res.setHeader('Expires', '-1');
@@ -4805,10 +4830,10 @@ const getBulkUploadPage = async ( req , res ) => {
      
       user
     })
-  } catch (error) {
+  } catch (err) {
     console.log(err.message)
     res.status(500).send( 'Internal Server Error' + ' ' + err.message);
-   }
+  }
   }
 
 
@@ -5218,6 +5243,7 @@ module.exports = {
     bulkUpload,
     getAllLearnerWitNoclass,
     updateBulkUploads,
+    subjectBulkUpload,
     
 }
 

@@ -141,6 +141,7 @@ const {
     patchCarear,
     deleteCarear,
     getBulkUploadPage,
+    subjectBulkUpload,
 
     //teacher attendance
    autoAttendance,
@@ -276,7 +277,7 @@ adminRoute.route('/career-builder').post(adminEnsureLoggedIn, carearMade);
 adminRoute.route('/carear-page').get(adminEnsureLoggedIn, getIconAndJob);
 adminRoute.route('/edit-carear/:id').post(adminEnsureLoggedIn, updateCarear);
 adminRoute.route('/patch-carear/:id').patch(adminEnsureLoggedIn, patchCarear);
-adminRoute.route('/delete-patch').delete(adminEnsureLoggedIn, deleteCarear);
+adminRoute.route('/delete-patch/:id').delete(adminEnsureLoggedIn, deleteCarear);
 adminRoute.post("/learners/upload", uploader.single("filePath"), bulkUpload);
 adminRoute.get('/bulk-Upload', adminEnsureLoggedIn, getBulkUploadPage);
 adminRoute.post('/insert-class', adminEnsureLoggedIn,  uploader.none(), updateBulkUploads);
@@ -286,7 +287,8 @@ adminRoute.post("/register-staff-face/:id", adminEnsureLoggedIn, registerStaffFa
 adminRoute.get('/clock-in-out',adminEnsureLoggedIn, getClockInPage );
 adminRoute.get('/attendance', adminEnsureLoggedIn, getAttendancePage);
 adminRoute.get('/staff-daily-attendance', adminEnsureLoggedIn, getStaffDailyAttendance);
-adminRoute.get('/dailyattendance', adminEnsureLoggedIn, getDailyAttendancePage)
+adminRoute.get('/dailyattendance', adminEnsureLoggedIn, getDailyAttendancePage);
+adminRoute.post('/subjects/upload', uploader.single("filePath"), subjectBulkUpload);
 
 
 module.exports = adminRoute;

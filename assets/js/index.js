@@ -673,109 +673,6 @@ $(function() {
   });
 });
 
-
-//all section delete
-
-$(function() 
-{$('a.deleteSection').click(function(e) {
-  e.preventDefault(); // Prevent the default behavior of the anchor tag
-  var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-  var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
-  var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
-
-  if (confirm('Are you sure you want to delete this data?')) {
-    $.ajax({
-      url: url,
-      type: 'DELETE',
-      data: { id: id },
-      success: function(result) {
-        alert('Data deleted successfully!');
-        row.remove(); // Remove the deleted row from the DOM
-      },
-      error: function(xhr, status, error) {
-        alert('Error deleting Data: ' + error);
-      }
-    });
-  }
-});
-});
-
-$(function() {
-  $('a.deleteSession').click(function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag
-    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
-    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
-
-    if (confirm('Are you sure you want to delete this data?')) {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        data: { id: id },
-        success: function(result) {
-          alert('Data deleted successfully!');
-          row.remove(); // Remove the deleted row from the DOM
-        },
-        error: function(xhr, status, error) {
-          alert('Error deleting Data: ' + error);
-        }
-      });
-    }
-  });
-})
-
-$(function() {
-  $('a.deleteSubject').click(function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag
-    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
-    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
-
-    if (confirm('Are you sure you want to delete this data?')) {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        data: { id: id },
-        success: function(result) {
-          alert('Data deleted successfully!');
-          row.remove(); // Remove the deleted row from the DOM
-        },
-        error: function(xhr, status, error) {
-          alert('Error deleting Data: ' + error);
-        }
-      });
-    }
-  });
-});
-
-$(function() {
-  $('a.deleteThird').click(function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag
-    var url = $(this).attr('href'); // Get the URL to send the DELETE request to
-    var id = $(this).data('id'); // Get the ID of the resource to be deleted from a data-* attribute
-    var row = $(this).closest('tr'); // Assuming you are working with a table row, adjust this based on your HTML structure
-
-    if (confirm('Are you sure you want to delete this data?')) {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        data: { id: id },
-        success: function(result) {
-          alert('Data deleted successfully!');
-          row.remove(); // Remove the deleted row from the DOM
-        },
-        error: function(xhr, status, error) {
-          alert('Error deleting Data: ' + error);
-        }
-      });
-    }
-  });
-});
-
-
-
-
-
 // =================Code for delete learner=========================//
 
 $(function() {
@@ -988,7 +885,7 @@ $("#creat-Classing").submit(function (params) {
   $.map(unindexed_arrays, function (n, i) {
     data[ n[ "name" ]] = n[ "value" ]
   }); 
-  console.log(data);
+ 
 
   let request = {
     "url" : `/admin/update-staff/${data.id}`,
