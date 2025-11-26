@@ -27,21 +27,38 @@
                 </div>
                
             </div>
-                 <div class="mb-3">
-                    <div class="hop">
-                        <label for="dating">Category :</label>
-                        <select name="category" value="<%= typeof category != 'undefined' ?  category : '' %>" >
-                            <option value="select option">select option</option>
-                            <option value="All">All</option>
-                            <option value="Elective">Elective</option>
-                            <option value="Beginner">Beginner</option>
-                            <option value="Senior">Senior</option>
-                    </div>
-                   
-                    </select>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="first_o">First CA Overall:</label>
+                    <input type="number" name="f_o" value="<%= typeof f_o != 'undefined' ? f_o : '' %>"  />
+                </div>    
+            </div>  
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="second_o">Second CA Overall:</label>
+                    <input type="number" name="s_o" value="<%= typeof s_o != 'undefined' ? s_o : '' %>"  />
                 </div>
-        </div>    
-    </div>     
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="second_o">Third CA Overall: <span style="font-size: smaller; color: gray;" >Optional, if your school don't have third CA</span></label>
+                    <input type="number" name="t_o" value="<%= typeof t_o != 'undefined' ? t_o : '' %>"  />
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="exam_o">Exam Overall:</label>
+                    <input type="number" name="ex_o" value="<%= typeof ex_o != 'undefined' ? ex_o : '' %>"  />
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="total_over_all">Whole Session Overall:</label>
+                    <input type="number" name="total_over_all" value="<%= typeof total_over_all != 'undefined' ? total_over_all : '' %>"  />
+                </div>
+
+        </div>
+
           
     <div class="mb-3">
         <input type="submit" value="Ok? Create">

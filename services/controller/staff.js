@@ -79,7 +79,7 @@ const getClassForstaff = async ( req , res ) => {
           const session = await Session.findById(sessionId).exec();
           const user = req.user;
          
-          if (classes && session && user) {
+          if (classes && session && user && classes.length > 0) {
             res.render('classes', {
               classes,
               session,
@@ -205,7 +205,7 @@ const getSectionTextExam = async ( req , res ) => {
 
 const createExam = async (req, res) => {
   try {
-      let { roll_no, student_name, subjects, _learner, classofs, term } = req.body;
+      let { roll_no, student_name, subjects, _learner, classofs, term} = req.body;
 
       if (!roll_no || !student_name || !subjects || !_learner || !classofs || !term) {
           return res.status(400).json({ message: "Please fill in all fields" });
@@ -222,10 +222,15 @@ const createExam = async (req, res) => {
       const exams = subjects.map(subject => ({
           roll_no,
           student_name,
-          name: subject,
+          name: subject.name,
           classofs,
           term,
-          _learner
+          _learner,
+          overall_first_ca: subject.f_o,
+          overall_second_ca: subject.s_o,
+          overall_third_ca: subject.t_o,
+          exam_overall: subject.ex_o,
+
       }));
 
       // Save all exams at once
@@ -239,82 +244,51 @@ const createExam = async (req, res) => {
   }
 };
 
+const updateExam = async (req, res) => {
+  try {
+    const exams = req.body.exams; // { examId1: {...}, examId2: {...} }
 
+    for (let examId in exams) {
+      const examData = exams[examId];
 
+      // calculate total, percentage, grade, remarks as before
+      let total =
+        Number(examData.exam_mark_obtain) +
+        Number(examData.mark_otained_third_ca) +
+        Number(examData.mark_otained_second_ca) +
+        Number(examData.mark_obtained_first_ca);
 
-const updateExam = async ( req , res ) => {
-    try {
-        
-        const id = req.params.id;
-        Exam.findById(id)
-           .then((exam) => {
-            let totaled =  Number(req.body.exam_mark_obtain) + Number(req.body.mark_otained_third_ca) +  Number(req.body.mark_otained_second_ca) + Number(req.body.mark_obtained_first_ca);
-            var grade = req.body.grade;
-            var remarks = req.body.remarks
-                 if(totaled <= 39.9 ) {
-                     grade = "F9"
-                     remarks ="Fail"
-                 }else if (totaled <= 44.9 && totaled >= 40) {
-                     grade = "E8"
-                     remarks = "Pass"
-                 }else if (totaled <= 49.9 && totaled >= 45) {
-                     grade = "D7"
-                     remarks = "Pass"
-                 }else if (totaled <= 59.9 && totaled >= 50) {
-                     grade = "C6"
-                     remarks = "Credit"
-                 }else if (totaled <= 64.9 && totaled >= 60) {
-                     grade = "C5"
-                     remarks = "Credit"
-                 }else if(totaled <= 69.9 && totaled >= 65) {
-                     grade = "C4"
-                     remarks = "Credit"
-                 }else if(totaled <= 74.9 && totaled >= 70){
-                     grade = "B3"
-                     remarks = "Good"
-                 }else if(totaled <= 79.9 && totaled >= 75){
-                     grade = "B2"
-                     remarks = "Very Good"
-                 }else if (totaled >= 100) {
-                     grade = "A1+"
-                     remarks = "Scholar"
-                 } else {
-                     grade = "A1"
-                     remarks = "Excellent"
-                 }
-            exam.name = req.body.name;
-            exam.overall_first_ca = req.body.overall_first_ca;
-            exam.mark_obtained_first_ca = req.body.mark_obtained_first_ca;
-            exam.overall_second_ca = req.body.overall_second_ca;
-            exam.mark_otained_second_ca = req.body.mark_otained_second_ca;
-            exam.overall_third_ca = req.body.overall_third_ca;
-            exam.mark_otained_third_ca = req.body.mark_otained_third_ca;
-            exam.exam_overall = req.body.exam_overall;
-            exam.exam_mark_obtain = req.body.exam_mark_obtain;
-            exam.editted_name = req.body.editted_name;
-            exam.term_total = totaled;
-            exam.grade = grade;
-            exam.remarks = remarks;
-            
-            exam
-               .save()
-               .then(() => {
-                     res.render('success', {title: "Exam Saved successfully!"})
-     
-               })
-               .catch((err) => res.status(400).json("Error:" + err));
-           })
-           .catch((err) => {
-             res.status(400).json("Error: " + err);
-           });
+      const numbers = Number(total);
 
-    } catch (error) {
-        if(err) 
-        console.log(err.message)
-        res.status(500).send('error_msg', 'Internal Server Error' + ' ' + err.message);
+      let grade, remarks;
+      if (isNaN(numbers)) {
+        grade = "NR"; remarks = "Absent";
+      } else if (numbers <= 39.9) { grade = "F9"; remarks = "Fail"; }
+      else if (numbers <= 44.9) { grade = "E8"; remarks = "Pass"; }
+      else if (numbers <= 49.9) { grade = "D7"; remarks = "Pass"; }
+      else if (numbers <= 59.9) { grade = "C6"; remarks = "Credit"; }
+      else if (numbers <= 64.9) { grade = "C5"; remarks = "Credit"; }
+      else if (numbers <= 69.9) { grade = "C4"; remarks = "Credit"; }
+      else if (numbers <= 74.9) { grade = "B3"; remarks = "Good"; }
+      else if (numbers <= 79.9) { grade = "B2"; remarks = "Very Good"; }
+      else if (numbers <= 100) { grade = "A1"; remarks = "Excellent"; }
+      else { grade = "A1+"; remarks = "Scholar"; }
+
+      await Exam.findByIdAndUpdate(examId, {
+        ...examData,
+        term_total: numbers,
+        // per_over_all: total.toFixed(2),
+        grade,
+        remarks,
+      });
     }
-};
 
+    res.json({ message: "All exams updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
 
 const deleteExam = async ( req , res ) => {
     try {
@@ -361,9 +335,11 @@ const getExamSpace = async ( req , res ) => {
         const name = req.query.name;
         const roll_nos = req.query.roll_no;
         const classofss = req.query.classof;
-    
+
+        const currentClassId = await Currentclass.findById(classId).exec(); 
+        const currentClassIdSubjects = currentClassId ? currentClassId.subjectId : [];  
         if (userId && sessionId && sectionId && classId) {
-          const subjects = await Subject.find({ schoolId: req.user.schoolId }).select("name").exec();
+          
           const users = await Learner.findById(userId).exec();
           const classed = await Currentclass.findById(classId).exec();
           const session = await Session.findById(sessionId).exec();
@@ -372,6 +348,10 @@ const getExamSpace = async ( req , res ) => {
           const position = await Position.findOne({ learnerId: userId, term: name, classofs: classofss }).exec();
           const exams = await Exam.find({ _learner: userId, term: name, roll_no: roll_nos, classofs: classofss }).exec();
           const submit = await Submission.find( { userId: userId, session: session.name, term: section.name } ).exec();
+          const subjects = await Promise.all(currentClassIdSubjects.map(async (sub) => {
+            const subject = await Subject.findById(sub).exec();
+            return subject;
+          }));
     
           res.render('exam_fill', {
             exam: exams,
@@ -775,25 +755,27 @@ const updateLearnerPosition = async (req, res) => {
 
 const registerThirdTermExam = async (req, res) => {
   try {
-    const { roll_no, student_name, exam_name, _learner, classofs, term, total_over_all, subjects } = req.body;
-    let errors = [];
+    let { roll_no, student_name, name, _learner, classofs, term, subjects } = req.body;
 
-    if (!roll_no || !student_name || !exam_name || !_learner || !classofs || !term || !total_over_all || !subjects) {
-      errors.push({ msg: "Please fill in all fields" });
-    }
+
+    subjects = JSON.parse(subjects);
 
     if (!Array.isArray(subjects) || subjects.length === 0) {
       return res.status(400).json({ message: "Subjects must be an array and cannot be empty" });
     }
-   
+
     const exams = subjects.map(subject => ({
-      roll_no: roll_no,
-      student_name: student_name,
-      name: subject,  // Keeping "name" inside map for subject names
-      classofs: classofs,
-      term: term,
-      _learner: _learner,
-      total_over_all: total_over_all,
+      roll_no,
+      student_name,
+      name: subject.name, 
+      classofs,
+      term,
+      _learner,
+      overall_first_ca: subject.f_o,
+      overall_second_ca: subject.s_o,
+      overall_third_ca: subject.t_o,
+      exam_overall: subject.ex_o,
+      total_over_all: subject.total_over_all,
     }));
 
     await Examing.insertMany(exams);
@@ -804,91 +786,74 @@ const registerThirdTermExam = async (req, res) => {
     res.status(500).send('Internal Server Error: ' + err.message);
   }
 };
+ 
 
-const updateThirdTermExam = async ( req , res ) => {
-  const id = req.params.id;
-    
-  await Examing.findById(id)
-     .then((exam) => {
-      
-    let total =  Number(req.body.exam_mark_obtain) + Number(req.body.mark_otained_third_ca) +  Number(req.body.mark_otained_second_ca) + Number(req.body.mark_obtained_first_ca);
-     let multiple =  ((Number(req.body.qone) +  Number(req.body.qtwo) + Number(total))/ Number(req.body.total_over_all)) * 100
-     var grade = req.body.grade;
-     var remarks = req.body.remarks;
+// POST /staff/update-all-exams
+const updateThirdTermExam  = async (req, res) => {
+  try {
+    const exams = req.body.exams; // { examId1: {...}, examId2: {...}, ... }
 
-     if(multiple <= 39.9 ) {
-       grade = "F9"
-       remarks ="Fail"
-   }else if (multiple <= 44.9 && multiple >= 40) {
-       grade = "E8"
-       remarks = "Pass"
-   }else if (multiple <= 49.9 && multiple >= 45) {
-       grade = "D7"
-       remarks = "Pass"
-   }else if (multiple <= 59.9 && multiple >= 50) {
-       grade = "C6"
-       remarks = "Credit"
-   }else if (multiple <= 64.9 && multiple >= 60) {
-       grade = "C5"
-       remarks = "Credit"
-   }else if(multiple <= 69.9 && multiple >= 65) {
-       grade = "C4"
-       remarks = "Credit"
-   }else if(multiple <= 74.9 && multiple >= 70){
-       grade = "B3"
-       remarks = "Good"
-   }else if(multiple <= 79.9 && multiple >= 75){
-       grade = "B2"
-       remarks = "Very Good"
-   }else if (multiple >= 100) {
-       grade = "A1+"
-       remarks = "Scholar"
-   }else if ( isNaN(multiple) ) {
-     grade = "NR"
-     remarks = "Absent"
- } else {
-       grade = "A1"
-       remarks = "Excellent"
-   }
-       exam.name = req.body.name;
-       exam.total_over_all = req.body.total_over_all,
-       exam.qone = req.body.qone;
-       exam.qtwo = req.body.qtwo;
-       exam.overall_first_ca = req.body.overall_first_ca;
-       exam.mark_obtained_first_ca = req.body.mark_obtained_first_ca;
-       exam.overall_second_ca = req.body.overall_second_ca;
-       exam.mark_otained_second_ca = req.body.mark_otained_second_ca;
-       exam.overall_third_ca = req.body.overall_third_ca;
-       exam.mark_otained_third_ca = req.body.mark_otained_third_ca;
-       exam.exam_overall = req.body.exam_overall;
-       exam.exam_mark_obtain = req.body.exam_mark_obtain;
-       exam.editted_name = req.body.editted_name;
-       exam.term_total = total;
-       exam.per_over_all = toFixed(multiple, 2);
-       exam.grade = grade;
-       exam.remarks = remarks;
-       exam
-         .save()
-         .then(() => {
-           console.log("Exam saved successfully")
-           res.json("Exam Updated...");
-         })
-         .catch((err) =>{
-           res.status(400).json("Error:" + err)
-           console.log(err)
-         }
-         );
-         
-     })
-     .catch((err) => {
-       res.status(500).send("Error: " + err);
-       console.log(err)
-     });
+    for (let examId in exams) {
+      const examData = exams[examId];
+
+      let total =
+        Number(examData.exam_mark_obtain) +
+        Number(examData.mark_otained_third_ca) +
+        Number(examData.mark_otained_second_ca) +
+        Number(examData.mark_obtained_first_ca);
+
+      let percentage =
+        ((Number(examData.qone) +
+          Number(examData.qtwo) +
+          total) /
+          Number(examData.total_over_all)) *
+        100;
+
+      // calculate grade/remarks as before
+      let grade, remarks;
+      if (isNaN(percentage)) {
+        grade = "NR";
+        remarks = "Absent";
+      } else if (percentage <= 39.9) {
+        grade = "F9"; remarks = "Fail";
+      } else if (percentage <= 44.9) {
+        grade = "E8"; remarks = "Pass";
+      } else if (percentage <= 49.9) {
+        grade = "D7"; remarks = "Pass";
+      } else if (percentage <= 59.9) {
+        grade = "C6"; remarks = "Credit";
+      } else if (percentage <= 64.9) {
+        grade = "C5"; remarks = "Credit";
+      } else if (percentage <= 69.9) {
+        grade = "C4"; remarks = "Credit";
+      } else if (percentage <= 74.9) {
+        grade = "B3"; remarks = "Good";
+      } else if (percentage <= 79.9) {
+        grade = "B2"; remarks = "Very Good";
+      } else if (percentage <= 100) {
+        grade = "A1"; remarks = "Excellent";
+      } else {
+        grade = "A1+"; remarks = "Scholar";
+      }
+
+      await Examing.findByIdAndUpdate(examId, {
+        ...examData,
+        term_total: total,
+        per_over_all: percentage.toFixed(2),
+        grade,
+        remarks,
+      });
+    }
+
+    res.json({ message: "All exams updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 };
 
 const getThirdTermExam = async ( req , res ) => {
   try {
-
 
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.setHeader('Expires', '-1');
@@ -902,8 +867,14 @@ const getThirdTermExam = async ( req , res ) => {
     const roll_nos = req.query.roll_no;
     const classofss = req.query.classof;
 
+     const currentClassId = await Currentclass.findById(classId).exec(); 
+        const currentClassIdSubjects = currentClassId ? currentClassId.subjectId : [];  
+
     if (userId && sessionId && sectionId && classId) {
-      const subjects = await Subject.find({ schoolId: req.user.schoolId }).select("name").exec();
+      const subjects = await Promise.all(currentClassIdSubjects.map(async (sub) => {
+            const subject = await Subject.findById(sub).exec();
+            return subject;
+          }));
       const users = await Learner.findById(userId).exec();
       const classed = await Currentclass.findById(classId).exec();
       const sessions = await Session.findById(sessionId).exec();

@@ -6,42 +6,27 @@
       <p>Status changed successfully!</p>
       <button id="closePopup">Close</button>
     </div>
-  </div>
+</div>
   
 <div class="p_head">
     <% if(user.img.url) {%> 
         <img src="<%= user.img.url %>" alt="Learner Image" width="100">
      <% } else {%> 
-         <img src="https://res.cloudinary.com/dj6xdawqc/image/upload/v1713521762/school_logo-01_rf6ogn.png" alt="" width="100">
+         <img src="https://res.cloudinary.com/idrynod-001/image/upload/v1758499673/e-logo_phpxzg.png" alt="" width="100">
          <% } %> 
 </div>
 
 
 <div class="ul-one keep-on" id="big-door">
- 
-    <button id="logoutBtn" class="logout-btn"> <i class="bi bi-box-arrow-right"></i></button>
-    <button  class="btn btn-open"><p>1/2</p></button>
-    <button  class="btn btn-opens"><p>3</p></button>   
-    
+    <div class="next noxt">
+        <p class="vertical-text">RESULTS</p>
+    </div>
+    <div class="div_mid">
+        <button id="logoutBtn" class="logout-btn"> <i class="bi bi-box-arrow-right"><p></p></i></button>
+        <button  class="btn btn-open"><p>1/2</p></button>
+        <button  class="btn btn-opens"><p>3</p></button>   
+    </div>
 </div>
-<div class="next noxt"><p class="vertical-text">RESULTS</p>
-</div>
-
-<style>
-  .logout-btn {
-    background: crimson;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  .logout-btn:hover {
-    background: darkred;
-  }
-</style>
-
 
 <div class="menu-toggle" onclick="toggleMenu()">
     <div class="bar"></div>
@@ -209,11 +194,41 @@
     </div>
 </div>
 
+
+<div id="message" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; z-index: 1000;">
+    
+</div>
+
+<script>
+    setTimeout(() => {
+        const messageDiv = document.getElementById("message");
+        if (messageDiv) {
+            messageDiv.style.display = "none";
+        }
+    }, 3000); // Hide after 3 seconds
+</script>
+
 <style>
     #big-door {
           transition: all 0.7s ease-in-out; /* Move the transition property here */
     }
+
+   
+  .logout-btn {
+    color: rgb(6, 87, 134);;
+    border: none;
+    padding: 8px 15px;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+
   </style>
+
+
+
   
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -239,24 +254,19 @@ const unfloatbu = document.querySelector('.ul-one');
 
 const keepOn = () => {
    unfloatbu.classList.toggle('keep-on')
-   float.classList.toggle('noxt')
 
 }
 
 float.addEventListener('click',keepOn )
-
-
-
-
-
-    
+  
   </script>
   
 
 <script>
   document.getElementById("logoutBtn").addEventListener("click", async () => {
-    const btn = document.getElementById("logoutBtn");
-    btn.textContent = "⏳ Logging out...";
+    const btn = document.getElementById("message");
+    btn.style.display = "block";
+    btn.textContent = "⏳ Logging out...✌🏽";
 
     try {
       const response = await fetch("/admin/logout", {
@@ -267,7 +277,7 @@ float.addEventListener('click',keepOn )
       const data = await response.json();
 
       if (response.ok) {
-        btn.textContent = "✅ Logged out!";
+        btn.textContent = "✅ Logged out! ✌🏽👋🏽";
         setTimeout(() => {
           window.location.href = "/"; // redirect to login page
         }, 1000);

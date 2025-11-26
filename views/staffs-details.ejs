@@ -12,11 +12,12 @@
                                 <input type="hidden" id="staffId" value="<%= staff._id %>">
                                 <select id="classID" required>
                                     <% classes.forEach(c => { %>
-                                    <option value="<%= c._id %>"><%= c.name %></option>
+                                    <option value="<%= c._id %>"><%= c.name %> <%= c.arm %></option>
                                     <% }) %>
                                 </select>
                                 <button type="submit">Allocate Class</button>
                                 </form>
+                                 <div id="message"></div>
                             </div>
                            
                                     <table>
@@ -36,12 +37,21 @@
                                                 <td>
                                                     
                                                     <ul id="staffClasses">
+                                                      <% if(allocatedClasses.length > 0) {%>
                                                     <% allocatedClasses.forEach(c => { %>
+
+                                                      <% if (c) {%>
                                                         <li class="newl">
-                                                        <%= c.name || c %>
-                                                        <button class="remove-btn" data-class="<%= c._id || c %>" data-staff="<%= staff._id %>">❌ </button>
+                                                        <%= c.name + " " + c.arm || c %>
+                                                         <button class="remove-btn" data-class="<%= c._id || c %>" data-staff="<%= staff._id %>"><i class="fas fa-trash"></i></button>
                                                         </li>
+                                                        
+                                                        <% } %>
                                                     <% }) %>
+                                                    <% } else { %>
+                                                        <p>No classes allocated.</p>
+                                                    <% } %>
+                                                    
                                                     </ul>
                                                 </td>
                                             </tr>
@@ -51,7 +61,7 @@
            
         
                                     </table>
-                                            <div id="message"></div>
+                                            
    
 </div>
 <footer class="foot">
@@ -219,7 +229,25 @@ form {
 }
 ul button {
     background: none;
+    outline: none;
+    border: none;
+    color: crimson;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+
 }
+
+.remove-btn {
+    background: none;
+    outline: none;
+    border: none;
+    color: crimson;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
 
 .dreout button {
      padding: 12px 14px;
@@ -274,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement("li");
         li.innerHTML = `
           ${className}
-          <button class="remove-btn" data-class="${classID}" data-staff="${staffId}">❌</button>
+          <button class="remove-btn" data-class="${classID}" data-staff="${staffId}"><i class="fas fa-trash"></i></button>
         `;
         classList.appendChild(li);
 

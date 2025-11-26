@@ -31,10 +31,22 @@
         <div class="checkbox-container">
           <% if(subject) { %> 
               <% for (var i = 0; i < subject.length; i++) { %> 
-                  <label>
-                      <input type="checkbox" name="subjects[]" value="<%= subject[i].name %>"> 
-                      <%= subject[i].name %>
-                  </label>
+          <label>
+            <input type="checkbox" class="subject-check" data-index="<%= i %>">
+            <%= subject[i].name %>
+            <input type="hidden" class="sub-name" value="<%= subject[i].name %>">
+           
+            <input type="number" style="width: 60px;" class="sub-f_o" value="<%= subject[i].f_o %>">
+            
+            <input type="number" style="width: 60px;" class="sub-s_o" value="<%= subject[i].s_o %>">
+            
+            <input type="number" style="width: 60px;" class="sub-t_o" value="<%= subject[i].t_o %>">
+            
+            <input type="number" style="width: 60px;" class="sub-ex_o" value="<%= subject[i].ex_o %>">
+
+            
+          </label>
+
               <% } %> 
           <% } %> 
       </div>
@@ -55,124 +67,39 @@
     <div class="input">
         <input type="hidden" name="term" value="<%= section.name %>"/>
     </div>
+    
 
     <div class="div">
         <input type="submit" value="Add Exam">
     </div>
   </form>
-<style>
-  /* General Form Styling */
-#blessing {
-   
-    background: #ececec;
-    min-width: 1000px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Poppins', sans-serif; 
-    
-}
 
-.input {
-    margin-bottom: 15px;
-    
-}
 
-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-}
+  <div class="pos">
+      
+      <form method="POST" id="position" >
+        <h2 style="font-size: 12px; color: var(--crimson);">Click below to initiate Position for Learner. <br> NB: do this after Recording all the exams</h2>
+          <div class="input">
+            <div class="input">
+              <input type="hidden" name="term"  value="<%= section.name %>" readonly/>
+          </div>
 
-/* Checkbox Container - Display in Column */
-.checkbox-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 0;
-    /* width: 300px;   */
-}
+          <div class="input">
+              <input type="hidden" name="learnerId"  value="<%= users._id %>" readonly/>
+          </div>
+          <div class="input">
+            <input type="hidden" name="classId"  value="<%= classed._id %>" readonly/>
+          </div>
 
-.checkbox-container label {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    text-align: right;
-    cursor: pointer;
-    background: #e6f7e6;
-    padding: 8px 12px;
-    border-radius: 5px;
-    transition: 0.3s;
-    width: 250px;
-}
-
-.checkbox-container label:hover {
-    background: #d0f0d0;
-}
-
-input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: seagreen;
-}
-
-/* Submit Button */
-.div input[type="submit"] {
-    width: 100%;
-    background: seagreen;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.div input[type="submit"]:hover {
-    background: darkgreen;
-}
-
-/* Responsive Design */
-@media (max-width: 400px) {
-    #blessing {
-        width: 90%;
-        padding: 15px;
-    }
-}
-
-</style>
-
-        <div class="pos">
-           
-            <form method="POST" id="position" >
-              <h2 style="font-size: 12px; color: var(--crimson);">Click below to initiate Position for Learner. <br> NB: do this after Recording all the exams</h2>
-                <div class="input">
-                  <div class="input">
-                    <input type="hidden" name="term"  value="<%= section.name %>" readonly/>
-                </div>
-
-                <div class="input">
-                    <input type="hidden" name="learnerId"  value="<%= users._id %>" readonly/>
-                </div>
-                <div class="input">
-                  <input type="hidden" name="classId"  value="<%= classed._id %>" readonly/>
-                </div>
-
-                <div class="input">
-                    <input type="hidden" name="classofs"  value="<%= session.classof %>" readonly/>
-                </div>
-              
-                <div class="div">
-                    <input type="submit" value="Initiate">
-                </div>
-            </form>
-        </div>
+          <div class="input">
+              <input type="hidden" name="classofs"  value="<%= session.classof %>" readonly/>
+          </div>
+        
+          <div class="div">
+              <input type="submit" value="Initiate">
+          </div>
+      </form>
+  </div>
       </div>
       <h3 style="text-align: center;">CBT RESULTS</h3>
       <div class="test-exam">
@@ -284,25 +211,25 @@ input[type="checkbox"] {
           <% if (exam && exam.length > 0) {%> 
             <% var totalOverall = 0, totalFirstCA = 0, totalSecondCA = 0, totalThirdCA = 0, 
             totalExamOverall = 0, totalExamMark = 0, totalTermTotal = 0, totalFirstCaAll = 0, totalSecondCaAll = 0, totalThirdCaAll = 0; %>
-        <% for (var i = 0; i < exam.length; i++) {%> 
+        
            
-            <form method="POST" class="exam" id="myexam-<%= exam[i]._id %>" data-id=<%= exam[i]._id %>>
-             
+            <form id="allExamsForm">
+              <% for (var i = 0; i < exam.length; i++) {%>
                 <tr>
-                    <td><input id="name" type="text" name="name" value="<%= exam[i].name %> "></td>
-                    <td><input id="overallfirstca" type="tex" name="overall_first_ca" value="<%= exam[i].overall_first_ca %>" ></td>
-                    <td><input id="markobtainedfirstca" type="tex" name="mark_obtained_first_ca" value="<%= exam[i].mark_obtained_first_ca %>"></td>
-                    <td><input id="overallsecondca" type="tex" name="overall_second_ca" value="<%= exam[i].overall_second_ca %>"></td>
-                    <td><input id="markotainedsecondca " type="tex" name="mark_otained_second_ca" value="<%= exam[i].mark_otained_second_ca %>"></td>
-                    <td><input id="overallthirdca " type="tex" name="overall_third_ca" value="<%= exam[i].overall_third_ca %>"></td>
-                    <td><input id="markotainedthirdca" type="tex" name="mark_otained_third_ca" value="<%= exam[i].mark_otained_third_ca %>"></td>
-                    <td><input id="examoverall" type="tex" name="exam_overall" value="<%= exam[i].exam_overall %>"></td>
-                    <td><input id="exammarkobtain" type="tex" name="exam_mark_obtain" value="<%= exam[i].exam_mark_obtain %>"></td>
-                    <td><input id="termtotal" type="te" name="term_total" value="<%= exam[i].term_total %>" readonly></td>
-                    <td><input id="grades" type="grade" name="grade" value="<%= exam[i].grade %>" readonly></td> 
-                    <td><input id="remark" type="text" name="remarks" value="<%= exam[i].remarks %>" readonly></td>
+                    <td><input id="name" type="text" name="name[<%= exam[i]._id %>]" value="<%= exam[i].name %> "></td>
+                    <td><input id="overallfirstca" type="tex" name="overall_first_ca[<%= exam[i]._id %>]" value="<%= exam[i].overall_first_ca %>" ></td>
+                    <td><input id="markobtainedfirstca" type="tex" name="mark_obtained_first_ca[<%= exam[i]._id %>]" value="<%= exam[i].mark_obtained_first_ca %>"></td>
+                    <td><input id="overallsecondca" type="tex" name="overall_second_ca[<%= exam[i]._id %>]" value="<%= exam[i].overall_second_ca %>"></td>
+                    <td><input id="markotainedsecondca " type="tex" name="mark_otained_second_ca[<%= exam[i]._id %>]" value="<%= exam[i].mark_otained_second_ca %>"></td>
+                    <td><input id="overallthirdca " type="tex" name="overall_third_ca[<%= exam[i]._id %>]" value="<%= exam[i].overall_third_ca %>"></td>
+                    <td><input id="markotainedthirdca" type="tex" name="mark_otained_third_ca[<%= exam[i]._id %>]" value="<%= exam[i].mark_otained_third_ca %>"></td>
+                    <td><input id="examoverall" type="tex" name="exam_overall[<%= exam[i]._id %>]" value="<%= exam[i].exam_overall %>"></td>
+                    <td><input id="exammarkobtain" type="tex" name="exam_mark_obtain[<%= exam[i]._id %>]" value="<%= exam[i].exam_mark_obtain %>"></td>
+                    <td><input id="termtotal" type="te" name="term_total[<%= exam[i]._id %>]" value="<%= exam[i].term_total %>" readonly></td>
+                    <td><input id="grades" type="grade" name="grade[<%= exam[i]._id %>]" value="<%= exam[i].grade %>" readonly></td> 
+                    <td><input id="remark" type="text" name="remarks[<%= exam[i]._id %>]" value="<%= exam[i].remarks %>" readonly></td>
                     <input  type="hidden" name="editted_name" value="<%= user.name %>" readonly>
-                    <td class="td"><button type="submit"><i class="fas fa-save" onclick="submitForm()"></i></button> <a href="/staff/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
+                    <td class="td"><a href="/staff/deleteds/<%= exam[i]._id %>" class="delete" id="just_get_it" data-id="<%= exam[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
                     <td><p style="font-size: 10px;" ><%= exam[i].editted_name %></p></td>
                     <% totalOverall += exam[i].overall_first_ca + exam[i].overall_second_ca + (exam.overall_third_ca ? exam[i].overall_third_ca : 0) + exam[i].exam_overall; %>
                            
@@ -316,11 +243,12 @@ input[type="checkbox"] {
                             <% totalExamMark += exam[i].exam_mark_obtain; %>
                             <% totalTermTotal += exam[i].term_total; %>
                 </tr>
-                
+                  <% } %> 
+                  <button type="submit"><i class="fas fa-save" onclick="submitForm()"></i></button> 
             </form>
 
 
-            <% } %> 
+          
             <% if(position) {%>
              
                 <form method="put"  id="setPosition" >
@@ -424,41 +352,156 @@ input[type="checkbox"] {
   <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
 </footer>
 </div>
+
+
+
+<style>
+  /* General Form Styling */
+#blessing {
+   
+    background: #ececec;
+    min-width: 1000px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif; 
+    
+}
+
+.input {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+input[type="number"] {
+   width: calc(100% - 20px);
+   padding: 8px 10px;
+   margin-top: 5px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   font-size: 14px;
+   transition: border-color 0.3s;
+}
+
+/* Checkbox Container - Display in Column */
+.checkbox-container {
+   display: flex;
+   justify-content: left;
+   align-items: center;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 10px;
+}
+
+.checkbox-container label {
+    display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   text-align: right;
+   cursor: pointer;
+   background: #e6f7e6;
+    padding: 5px;
+   border-radius: 5px;
+   transition: 0.3s;
+}
+
+.checkbox-container label:hover {
+    background: #d0f0d0;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: seagreen;
+}
+
+/* Submit Button */
+.div input[type="submit"] {
+    width: 100%;
+    background: seagreen;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.div input[type="submit"]:hover {
+    background: darkgreen;
+}
+
+/* Responsive Design */
+@media (max-width: 400px) {
+    #blessing {
+        width: 90%;
+        padding: 15px;
+    }
+}
+
+</style>
+
+
+
+
+
+
+
+
+
+
    
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript">
-       function submitForm(form) {
-    var unindexed_arrayon = $(form).serializeArray();
-    var data = {};
+   
 
-    $.map(unindexed_arrayon, function (x, i) {
-      data[x["name"]] = x["value"];
+$(document).ready(function() {
+  $("#allExamsForm").submit(function(e) {
+    e.preventDefault();
+
+    const formData = $(this).serializeArray();
+    let exams = {};
+
+    formData.forEach(function(item) {
+      const matches = item.name.match(/^(\w+)\[(.+)\]$/);
+      if (matches) {
+        const key = matches[1];
+        const examId = matches[2];
+        if (!exams[examId]) exams[examId] = {};
+        exams[examId][key] = item.value;
+      }
     });
 
-    var id = $(form).attr("data-id");
-    var requests = {
-      url: `/staff/update-exam/${id}`,
-      method: "POST",
-      data: data,
-    };
+      // send each exam individually
+      $.ajax({
+        url: `/staff/update-exam`,
+        method: "POST",
+        contentType: "application/json",
+      data: JSON.stringify({ exams }),
+        success: function(response) {
+          console.log(`Exam ${id} updated`);
+        },
+        error: function(xhr) {
+          console.error(`Failed to update exam ${id}:`, xhr.responseText);
+        }
+      });
+    
 
-    $.ajax(requests).done(function (response) {
-      alert("Exam Saved Successfully!");
-      location.reload();
-      console.log("Data Updated Successfully!");
-    });
-  }
-
-  $("form").each(function() {
-    $(this).submit(function(event) {
-      event.preventDefault();
-      submitForm(this);
-    });
+    alert("All exams update requests sent!");
+    location.reload();
   });
+});
 
 
-  
 
   $(function() {
   $('a.delete').click(function(e) {
@@ -510,59 +553,78 @@ input[type="checkbox"] {
    });
  });
 
+
+ // for creating Exams //
+
  $(document).ready(function () {
     let subjectOrder = [];
 
-    // Track order of clicked checkboxes
+   
     $(document).on("change", "input[name='subjects[]']", function () {
         let value = $(this).val();
 
         if ($(this).is(":checked")) {
-            // Add to the order list
+           
             subjectOrder.push(value);
         } else {
-            // Remove if unchecked
+            
             subjectOrder = subjectOrder.filter(subject => subject !== value);
         }
     });
 
-    $("#blessing").submit(function (event) {
-        event.preventDefault();
+   $("#blessing").submit(function (event) {
+    event.preventDefault();
 
-        var formData = new FormData(this);
-        formData.delete("subjects[]"); // Remove default multi-value field
-        formData.append("subjects", JSON.stringify(subjectOrder)); // Add subjects as a JSON array
+    let subjectsFinal = [];  // <-- PLACE IT HERE
 
-        // Convert FormData to an object for logging
-        let formObject = {};
-        formData.forEach((value, key) => {
-            formObject[key] = value;
-        });
+    // Collect all checked subjects and their values
+    $(".subject-check").each(function () {
+        if ($(this).is(":checked")) {
+            let parent = $(this).closest("label");
 
-        console.log("Data being sent:", formObject);
-
-        $.ajax({
-            url: "/staff/register_exam",
-            method: "POST",
-            data: formData,
-            processData: false, // Prevent jQuery from auto-processing the data
-            contentType: false, // Ensure correct Content-Type is used
-            success: function (response) {
-                alert("Exams registered successfully!");
-                console.log(response);
-                location.reload();
-            },
-            error: function (xhr, status, error) {
-                alert("Error registering exams: " + error);
-                console.log(xhr.responseText);
-            }
-        });
+            subjectsFinal.push({
+                name: parent.find(".sub-name").val(),
+                f_o: parent.find(".sub-f_o").val(),
+                s_o: parent.find(".sub-s_o").val(),
+                t_o: parent.find(".sub-t_o").val(),
+                ex_o: parent.find(".sub-ex_o").val(),
+            });
+        }
     });
+
+    // Prepare form data
+    var formData = new FormData(this);
+    formData.delete("subjects[]"); 
+    formData.append("subjects", JSON.stringify(subjectsFinal));  // <-- AND HERE
+
+    // For debugging
+    let formObject = {};
+    formData.forEach((value, key) => {
+        formObject[key] = value;
+    });
+
+    console.log("Data being sent:", formObject);
+
+    $.ajax({
+        url: "/staff/register_exam",
+        method: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            alert("Exams registered successfully!");
+            location.reload();
+        },
+        error: function (xhr, status, error) {
+            alert("Error registering exams: " + error);
+            console.log(xhr.responseText);
+        }
+    });
+});
 });
 
 
-
-
+// for creating position //
 
 $("#position").submit(function (evente) {
   evente.preventDefault();

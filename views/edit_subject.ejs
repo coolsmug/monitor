@@ -4,6 +4,8 @@
 
 <div class="diverr">
     <h4>Update <%= subject.name %>  Subject</h4>
+    <h1><a href="/admin/all-subject/1"><i class="fas fa-arrow-left"></i> All Subjects</a></h1>
+
 
     <div class="form_for_create">
 
@@ -23,19 +25,36 @@
                     </div>
                     
                 </div>
-                <div class="mb-3">
-                    <div class="hop">
-                        <label for="dating">Category :</label>
-                        <select name="category" value="<%= subject.category %>" >
-                        <option value="<%= subject.category %>"><%= subject.category %></option>
-                        <option value="All">All</option>
-                        <option value="Elective">Elective</option>
-                        <option value="Beginner">Beginner</option>
-                        <option value="Senior">Senior</option>
-                        </select>
-                    </div>
-                  
+                 <div class="mb-3">
+                <div class="hop">
+                    <label for="first_o">First CA Overall:</label>
+                    <input type="number" name="f_o" value="<%= subject.f_o %>"  />
+                </div>    
+            </div>  
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="second_o">Second CA Overall:</label>
+                    <input type="number" name="s_o" value="<%= subject.s_o %>"  />
                 </div>
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="second_o">Third CA Overall: <span style="font-size: smaller; color: gray;" >Optional, if your school don't have third CA</span></label>
+                    <input type="number" name="t_o" value="<%= subject.t_o %>"  />
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="exam_o">Exam Overall:</label>
+                    <input type="number" name="ex_o" value="<%= subject.ex_o %>"  />
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="hop">
+                    <label for="total_over_all">Whole Session Overall:</label>
+                    <input type="number" name="total_over_all" value="<%= subject.total_over_all %>"  />
+                </div>
+
             </div>
            
           

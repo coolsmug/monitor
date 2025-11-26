@@ -10,12 +10,22 @@ const subjectSchema = new Schema ({
        type: String,
         required: true,
     },
-
-    category: { 
-        type: String,
-        required: true,
+     f_o: { 
+        type: Number,
     },
-
+     s_o: { 
+        type: Number,
+    },
+     t_o: { 
+        type: Number,
+    },
+     ex_o: { 
+        type: Number,
+    },
+    total_over_all: {
+        type: Number,
+       
+    },
     schoolId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

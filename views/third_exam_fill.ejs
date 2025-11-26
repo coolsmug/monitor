@@ -33,9 +33,18 @@
                     <% for (var i = 0; i < subjects.length; i++) { %> 
                         <label>
                            
-                            <input type="checkbox" class="subject-checkbox" name="subjects[]" value="<%= subjects[i].name %>"> 
+                            <input type="checkbox" class="subject-checkbox" data-index="<%= i %>"/> 
                             <%= subjects[i].name %>
+                            <input type="hidden" class="sub-name" value="<%= subjects[i].name %>">
+                            <input type="number" style="width: 60px;" class="sub-f_o" value="<%= subjects[i].f_o %>">
+            
+                            <input type="number" style="width: 60px;" class="sub-s_o" value="<%= subjects[i].s_o %>">
                             
+                            <input type="number" style="width: 60px;" class="sub-t_o" value="<%= subjects[i].t_o %>">
+                            
+                            <input type="number" style="width: 60px;" class="sub-ex_o" value="<%= subjects[i].ex_o %>">
+                            <h6>Session overall</h6>
+                            <input type="number" style="width: 80px;" class="total_over_all" value="<%= subjects[i].total_over_all %>">
                         </label>
                        
                     <% } %> 
@@ -63,95 +72,7 @@
             <input type="submit" value="Add Exam">
         </div>
     </form>
-    <style>
-      /* General Form Styling */
-#myblessing {
-   
-   background: #ececec;
-   min-width: 1000px;
-   padding: 20px;
-   border-radius: 10px;
-   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-   font-family: 'Poppins', sans-serif; 
-   
-}
-
-.input {
-   margin-bottom: 15px;
-   
-}
-
-label {
-   font-size: 14px;
-   font-weight: 600;
-   color: #333;
-}
-
-/* Checkbox Container - Display in Column */
-.checkbox-container {
-   display: flex;
-   justify-content: center;
-   flex-direction: row;
-   flex-wrap: wrap;
-   gap: 10px;
-   padding: 10px 0;
-   /* width: 300px;   */
-}
-
-.checkbox-container label {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   flex-direction: row;
-   text-align: right;
-   cursor: pointer;
-   background: #e6f7e6;
-   padding: 8px 12px;
-   border-radius: 5px;
-   transition: 0.3s;
-   width: 250px;
-}
-
-.checkbox-container label:hover {
-   background: #d0f0d0;
-}
-
-input[type="checkbox"] {
-   width: 18px;
-   height: 18px;
-   cursor: pointer;
-   accent-color: seagreen;
-}
-
-/* Submit Button */
-.div input[type="submit"] {
-   width: 100%;
-   background: seagreen;
-   color: white;
-   font-size: 16px;
-   font-weight: bold;
-   border: none;
-   padding: 10px;
-   border-radius: 5px;
-   cursor: pointer;
-   transition: 0.3s;
-}
-
-.div input[type="submit"]:hover {
-   background: darkgreen;
-}
-
-/* Responsive Design */
-@media (max-width: 400px) {
-   #blessing {
-       width: 90%;
-       padding: 15px;
-   }
-}
-
-</style>
-    </style>
-        
+     
         <div class="pos">
            
           <form method="POST" id="position" >
@@ -293,30 +214,32 @@ input[type="checkbox"] {
                 <% var totalOverall = 0, totalQone = 0, totalQtwo = 0, totalFirstCA = 0, totalSecondCA = 0, totalThirdCA = 0, 
             totalExamOverall = 0, totalExamMark = 0, totalTermTotal = 0, totalFirstCaAll = 0, totalSecondCaAll = 0, totalThirdCaAll = 0,
             totalper_over_al = 0;  %>
-            <% for (var i = 0; i < exams.length; i++) {%> 
+           
                
-                <form method="POST" id="myexam-<%= exams[i]._id %>" data-id=<%= exams[i]._id %>>
+                <form method="POST" id="allExamsForm">
+
+ <% for (var i = 0; i < exams.length; i++) {%> 
                     <tr>  
-                        <td><input type="text" name="name" value="<%= exams[i].name %> "></td>
-                        <td><input type="tex" name="total_over_all" value="<%= exams[i].total_over_all %> "></td>
-                        <td><input type="tex" name="qone" value="<%= exams[i].qone %>" ></td>
-                        <td><input type="tex" name="qtwo" value="<%= exams[i].qtwo %>" ></td>
-                        <td><input type="tex" name="overall_first_ca" value="<%= exams[i].overall_first_ca %>" ></td>
-                        <td><input type="tex" name="mark_obtained_first_ca" value="<%= exams[i].mark_obtained_first_ca %>"></td>
-                        <td><input type="tex" name="overall_second_ca" value="<%= exams[i].overall_second_ca %>"></td>
-                        <td><input type="tex" name="mark_otained_second_ca" value="<%= exams[i].mark_otained_second_ca %>"></td>
-                        <td><input type="tex" name="overall_third_ca" value="<%= exams[i].overall_third_ca %>"></td>
-                        <td><input type="tex" name="mark_otained_third_ca" value="<%= exams[i].mark_otained_third_ca %>"></td>
-                        <td><input type="tex" name="exam_overall" value="<%= exams[i].exam_overall %>"></td>
-                        <td><input type="tex" name="exam_mark_obtain" value="<%= exams[i].exam_mark_obtain %>"></td>
-                        <td><input type="te" name="term_total" value="<%= exams[i].term_total %>" readonly></td>
+                        <td><input type="text" name="name[<%= exams[i]._id %>]" value="<%= exams[i].name %> "></td>
+                        <td><input type="tex" name="total_over_all[<%= exams[i]._id %>]" value="<%= exams[i].total_over_all %> "></td>
+                        <td><input type="tex" name="qone[<%= exams[i]._id %>]" value="<%= exams[i].qone %>" ></td>
+                        <td><input type="tex" name="qtwo[<%= exams[i]._id %>]" value="<%= exams[i].qtwo %>" ></td>
+                        <td><input type="tex" name="overall_first_ca[<%= exams[i]._id %>]" value="<%= exams[i].overall_first_ca %>" ></td>
+                        <td><input type="tex" name="mark_obtained_first_ca[<%= exams[i]._id %>]" value="<%= exams[i].mark_obtained_first_ca %>"></td>
+                        <td><input type="tex" name="overall_second_ca[<%= exams[i]._id %>]" value="<%= exams[i].overall_second_ca %>"></td>
+                        <td><input type="tex" name="mark_otained_second_ca[<%= exams[i]._id %>]" value="<%= exams[i].mark_otained_second_ca %>"></td>
+                        <td><input type="tex" name="overall_third_ca[<%= exams[i]._id %>]" value="<%= exams[i].overall_third_ca %>"></td>
+                        <td><input type="tex" name="mark_otained_third_ca[<%= exams[i]._id %>]" value="<%= exams[i].mark_otained_third_ca %>"></td>
+                        <td><input type="tex" name="exam_overall[<%= exams[i]._id %>]" value="<%= exams[i].exam_overall %>"></td>
+                        <td><input type="tex" name="exam_mark_obtain[<%= exams[i]._id %>]" value="<%= exams[i].exam_mark_obtain %>"></td>
+                        <td><input type="te" name="term_total[<%= exams[i]._id %>]" value="<%= exams[i].term_total %>" readonly></td>
                        
-                        <td><input type="tech" name="per_over_all" value="<%= exams[i].per_over_all %>" readonly></td>
+                        <td><input type="tech" name="per_over_all[<%= exams[i]._id %>]" value="<%= exams[i].per_over_all %>" readonly></td>
                         
-                        <td><input type="grade" name="grade" value="<%= exams[i].grade %>" readonly></td> 
-                        <td><input type="text" name="remarks" value="<%= exams[i].remarks %>" readonly></td>
+                        <td><input type="grade" name="grade[<%= exams[i]._id %>]" value="<%= exams[i].grade %>" readonly></td> 
+                        <td><input type="text" name="remarks[<%= exams[i]._id %>]" value="<%= exams[i].remarks %>" readonly></td>
                         <input  type="hidden" name="editted_name" value="<%= user.name %>" readonly>
-                        <td class="td"><button type="submit"><i class="fas fa-save"></i></button> <a href="/staff/deletedss/<%= exams[i]._id %>" class="delete" id="just_get_it" data-id="<%= exams[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
+                        <td class="td"> <a href="/staff/deletedss/<%= exams[i]._id %>" class="delete" id="just_get_it" data-id="<%= exams[i]._id %>"><i class="fas fa-trash-alt"></i></a></td>
                         <td><p style="font-size: 10px;" ><%= exams[i].editted_name %></p></td>
                         <% totalOverall += exams[i].overall_first_ca + exams[i].overall_second_ca + (exams.overall_third_ca ? exams[i].overall_third_ca : 0) + exams[i].exam_overall; %>
                         
@@ -334,8 +257,11 @@ input[type="checkbox"] {
                         <% var totalSessionScore =totalper_over_al += Number(exams[i].per_over_all) %>
                         
                     </tr>
+                     <% } %>
+                    <button type="submit"><i class="fas fa-save"></i></button>
                 </form>
-                <% } %> 
+                
+                
                 <% if(position) {%>
                   <form method="put"  id="setPosition" >
                   <tr> 
@@ -433,37 +359,157 @@ input[type="checkbox"] {
     </footer>
 </div>
 
+
+  <style>
+      /* General Form Styling */
+#myblessing {
+   
+   background: #ececec;
+   min-width: 1000px;
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   font-family: 'Poppins', sans-serif; 
+   
+}
+
+.input {
+   margin-bottom: 15px;
+   
+}
+
+label {
+   font-size: 14px;
+   font-weight: 600;
+   color: #333;
+}
+
+input[type="number"] {
+   width: calc(100% - 20px);
+   padding: 8px 10px;
+   margin-top: 5px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   font-size: 14px;
+   transition: border-color 0.3s;
+}
+
+/* Checkbox Container - Display in Column */
+.checkbox-container {
+   display: flex;
+   justify-content: left;
+   align-items: center;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 10px;
+}
+
+.checkbox-container label {
+    display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   text-align: right;
+   cursor: pointer;
+   background: #e6f7e6;
+    padding: 5px;
+   border-radius: 5px;
+   transition: 0.3s;
+}
+
+.checkbox-container label:hover {
+   background: #d0f0d0;
+}
+
+input[type="checkbox"] {
+   width: 18px;
+   height: 18px;
+   cursor: pointer;
+   accent-color: seagreen;
+}
+
+/* Submit Button */
+.div input[type="submit"] {
+   width: 100%;
+   background: seagreen;
+   color: white;
+   font-size: 16px;
+   font-weight: bold;
+   border: none;
+   padding: 10px;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: 0.3s;
+}
+
+.div input[type="submit"]:hover {
+   background: darkgreen;
+}
+
+/* Responsive Design */
+@media (max-width: 400px) {
+   #blessing {
+       width: 90%;
+       padding: 15px;
+   }
+}
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript">
-            function submitForm(form) {
-    var unindexed_arrayon = $(form).serializeArray();
-    var data = {};
 
-    $.map(unindexed_arrayon, function (x, i) {
-      data[x["name"]] = x["value"];
+  
+  $(document).ready(function () {
+  $("#allExamsForm").submit(function (e) {
+    e.preventDefault();
+
+    const formData = $(this).serializeArray();
+    let exams = {};
+
+    formData.forEach(function(item) {
+      const matches = item.name.match(/^(\w+)\[(.+)\]$/);
+      if (matches) {
+        const key = matches[1];   // field name
+        const examId = matches[2]; // exam _id
+        if (!exams[examId]) exams[examId] = {};
+        exams[examId][key] = item.value;
+      }
     });
 
-    var id = $(form).attr("data-id");
-    var requests = {
-      url: `/staff/update-exams/${id}`,
+    $.ajax({
+      url: "/staff/update-exams", // backend route
       method: "POST",
-      data: data,
-    };
-
-    $.ajax(requests).done(function (response) {
-      alert("Exam Saved Successfully!");
-      location.reload();
-      console.log("Data Updated Successfully!");
+      contentType: "application/json",
+      data: JSON.stringify({ exams }),
+      success: function (res) {
+        alert(res.message);
+        location.reload();
+      },
+      error: function (xhr) {
+        console.error(xhr.responseText);
+        alert("Failed to update exams");
+      }
     });
-  }
+  });
+});
 
-  $("form").each(function() {
-    $(this).submit(function(event) {
-      event.preventDefault();
-      submitForm(this);
-    });
-  }); 
+
 
 
   
@@ -518,38 +564,47 @@ $("#update_misc").submit(function (eventss) {
 
 
  $(document).ready(function () {
-    let subjectOrder = [];
-
-    // Track order of clicked checkboxes
-    $(".subject-checkbox").change(function () {
-        let value = $(this).val();
-
-        if ($(this).is(":checked")) {
-            // Add subject if checked
-            subjectOrder.push(value);
-        } else {
-            // Remove if unchecked
-            subjectOrder = subjectOrder.filter(subject => subject !== value);
-        }
-    });
 
     $("#myblessing").submit(function (event) {
         event.preventDefault();
 
-        var formData = $(this).serializeArray();
-        var data = {};
+        let subjects = [];
 
-        // Convert form data to object
-        formData.forEach((item) => {
-            if (item.name.endsWith("[]")) {
-                let key = item.name.slice(0, -2);
-                data[key] = subjectOrder; // Use tracked order
-            } else {
-                data[item.name] = item.value;
-            }
+        // Loop through all checked subjects
+        $(".subject-checkbox:checked").each(function () {
+            let index = $(this).data("index");
+
+            // Get corresponding inputs
+            let subjectName = $(".sub-name").eq(index).val();
+            let f_o = $(".sub-f_o").eq(index).val();
+            let s_o = $(".sub-s_o").eq(index).val();
+            let t_o = $(".sub-t_o").eq(index).val();
+            let ex_o = $(".sub-ex_o").eq(index).val();
+            let total_over_all = $(".total_over_all").eq(index).val();
+
+            subjects.push({
+                name: subjectName,
+                f_o: f_o,
+                s_o: s_o,
+                t_o: t_o,
+                ex_o: ex_o,
+                total_over_all: total_over_all
+            });
         });
 
-        console.log(data);
+        // Build final data object to send to backend
+        let data = {
+            _learner: $("input[name='_learner']").val(),
+            roll_no: $("input[name='roll_no']").val(),
+            student_name: $("input[name='student_name']").val(),
+            classofs: $("input[name='classofs']").val(),
+            term: $("input[name='term']").val(),
+            total_over_all: $("input[name='total_over_all']").val(),
+            subjects: JSON.stringify(subjects) // backend expects JSON string
+            
+        };
+
+        console.log("Sending:", data);
 
         $.ajax({
             url: "/staff/register_exams",
@@ -560,13 +615,14 @@ $("#update_misc").submit(function (eventss) {
                 alert("Exam Created Successfully!");
                 location.reload();
             },
-            error: function (xhr, status, error) {
+            error: function (xhr) {
                 alert("Error: " + xhr.responseText);
                 console.error("Error:", xhr.responseText);
             }
         });
     });
 });
+
 
 
 $("#position").submit(function (evente) {
@@ -593,6 +649,8 @@ $("#position").submit(function (evente) {
     console.log("Data Updated Successfully!");
   });
 });
+
+
 
 $("#setPosition").submit(function(eventss) {
   eventss.preventDefault();

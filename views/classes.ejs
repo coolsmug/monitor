@@ -27,6 +27,7 @@
             <p class="p_of_p"> All Classes for <%= session.name %> Session</p>
 
             <div class="form-for-report">
+                <% if(classes && classes.length > 0) {%>
                 <% for (var i = 0; i < classes.length ; i++) {%> 
             
                     <div class="div_divol">
@@ -46,6 +47,7 @@
                     
                     
                     <% } %> 
+                    <% } %>
 
             </div>
         </div>

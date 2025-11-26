@@ -34,7 +34,13 @@ const CurrentClassSchema = new Schema ({
         type: String,
         required:true,
     },
-
+    subjectId: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'subjects'
+  }
+]
+,
     datenow :{
         type: Date,
         default: Date.now,

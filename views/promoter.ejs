@@ -67,6 +67,7 @@
    
 </div>
 
+
 <div class="div-for-promote">
  <form method="POST" id="bulkUpdateForm">
   <div class="input">
@@ -106,6 +107,117 @@
 
 </div>
 
+
+<div class="all-sub">
+  <h3>Subjects Offered</h3>
+  <% if (schoolSubject && schoolSubject.length > 0) { %>
+    <ul>
+      <% schoolSubject.forEach(function(subject) { %>
+        <li>
+          <%= subject.name %>
+          <button class="remove-btn" 
+                  data-subject-id="<%= subject._id %>" 
+                  data-class-id="<%= presentClass._id %>">
+            <i class="bi bi-trash" style="font-size: 1.5em; color: #ec2b2b;"></i>
+          </button>
+        </li>
+      <% }); %>
+    </ul>
+  <% } %>
+</div>
+
+
+<script>
+$(document).ready(function () {
+  $(".remove-btn").click(function () {
+    const classId = $(this).data("class-id");
+    const subjectId = $(this).data("subject-id");
+
+    $.ajax({
+      url: `/admin/remove-subject/${classId}?subjectId=${subjectId}`,
+      method: "DELETE",
+      success: function (response) {
+        alert("Subject removed successfully!");
+        location.reload();
+      },
+      error: function (xhr) {
+        console.error(xhr);
+        alert("Failed to remove subject");
+      }
+    });
+  });
+});
+
+</script>
+
+<style>
+  .all-sub {
+    min-width: 300px;
+    margin: auto;
+    display : flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 150px;
+  }
+
+  .all-sub ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+
+  }
+
+  .all-sub li {
+    background-color: #f0f0f0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px;
+  }
+
+  h3 {
+    color: rgb(46, 75, 139);
+    font-family: var(--playfair-bold);
+  }
+</style>
+
+<div class="div-for-promote  new">
+ <form method="POST" id="bulkUpdateFormsubject" action="/admin/insert-subject?id=<%= presentClass._id %>">
+  
+  <div class="input">
+    <label style="font-size: 12px; color: rgb(89, 46, 139);">
+      Use this form to add subjects offered in this class by ticking the box
+    </label>
+
+    <div class="checkbox-container">
+      <% if (subjects) { %> 
+        <% for (var i = 0; i < subjects.length; i++) { %> 
+          <label>
+            <input type="checkbox" name="subjects" value="<%= subjects[i]._id %>"> 
+            <p><%= subjects[i].name %></p>
+          </label>
+        <% } %> 
+      <% } %> 
+    </div>
+  </div>
+  
+  <div class="div">
+    <input type="submit" value="Add Subjects to Class">
+  </div>
+</form>
+
+
+</div>
+
 <footer class="foot">
     <h3>All rights reserved and Powered by Dark theme code  <i class="fas fa-copyright"> </i> 2024</h3>
 </footer>   
@@ -114,13 +226,12 @@
 <style>
 
   .div-for-promote {
-    width: 70%;
+    min-width: 300px;
     margin: auto;
     display : flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    flex-direction: column;
+    margin-bottom: 150px;
   }
   .img{
     border-radius: 100%;
@@ -149,11 +260,22 @@
 
     #bulkUpdateForm {
       background: #ececec;
-      min-width: 1000px;
+      min-width: 600px;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       font-family: 'Poppins', sans-serif; 
+      text-align: center;
+}
+
+#bulkUpdateFormsubject {
+   background: #ececec;
+      min-width: 500px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      font-family: 'Poppins', sans-serif;
+      text-align: center; 
 }
 
 .input {
@@ -169,13 +291,15 @@ label {
 
 /* Checkbox Container - Display in Column */
 .checkbox-container {
+  width: 500px;
    display: flex;
    justify-content: center;
+   align-items: center;
    flex-direction: row;
    flex-wrap: wrap;
    gap: 10px;
-   padding: 10px 0;
-   /* width: 300px;   */
+   padding: 5px;
+   
 }
 
 .checkbox-container label {
@@ -186,10 +310,10 @@ label {
    text-align: right;
    cursor: pointer;
    background: #8bb9ff;
-   padding: 8px 12px;
+   padding: 5px;
    border-radius: 5px;
    transition: 0.3s;
-   width: 250px;
+   min-width: 200px;
 }
 
 .checkbox-container label:hover {
@@ -305,6 +429,33 @@ $("#bulkUpdateForm").submit(function (event) {
     }
   });
 });
+
+$("#bulkUpdateFormsubject").submit(function (event) {
+  event.preventDefault();
+
+  var formData = new FormData(this);
+
+  // Debug print
+  console.log("Sending form data...");
+  formData.forEach((val, key) => console.log(key, val));
+
+  $.ajax({
+    url: $(this).attr("action"), // ensure ID is inside the action URL
+    method: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      alert("Subjects Added successfully!");
+      location.reload();
+    },
+    error: function (xhr, status, error) {
+      alert("Error: " + error);
+      console.error(xhr.responseText);
+    }
+  });
+});
+
 
 
 

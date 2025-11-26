@@ -46,20 +46,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Multer configuration for file uploads
-// const uploads = multer({
-//   dest: 'uploads/',
-//   limits: {
-//     fileSize: 3 * 1024 * 1024, // 3 MB limit
-//   },
-//   fileFilter: (req, file, cb) => {
-//     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
-//     if (!allowedMimeTypes.includes(file.mimetype)) {
-//       return cb(new Error('Invalid file type'), false);
-//     }
-//     cb(null, true);
-//   }
-// });
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -311,7 +298,7 @@ const updateLearner = async ( req, res ) => {
                               if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                                 age--
                               }
-                              req.body.age = age--
+                              req.body.age = age
                               return req.body.age
                              
                             }
@@ -559,7 +546,7 @@ const adminLogin = async ( req , res, next ) => {
         if (err) {
           return next(err);
         }
-        req.flash('success_msg', 'You are welcome');
+        req.flash('success_msg', 'You are welcome' + " " + admin.school_name);
         return res.redirect('/admin/admin_dashboard');
       });
     }
@@ -578,7 +565,7 @@ const adminLogin = async ( req , res, next ) => {
         if (err) {
           return next(err);
         }
-        req.flash('success_msg', 'You are welcome');
+        req.flash('success_msg', 'You are welcome' + " " + admin.school_name);
         return res.redirect('/admin/admin_dashboard');
       });
     
@@ -1316,55 +1303,19 @@ const registerStaffFace = async (req, res) => {
   }
 };
 
-
-
-
 const updateStaff = async (req, res) => {
-
   try {
     const { id } = req.params;
-    
-    const  {
-       roll, 
-      name,
-      position,
-      status,
-      isStaff,
-      schoolId,
-      classId,
-      password,
-      about,
-      subject,
-      mobile_phone,
-      award,
-      address,
-      x,
-      instagramm,
-      facebook,
-      linkedin,
-      admin_no,
+
+    const {
+      roll, name, position, about, subject, mobile_phone, award, address,
+      x, instagram, facebook, linkedin, admin_no, email,
     } = req.body;
 
-    // Build staff object from req.body
     const staff = {
-      roll, 
-      name,
-      position,
-      status,
-      isStaff,
-      schoolId,
-      classId,
-      password,
-      about,
-      subject,
-      mobile_phone,
-      award: award.split(',').map(item => item.trim()),
-      address,
-      x,
-      instagramm,
-      facebook,
-      linkedin,
-      admin_no
+      roll, name, position, about, subject, mobile_phone, email,
+      award: award ? award.split(',').map(item => item.trim()) : [],
+      address, x, instagram, facebook, linkedin, admin_no
     };
 
     const updatedStaff = await Staff.findByIdAndUpdate(id, staff, {
@@ -1376,10 +1327,11 @@ const updateStaff = async (req, res) => {
       return res.status(404).json({ error: "Staff not found" });
     }
 
-    res.json({ message: "Staff updated successfully", staff: updatedStaff });
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send("Internal Server Error " + err.message);
+    res.json({ message: "Staff updated successfully" });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error " + error.message);
   }
 };
 
@@ -2063,7 +2015,6 @@ const addSession = async ( req, res ) => {
              res.status(500).send({message:"Error Updating session information" + err})
         })
     } catch (error) {
-      if(err) 
       console.log(err.message)
       res.status(500).send('Internal Server Error' + ' ' + err.message);
     }
@@ -2171,7 +2122,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+             res.status(500).send({ message: "Error retrieving Section id", error: err.message });
           });
       }
     } catch (err) {
@@ -2307,7 +2258,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+            res.status(500).send({ message: "Error retrieving Section id", error: err.message });
           });
       }
     } catch (err) {
@@ -2454,7 +2405,7 @@ const addSession = async ( req, res ) => {
             }
           })
           .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
+             res.status(500).send({ message: "Error retrieving Class id", error: err.message });
           });
       }
     } catch (err) {
@@ -2520,11 +2471,11 @@ const addSession = async ( req, res ) => {
   // ----------------------------add, update and delete subject----------------------------------------------
   const addSubject = async ( req , res ) => {
     try {
-      const {roll_no, name, category} = req.body;
+      const {roll_no, name, f_o, s_o, t_o, ex_o, total_over_all} = req.body;
     let errors = [];
-    console.log(`Roll_no: ${roll_no} Name: ${name} Category: ${category}`)
+    console.log(`Roll_no: ${roll_no} Name: ${name} First_O: ${f_o} Second_O: ${s_o} Exam_O: ${ex_o} Total_Overall: ${total_over_all} `)
    
-    if(!roll_no || !name || !category) {
+    if(!roll_no || !name || !f_o || !s_o || !ex_o ) {
         errors.push( { msg : "Please fill in all fields"});
     }
     
@@ -2533,7 +2484,11 @@ const addSession = async ( req, res ) => {
             errors: errors,
             roll_no: roll_no,
             name: name,
-            category: category,
+            f_o: f_o,
+            s_o: s_o,
+            t_o: t_o,
+            ex_o: ex_o,
+            total_over_all: total_over_all,
             user: req.user,
         })
     } else {
@@ -2541,13 +2496,13 @@ const addSession = async ( req, res ) => {
             console.log(claas)
             if(claas) {
                  errors.push ( { msg: "a subject already associated with the roll_no" });
-                res.render('create_subject', {errors, roll_no, name, category, user: req.user});
+                res.render('create_subject', {errors, roll_no, name, f_o, s_o, t_o, ex_o, user: req.user});
             } else if (!claas){
                 Subject.findOne( { name: name, schoolId: req.user._id } ).exec((err, names) => {
                     console.log(names)
                     if(names) {
                          errors.push ( { msg: "a Subject already associated with this name" });
-                        res.render('create_subject', {errors, roll_no, name, category, user: req.user} );
+                        res.render('create_subject', {errors, roll_no, name, f_o, s_o, t_o, ex_o, user: req.user} );
                     }else if (!names) {
                              
                 const exam = new Exam();
@@ -2558,7 +2513,10 @@ const addSession = async ( req, res ) => {
                 const newSubject = new Subject({
                         roll_no : roll_no,
                         name : name,
-                        category: category,
+                        f_o: f_o,
+                        s_o: s_o,
+                        t_o: t_o,
+                        ex_o: ex_o,
                         session: session._id,
                         schoolId: req.user._id,
                         learner: learner._id,
@@ -2598,18 +2556,22 @@ const addSession = async ( req, res ) => {
 
 
       if (req.query.id) {
-        const id = req.query.id;
-        Subject.findById(id)
-          .then((subject) => {
+
+        try {
+           const id = req.query.id;
+       const subject = await Subject.findById(id)
+
+          
             if (!subject) {
               res.status(404).send({ message: "subject not found" });
             } else {
               res.render("edit_subject", { subject : subject, user: req.user });
             }
-          })
-          .catch((err) => {
-            res.send(500).send({ message: "Error retrieving Session id" });
-          });
+       
+        } catch (error) {
+          res.status(500).send({ message: "Error retrieving Subject id", error: err.message });
+        }
+        
       }
     } catch (err) {
       if(err) 
@@ -2961,40 +2923,43 @@ const getAllThirdSecton = async ( req , res ) => {
   }
 };
 
-const getAllLearner = async ( req , res ) => {
+const getAllLearner = async (req, res, next) => {
   try {
-
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-      res.setHeader('Expires', '-1');
-      res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '-1');
+    res.setHeader('Pragma', 'no-cache');
 
-    var perPage = 9
-    var page = req.params.page || 1
+    const perPage = 9;
+    const page = parseInt(req.params.page) || 1;
 
-     Learner
-        .find({ status : true, deletes: false, schoolId: req.user._id })
-        .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code ")
-        .skip((perPage * page) - perPage)
-        .sort({classes : 1})
-        .limit(perPage)
-        .exec(function(err,learner) {
-            Learner.count({schoolId: req.user._id, status : true, deletes: false}).exec(function(err, count) {
-                if (err) return next(err)
-               
-                res.render('all_learners', {
-                    learner: learner,
-                    user: req.user,
-                    current: page,
-                    pages: Math.ceil(count / perPage)
-                });
-                
-            })
-        })
+    const learners = await Learner.find({
+      status: true,
+      deletes: false,
+      schoolId: req.user._id,
+    })
+      .select("roll_no classes arm first_name last_name gender status img date_enrolled date_ended class_code")
+      .sort({ createdAt : -1 })
+      .skip((perPage * page) - perPage)
+      .limit(perPage);
+
+    const count = await Learner.countDocuments({
+      status: true,
+      deletes: false,
+      schoolId: req.user._id,
+    });
+
+    res.render('all_learners', {
+      learner: learners,
+      user: req.user,
+      current: page,
+      pages: Math.ceil(count / perPage),
+    });
   } catch (err) {
-    console.log(err.message)
-    res.status(500).send('Internal Server Error' + ' ' + err.message);
+    console.log(err.message);
+    res.status(500).send('Internal Server Error ' + err.message);
   }
 };
+
 
 const getAllSubject = async ( req , res ) => {
   try {
@@ -3006,9 +2971,8 @@ const getAllSubject = async ( req , res ) => {
     var perPage = 9
     var page = req.params.page || 1
 
-    await Subject
+     Subject
         .find({ schoolId: req.user._id})
-        .select("roll_no name category")
         .skip((perPage * page) - perPage)
         .sort({roll_no : 1})
         .limit(perPage)
@@ -3049,7 +3013,7 @@ const getAllClasses = async ( req , res ) => {
         .sort({roll_no : 1})
         .limit(perPage)
         .exec(function(err, classes) {
-            Currentclass.count().exec(function(err, count) {
+            Currentclass.count({schoolId: req.user._id}).exec(function(err, count) {
                 if (err) return next(err)
                 res.render('all_currentclass', {
                     classes: classes,
@@ -3278,43 +3242,43 @@ const promoteAllLearner = async (req, res) => {
 };
 
 
-const getPromotePage = async ( req , res  ) => {
-
+const getPromotePage = async (req, res) => {
   try {
-
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.setHeader('Expires', '-1');
     res.setHeader('Pragma', 'no-cache');
 
-    if (req.query.id) {
-      const id = req.query.id;
-      const presentClass = await Currentclass.findById(id).exec()
-       Currentclass.find( { schoolId : req.user._id } )
-                         .select("name arm _id") 
-                         .sort({ roll_no : 1})
-                         .exec((err, classed) => {
-                              if(err) throw new Error(err)
-                              Learner.find( { "classId" : id, "status": true, "deletes": false } )
-                                .exec((errOne, users) => {
-                                  if(errOne) throw new Error(errOne)
-                                  res.render("promoter", {
-                                      classed: classed,
-                                      users: users,
-                                      user: req.user,
-                                      presentClass
-                                  })
-                              })
-                             
-                         })
-     }
+    const { id } = req.query;
 
-    
-  } catch (error) {
+    if (!id) return res.status(400).send('Missing class ID');
 
-    res.status(500).send('Internal Server Error' + ' ' + error);
-  }
+    const presentClass = await Currentclass.findById(id).exec();
+    const classed = await Currentclass.find({ schoolId: req.user._id })
+      .select('name arm _id')
+      .sort({ roll_no: 1 })
+      .exec();
+
+       if (!presentClass) {
+      return res.status(404).send('Class not found');
+    }
+
+    const users = await Learner.find({ classId: id, status: true, deletes: false }).exec();
+    const subjectId = presentClass ? presentClass.subjectId : [];
+    const schoolSubject = await Promise.all(subjectId.map(async (subId) => {
+     return await Subject.findById(subId).exec();
+    }));
+
   
-
+    res.render('promoter', {
+      classed,
+      users,
+      user: req.user,
+      presentClass,
+      schoolSubject
+    });
+  } catch (error) {
+    res.status(500).send('Internal Server Error: ' + error.message);
+  }
 };
 
 const getAllLearnerWitNoclass = async ( req , res, next) => {
@@ -3322,7 +3286,9 @@ const getAllLearnerWitNoclass = async ( req , res, next) => {
     const id = req.query.id;
     const user = req.user;
     const student = await Learner.find({ schoolId : user._id, classId: { $exists: false }, status: true, deletes: false });
-    res.locals.student = student; // pass data forward
+     const subjects = await Subject.find({ schoolId: req.user._id }).exec();
+    res.locals.student = student; 
+    res.locals.subjects = subjects;
     next(); // ✅ continue to getPromotePage
   } catch (error) {
       res.status(500).send('Internal Server Error' + ' ' + error);
@@ -3359,11 +3325,65 @@ const updateBulkUploads = async (req, res) => {
 };
 
 
+const updateBulkUploadSubject = async (req, res) => {
+  try {
+    let { subjects } = req.body;
+    const { id } = req.query;
 
+    if (!subjects) {
+      return res.status(400).json({ message: "No Subject selected" });
+    }
+
+    // Ensure subjects is always an array
+    subjects = Array.isArray(subjects) ? subjects : [subjects];
+
+    const classed = await currentClass.findById(id);
+    if (!classed) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // Merge existing and new subject IDs, avoiding duplicates
+    const updatedSubjectIds = [...new Set([...classed.subjectId, ...subjects])];
+
+    classed.subjectId = updatedSubjectIds;
+    await classed.save();
+
+    res.status(200).json({ message: "Subject Added Successfully!" });
+  } catch (err) {
+    console.error("Error:", err.message);
+    res.status(500).send("Internal Server Error: " + err.message);
+  }
+};
+
+
+const removeSubjectFromClass = async (req, res) => {
+  const { id: classId } = req.params; // class ID
+  const { subjectId } = req.query;    // subject ID
+
+  if (!subjectId) {
+    return res.status(400).json({ message: "subjectId is required" });
+  }
+
+  try {
+    const updatedClass = await currentClass.findByIdAndUpdate(
+      classId,
+      { $pull: { subjectId: mongoose.Types.ObjectId(subjectId) } },
+      { new: true } // return updated document
+    );
+
+    if (!updatedClass) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    res.json({ message: "Subject removed successfully", updatedClass });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err });
+  }
+};
 
 
 //-----------------------------checking Result-------------------------------------
-
 
 const checkResultFirstAndSecond = async ( req , res ) => {
   try {
@@ -4580,7 +4600,7 @@ const carearMade = async (req , res) => {
 
 const deleteCarear =   async(req, res) => {
     const id = req.params.id;
-      await CareerCreation.findByIdAndDelete(id)
+      Carear.findByIdAndDelete(id)
       .then((data) => {
         if (!data) {
           res
@@ -4725,6 +4745,7 @@ const bulkUpload = async (req, res) => {
     } else {
       return res.status(400).json({ error: "Only CSV or Excel files are allowed" });
     }
+    
 
     // Process Learners
     const docs = await Promise.all(
@@ -4794,6 +4815,142 @@ const bulkUpload = async (req, res) => {
   }
 };
 
+
+// Subject bulkUpload 
+
+const subjectBulkUpload = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Please upload a file" });
+    }
+
+    const userId = req.user._id;
+    
+    // Get current learner count
+    let subjectCount = await Subject.countDocuments({ schoolId: userId });
+
+    const filePath = req.file.path;
+    let subjects = [];
+
+    // Parse file
+    if (req.file.originalname.endsWith(".csv")) {
+      await new Promise((resolve, reject) => {
+        fs.createReadStream(filePath)
+          .pipe(csv())
+          .on("data", (row) => subjects.push(row))
+          .on("end", resolve)
+          .on("error", reject);
+      });
+    } else if (req.file.originalname.endsWith(".xlsx")) {
+      const workbook = xlsx.readFile(filePath);
+      const sheetName = workbook.SheetNames[0];
+      subjects = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    } else {
+      return res.status(400).json({ error: "Only CSV or Excel files are allowed" });
+    }
+    
+
+    // Process Learners
+    const docs = await Promise.all(
+      subjects.map(async (row) => {
+
+      
+        subjectCount++; // increment count for each learner
+
+        // Pad number e.g. 001, 045, 120
+        const numerCode = String(subjectCount).padStart(3, "0");
+
+        // Generate roll number & email
+        const subjectRollNo = numerCode;
+      
+
+        return {
+           roll_no: subjectRollNo,
+          name: row.name,
+          category: row.category,
+          schoolId: userId,
+        };
+      })
+    );
+
+    // Save to DB
+    await Subject.insertMany(docs);
+
+    fs.unlinkSync(filePath); // clean up
+    res.status(200).json({ message: "Subjects uploaded successfully" });
+
+  } catch (error) {
+    console.error("Bulk upload error:", error);
+    res.status(500).json({ error: "Failed to upload Subjects" });
+  }
+};
+
+
+// Creation of bulkupload for cbt page
+
+const cbtBulkUpload = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Please upload a file" });
+    }
+
+    const userId = req.user._id;
+
+    const filePath = req.file.path;
+    let cbt = [];
+
+    // Parse file
+    if (req.file.originalname.endsWith(".csv")) {
+      await new Promise((resolve, reject) => {
+        fs.createReadStream(filePath)
+          .pipe(csv())
+          .on("data", (row) => cbt.push(row))
+          .on("end", resolve)
+          .on("error", reject);
+      });
+    } else if (req.file.originalname.endsWith(".xlsx")) {
+      const workbook = xlsx.readFile(filePath);
+      const sheetName = workbook.SheetNames[0];
+      cbt = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    } else {
+      return res.status(400).json({ error: "Only CSV or Excel files are allowed" });
+    }
+    
+    const descriptionArray = row.description
+    ? row.description.split(',').map(item => item.trim()) // turn string → array
+    : [];
+
+    // Process Learners
+    const docs = await Promise.all(
+      cbt.map(async (row) => {
+      
+        return {
+          title: row.title,
+          description: descriptionArray,
+          schoolId: userId,
+          duration: row.duration,
+          startTime:  parseDate(row.startTime),
+          session:  row.session,
+          term: row.term,
+          type: row.type,
+          ca_pos: row.ca_pos,
+          student_class: row.student_class,
+        };
+      })
+    );
+
+    // Save to DB
+    await CBT.insertMany(docs);
+
+    fs.unlinkSync(filePath); // clean up
+    res.status(200).json({ message: "CBT Exam uploaded successfully!" });
+
+  } catch (error) {
+    console.error("Bulk upload error:", error);
+    res.status(500).json({ error: "Failed to upload CBT Exams" });
+  }
+};
+
 const getBulkUploadPage = async ( req , res ) => {
   try {
      res.setHeader('Expires', '-1');
@@ -4805,10 +4962,10 @@ const getBulkUploadPage = async ( req , res ) => {
      
       user
     })
-  } catch (error) {
+  } catch (err) {
     console.log(err.message)
     res.status(500).send( 'Internal Server Error' + ' ' + err.message);
-   }
+  }
   }
 
 
@@ -4818,6 +4975,7 @@ const getBulkUploadPage = async ( req , res ) => {
 
 const { findStaffByFace } = require('../middleware/utils');
 const StaffAttendance = require("../models/teacherAttendance");
+const currentClass = require('../models/current_class');
 
 //  Register Staff Face
 const autoAttendance = async (req, res) => {
@@ -5218,6 +5376,9 @@ module.exports = {
     bulkUpload,
     getAllLearnerWitNoclass,
     updateBulkUploads,
+    updateBulkUploadSubject,
+    subjectBulkUpload,
+    removeSubjectFromClass,
     
 }
 

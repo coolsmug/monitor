@@ -6,7 +6,7 @@
 
 
 <div class="diverr">
-    <h3 style="position: absolute; top:0px; left: 10px;"><a href="<%= previousUrl %>">Back</a></h3>
+    <a href="/admin/all-staffs">Back</a>
     <h4>Use these forms to Update <%= staff.name %> </h4>
     <div class="form_for_create">
         <%- include ('./partials/messages') %>
@@ -117,7 +117,7 @@
                         <label for="gmail">Gmail:</label>
                         <input 
                         type="email" 
-                        name="gmail" 
+                        name="email" 
                         value="<%= staff.email %>" />
                     </div>
                 </div>
@@ -312,6 +312,33 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   captureBtn.addEventListener("click", captureFaceEmbedding);
+});
+
+
+
+
+$("#creat-Classing").submit(function (params) {
+  params.preventDefault();
+
+  let unindexed_arrays = $(this).serializeArray();
+  let data = {}
+
+  $.map(unindexed_arrays, function (n, i) {
+    data[ n[ "name" ]] = n[ "value" ]
+  }); 
+ 
+
+  let request = {
+    "url" : `/admin/update-staff/${data.id}`,
+    "method" : "PUT",
+    "data" : data,
+  };
+
+  $.ajax(request).done(function (response) {
+    alert("Session Updated Successfully!")
+    location.reload();
+    
+  });
 });
 </script>
 
